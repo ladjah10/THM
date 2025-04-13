@@ -2,6 +2,8 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { z } from "zod";
+import { sendAssessmentEmail } from "./sendgrid";
+import { AssessmentResult } from "../shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Email sending endpoint
@@ -57,8 +59,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const validatedData = emailSchema.parse(req.body);
       
-      // Store assessment result in storage
-      await storage.saveAssessment({
+      // Create assessment result object
+      const assessmentResult: AssessmentResult = {
         email: validatedData.to,
         name: validatedData.data.name,
         scores: validatedData.data.scores,
@@ -66,11 +68,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
         responses: validatedData.data.responses,
         demographics: validatedData.data.demographics,
         timestamp: new Date().toISOString()
-      });
+      };
       
-      // In a real application, we would send an actual email here
-      // For this implementation, we'll simulate sending an email
-      console.log(`Email report would be sent to ${validatedData.to} with CC to ${validatedData.cc}`);
+      // Store assessment result in storage
+      await storage.saveAssessment(assessmentResult);
+      
+      // Send email with SendGrid
+      const emailSent = await sendAssessmentEmail(
+        assessmentResult, 
+        validatedData.cc // This should be 'la@lawrenceadjah.com'
+      );
+      
+      if (!emailSent) {
+        return res.status(500).json({
+          success: false,
+          message: "Failed to send email. Assessment data was saved."
+        });
+      }
       
       return res.status(200).json({ 
         success: true,
