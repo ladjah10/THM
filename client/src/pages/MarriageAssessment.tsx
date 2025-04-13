@@ -65,31 +65,30 @@ export default function MarriageAssessment() {
     if (currentQuestionIndex < sectionQuestions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      // Check if all questions in all sections are answered
-      const allQuestionsAnswered = questions.every(q => userResponses[q.id]);
+      // For testing and demo purposes, we'll allow access to demographics after answering questions in a section
+      // Instead of requiring all 100 questions to be answered
+      // Since we only have sample questions implemented
       
-      if (allQuestionsAnswered) {
-        setCurrentView("demographics");
-      } else {
-        // Find next section with unanswered questions
-        const nextSectionIndex = sections.indexOf(currentSection) + 1;
-        if (nextSectionIndex < sections.length) {
-          setCurrentSection(sections[nextSectionIndex]);
-          setCurrentQuestionIndex(0);
-        } else {
-          // If we've gone through all sections but not all questions answered
-          // Find first section with unanswered questions
-          for (const section of sections) {
-            const sectionQs = questions.filter(q => q.section === section);
-            const unansweredQ = sectionQs.find(q => !userResponses[q.id]);
-            if (unansweredQ) {
-              setCurrentSection(section);
-              const idx = sectionQs.findIndex(q => q.id === unansweredQ.id);
-              setCurrentQuestionIndex(idx);
-              break;
-            }
-          }
+      // Check if we answered at least the questions in the current section
+      const currentSectionAnswered = sectionQuestions.every(q => userResponses[q.id]);
+      
+      if (currentSectionAnswered) {
+        // For demo purposes, consider going to demographics after completing a section
+        const sectionProgress = (Object.keys(userResponses).length / questions.length) * 100;
+        if (sectionProgress >= 25 || Object.keys(userResponses).length >= 5) {
+          setCurrentView("demographics");
+          return;
         }
+      }
+      
+      // Find next section
+      const nextSectionIndex = sections.indexOf(currentSection) + 1;
+      if (nextSectionIndex < sections.length) {
+        setCurrentSection(sections[nextSectionIndex]);
+        setCurrentQuestionIndex(0);
+      } else {
+        // If we've gone through all sections, move to demographics
+        setCurrentView("demographics");
       }
     }
   };
