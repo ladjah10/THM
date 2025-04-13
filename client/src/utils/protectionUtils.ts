@@ -60,19 +60,17 @@ function preventSelection() {
 }
 
 // Initialize all protection methods
-function initializeProtection() {
-  preventScreenshots();
-  preventContextMenu();
-  preventSelection();
-  
-  // Override window.print
-  window.print = () => {
-    alert('Printing is disabled for this assessment.');
-    return false;
-  };
+export function initializeProtection() {
+  // Check if we're in a browser environment
+  if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+    preventScreenshots();
+    preventContextMenu();
+    preventSelection();
+    
+    // Override window.print
+    window.print = () => {
+      alert('Printing is disabled for this assessment.');
+      return false;
+    };
+  }
 }
-
-// Apply protection when the module is imported
-initializeProtection();
-
-export {};

@@ -16,11 +16,13 @@ import {
   UserProfile 
 } from "@/types/assessment";
 import { toast } from "@/hooks/use-toast";
+import { initializeProtection } from "@/utils/protectionUtils";
 
-type View = "questionnaire" | "demographics" | "results" | "emailSent";
+type View = "demographics" | "questionnaire" | "results" | "emailSent";
 
 export default function MarriageAssessment() {
-  const [currentView, setCurrentView] = useState<View>("questionnaire");
+  // Start with demographics first - this is a key requirement
+  const [currentView, setCurrentView] = useState<View>("demographics");
   const [currentSection, setCurrentSection] = useState(sections[0]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userResponses, setUserResponses] = useState<Record<number, UserResponse>>({});
@@ -38,6 +40,11 @@ export default function MarriageAssessment() {
   const [scores, setScores] = useState<AssessmentScores | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [emailSending, setEmailSending] = useState(false);
+
+  // Initialize protection utilities
+  useEffect(() => {
+    initializeProtection();
+  }, []);
 
   // Filter questions by current section
   const sectionQuestions = questions.filter(q => q.section === currentSection);
@@ -65,30 +72,15 @@ export default function MarriageAssessment() {
     if (currentQuestionIndex < sectionQuestions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      // For testing and demo purposes, we'll allow access to demographics after answering questions in a section
-      // Instead of requiring all 100 questions to be answered
-      // Since we only have sample questions implemented
-      
-      // Check if we answered at least the questions in the current section
-      const currentSectionAnswered = sectionQuestions.every(q => userResponses[q.id]);
-      
-      if (currentSectionAnswered) {
-        // For demo purposes, consider going to demographics after completing a section
-        const sectionProgress = (Object.keys(userResponses).length / questions.length) * 100;
-        if (sectionProgress >= 25 || Object.keys(userResponses).length >= 5) {
-          setCurrentView("demographics");
-          return;
-        }
-      }
-      
       // Find next section
       const nextSectionIndex = sections.indexOf(currentSection) + 1;
       if (nextSectionIndex < sections.length) {
         setCurrentSection(sections[nextSectionIndex]);
         setCurrentQuestionIndex(0);
       } else {
-        // If we've gone through all sections, move to demographics
-        setCurrentView("demographics");
+        // If we've gone through all sections, move to results
+        calculateAssessmentResults();
+        setCurrentView("results");
       }
     }
   };
@@ -119,13 +111,16 @@ export default function MarriageAssessment() {
 
   // Handle demographic form submission
   const handleDemographicSubmit = () => {
-    // Calculate scores and determine profile
+    setCurrentView("questionnaire");
+  };
+
+  // Calculate scores and determine profile
+  const calculateAssessmentResults = () => {
     const calculatedScores = calculateScores(questions, userResponses);
     const profile = determineProfile(calculatedScores, demographicData.gender);
     
     setScores(calculatedScores);
     setUserProfile(profile);
-    setCurrentView("results");
   };
 
   // Handle sending email report
@@ -174,7 +169,7 @@ export default function MarriageAssessment() {
     setUserResponses({});
     setCurrentSection(sections[0]);
     setCurrentQuestionIndex(0);
-    setCurrentView("questionnaire");
+    setCurrentView("demographics");
   };
 
   return (
@@ -186,13 +181,24 @@ export default function MarriageAssessment() {
             <h1 className="text-xl font-semibold text-gray-900">100 Marriage Assessment</h1>
           </div>
           <div className="hidden sm:block">
-            <span className="text-sm text-gray-500">© 2025 Lawrence E. Adjah</span>
+            <span className="text-sm text-gray-500">© 2023 Lawrence E. Adjah</span>
           </div>
         </div>
       </header>
 
       {/* Main Content Area */}
       <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Demographics comes first */}
+        {currentView === "demographics" && (
+          <DemographicView 
+            demographicData={demographicData}
+            onChange={handleDemographicChange}
+            onSubmit={handleDemographicSubmit}
+            onBack={() => setCurrentView("questionnaire")}
+          />
+        )}
+
+        {/* Questionnaire view */}
         {currentView === "questionnaire" && (
           <>
             <QuestionnaireProgress 
@@ -207,28 +213,22 @@ export default function MarriageAssessment() {
               onSectionChange={handleSectionChange}
             />
             
-            <QuestionnaireView 
-              question={currentQuestion}
-              onOptionSelect={handleOptionSelect}
-              onNextQuestion={handleNextQuestion}
-              onPreviousQuestion={handlePreviousQuestion}
-              selectedOption={userResponses[currentQuestion.id]?.option}
-              isFirstQuestion={currentQuestionIndex === 0 && sections.indexOf(currentSection) === 0}
-              questionIndex={questions.findIndex(q => q.id === currentQuestion.id)}
-              totalQuestions={totalQuestions}
-            />
+            {currentQuestion && (
+              <QuestionnaireView 
+                question={currentQuestion}
+                onOptionSelect={handleOptionSelect}
+                onNextQuestion={handleNextQuestion}
+                onPreviousQuestion={handlePreviousQuestion}
+                selectedOption={userResponses[currentQuestion.id]?.option}
+                isFirstQuestion={currentQuestionIndex === 0 && sections.indexOf(currentSection) === 0}
+                questionIndex={questions.findIndex(q => q.id === currentQuestion.id)}
+                totalQuestions={totalQuestions}
+              />
+            )}
           </>
         )}
 
-        {currentView === "demographics" && (
-          <DemographicView 
-            demographicData={demographicData}
-            onChange={handleDemographicChange}
-            onSubmit={handleDemographicSubmit}
-            onBack={() => setCurrentView("questionnaire")}
-          />
-        )}
-
+        {/* Results view */}
         {currentView === "results" && scores && userProfile && (
           <ResultsView 
             scores={scores}
@@ -240,6 +240,7 @@ export default function MarriageAssessment() {
           />
         )}
 
+        {/* Email sent confirmation */}
         {currentView === "emailSent" && (
           <EmailSentConfirmation onBackToResults={handleBackToResults} />
         )}

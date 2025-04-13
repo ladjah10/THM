@@ -1,4 +1,43 @@
 export const demographicQuestions = {
+  firstName: {
+    id: "firstName",
+    label: "First Name",
+    type: "text",
+    required: true,
+    placeholder: "Enter your first name"
+  },
+  lastName: {
+    id: "lastName",
+    label: "Last Name",
+    type: "text",
+    required: true,
+    placeholder: "Enter your last name"
+  },
+  email: {
+    id: "email",
+    label: "Email Address",
+    type: "email",
+    required: true,
+    placeholder: "example@email.com",
+    helpText: "Use this email to send the confirmation of results"
+  },
+  phone: {
+    id: "phone",
+    label: "Phone Number",
+    type: "tel",
+    required: false,
+    placeholder: "(123) 456-7890"
+  },
+  desireChildren: {
+    id: "desireChildren",
+    label: "Do You Want Children?",
+    type: "select",
+    required: true,
+    options: [
+      { value: "yes", label: "Yes" },
+      { value: "no", label: "No" }
+    ]
+  },
   gender: {
     id: "gender",
     label: "Gender",
@@ -6,51 +45,38 @@ export const demographicQuestions = {
     required: true,
     options: [
       { value: "male", label: "Male" },
-      { value: "female", label: "Female" },
-      { value: "non-binary", label: "Non-binary" },
-      { value: "prefer-not-to-say", label: "Prefer not to say" }
+      { value: "female", label: "Female" }
     ]
   },
   marriageStatus: {
     id: "marriageStatus",
-    label: "Marriage Status",
-    type: "select",
-    required: true,
-    options: [
-      { value: "single", label: "Single" },
-      { value: "dating", label: "Dating" },
-      { value: "engaged", label: "Engaged" },
-      { value: "married", label: "Married" },
-      { value: "divorced", label: "Divorced" },
-      { value: "widowed", label: "Widowed" }
-    ]
-  },
-  desireChildren: {
-    id: "desireChildren",
-    label: "Desire for Children",
+    label: "Have You Been (Legally) Married",
     type: "select",
     required: true,
     options: [
       { value: "yes", label: "Yes" },
-      { value: "no", label: "No" },
-      { value: "unsure", label: "Unsure" }
+      { value: "no", label: "No" }
     ]
   },
   ethnicity: {
     id: "ethnicity",
-    label: "Race/Ethnicity",
-    type: "select",
+    label: "Race and Ethnicity",
+    type: "multiselect",
     required: true,
+    helpText: "Select all that apply",
     options: [
+      { value: "american-indian", label: "American Indian or Alaska Native" },
       { value: "asian", label: "Asian" },
       { value: "black", label: "Black or African American" },
-      { value: "hispanic", label: "Hispanic or Latino" },
-      { value: "native", label: "Native American" },
-      { value: "pacific", label: "Pacific Islander" },
-      { value: "white", label: "White or Caucasian" },
-      { value: "multiracial", label: "Multiracial" },
-      { value: "other", label: "Other" },
-      { value: "prefer-not-to-say", label: "Prefer not to say" }
+      { value: "pacific-islander", label: "Native Hawaiian or Other Pacific Islander" },
+      { value: "white", label: "White" },
+      { value: "hispanic", label: "Hispanic or Latino" }
     ]
+  },
+  purchaseDate: {
+    id: "purchaseDate",
+    label: "Date of Purchase (The 100 Marriage)",
+    type: "date",
+    required: false
   }
 };
