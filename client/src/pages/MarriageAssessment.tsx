@@ -183,7 +183,7 @@ export default function MarriageAssessment() {
             <h1 className="text-xl font-semibold text-gray-900">100 Marriage Assessment</h1>
           </div>
           <div className="hidden sm:block">
-            <span className="text-sm text-gray-500">© 2023 Lawrence E. Adjah</span>
+            <span className="text-sm text-gray-500">© 2025 Lawrence E. Adjah</span>
           </div>
         </div>
       </header>

@@ -115,7 +115,7 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
         </div>
         
         <div class="footer">
-          <p>© 2023 Lawrence E. Adjah - The 100 Marriage Assessment</p>
+          <p>© 2025 Lawrence E. Adjah - The 100 Marriage Assessment</p>
           <p>This assessment is designed to help you understand your readiness for marriage and identify areas for growth.</p>
         </div>
       </div>
