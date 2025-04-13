@@ -1,6 +1,6 @@
 import { Question } from "@/types/assessment";
 
-// Define sections for navigation
+// Define sections based on the PDF
 export const sections = [
   "Your Foundation",
   "Your Faith Life",
@@ -843,5 +843,5 @@ export const questions: Question[] = [
       "No specific expectations"
     ],
     weight: 5
-  }
+  },
 ];
