@@ -1,0 +1,283 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "section": "Your Foundation",
+      "subsection": "Marriage + Family",
+      "type": "M",
+      "text": "Your Foundation: Marriage + Family",
+      "options": [
+        "We each already believe in and (have) receive(d) Jesus Christ as our Lord and Savior and this reality will be the active foundation and guiding lens through which we see and operate in our marriage and family",
+        "We are interested in living our new lives together according to the Christian faith, but we haven't each made the individual decision to receive Jesus Christ as our Lord and Savior (and be baptized) and we would like to do this in advance of our union."
+      ],
+      "weight": 36
+    },
+    {
+      "id": 2,
+      "section": "Your Foundation",
+      "subsection": "Marriage + Family Accountability",
+      "type": "D",
+      "text": "Your Foundation: Marriage + Family Accountability",
+      "options": [
+        "In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this \"life covenant\" process, unless mutually revisited and discussed at a later time.",
+        "Other: Before committing to this we need further discussion with spiritual counsel around how this would operate"
+      ],
+      "weight": 5
+    },
+    {
+      "id": 3,
+      "section": "Your Foundation",
+      "subsection": "Marriage & Your Children's Faith Journey",
+      "type": "D",
+      "text": "Your Foundation: Marriage & Your Children's Faith Journey (for if/when it becomes applicable)",
+      "options": [
+        "We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ"
+      ],
+      "weight": 5
+    },
+    {
+      "id": 4,
+      "section": "Your Foundation",
+      "subsection": "Marriage Mindset: Happiness",
+      "type": "M",
+      "text": "Your Foundation: Marriage Mindset: Happiness",
+      "options": [
+        "We're committed to the belief: While a marriage relationship can yield happiness, we believe happiness is neither a stable emotion nor a stable foundation to build a marriage upon, as such, we believe each spouse is ultimately responsible for their own happiness.",
+        "We're committed to the belief: \"Happy Wife, Happy Life\" – the husband is ultimately responsible for making his wife happy and this will in turn lead to a successful marriage.",
+        "We're committed to the belief: \"Happy King, Happy Kingdom\" – the wife is ultimately responsible for making her husband happy and this will in turn lead to a successful marriage.",
+        "We're committed to the belief: We believe in \"Happy Spouse, Happy House\" – each spouse is ultimately responsible for the other spouse's happiness and this will in turn lead to a successful marriage."
+      ],
+      "weight": 5
+    },
+    {
+      "id": 5,
+      "section": "Your Foundation",
+      "subsection": "Marriage Preparation: Legal (Incapacitation)",
+      "type": "D",
+      "text": "Your Foundation: Marriage Preparation: Legal (Incapacitation)",
+      "options": [
+        "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing our spouse as Power of Attorney before our marriage date on or by this date ___________"
+      ],
+      "weight": 5
+    },
+    {
+      "id": 6,
+      "section": "Your Foundation",
+      "subsection": "Marriage Preparation: Legal (Estate)",
+      "type": "D",
+      "text": "Your Foundation: Marriage Preparation: Legal (Estate)",
+      "options": [
+        "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing completing a notarized copy of our will before our marriage date on or by this date ___________"
+      ],
+      "weight": 5
+    },
+    {
+      "id": 7,
+      "section": "Your Foundation",
+      "subsection": "Marriage Mindset: Divorce",
+      "type": "D",
+      "text": "Your Foundation: Marriage Mindset: Divorce",
+      "options": [
+        "We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, \"Falling Out of Love\", \"Growing Apart\", \"Irreconcilable Differences\""
+      ],
+      "weight": 5
+    },
+    {
+      "id": 8,
+      "section": "Your Foundation",
+      "subsection": "Marriage Mindset: Divorce & Law",
+      "type": "M",
+      "text": "Your Foundation: Marriage Mindset: Divorce & Law",
+      "options": [
+        "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), still, in view of the law and the prevalent rates of marriage dissolution, we agree to explore and structure a mutually considerate prenuptial agreement for our marriage.",
+        "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), and do not believe any legal agreements beyond our mutual commitments through this life covenant process are necessary for us to explore and structure at this time.",
+        "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), still, we'd like to be more informed about what prenuptial agreements entail before deciding to consider or not consider it before our marriage."
+      ],
+      "weight": 5
+    },
+    {
+      "id": 9,
+      "section": "Your Foundation",
+      "subsection": "Marriage Mindset: Celebrating our Covenant",
+      "type": "M",
+      "text": "Your Foundation: Marriage Mindset: Celebrating our Covenant",
+      "options": [
+        "We commit to establishing and celebrating our holy union/covenant through our wedding and celebrating our marriage anniversary every year.",
+        "We commit to establishing and celebrating our holy union/covenant through our wedding, celebrating our marriage anniversary every year and also doing/celebrating a covenant renewal ceremony every 10 years.",
+        "We commit to establishing and celebrating our holy union/covenant through our wedding, celebrating our marriage anniversary every year and also doing/celebrating a covenant renewal ceremony every 5 years."
+      ],
+      "weight": 5
+    },
+    {
+      "id": 10,
+      "section": "Your Faith Life",
+      "subsection": "Worship Life: Marriage",
+      "type": "M",
+      "text": "Your Faith Life: Worship Life: Marriage (Husband and Wife)",
+      "options": [
+        "We commit to daily prayer as a couple before we go to sleep.",
+        "We commit to weekly prayer as a couple (during designated check-in time).",
+        "Other: Please detail ___________"
+      ],
+      "weight": 5
+    },
+    {
+      "id": 11,
+      "section": "Your Faith Life",
+      "subsection": "Worship Life: Family",
+      "type": "M",
+      "text": "Your Faith Life: Worship Life: Family (applicable w/or w/o children)",
+      "options": [
+        "We commit to family worship weekly, including a dedicated time for prayer and reflection as a family weekly, familial prayer over meals, and weekly corporate worship in a local faith community where we are members.",
+        "We commit to family worship weekly, including familial prayer over meals, and weekly corporate worship in a local faith community where we are members.",
+        "We commit to family worship weekly, including familial prayer over meals, and weekly corporate worship in a local/remote faith community where we are members.",
+        "Other: Please detail ___________"
+      ],
+      "weight": 5
+    },
+    {
+      "id": 12,
+      "section": "Your Faith Life",
+      "subsection": "Worship Life: Serving",
+      "type": "M",
+      "text": "Your Faith Life: Worship Life: Serving (applicable w/or w/o children)",
+      "options": [
+        "We commit to each volunteering/serving in our faith community in some capacity in every season.",
+        "We commit to each volunteering/serving in our faith community in some capacity at least one season/event per year.",
+        "We commit to each volunteering/serving flexibly inside (and outside of) our faith community based on our capacity, but at a minimum, we'll always be serving our faith community through our giving in every season.",
+        "We commit to each volunteering/serving flexibly inside (and outside of) our faith community based on our capacity."
+      ],
+      "weight": 5
+    },
+    {
+      "id": 13,
+      "section": "Your Marriage Life",
+      "subsection": "Order of Priority before God",
+      "type": "D",
+      "text": "Your Marriage Life: Order of Priority before God",
+      "options": [
+        "We understand and accept the order of relationship priority according to God's highest design is first, our relationship with God; then, our relationship with our Spouse (see: \"forsake all others\"); then, our relationship with our children (if applicable); then everything and everyone else (including work, friends, family)"
+      ],
+      "weight": 5
+    },
+    {
+      "id": 14,
+      "section": "Your Marriage Life",
+      "subsection": "Family Name",
+      "type": "M",
+      "text": "Your Marriage Life: Family Name",
+      "options": [
+        "We commit to sharing the same last name in marriage and for the wife to take the husband's last name.",
+        "We commit to each keeping our own last names in marriage.",
+        "We commit to the wife hyphenating her last name with her husband's last name in marriage."
+      ],
+      "weight": 5
+    },
+    {
+      "id": 15,
+      "section": "Your Marriage Life",
+      "subsection": "Relationship Model (Work / Home Life)",
+      "type": "M",
+      "text": "Your Marriage Life: Relationship Model (Work / Home Life)",
+      "options": [
+        "We commit to a marriage model where we agree to both work full-time for as long as we both can consistently honor our commitments to God, our spouse and our children (if applicable).",
+        "We commit to a marriage model where we agree the husband is the primary provider and works full-time and the wife stays at home as full-time housewife/homemaker.",
+        "We commit to a marriage model where we agree to both work full-time until we have children and then we will transition to a model where the wife stays at home for an extended period (beyond standard parental leave) until the children reach age ___.",
+        "We commit to a marriage model where we agree to both work full-time until we have children and then we will transition to a model where the wife stays at home indefinitely as full-time housewife/homemaker."
+      ],
+      "weight": 5
+    },
+    {
+      "id": 16,
+      "section": "Your Marriage Life",
+      "subsection": "Relationship Model (Work/Family Life Boundaries - Travel)",
+      "type": "M",
+      "text": "Your Marriage Life: Relationship Model (Work/Family Life Boundaries - Travel)",
+      "options": [
+        "We commit to a marriage/work model where we agree to never be away from one another for more than a 7-day period, regardless of the commitment/project scope. If necessary, we will set a \"Come to me or I'll come to you\" plan in order to honor this expectation.",
+        "We commit to a marriage/work model where we agree to never be away from one another for more than a 10-day period, regardless of the commitment/project scope. If necessary, we will set a \"Come to me or I'll come to you\" plan in order to honor this expectation.",
+        "We commit to a marriage/work model where we agree to never be away from one another for more than a 3-day period, regardless of the commitment/project scope. If necessary, we will set a \"Come to me or I'll come to you\" plan in order to honor this expectation.",
+        "Other: Please detail___________"
+      ],
+      "weight": 5
+    },
+    {
+      "id": 17,
+      "section": "Your Marriage Life",
+      "subsection": "Relationship Model (Work/Family Life Boundaries - Work Down Time)",
+      "type": "M",
+      "text": "Your Marriage Life: Relationship Model (Work/Family Life Boundaries - Work Down Time)",
+      "options": [
+        "We commit to a marriage/work model where we agree to have a guarded period of at least 2 hours daily where it's our time to connect directly (not including children), and no work is to be done. Our preliminary guarded time is ________(am/pm)",
+        "We commit to a marriage/work model where we agree to have a guarded period of at least 1.5 hours daily where it's our time to connect directly (not including children), and no work is to be done. Our preliminary guarded time is ________(am/pm)",
+        "We commit to a marriage/work model where we agree to have a guarded period of at least 1 hour daily where it's our time to connect directly (not including children), and no work is to be done. Our preliminary guarded time is ________(am/pm)",
+        "Other: Please detail ___________"
+      ],
+      "weight": 5
+    },
+    {
+      "id": 18,
+      "section": "Your Marriage Life",
+      "subsection": "Relationship Model (Work/Family Life Boundaries - Late Night Work)",
+      "type": "M",
+      "text": "Your Marriage Life: Relationship Model (Work/Family Life Boundaries - Late Night Work at Office/Home)",
+      "options": [
+        "We commit to a marriage/work model where we agree to have no more than 2 late night workdays either at the office or at home (i.e., not going to bed with your spouse), per week.",
+        "We commit to a marriage/work model where we agree to have no more than 1 late night workdays either at the office or at home (i.e., not going to bed with your spouse), per week.",
+        "Given the nature of our work, we do not believe this commitment would align well for us.",
+        "Other: Please detail ___________"
+      ],
+      "weight": 5
+    },
+    {
+      "id": 19,
+      "section": "Your Marriage Life",
+      "subsection": "Dedicated Time (Fellowship)",
+      "type": "M",
+      "text": "Your Marriage Life: Dedicated Time (Fellowship)",
+      "options": [
+        "We commit to a weekly date night on ____ (guarded day, no children if applicable)",
+        "We commit to a bi-weekly date night on ____ (guarded day, no children if applicable)",
+        "Other: Please detail ___________"
+      ],
+      "weight": 5
+    },
+    {
+      "id": 20,
+      "section": "Your Marriage Life",
+      "subsection": "Sex Perspective: Declaration",
+      "type": "D",
+      "text": "Your Marriage Life: Sex Perspective: Declaration",
+      "options": [
+        "We share the belief that sex in marriage is a duty before God and not a conditional expression of love and honor. As such, we believe we not only have the opportunity to have sex in marriage, but also, we each have the equal responsibility to have sex with each other regularly in marriage, unless only for a short pause due to a mutual commitment to prayer or fasting or for an unexpected health challenge."
+      ],
+      "weight": 5
+    },
+    {
+      "id": 21,
+      "section": "Your Marriage Life",
+      "subsection": "Sex - Frequency",
+      "type": "M",
+      "text": "Your Marriage Life: Sex - Frequency",
+      "options": [
+        "We commit to having sex at least 3 times per week",
+        "We commit to having sex daily",
+        "We commit to having sex at least 2 times per week"
+      ],
+      "weight": 5
+    },
+    {
+      "id": 22,
+      "section": "Your Marriage Life",
+      "subsection": "Sex - Initiation",
+      "type": "M",
+      "text": "Your Marriage Life: Sex - Initiation",
+      "options": [
+        "We commit to alternating who initiates sex by week.",
+        "We commit to alternating who initiates sex by day/instance.",
+        "We commit to \"letting it flow\" naturally without a set alternation schedule, with that said, we each willingly acknowledge it is not the responsibility of one spouse to initiate a duty before God."
+      ],
+      "weight": 5
+    }
+  ]
+}

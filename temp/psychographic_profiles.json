@@ -1,0 +1,372 @@
+[
+  {
+    "id": 1,
+    "name": "Steadfast Believers",
+    "type": "Unisex",
+    "score_range": {
+      "min": 721,
+      "max": 800,
+      "out_of_59_questions": "~420"
+    },
+    "description": "Steadfast Believers are deeply rooted in their faith, viewing it as the cornerstone of their marriage and family life. They prioritize a traditional, biblical approach to relationships, emphasizing lifelong commitment, clear priorities, and structured routines that reinforce their values. They are highly communicative, ensuring conflicts are resolved in alignment with their faith-based principles, and they maintain consistent, practical habits like weekly date nights and daily family dinners. This profile excels in creating a stable, predictable environment but may struggle with flexibility when faced with differing perspectives.",
+    "key_traits": [
+      "Strong faith foundation (Q1: Believe in Christ = 36, Q2: Accountability = 12)",
+      "Committed to lifelong marriage (Q7: No divorce = 12, Q8: No legal agreements = 12)",
+      "Practical in daily routines (Q19: Weekly date night = 7, Q64: Daily family dinner = 3)",
+      "Highly communicative (Q28–36: Mostly 7, e.g., Q28: No fighting in front of others = 7)",
+      "Traditional priorities (Q13: God, Spouse, Children = 12, Q14: Wife takes husband's name = 12)"
+    ],
+    "strengths": [
+      "Unwavering commitment to faith and marriage, providing a strong foundation for partnership",
+      "Excellent communication and conflict resolution, ensuring alignment on core values",
+      "Consistent routines that foster family unity and connection"
+    ],
+    "weaknesses": [
+      "May be rigid in expectations, struggling to adapt to modern or differing viewpoints",
+      "Can come across as overly traditional, potentially clashing with more progressive partners",
+      "Less flexible in lifestyle choices (e.g., Q38: Specific city preference = 4)"
+    ],
+    "example_responses": {
+      "Q1 (Faith)": "Believe in Christ (36 points)",
+      "Q7 (Divorce)": "No divorce (biblical/safety) (12 points)",
+      "Q13 (Order of Priority)": "God, Spouse, Children (12 points)",
+      "Q19 (Date night)": "Weekly date night (7 points)",
+      "Q28 (Conflict Resolution)": "No fighting in front of others (7 points)",
+      "Q64 (Family Dinner)": "Daily family dinner (3 points)"
+    },
+    "representative_example": "ID 19 (Man, score ~420): High score, strong faith alignment, traditional values, and consistent routines. Also seen in ID 49 (Woman, score ~415), who shares similar traits but with slightly more flexibility in lifestyle choices."
+  },
+  {
+    "id": 2,
+    "name": "Harmonious Planners",
+    "type": "Unisex",
+    "score_range": {
+      "min": 641,
+      "max": 720,
+      "out_of_59_questions": "~415"
+    },
+    "description": "Harmonious Planners strike a balance between faith and practicality, ensuring their spiritual beliefs guide their daily life while maintaining a structured approach to relationships. They prioritize regular connection through practices like daily prayer and weekly date nights, and they excel in communication, resolving conflicts with clear boundaries. They are more flexible than Steadfast Believers, willing to adapt on logistical matters like location or city type, but they still value planning and intentionality in their marriage. Their challenge lies in over-planning, which can lead to stress if expectations aren't met.",
+    "key_traits": [
+      "Balanced faith (Q1: Believe in Christ = 36, Q10: Daily prayer = 7)",
+      "Connection-focused (Q19: Weekly date night = 7, Q27: Weekly check-in = 7)",
+      "Strong communication (Q28–36: Mostly 7, e.g., Q31: No more than 24 hours without speaking = 7)",
+      "Flexible in lifestyle (Q38: Flexible location = 7, Q39: Flexible city type = 3)",
+      "Practical routines (Q64: Daily family dinner = 3)"
+    ],
+    "strengths": [
+      "Intentional approach to faith and relationship-building, fostering deep connection",
+      "Excellent conflict resolution skills, ensuring harmony in the relationship",
+      "Adaptable on logistical matters, making them versatile partners"
+    ],
+    "weaknesses": [
+      "Over-planning can lead to stress or disappointment if plans don't align",
+      "May struggle with spontaneity, preferring structure over flexibility in some areas",
+      "Slightly less rigid on foundational issues than Steadfast Believers, which may cause misalignment with highly traditional partners"
+    ],
+    "example_responses": {
+      "Q1 (Faith)": "Believe in Christ (36 points)",
+      "Q10 (Worship Life)": "Daily prayer (7 points)",
+      "Q19 (Date night)": "Weekly date night (7 points)",
+      "Q31 (Conflict Resolution)": "No more than 24 hours without speaking (7 points)",
+      "Q38 (Living – Rooting)": "Flexible location (7 points)",
+      "Q64 (Family Dinner)": "Daily family dinner (3 points)"
+    },
+    "representative_example": "ID 49 (Woman, score ~415): High score, balanced faith and practicality, excellent communication, and flexibility in lifestyle. Also seen in ID 29 (Man, score ~400), who shares similar traits but with a more leadership-oriented approach."
+  },
+  {
+    "id": 3,
+    "name": "Flexible Faithful",
+    "type": "Unisex",
+    "score_range": {
+      "min": 561,
+      "max": 640,
+      "out_of_59_questions": "~280-310"
+    },
+    "description": "Flexible Faithful individuals maintain a moderate commitment to faith, often aligning with Christian values but showing openness to those still exploring their beliefs. They focus on practicality in daily life, such as maintaining work/life balance and bi-weekly date nights, and they value communication, particularly in avoiding public conflicts. They are highly adaptable in logistical matters like city type or home preferences, making them versatile partners. However, their less rigid stance on foundational issues may lead to challenges in aligning with partners who prioritize strict faith-based principles.",
+    "key_traits": [
+      "Moderate faith commitment (Q1: Believe in Christ = 36 or Plan to accept = 18)",
+      "Practical in daily life (Q15: Both work full-time = 7, Q19: Bi-weekly date night = 4)",
+      "Open to communication (Q28: No fighting in front of others = 7)",
+      "Highly adaptable (Q39: Flexible city type = 3, Q40: Flexible domestic/international = 3)",
+      "Behavioral routines (Q64: Daily or weekly family dinner = 2–3)"
+    ],
+    "strengths": [
+      "Adaptable and pragmatic, making them easy to live with in diverse circumstances",
+      "Good communication skills, particularly in maintaining privacy during conflicts",
+      "Balanced approach to faith and practicality, appealing to a wide range of partners"
+    ],
+    "weaknesses": [
+      "May lack deep conviction on foundational issues, causing potential misalignment with highly traditional partners",
+      "Less consistent in structured routines compared to higher-scoring profiles",
+      "Moderate faith commitment may be a mismatch for those with stronger spiritual expectations"
+    ],
+    "example_responses": {
+      "Q1 (Faith)": "Believe in Christ or Plan to accept Christ (18-36 points)",
+      "Q15 (Work/Home)": "Both work full-time (7 points)",
+      "Q19 (Date night)": "Bi-weekly date night (4 points)",
+      "Q28 (Conflict Resolution)": "No fighting in front of others (7 points)",
+      "Q39 (City Type)": "Flexible (3 points)",
+      "Q64 (Family Dinner)": "Weekly family dinner (2 points)"
+    },
+    "representative_example": "ID 46 (Woman, score ~275): Moderate score, balanced faith, practical routines, and adaptability. Also seen in ID 21 (Man, score ~290), who shares similar flexibility but with a slightly stronger faith alignment."
+  },
+  {
+    "id": 4,
+    "name": "Pragmatic Partners",
+    "type": "Unisex",
+    "score_range": {
+      "min": 321,
+      "max": 400,
+      "out_of_59_questions": "~215-250"
+    },
+    "description": "Pragmatic Partners focus on the practical aspects of marriage, prioritizing work/life balance and logistical compatibility over strict faith alignment. They often have a moderate faith commitment, valuing Christian principles but not emphasizing them as the sole driver of their relationship. They may struggle with communication, showing gaps in conflict resolution (e.g., sleeping angry or using silence), but they excel in adaptability, particularly in lifestyle choices like home type or location. Their challenge lies in building deeper emotional connections, as their focus on practicality can overshadow relational intimacy.",
+    "key_traits": [
+      "Practical focus (Q15–18: Work/life balance = 4–7, e.g., Q16: Max 10 days apart = 4)",
+      "Moderate faith (Q1: Believe in Christ = 36)",
+      "Communication gaps (Q28–36: Mixed, e.g., Q31: 24 hours = 7, Q33: Sleep angry = 0)",
+      "Flexible in lifestyle (Q41: Home type = 3, Q38: Flexible location = 7)",
+      "Behavioral routines (Q19: Bi-weekly date night = 4, Q64: Weekly dinner = 2)"
+    ],
+    "strengths": [
+      "Highly practical, ensuring logistical compatibility in daily life",
+      "Adaptable in lifestyle choices, making them easy to live with in varied settings",
+      "Moderate faith alignment allows for broader compatibility with less traditional partners"
+    ],
+    "weaknesses": [
+      "Struggles with deeper emotional connection due to communication gaps",
+      "Less consistent in faith-driven practices, which may misalign with highly spiritual partners",
+      "May prioritize practicality over relational or spiritual intimacy"
+    ],
+    "example_responses": {
+      "Q1 (Faith)": "Believe in Christ (36 points)",
+      "Q15 (Work/Home)": "Both work full-time (7 points)",
+      "Q19 (Date night)": "Bi-weekly date night (4 points)",
+      "Q31 (Conflict Resolution)": "No more than 24 hours without speaking (7 points)",
+      "Q33 (Conflict Resolution)": "Sleep angry (0 points)",
+      "Q41 (Home Type)": "Single-family house (3 points)"
+    },
+    "representative_example": "ID 45 (Woman, score ~235): Middle score, practical focus, some communication gaps, and flexibility. Also seen in ID 47 (Man, score ~215), who shares similar traits but with a slightly stronger emphasis on traditional roles."
+  },
+  {
+    "id": 5,
+    "name": "Individualist Seekers",
+    "type": "Unisex",
+    "score_range": {
+      "min": 0,
+      "max": 80,
+      "out_of_59_questions": "~200-210"
+    },
+    "description": "Individualist Seekers prioritize independence and personal freedom over strict alignment on faith or relational structure. They often lack a strong faith foundation, selecting 'Other' or 'Plan to accept Christ' in faith-related questions, and they show minimal commitment to traditional marriage principles like lifelong commitment or structured routines. Communication is a significant challenge, as they may not adhere to conflict resolution boundaries, and they lack consistency in behavioral practices like date nights or family dinners. Their flexibility in lifestyle choices makes them adaptable, but their misalignment on core values makes them difficult to match with most partners.",
+    "key_traits": [
+      "Independent mindset (Q1–2: Other = 0, Q7: Other = 0)",
+      "Uncommitted to routines (Q19: No date night = 0, Q64: Weekly dinner = 0)",
+      "Minimal communication structure (Q28–36: Mostly 0, e.g., Q28: Fighting in front = 0)",
+      "Flexible in lifestyle (Q38–41: Mixed, e.g., Q39: Flexible city type = 3)",
+      "Behavioral gaps (Q55–58: Social media exposure = 0, no restrictions)"
+    ],
+    "strengths": [
+      "Highly independent, allowing for personal freedom in relationships",
+      "Adaptable in logistical matters, open to varied living arrangements",
+      "Unconstrained by traditional expectations, potentially appealing to like-minded partners"
+    ],
+    "weaknesses": [
+      "Significant misalignment on core values, making matching difficult",
+      "Poor communication and conflict resolution skills, leading to relational challenges",
+      "Lack of structured routines can create instability in family life"
+    ],
+    "example_responses": {
+      "Q1 (Faith)": "Other (0 points)",
+      "Q7 (Divorce)": "Other (0 points)",
+      "Q19 (Date night)": "Other (0 points)",
+      "Q28 (Conflict Resolution)": "Fighting in front of others (0 points)",
+      "Q39 (City Type)": "Flexible (3 points)",
+      "Q64 (Family Dinner)": "Weekly family dinner (0 points)"
+    },
+    "representative_example": "ID 53 (Woman, score ~200): Low score, independent mindset, minimal structure, and flexibility. Also seen in ID 10 (Woman, score ~240), who shares similar independence but with slightly more traditional leanings."
+  },
+  {
+    "id": 6,
+    "name": "Relational Nurturers",
+    "type": "Women-Specific",
+    "score_range": {
+      "min": 601,
+      "max": 680,
+      "out_of_59_questions": "~390-415"
+    },
+    "description": "Relational Nurturers, primarily women, are deeply committed to faith while prioritizing relational intimacy and emotional connection in their marriages. They align strongly with Christian values and emphasize communication, ensuring conflicts are resolved with care and privacy. They show flexibility in sex frequency, reflecting a nurturing approach to intimacy, and are adaptable in lifestyle choices like city type or home preferences. Their focus on relational aspects can sometimes overshadow practical logistics, making them less structured in routines compared to other high-scoring profiles.",
+    "key_traits": [
+      "Strong faith (Q1: Believe in Christ = 36, Q2: Accountability = 12)",
+      "Relational focus (Q21: Sex frequency varies, e.g., 5/51 women select 'Daily' = 12)",
+      "Highly communicative (Q28–36: Mostly 7, e.g., Q28: No fighting in front = 7)",
+      "Flexible in lifestyle (Q39: 30/51 women flexible = 3, Q41: Home type = 3)",
+      "Practical but less structured (Q19: Weekly date night = 7, Q64: Daily dinner = 3)"
+    ],
+    "strengths": [
+      "Deep emotional connection, fostering intimacy and understanding in relationships",
+      "Strong faith alignment, providing a spiritual foundation for marriage",
+      "Excellent communication, ensuring relational harmony"
+    ],
+    "weaknesses": [
+      "May over-prioritize relational aspects, neglecting practical logistics",
+      "Flexibility in some areas (e.g., sex frequency) may lead to mismatched expectations with more traditional partners",
+      "Less structured in routines compared to Steadfast Believers"
+    ],
+    "example_responses": {
+      "Q1 (Faith)": "Believe in Christ (36 points)",
+      "Q21 (Sex Frequency)": "Daily or 3x/week (12 points)",
+      "Q28 (Conflict Resolution)": "No fighting in front of others (7 points)",
+      "Q39 (City Type)": "Flexible (3 points)",
+      "Q64 (Family Dinner)": "Daily family dinner (3 points)",
+      "Q19 (Date night)": "Weekly date night (7 points)"
+    },
+    "representative_example": "ID 49 (Woman, score ~415): High score, strong faith, relational focus, and flexibility in lifestyle choices."
+  },
+  {
+    "id": 7,
+    "name": "Adaptive Communicators",
+    "type": "Women-Specific",
+    "score_range": {
+      "min": 401,
+      "max": 480,
+      "out_of_59_questions": "~260-275"
+    },
+    "description": "Adaptive Communicators, primarily women, balance faith with a strong emphasis on communication and adaptability. They align with Christian values but are less rigid than higher-scoring profiles, focusing on practical daily life and maintaining harmony through clear conflict resolution boundaries. They are highly flexible in lifestyle choices, such as location or city type, and they prioritize practical routines like daily family dinners. Their tendency to compromise can sometimes lead to overlooking their own preferences, making them overly accommodating in relationships.",
+    "key_traits": [
+      "Balanced faith (Q1: Believe in Christ = 36)",
+      "Strong communication (Q28–36: Mostly 7, e.g., Q31: No more than 24 hours = 7)",
+      "Highly adaptable (Q38: Flexible location = 7, Q39: Flexible city type = 3)",
+      "Practical routines (Q64: Daily family dinner = 3, Q19: Bi-weekly date night = 4)",
+      "Behavioral focus (Q55–58: Restrict social media exposure = 3)"
+    ],
+    "strengths": [
+      "Excellent communication skills, ensuring relational harmony",
+      "Highly adaptable, making them easy to live with in varied circumstances",
+      "Practical approach to family life, fostering stability through routines"
+    ],
+    "weaknesses": [
+      "May over-compromise, neglecting personal preferences in favor of harmony",
+      "Less rigid faith alignment may misalign with highly traditional partners",
+      "Moderate structure in routines compared to higher-scoring profiles"
+    ],
+    "example_responses": {
+      "Q1 (Faith)": "Believe in Christ (36 points)",
+      "Q19 (Date night)": "Bi-weekly date night (4 points)",
+      "Q31 (Conflict Resolution)": "No more than 24 hours without speaking (7 points)",
+      "Q38 (Living – Rooting)": "Flexible location (7 points)",
+      "Q64 (Family Dinner)": "Daily family dinner (3 points)",
+      "Q55 (Social Media – New Child)": "Limit exposure (3 points)"
+    },
+    "representative_example": "ID 46 (Woman, score ~275): Middle score, balanced faith, strong communication, and high adaptability."
+  },
+  {
+    "id": 8,
+    "name": "Independent Traditionalists",
+    "type": "Women-Specific",
+    "score_range": {
+      "min": 241,
+      "max": 320,
+      "out_of_59_questions": "~240-250"
+    },
+    "description": "Independent Traditionalists, primarily women, blend traditional values with a degree of independence in practical matters. They are committed to lifelong marriage and traditional roles, such as the wife taking the husband's name, but they show independence in work/life balance, often opting for flexibility in travel or downtime. Communication is a challenge, as they may struggle with conflict resolution boundaries, and they are less consistent in structured routines like date nights. Their traditional values can make it difficult to adapt to modern relational dynamics, posing challenges in matching.",
+    "key_traits": [
+      "Traditional values (Q7: No divorce = 12, Q14: Wife takes husband's name = 12)",
+      "Independent in practicality (Q15–18: Mixed, e.g., Q16: Max 10 days apart = 4)",
+      "Communication challenges (Q28–36: Mixed, e.g., Q33: Sleep angry = 0)",
+      "Varied lifestyle preferences (Q39–41: Mixed, e.g., Q39: Specific city = 2)",
+      "Behavioral gaps (Q19: Bi-weekly or no date night = 0–4)"
+    ],
+    "strengths": [
+      "Strong commitment to traditional marriage principles, appealing to like-minded partners",
+      "Independent in practical matters, allowing for flexibility in daily life",
+      "Moderate faith alignment provides some common ground with traditional partners"
+    ],
+    "weaknesses": [
+      "Struggles with modern relational dynamics due to traditional mindset",
+      "Communication gaps can lead to unresolved conflicts",
+      "Inconsistent routines may create instability in family life"
+    ],
+    "example_responses": {
+      "Q1 (Faith)": "Believe in Christ (36 points)",
+      "Q7 (Divorce)": "No divorce (biblical/safety) (12 points)",
+      "Q14 (Family Name)": "Wife takes husband's name (12 points)",
+      "Q16 (Travel)": "Max 10 days apart (4 points)",
+      "Q33 (Conflict Resolution)": "Sleep angry (0 points)",
+      "Q19 (Date night)": "Bi-weekly date night (4 points)"
+    },
+    "representative_example": "ID 10 (Woman, score ~240): Lower-middle score, traditional values, independent in practicality, and communication challenges."
+  },
+  {
+    "id": 9,
+    "name": "Faithful Protectors",
+    "type": "Men-Specific",
+    "score_range": {
+      "min": 641,
+      "max": 720,
+      "out_of_59_questions": "~400-420"
+    },
+    "description": "Faithful Protectors, primarily men, are deeply faith-driven and see themselves as guardians of their family's spiritual and relational well-being. They have a strong faith foundation, clear priorities (God, spouse, children), and traditional views on intimacy, viewing sex as a duty within marriage. They are practical in routines, maintaining weekly date nights and daily family dinners, and they excel in communication, ensuring conflicts are resolved with biblical principles. Their challenge lies in their lack of flexibility, particularly in lifestyle choices, which can make them less adaptable to modern or progressive partners.",
+    "key_traits": [
+      "Strong faith (Q1–2: Believe in Christ and Accountability = 36 and 12 respectively)",
+      "Clear priorities (Q13: 8/8 men score God, Spouse, Children = 12)",
+      "Traditional sex views (Q20: 8/8 men score Sex as duty = 12)",
+      "Practical routines (Q19: Weekly date night = 7, Q64: Daily dinner = 3)",
+      "Highly communicative (Q28–36: Mostly 7, e.g., Q28: No fighting in front = 7)"
+    ],
+    "strengths": [
+      "Strong spiritual leadership, providing a stable foundation for marriage",
+      "Clear priorities and traditional values, appealing to like-minded partners",
+      "Excellent communication and structured routines, fostering family unity"
+    ],
+    "weaknesses": [
+      "Lack of flexibility in lifestyle choices (e.g., Q38: Specific city = 4)",
+      "Traditional views may clash with more progressive partners",
+      "Less adaptable to modern relational dynamics"
+    ],
+    "example_responses": {
+      "Q1 (Faith)": "Believe in Christ (36 points)",
+      "Q13 (Order of Priority)": "God, Spouse, Children (12 points)",
+      "Q20 (Sex Perspective)": "Sex as duty (12 points)",
+      "Q19 (Date night)": "Weekly date night (7 points)",
+      "Q28 (Conflict Resolution)": "No fighting in front of others (7 points)",
+      "Q64 (Family Dinner)": "Daily family dinner (3 points)"
+    },
+    "representative_example": "ID 19 (Man, score ~420): High score, strong faith, traditional views, and structured routines."
+  },
+  {
+    "id": 10,
+    "name": "Structured Leaders",
+    "type": "Men-Specific",
+    "score_range": {
+      "min": 401,
+      "max": 480,
+      "out_of_59_questions": "~380-400"
+    },
+    "description": "Structured Leaders, primarily men, combine faith with a leadership-oriented approach to marriage. They align with Christian values and see themselves as the final authority in decision-making, reflecting a traditional mindset. They maintain structured routines, such as weekly date nights and daily family dinners, and they are consistent in communication, ensuring conflicts are resolved with clear boundaries. Their focus on leadership can sometimes lead to overlooking their partner's input, making them less collaborative in decision-making compared to other profiles.",
+    "key_traits": [
+      "Faith-driven (Q1: Believe in Christ = 36, Q2: Accountability = 12)",
+      "Leadership-focused (Q37: Husband as final authority = 12)",
+      "Structured routines (Q19: Weekly date night = 7, Q64: Daily dinner = 3)",
+      "Consistent communication (Q28–36: Mostly 7, e.g., Q31: 24 hours = 7)",
+      "Traditional priorities (Q13: God, Spouse, Children = 12)"
+    ],
+    "strengths": [
+      "Strong leadership, providing clarity and direction in the relationship",
+      "Consistent routines and communication, fostering stability and harmony",
+      "Faith-driven approach aligns well with traditional partners"
+    ],
+    "weaknesses": [
+      "May overlook partner's input in decision-making, leading to potential resentment",
+      "Less flexible in adapting to modern or egalitarian dynamics",
+      "Traditional mindset may not appeal to more progressive partners"
+    ],
+    "example_responses": {
+      "Q1 (Faith)": "Believe in Christ (36 points)",
+      "Q13 (Order of Priority)": "God, Spouse, Children (12 points)",
+      "Q37 (Decision Making)": "Husband as final authority (12 points)",
+      "Q19 (Date night)": "Weekly date night (7 points)",
+      "Q31 (Conflict Resolution)": "No more than 24 hours without speaking (7 points)",
+      "Q64 (Family Dinner)": "Daily family dinner (3 points)"
+    },
+    "representative_example": "ID 29 (Man, score ~400): Middle-high score, faith-driven, leadership-oriented, and structured in routines."
+  }
+]
