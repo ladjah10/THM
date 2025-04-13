@@ -245,8 +245,8 @@ export const questions: Question[] = [
     type: "D",
     text: "Your Marriage Life: Communication & Conflict Resolution:2 (24 hours) - I believe we should not go more than 24 hours without speaking.",
     options: [
-      "Agree",
-      "Disagree"
+      "We do believe couples should resolve conflicts and resume communication within 24 hours",
+      "We do not believe there should be a strict timeframe for resolving conflicts and resuming communication"
     ],
     weight: 5
   },
@@ -257,8 +257,8 @@ export const questions: Question[] = [
     type: "D",
     text: "Your Marriage Life: Communication & Conflict Resolution:3 (Text) - I believe we should not discuss serious issues via text.",
     options: [
-      "Agree",
-      "Disagree"
+      "We do believe serious relationship issues should be discussed in person rather than through text messages",
+      "We do not believe the medium of communication matters as much as clear expression of thoughts and feelings"
     ],
     weight: 3
   },
@@ -269,8 +269,8 @@ export const questions: Question[] = [
     type: "D",
     text: "Your Marriage Life: Communication & Conflict Resolution:4 (Sleep angry) - I believe we should not sleep angry.",
     options: [
-      "Agree",
-      "Disagree"
+      "We do believe couples should resolve conflicts before going to bed and not sleep while angry",
+      "We do not believe every conflict must be resolved before sleeping and sometimes rest can provide needed perspective"
     ],
     weight: 3
   },
@@ -281,8 +281,8 @@ export const questions: Question[] = [
     type: "D",
     text: "Your Marriage Life: Communication & Conflict Resolution:5 (Same bed) - I believe we should always sleep in the same bed.",
     options: [
-      "Agree",
-      "Disagree"
+      "We do believe couples should always sleep in the same bed to maintain intimacy and connection",
+      "We do not believe sleeping in separate beds occasionally compromises the marriage relationship"
     ],
     weight: 3
   },
