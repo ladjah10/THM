@@ -47,7 +47,7 @@ export const questions: Question[] = [
     text: "Your Foundation: Marriage & Your Children's Faith - How do you plan to raise your children?",
     options: [
       "We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ",
-      "Disagree"
+      "We do not believe we have a responsibility to raise our children according to any specific faith tradition and prefer to let them choose their own spiritual path when they're old enough to decide"
     ],
     weight: 12
   },
@@ -73,7 +73,7 @@ export const questions: Question[] = [
     text: "Your Foundation: Marriage Preparation: Legal (Incapacitation) - What is your position on Power of Attorney?",
     options: [
       "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing our spouse as Power of Attorney before our marriage date",
-      "Disagree"
+      "We do not believe it's necessary to establish Power of Attorney before marriage and prefer to address this matter later if and when it becomes relevant"
     ],
     weight: 5
   },
@@ -85,7 +85,7 @@ export const questions: Question[] = [
     text: "Your Foundation: Marriage Preparation: Legal (Estate) - What is your position on creating a will?",
     options: [
       "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing completing a notarized copy of our will before our marriage date",
-      "Disagree"
+      "We do not believe creating a will is necessary before marriage and prefer to address estate planning at a later stage in our relationship"
     ],
     weight: 5
   },
@@ -97,7 +97,7 @@ export const questions: Question[] = [
     text: "Your Foundation: Marriage Mindset: Divorce - What is your position on divorce?",
     options: [
       "We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, 'Falling Out of Love', 'Growing Apart', 'Irreconcilable Differences'",
-      "Disagree"
+      "We believe that while marriage is intended to be lifelong, divorce may be a reasonable option in a wider range of circumstances, including when personal happiness and fulfillment are severely compromised"
     ],
     weight: 12
   },
@@ -221,8 +221,8 @@ export const questions: Question[] = [
     type: "D",
     text: "Your Marriage Life: Communication & Conflict Resolution - I believe we should not fight in front of others.",
     options: [
-      "Agree",
-      "Disagree"
+      "We do believe disagreements should be kept private and not conducted in front of others",
+      "We do not believe all disagreements need to be hidden from others and some can be respectfully discussed in public"
     ],
     weight: 6
   },
@@ -233,8 +233,8 @@ export const questions: Question[] = [
     type: "D",
     text: "Your Marriage Life: Communication & Conflict Resolution (Discuss with others) - I believe we should never discuss issues with others before discussing with spouse.",
     options: [
-      "Agree",
-      "Disagree"
+      "We do believe all marital issues should be discussed with our spouse before sharing with others",
+      "We do not believe it's always necessary to discuss issues with our spouse first before seeking outside perspective"
     ],
     weight: 10
   },
@@ -577,6 +577,68 @@ export const questions: Question[] = [
     weight: 5
   },
   
+  // Add more declaration questions for Marriage Life
+  {
+    id: 62,
+    section: "Your Marriage Life",
+    subsection: "Social Media Boundaries",
+    type: "D",
+    text: "Your Marriage Life: Social Media Boundaries - I believe we should have access to each other's social media accounts.",
+    options: [
+      "We do believe spouses should have access to each other's social media accounts for transparency and trust",
+      "We do not believe spouses should have access to each other's social media accounts as this infringes on personal privacy"
+    ],
+    weight: 4
+  },
+  {
+    id: 63,
+    section: "Your Marriage Life",
+    subsection: "Phone Privacy",
+    type: "D",
+    text: "Your Marriage Life: Phone Privacy - I believe we should have access to each other's phones.",
+    options: [
+      "We do believe spouses should have full access to each other's phones and passwords",
+      "We do not believe spouses need access to each other's phones as that violates personal privacy"
+    ],
+    weight: 4
+  },
+  {
+    id: 64,
+    section: "Your Marriage Life",
+    subsection: "Friendship Boundaries",
+    type: "D",
+    text: "Your Marriage Life: Friendship Boundaries - I believe we should limit close friendships with the opposite sex.",
+    options: [
+      "We do believe spouses should limit close one-on-one friendships with the opposite sex out of respect for our marriage",
+      "We do not believe limiting friendships based on gender is necessary in a trusting marriage"
+    ],
+    weight: 5
+  },
+  {
+    id: 65,
+    section: "Your Marriage Life",
+    subsection: "Spiritual Leadership",
+    type: "D",
+    text: "Your Marriage Life: Spiritual Leadership - I believe the husband should be the spiritual leader of the home.",
+    options: [
+      "We do believe the husband should take primary responsibility for spiritual leadership in the home",
+      "We do not believe spiritual leadership is gender-specific and should be shared equally"
+    ],
+    weight: 6
+  },
+  {
+    id: 66,
+    section: "Your Marriage Life",
+    subsection: "Financial Decisions",
+    type: "D",
+    text: "Your Marriage Life: Financial Decisions - I believe major financial decisions should be made together.",
+    options: [
+      "We do believe all major financial decisions should be discussed and agreed upon by both spouses",
+      "We do not believe all financial decisions need joint approval and each spouse should have some autonomy"
+    ],
+    weight: 6
+  },
+  
   // YOUR FAMILY/HOME LIFE
   {
     id: 43,
@@ -843,5 +905,403 @@ export const questions: Question[] = [
       "No specific expectations"
     ],
     weight: 5
+  },
+  
+  // Add additional declaration questions (67-99) to reach 99 total
+  {
+    id: 67,
+    section: "Your Faith Life",
+    subsection: "Bible Study",
+    type: "D",
+    text: "Your Faith Life: Bible Study - I believe we should have regular Bible study together.",
+    options: [
+      "We do believe in having regular Bible study together as a couple",
+      "We do not believe regular couple Bible study is necessary as long as we each maintain our own spiritual disciplines"
+    ],
+    weight: 5
+  },
+  {
+    id: 68,
+    section: "Your Faith Life",
+    subsection: "Faith Mentorship",
+    type: "D",
+    text: "Your Faith Life: Faith Mentorship - I believe we should have spiritual mentors for our marriage.",
+    options: [
+      "We do believe having spiritual mentors or counselors for our marriage is important",
+      "We do not believe having formal spiritual mentors is necessary for a healthy marriage"
+    ],
+    weight: 4
+  },
+  {
+    id: 69,
+    section: "Your Faith Life",
+    subsection: "Sabbath Observance",
+    type: "D",
+    text: "Your Faith Life: Sabbath Observance - I believe we should set aside a sabbath day for rest and worship.",
+    options: [
+      "We do believe in setting aside a specific sabbath day for rest and worship", 
+      "We do not believe formally observing a sabbath day is necessary for our faith practice"
+    ],
+    weight: 3
+  },
+  {
+    id: 70,
+    section: "Your Parenting Life",
+    subsection: "Religious Education",
+    type: "D",
+    text: "Your Parenting Life: Religious Education - I believe our children should attend religious schools.",
+    options: [
+      "We do believe our children should attend religious schools for their education",
+      "We do not believe religious schools are necessary for our children's education"
+    ],
+    weight: 5
+  },
+  {
+    id: 71,
+    section: "Your Parenting Life",
+    subsection: "Gender Roles",
+    type: "D",
+    text: "Your Parenting Life: Gender Roles - I believe we should raise our children with traditional gender roles.",
+    options: [
+      "We do believe in raising our children with traditional gender roles and expectations",
+      "We do not believe in emphasizing traditional gender roles when raising our children"
+    ],
+    weight: 6
+  },
+  {
+    id: 72,
+    section: "Your Parenting Life",
+    subsection: "Technology Access",
+    type: "D",
+    text: "Your Parenting Life: Technology Access - I believe we should strictly limit our children's access to technology.",
+    options: [
+      "We do believe in strictly limiting and monitoring our children's access to technology",
+      "We do not believe in strict limitations on technology but rather teaching responsible use"
+    ],
+    weight: 4
+  },
+  {
+    id: 73,
+    section: "Your Parenting Life",
+    subsection: "Allowance",
+    type: "D",
+    text: "Your Parenting Life: Allowance - I believe children should earn allowance through chores.",
+    options: [
+      "We do believe children should earn allowance through completing chores and responsibilities",
+      "We do not believe allowance should be tied to chores as children should contribute to the household regardless"
+    ],
+    weight: 3
+  },
+  {
+    id: 74,
+    section: "Your Parenting Life",
+    subsection: "Extended Family Childcare",
+    type: "D",
+    text: "Your Parenting Life: Extended Family Childcare - I believe extended family should be involved in childcare.",
+    options: [
+      "We do believe extended family should be regularly involved in caring for our children",
+      "We do not believe extended family should have a primary role in providing regular childcare"
+    ],
+    weight: 4
+  },
+  {
+    id: 75,
+    section: "Your Family/Home Life",
+    subsection: "Housework Division",
+    type: "D",
+    text: "Your Family/Home Life: Housework Division - I believe housework should be divided based on traditional gender roles.",
+    options: [
+      "We do believe housework should generally follow traditional gender role divisions",
+      "We do not believe housework should be divided based on gender but rather on preferences and availability"
+    ],
+    weight: 5
+  },
+  {
+    id: 76,
+    section: "Your Family/Home Life",
+    subsection: "Home Decor Decisions",
+    type: "D",
+    text: "Your Family/Home Life: Home Decor Decisions - I believe home decoration decisions should be made together.",
+    options: [
+      "We do believe all home decoration decisions should be made jointly",
+      "We do not believe all decoration decisions need joint approval and can be more independent"
+    ],
+    weight: 3
+  },
+  {
+    id: 77,
+    section: "Your Family/Home Life",
+    subsection: "Pet Ownership",
+    type: "D",
+    text: "Your Family/Home Life: Pet Ownership - I believe pets are important members of the family.",
+    options: [
+      "We do believe pets are important family members and should be treated as such",
+      "We do not believe pets should be considered equivalent to family members"
+    ],
+    weight: 3
+  },
+  {
+    id: 78,
+    section: "Your Family/Home Life",
+    subsection: "Television Time",
+    type: "D",
+    text: "Your Family/Home Life: Television Time - I believe we should limit television/screen time in our home.",
+    options: [
+      "We do believe in setting strict limits on television and screen time in our home",
+      "We do not believe strict screen time limits are necessary as long as other responsibilities are met"
+    ],
+    weight: 3
+  },
+  {
+    id: 79,
+    section: "Your Finances",
+    subsection: "Saving Priority",
+    type: "D",
+    text: "Your Finances: Saving Priority - I believe saving for the future should be a top financial priority.",
+    options: [
+      "We do believe saving for the future should take priority over current lifestyle expenses",
+      "We do not believe aggressive saving should come at the expense of enjoying life in the present"
+    ],
+    weight: 5
+  },
+  {
+    id: 80,
+    section: "Your Finances",
+    subsection: "Financial Transparency",
+    type: "D",
+    text: "Your Finances: Financial Transparency - I believe we should have complete transparency about all spending.",
+    options: [
+      "We do believe in complete transparency and detailed accounting of all spending",
+      "We do not believe every purchase needs to be reported as long as the budget is respected"
+    ],
+    weight: 5
+  },
+  {
+    id: 81,
+    section: "Your Finances",
+    subsection: "Lending to Family",
+    type: "D",
+    text: "Your Finances: Lending to Family - I believe we should lend money to family members in need.",
+    options: [
+      "We do believe in lending or giving money to family members in need when we are able",
+      "We do not believe in lending money to family as it can create relationship complications"
+    ],
+    weight: 5
+  },
+  {
+    id: 82,
+    section: "Your Finances",
+    subsection: "Financial Education",
+    type: "D",
+    text: "Your Finances: Financial Education - I believe we should actively educate ourselves about finances.",
+    options: [
+      "We do believe in continually educating ourselves about financial management and investing",
+      "We do not believe extensive financial education is necessary beyond basic budgeting skills"
+    ],
+    weight: 4
+  },
+  {
+    id: 83,
+    section: "Your Finances",
+    subsection: "Giving Decisions",
+    type: "D",
+    text: "Your Finances: Giving Decisions - I believe charitable giving decisions should be made jointly.",
+    options: [
+      "We do believe all charitable giving decisions should be made together as a couple",
+      "We do not believe all giving requires joint approval and each spouse should have some autonomy"
+    ],
+    weight: 4
+  },
+  {
+    id: 84,
+    section: "Your Health and Wellness",
+    subsection: "Diet Expectations",
+    type: "D",
+    text: "Your Health and Wellness: Diet Expectations - I believe we should follow the same dietary approach.",
+    options: [
+      "We do believe spouses should generally follow the same dietary approach",
+      "We do not believe spouses need to follow identical diets and can have individual approaches"
+    ],
+    weight: 3
+  },
+  {
+    id: 85,
+    section: "Your Health and Wellness",
+    subsection: "Medical Approaches",
+    type: "D",
+    text: "Your Health and Wellness: Medical Approaches - I believe in using alternative/holistic medicine alongside conventional medicine.",
+    options: [
+      "We do believe in incorporating alternative/holistic approaches alongside conventional medicine",
+      "We do not believe in alternative medicine and prefer to rely solely on conventional medical treatments"
+    ],
+    weight: 4
+  },
+  {
+    id: 86,
+    section: "Your Health and Wellness",
+    subsection: "Regular Checkups",
+    type: "D",
+    text: "Your Health and Wellness: Regular Checkups - I believe in getting regular preventative medical checkups.",
+    options: [
+      "We do believe in getting regular preventative medical and dental checkups",
+      "We do not believe routine checkups are necessary unless specific health concerns arise"
+    ],
+    weight: 4
+  },
+  {
+    id: 87,
+    section: "Your Health and Wellness",
+    subsection: "Mental Health Openness",
+    type: "D",
+    text: "Your Health and Wellness: Mental Health Openness - I believe in being open about mental health struggles.",
+    options: [
+      "We do believe in openly discussing and seeking help for mental health struggles",
+      "We do not believe mental health issues need to be widely discussed outside of professional treatment"
+    ],
+    weight: 5
+  },
+  {
+    id: 88,
+    section: "Your Health and Wellness",
+    subsection: "Health Accountability",
+    type: "D",
+    text: "Your Health and Wellness: Health Accountability - I believe spouses should hold each other accountable for health goals.",
+    options: [
+      "We do believe spouses should actively hold each other accountable for health goals",
+      "We do not believe in imposing accountability and each person should manage their own health goals"
+    ],
+    weight: 4
+  },
+  {
+    id: 89,
+    section: "Your Marriage and Boundaries",
+    subsection: "Device-Free Time",
+    type: "D",
+    text: "Your Marriage and Boundaries: Device-Free Time - I believe we should have regular device-free time together.",
+    options: [
+      "We do believe in having regular scheduled device-free time for connection",
+      "We do not believe formally scheduling device-free time is necessary"
+    ],
+    weight: 4
+  },
+  {
+    id: 90,
+    section: "Your Marriage and Boundaries",
+    subsection: "Relationship Openness",
+    type: "D",
+    text: "Your Marriage and Boundaries: Relationship Openness - I believe we should be completely open about past relationships.",
+    options: [
+      "We do believe in complete transparency about past relationships",
+      "We do not believe detailed discussion of past relationships is necessary or helpful"
+    ],
+    weight: 4
+  },
+  {
+    id: 91,
+    section: "Your Marriage and Boundaries",
+    subsection: "Travel Boundaries",
+    type: "D",
+    text: "Your Marriage and Boundaries: Travel Boundaries - I believe spouses should rarely travel alone overnight.",
+    options: [
+      "We do believe spouses should rarely travel alone overnight when possible",
+      "We do not believe restricting solo overnight travel is necessary in a trusting relationship"
+    ],
+    weight: 4
+  },
+  {
+    id: 92,
+    section: "Your Marriage and Boundaries",
+    subsection: "Emotional Confidants",
+    type: "D",
+    text: "Your Marriage and Boundaries: Emotional Confidants - I believe spouses should be each other's primary emotional confidants.",
+    options: [
+      "We do believe spouses should be each other's primary emotional confidants",
+      "We do not believe spouses must be each other's only or primary emotional support"
+    ],
+    weight: 5
+  },
+  {
+    id: 93,
+    section: "Your Marriage and Boundaries",
+    subsection: "Relational History",
+    type: "D",
+    text: "Your Marriage and Boundaries: Relational History - I believe maintaining contact with exes is inappropriate.",
+    options: [
+      "We do believe maintaining contact with ex-partners is generally inappropriate",
+      "We do not believe all contact with exes is inappropriate as long as boundaries are clear"
+    ],
+    weight: 5
+  },
+  {
+    id: 94,
+    section: "Your Faith Life",
+    subsection: "Faith Expressions",
+    type: "D",
+    text: "Your Faith Life: Faith Expressions - I believe we should express our faith publicly.",
+    options: [
+      "We do believe in openly and publicly expressing our faith in various settings",
+      "We do not believe faith needs to be publicly displayed and can be more private in nature"
+    ],
+    weight: 4
+  },
+  {
+    id: 95,
+    section: "Your Faith Life",
+    subsection: "Interfaith Relationships",
+    type: "D",
+    text: "Your Faith Life: Interfaith Relationships - I believe we should have close friendships with people of other faiths.",
+    options: [
+      "We do believe in cultivating close friendships with people of different faith backgrounds",
+      "We do not believe in prioritizing relationships with those who don't share our core faith values"
+    ],
+    weight: 4
+  },
+  {
+    id: 96,
+    section: "Your Marriage Life",
+    subsection: "Professional Boundaries",
+    type: "D",
+    text: "Your Marriage Life: Professional Boundaries - I believe we should limit professional interactions with the opposite sex.",
+    options: [
+      "We do believe in having clear boundaries around professional interactions with the opposite sex",
+      "We do not believe special boundaries are needed for professional interactions with the opposite sex"
+    ],
+    weight: 5
+  },
+  {
+    id: 97,
+    section: "Your Marriage Life",
+    subsection: "Vacation Priorities",
+    type: "D",
+    text: "Your Marriage Life: Vacation Priorities - I believe we should prioritize couple vacations over family or friend trips.",
+    options: [
+      "We do believe couple-only vacations should be prioritized over other trip types",
+      "We do not believe couple trips should necessarily take priority over family or friend vacations"
+    ],
+    weight: 3
+  },
+  {
+    id: 98,
+    section: "Your Marriage Life",
+    subsection: "Recreational Time",
+    type: "D",
+    text: "Your Marriage Life: Recreational Time - I believe spouses should share the same hobbies and interests.",
+    options: [
+      "We do believe couples should share most recreational interests and hobbies",
+      "We do not believe couples need to share the same recreational activities to have a healthy relationship"
+    ],
+    weight: 3
+  },
+  {
+    id: 99,
+    section: "Your Marriage Life",
+    subsection: "Community Involvement",
+    type: "D",
+    text: "Your Marriage Life: Community Involvement - I believe we should be actively involved in our local community together.",
+    options: [
+      "We do believe couples should be actively involved together in their local community",
+      "We do not believe couples need to participate in the same community activities and can have separate interests"
+    ],
+    weight: 4
   }
 ];
