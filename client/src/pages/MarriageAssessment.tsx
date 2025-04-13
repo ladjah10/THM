@@ -21,7 +21,7 @@ import { initializeProtection } from "@/utils/protectionUtils";
 type View = "demographics" | "questionnaire" | "results" | "emailSent";
 
 export default function MarriageAssessment() {
-  // Start with demographics first - this is a key requirement
+  // Force demographics to appear first
   const [currentView, setCurrentView] = useState<View>("demographics");
   const [currentSection, setCurrentSection] = useState(sections[0]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -41,9 +41,11 @@ export default function MarriageAssessment() {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [emailSending, setEmailSending] = useState(false);
 
-  // Initialize protection utilities
+  // Initialize protection utilities and ensure demographics first
   useEffect(() => {
+    console.log("Setting up assessment with demographics first");
     initializeProtection();
+    setCurrentView("demographics");
   }, []);
 
   // Filter questions by current section

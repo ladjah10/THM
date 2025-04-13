@@ -227,20 +227,12 @@ export default function DemographicView({
           />
         </div>
 
-        <div className="flex justify-between pt-4">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onBack}
-            className="px-4 py-2 text-sm font-medium"
-          >
-            Back to Questions
-          </Button>
+        <div className="flex justify-end pt-4">
           <Button
             type="submit"
-            className="px-4 py-2 text-sm font-medium"
+            className="px-6 py-3 text-sm font-medium"
           >
-            Start Assessment
+            Start Assessment Questions →
           </Button>
         </div>
       </form>
