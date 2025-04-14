@@ -434,7 +434,7 @@ export default function DemographicView({
                   onClick={handleProcessPayment}
                   disabled={isProcessingPayment}
                 >
-                  {isProcessingPayment ? "Processing..." : "Pay $49 and Start Assessment"}
+                  {isProcessingPayment ? "Processing..." : "Pay to Experience Clarity"}
                 </Button>
               </div>
             </CardContent>

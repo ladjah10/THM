@@ -70,7 +70,7 @@ export default function PaywallView({
                   <svg className="h-5 w-5 mr-2 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  <span>Personalized PDF Report with Insights to Guide Your Journey to a Lasting Partnership</span>
+                  <span>Personalized PDF Report with Insights to Guide Your Journey to a Lasting Relationship</span>
                 </li>
                 <li className="flex items-start">
                   <svg className="h-5 w-5 mr-2 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

@@ -70,7 +70,7 @@ export default function Home() {
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-gray-800">Personalized PDF Report</h3>
-                <p className="text-gray-600">With Insights to Guide Your Journey to a Lasting Partnership</p>
+                <p className="text-gray-600">With Insights to Guide Your Journey to a Lasting Relationship</p>
               </div>
             </div>
             
