@@ -58,12 +58,8 @@ export default function DemographicView({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Check if user has purchased the book or paid/used valid promo
-    if (demographicData.hasPurchasedBook === "yes" || demographicData.hasPaid) {
-      onSubmit();
-    } else {
-      setShowPaywall(true);
-    }
+    // We've already validated payment at the paywall step, so proceed directly
+    onSubmit();
   };
 
   // Handle ethnicity checkbox changes
@@ -382,7 +378,6 @@ export default function DemographicView({
           <Button
             type="submit"
             className="px-6 py-3 text-sm font-medium"
-            disabled={demographicData.hasPurchasedBook === "no" && !demographicData.hasPaid}
           >
             Start Assessment Questions →
           </Button>

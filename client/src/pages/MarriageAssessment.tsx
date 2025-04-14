@@ -175,7 +175,13 @@ export default function MarriageAssessment() {
     setUserResponses({});
     setCurrentSection(sections[0]);
     setCurrentQuestionIndex(0);
-    setCurrentView("demographics");
+    
+    // Reset payment status and return to paywall
+    setDemographicData(prev => ({
+      ...prev,
+      hasPaid: false
+    }));
+    setCurrentView("paywall");
   };
 
   return (
@@ -184,7 +190,7 @@ export default function MarriageAssessment() {
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div className="flex items-center">
-            <h1 className="text-xl font-semibold text-gray-900">100 Marriage Assessment</h1>
+            <h1 className="text-xl font-semibold text-gray-900">The 100 Marriage Assessment - Series 1</h1>
           </div>
           <div className="hidden sm:block">
             <span className="text-sm text-gray-500">© 2025 Lawrence E. Adjah</span>
@@ -194,7 +200,16 @@ export default function MarriageAssessment() {
 
       {/* Main Content Area */}
       <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Demographics comes first */}
+        {/* Paywall comes first */}
+        {currentView === "paywall" && (
+          <PaywallView 
+            demographicData={demographicData}
+            onChange={handleDemographicChange}
+            onPaymentComplete={() => setCurrentView("demographics")}
+          />
+        )}
+        
+        {/* Demographics comes after payment */}
         {currentView === "demographics" && (
           <DemographicView 
             demographicData={demographicData}
