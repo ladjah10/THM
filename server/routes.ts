@@ -8,11 +8,14 @@ import { AssessmentResult } from "../shared/schema";
 
 // Initialize Stripe with the secret key
 if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
+  console.error('Missing STRIPE_SECRET_KEY environment variable');
+  process.exit(1);
 }
 
 // Initialize Stripe - we're using the default API version
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: '2023-10-16'
+});
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Email sending endpoint
