@@ -2,7 +2,7 @@ import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { z } from "zod";
-import { sendAssessmentEmail } from "./sendgrid";
+import { sendAssessmentEmail } from "./nodemailer";
 import { AssessmentResult } from "../shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -73,7 +73,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Store assessment result in storage
       await storage.saveAssessment(assessmentResult);
       
-      // Send email with SendGrid - admin email is now CC'd by default
+      // Send email with Nodemailer - admin email is now CC'd by default
       const emailSent = await sendAssessmentEmail(assessmentResult);
       
       if (!emailSent) {
