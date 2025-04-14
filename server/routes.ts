@@ -74,13 +74,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.saveAssessment(assessmentResult);
       
       // Send email with Nodemailer - admin email is now CC'd by default
-      const emailSent = await sendAssessmentEmail(assessmentResult);
+      const emailResult = await sendAssessmentEmail(assessmentResult);
       
-      if (!emailSent) {
+      if (!emailResult.success) {
         return res.status(500).json({
           success: false,
           message: "Failed to send email. Assessment data was saved."
         });
+      }
+      
+      // For testing purposes, log the email preview URL
+      if (emailResult.previewUrl) {
+        console.log('📧 Email Preview URL (for testing):', emailResult.previewUrl);
+        console.log('(Open this URL in your browser to view the test email)');
       }
       
       return res.status(200).json({ 

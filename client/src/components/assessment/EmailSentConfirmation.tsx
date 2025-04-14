@@ -14,7 +14,10 @@ export default function EmailSentConfirmation({ onBackToResults }: EmailSentConf
         </div>
         <h3 className="mt-3 text-lg font-medium text-gray-900">Email Sent Successfully!</h3>
         <p className="mt-2 text-sm text-gray-500">
-          Your detailed assessment report has been sent to your email. A copy has also been sent to la@lawrenceadjah.com.
+          Your detailed assessment report (with PDF attachment) has been sent to your email. A copy has also been sent to la@lawrenceadjah.com.
+        </p>
+        <p className="mt-2 text-xs text-blue-500">
+          For testing purposes, you can check the email preview URL in the console.
         </p>
       </div>
       <Button 
