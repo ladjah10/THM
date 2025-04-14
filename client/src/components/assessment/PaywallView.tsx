@@ -13,6 +13,7 @@ import { Separator } from "@/components/ui/separator";
 import { DemographicData } from "@/types/assessment";
 import StripePaymentForm from "@/components/payment/StripePaymentForm";
 import PromoCodeForm from "@/components/payment/PromoCodeForm";
+import ReferralForm from "@/components/payment/ReferralForm";
 
 interface PaywallViewProps {
   demographicData: DemographicData;
@@ -111,9 +112,10 @@ export default function PaywallView({
             </p>
             
             <Tabs defaultValue="card" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
+              <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="card">Pay with Card</TabsTrigger>
                 <TabsTrigger value="promo">Use Promo Code</TabsTrigger>
+                <TabsTrigger value="referral">Invite Friends</TabsTrigger>
               </TabsList>
               <TabsContent value="card" className="mt-4">
                 <StripePaymentForm onPaymentSuccess={handlePaymentSuccess} />
@@ -128,6 +130,14 @@ export default function PaywallView({
                   <p>Valid promo codes: FREE100, LA2025, MARRIAGE100</p>
                   <p className="mt-1">* For demonstration purposes only.</p>
                 </div>
+              </TabsContent>
+              <TabsContent value="referral" className="mt-4">
+                <ReferralForm
+                  onSuccess={handlePaymentSuccess}
+                  userFirstName={demographicData.firstName}
+                  userLastName={demographicData.lastName}
+                  userEmail={demographicData.email}
+                />
               </TabsContent>
             </Tabs>
           </div>

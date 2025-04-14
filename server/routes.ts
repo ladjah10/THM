@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import Stripe from "stripe";
 import { storage } from "./storage";
 import { z } from "zod";
-import { sendAssessmentEmail } from "./nodemailer";
+import { sendAssessmentEmail, sendReferralEmail } from "./nodemailer";
 import { AssessmentResult } from "../shared/schema";
 
 // Initialize Stripe with the secret key
@@ -220,6 +220,84 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ 
         valid: false, 
         message: "Failed to verify promo code" 
+      });
+    }
+  });
+  
+  // Send referral invitations and apply discount
+  app.post('/api/send-referrals', async (req, res) => {
+    try {
+      const { referrer, contacts } = req.body;
+      
+      // Validate request data
+      if (!referrer || !referrer.firstName || !referrer.lastName || !referrer.email) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Referrer information is incomplete" 
+        });
+      }
+      
+      if (!contacts || !Array.isArray(contacts) || contacts.length < 3) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Must provide information for 3 contacts" 
+        });
+      }
+      
+      for (const contact of contacts) {
+        if (!contact.firstName || !contact.lastName || !contact.email) {
+          return res.status(400).json({ 
+            success: false, 
+            message: "Contact information is incomplete" 
+          });
+        }
+        
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(contact.email)) {
+          return res.status(400).json({ 
+            success: false, 
+            message: `Invalid email address: ${contact.email}` 
+          });
+        }
+      }
+      
+      // In a production system, we would:
+      // 1. Store the referrals in a database
+      // 2. Send emails to each contact
+      // 3. Apply the $10 discount to the referrer
+      
+      // For this demo, we'll just simulate the process
+      
+      // Log the referral information
+      console.log("Referral received:", {
+        referrer: `${referrer.firstName} ${referrer.lastName} (${referrer.email})`,
+        contacts: contacts.map(c => `${c.firstName} ${c.lastName} (${c.email})`)
+      });
+      
+      // Simulate sending emails to contacts
+      for (const contact of contacts) {
+        console.log(`Sending invitation email to ${contact.email}...`);
+        
+        // In a real implementation, this would send a real email
+        // await sendReferralEmail({
+        //   to: contact.email,
+        //   referrerName: `${referrer.firstName} ${referrer.lastName}`,
+        //   referrerEmail: referrer.email,
+        //   recipientName: `${contact.firstName} ${contact.lastName}`
+        // });
+      }
+      
+      // Return success response
+      res.status(200).json({ 
+        success: true, 
+        discountApplied: 10, // $10 discount
+        message: "Referrals sent successfully and discount applied!" 
+      });
+    } catch (error) {
+      console.error("Error processing referrals:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to process referrals. Please try again." 
       });
     }
   });

@@ -2,6 +2,14 @@ import nodemailer from 'nodemailer';
 import { AssessmentResult } from '../shared/schema';
 import { generateAssessmentPDF } from './pdf-generator';
 
+// Interface for referral email data
+interface ReferralEmailData {
+  to: string;
+  referrerName: string;
+  referrerEmail: string;
+  recipientName: string;
+}
+
 // Create a test account using Ethereal Email (for testing purposes)
 async function createTestAccount() {
   const testAccount = await nodemailer.createTestAccount();
@@ -177,6 +185,129 @@ export async function sendAssessmentEmail(assessment: AssessmentResult, ccEmail:
     };
   } catch (error) {
     console.error('Email error:', error);
+    return { success: false };
+  }
+}
+
+/**
+ * Format the referral invitation email 
+ */
+function formatReferralEmail(data: ReferralEmailData): string {
+  const { referrerName, recipientName } = data;
+  
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <title>You've Been Invited to The 100 Marriage Assessment</title>
+      <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .section { margin-bottom: 25px; }
+        h1 { color: #2c3e50; }
+        h2 { color: #3498db; margin-top: 20px; }
+        .cta-button { 
+          display: inline-block; 
+          background-color: #e67e22; 
+          color: white; 
+          padding: 12px 24px; 
+          text-decoration: none; 
+          border-radius: 4px; 
+          font-weight: bold; 
+          margin: 15px 0;
+        }
+        .highlight-box { 
+          background-color: #f8f9fa; 
+          border-left: 4px solid #3498db; 
+          padding: 15px; 
+          margin: 15px 0; 
+        }
+        .footer { margin-top: 30px; text-align: center; font-size: 12px; color: #7f8c8d; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>You've Been Invited to The 100 Marriage Assessment</h1>
+        </div>
+        
+        <div class="section">
+          <p>Dear ${recipientName},</p>
+          <p>${referrerName} thought you might benefit from taking The 100 Marriage Assessment - Series 1, an innovative tool designed to help you understand your expectations in relationships and marriage.</p>
+        </div>
+        
+        <div class="highlight-box">
+          <h2 style="margin-top: 0;">What is The 100 Marriage Assessment?</h2>
+          <p>
+            Based on the best-selling book by Lawrence E. Adjah, this assessment helps you:
+          </p>
+          <ul>
+            <li>Understand your expectations for dating, engagement, and marriage</li>
+            <li>Discover your unique relationship approach and psychographic profile</li>
+            <li>Identify potential areas of misalignment with your spouse or future spouse</li>
+            <li>Gain clarity on what truly matters to you in a lifelong commitment</li>
+          </ul>
+        </div>
+        
+        <div class="section" style="text-align: center;">
+          <p>The assessment normally costs $49, but as an invited guest, you'll receive a special discount:</p>
+          <h3 style="color: #e67e22; font-size: 24px;">Your Special Invitation Price: $39</h3>
+          <p>Use code <strong>INVITED10</strong> at checkout</p>
+          <a href="https://100marriage.com/assessment" class="cta-button">Take The Assessment Now</a>
+          <p style="font-size: 14px; color: #7f8c8d; margin-top: 15px;">
+            *For couples: Both spouses can take their individual assessments and compare results to strengthen their relationship.
+          </p>
+        </div>
+        
+        <div class="section">
+          <h2>Why This Assessment Matters</h2>
+          <p>
+            The #1 reason relationships fail is misaligned expectations. This assessment helps you identify and address 
+            potential misalignments before they become problems. Whether you're single, dating, engaged, or married, 
+            clarity about your expectations is the first step toward a fulfilling relationship.
+          </p>
+        </div>
+        
+        <div class="footer">
+          <p>(c) 2025 Lawrence E. Adjah - The 100 Marriage Assessment - Series 1</p>
+          <p>You're receiving this because ${referrerName} invited you. If you believe this was sent in error, please disregard.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+}
+
+/**
+ * Sends a referral invitation email
+ */
+export async function sendReferralEmail(data: ReferralEmailData): Promise<{ success: boolean, previewUrl?: string }> {
+  try {
+    // Create transporter
+    const { transporter, testAccount } = await createTransporter();
+    
+    // Format the email HTML content
+    const emailHtml = formatReferralEmail(data);
+    
+    // Send mail with defined transport object
+    const info = await transporter.sendMail({
+      from: `"The 100 Marriage Assessment" <${testAccount.user}>`,
+      to: data.to,
+      subject: `${data.referrerName} invited you to take The 100 Marriage Assessment`,
+      html: emailHtml,
+    });
+
+    console.log(`Referral invitation email sent: ${info.messageId}`);
+    console.log(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
+    
+    return { 
+      success: true,
+      previewUrl: nodemailer.getTestMessageUrl(info)
+    };
+  } catch (error) {
+    console.error('Referral email error:', error);
     return { success: false };
   }
 }
