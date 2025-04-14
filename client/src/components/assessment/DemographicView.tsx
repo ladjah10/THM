@@ -223,6 +223,45 @@ export default function DemographicView({
           </div>
         </div>
 
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor="lifeStage" className="text-sm font-medium text-gray-700">
+              {demographicQuestions.lifeStage.label}
+            </Label>
+            <Select
+              value={demographicData.lifeStage}
+              onValueChange={(value) => onChange("lifeStage", value)}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select your life stage" />
+              </SelectTrigger>
+              <SelectContent>
+                {demographicQuestions.lifeStage.options.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="birthday" className="text-sm font-medium text-gray-700">
+              {demographicQuestions.birthday.label}
+            </Label>
+            {demographicQuestions.birthday.helpText && (
+              <p className="text-xs text-gray-500">{demographicQuestions.birthday.helpText}</p>
+            )}
+            <Input
+              id="birthday"
+              type="date"
+              value={demographicData.birthday}
+              onChange={(e) => onChange("birthday", e.target.value)}
+              required={demographicQuestions.birthday.required}
+              className="mt-1 block w-full"
+            />
+          </div>
+        </div>
+
         <div className="space-y-2">
           <Label htmlFor="desireChildren" className="text-sm font-medium text-gray-700">
             {demographicQuestions.desireChildren.label}
@@ -352,6 +391,41 @@ export default function DemographicView({
             />
           </div>
         )}
+        
+        {/* THM Arranged Marriage Pool Question */}
+        <div className="space-y-2">
+          <Label htmlFor="interestedInArrangedMarriage" className="text-sm font-medium text-gray-700">
+            {demographicQuestions.interestedInArrangedMarriage.label}
+          </Label>
+          {demographicQuestions.interestedInArrangedMarriage.helpText && (
+            <p className="text-xs text-gray-500">{demographicQuestions.interestedInArrangedMarriage.helpText}</p>
+          )}
+          <Select
+            value={demographicData.interestedInArrangedMarriage ? "yes" : "no"}
+            onValueChange={(value) => {
+              // Set both the interest and whether they've applied
+              const isInterested = value === "yes";
+              onChange("interestedInArrangedMarriage", isInterested);
+              
+              // If they select yes, we'll charge them $25 more in the payment step
+              if (isInterested && !demographicData.thmPoolApplied) {
+                // Mark that they need to pay the extra fee
+                onChange("thmPoolApplied", true);
+              }
+            }}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select an option" />
+            </SelectTrigger>
+            <SelectContent>
+              {demographicQuestions.interestedInArrangedMarriage.options.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
         
         {/* Payment Wall */}
         {showPaywall && !demographicData.hasPaid && (

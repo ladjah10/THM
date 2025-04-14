@@ -142,7 +142,13 @@ function PaymentForm({ onPaymentSuccess }: { onPaymentSuccess: () => void }) {
 }
 
 // Exported wrapper component that provides Stripe context
-export default function StripePaymentForm({ onPaymentSuccess }: { onPaymentSuccess: () => void }) {
+export default function StripePaymentForm({ 
+  onPaymentSuccess, 
+  thmPoolApplied = false 
+}: { 
+  onPaymentSuccess: () => void;
+  thmPoolApplied?: boolean;
+}) {
   return (
     <div className="w-full">
       {stripePromise && (
