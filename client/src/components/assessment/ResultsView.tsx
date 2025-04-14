@@ -55,7 +55,18 @@ export default function ResultsView({
         <div className="max-w-2xl mx-auto mt-6 text-center text-gray-600 text-sm">
           <p className="mb-2">Your score reflects how you responded to the assessment questions, not a judgment of readiness. 
           Higher percentages indicate alignment with traditional marriage values, while lower percentages suggest 
-          more progressive viewpoints. Neither is inherently better—they simply represent different approaches to relationship.</p>
+          less traditional approaches. Neither is inherently better—just different expectations.</p>
+          
+          <ul className="text-left mt-3 space-y-2">
+            <li className="flex items-start">
+              <span className="text-blue-500 mr-2">•</span>
+              <span>The most important consideration is how your assessment and approach compares with someone you're married to or discerning marriage with.</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-blue-500 mr-2">•</span>
+              <span>The closer the percentage (with your spouse), overall, the more aligned and successful you will be.</span>
+            </li>
+          </ul>
         </div>
       </div>
 
@@ -92,7 +103,7 @@ export default function ResultsView({
         <p className="mb-4 text-gray-600 text-sm">
           Each section score reflects your perspective in a specific relationship area. These scores provide insights 
           into your relationship approach and help determine your psychographic profiles. Higher percentages typically 
-          indicate traditional views, while lower percentages suggest more progressive approaches.
+          indicate traditional views, while lower percentages suggest less traditional approaches.
         </p>
         <div className="space-y-6">
           {Object.entries(scores.sections).map(([section, { percentage }]) => (

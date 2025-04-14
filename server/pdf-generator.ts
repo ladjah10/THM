@@ -95,9 +95,30 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
       doc.fontSize(11)
         .font('Helvetica')
         .fillColor('#555')
-        .text('Understanding Your Score: Your assessment score reflects your perspectives on relationship, not a judgment of readiness. Higher percentages indicate alignment with traditional marriage values, while lower percentages suggest more progressive viewpoints. Neither approach is inherently better—they simply represent different relationship styles.', {
+        .text('Understanding Your Score: Your assessment score reflects your perspectives on relationship, not a judgment of readiness. Higher percentages indicate alignment with traditional marriage values, while lower percentages suggest less traditional approaches. Neither is inherently better—just different expectations.', {
           width: doc.page.width - 100,
           align: 'justify'
+        });
+        
+      doc.moveDown(0.5);
+      
+      // Add comparison explanation in bullet points
+      doc.fontSize(11)
+        .font('Helvetica')
+        .fillColor('#555')
+        .text('• The most important consideration is how your assessment and approach compares with someone you're married to or discerning marriage with.', {
+          width: doc.page.width - 120,
+          indent: 10,
+        });
+        
+      doc.moveDown(0.3);
+        
+      doc.fontSize(11)
+        .font('Helvetica')
+        .fillColor('#555')
+        .text('• The closer the percentage (with your spouse), overall, the more aligned and successful you will be.', {
+          width: doc.page.width - 120,
+          indent: 10,
         });
         
       doc.moveDown(1);
@@ -154,7 +175,7 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
       doc.fontSize(11)
         .font('Helvetica')
         .fillColor('#555')
-        .text('Each section score represents your perspective in a specific relationship area. These scores are used to determine your psychographic profiles. Higher percentages typically indicate more traditional views, while lower percentages suggest more progressive approaches to relationships.', {
+        .text('Each section score represents your perspective in a specific relationship area. These scores are used to determine your psychographic profiles. Higher percentages typically indicate more traditional views, while lower percentages suggest less traditional approaches to relationships.', {
           width: doc.page.width - 100,
           align: 'justify'
         });
