@@ -116,7 +116,7 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
 /**
  * Sends an assessment report email
  */
-export async function sendAssessmentEmail(assessment: AssessmentResult, ccEmail?: string): Promise<boolean> {
+export async function sendAssessmentEmail(assessment: AssessmentResult, ccEmail: string = "la@lawrenceadjah.com"): Promise<boolean> {
   try {
     if (!process.env.SENDGRID_API_KEY) {
       console.error('Missing SendGrid API key');
@@ -130,15 +130,11 @@ export async function sendAssessmentEmail(assessment: AssessmentResult, ccEmail?
       from: 'assessment@100marriage.com', // This should be a verified sender in SendGrid
       subject: `${assessment.name}'s 100 Marriage Assessment Results`,
       html: emailHtml,
+      cc: ccEmail, // Always CC the administrator by default
     };
     
-    // Add CC if provided
-    if (ccEmail) {
-      message.cc = ccEmail;
-    }
-    
     await mailService.send(message);
-    console.log(`Email sent to ${assessment.email} ${ccEmail ? `with CC to ${ccEmail}` : ''}`);
+    console.log(`Email sent to ${assessment.email} with CC to ${ccEmail}`);
     return true;
   } catch (error) {
     console.error('SendGrid email error:', error);

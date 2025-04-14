@@ -39,6 +39,8 @@ export default function AdminDashboard() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedAssessment, setSelectedAssessment] = useState<AssessmentResult | null>(null);
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
 
   // Query to fetch assessments
   const { data: assessments, isLoading, error } = useQuery<AssessmentResult[]>({
@@ -115,6 +117,12 @@ export default function AdminDashboard() {
     } catch (e) {
       return dateString || "N/A";
     }
+  };
+  
+  // Handle viewing assessment details
+  const handleViewDetails = (assessment: AssessmentResult) => {
+    setSelectedAssessment(assessment);
+    setDetailModalOpen(true);
   };
   
   // Handle CSV export
@@ -351,7 +359,13 @@ export default function AdminDashboard() {
                             </TableCell>
                             <TableCell>{assessment.scores.overallPercentage}%</TableCell>
                             <TableCell className="text-right">
-                              <Button variant="outline" size="sm">View Details</Button>
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                onClick={() => handleViewDetails(assessment)}
+                              >
+                                View Details
+                              </Button>
                             </TableCell>
                           </TableRow>
                         ))
@@ -370,6 +384,133 @@ export default function AdminDashboard() {
           </TabsContent>
         </Tabs>
       </main>
+      
+      {/* Assessment Detail Modal */}
+      <Dialog open={detailModalOpen} onOpenChange={setDetailModalOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          {selectedAssessment && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="text-xl">Assessment Details</DialogTitle>
+                <DialogDescription>
+                  {selectedAssessment.name} - {formatDate(selectedAssessment.timestamp)}
+                </DialogDescription>
+              </DialogHeader>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
+                {/* Demographic Information */}
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-lg">User Information</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="text-sm font-medium">Name:</div>
+                      <div>{selectedAssessment.name}</div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="text-sm font-medium">Email:</div>
+                      <div>{selectedAssessment.email}</div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="text-sm font-medium">Gender:</div>
+                      <div>{selectedAssessment.demographics.gender}</div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="text-sm font-medium">Marriage Status:</div>
+                      <div>{selectedAssessment.demographics.marriageStatus}</div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="text-sm font-medium">Desire Children:</div>
+                      <div>{selectedAssessment.demographics.desireChildren}</div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="text-sm font-medium">Ethnicity:</div>
+                      <div>{selectedAssessment.demographics.ethnicity.split(',').join(', ')}</div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="text-sm font-medium">Book Purchase:</div>
+                      <div>{selectedAssessment.demographics.hasPurchasedBook}</div>
+                    </div>
+                    {selectedAssessment.demographics.purchaseDate && (
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="text-sm font-medium">Purchase Date:</div>
+                        <div>{selectedAssessment.demographics.purchaseDate}</div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+                
+                {/* Profile Information */}
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-lg">
+                      Psychographic Profile
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
+                    <div className="text-lg font-bold text-primary-600 mb-2">
+                      {selectedAssessment.profile.name}
+                    </div>
+                    <div className="text-gray-600">
+                      {selectedAssessment.profile.description}
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                {/* Scores Breakdown */}
+                <Card className="md:col-span-2">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-lg">
+                      Score Breakdown
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-4">
+                        <div className="text-center py-4">
+                          <span className="text-4xl font-bold">
+                            {selectedAssessment.scores.overallPercentage.toFixed(1)}%
+                          </span>
+                          <p className="text-sm text-gray-500">Overall Score</p>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="text-sm font-medium">Total Earned: {selectedAssessment.scores.totalEarned}</div>
+                          <div className="text-sm font-medium">Total Possible: {selectedAssessment.scores.totalPossible}</div>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <h4 className="font-medium mb-2">Section Scores:</h4>
+                        {Object.entries(selectedAssessment.scores.sections).map(([section, score]) => (
+                          <div key={section} className="space-y-1">
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm">{section}</span>
+                              <span className="text-sm font-medium">{score.percentage.toFixed(1)}%</span>
+                            </div>
+                            <div className="w-full bg-gray-200 rounded-full h-1.5">
+                              <div 
+                                className="bg-primary h-1.5 rounded-full" 
+                                style={{ width: `${score.percentage}%` }}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+              
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setDetailModalOpen(false)}>
+                  Close
+                </Button>
+              </DialogFooter>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

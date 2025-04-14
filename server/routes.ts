@@ -73,11 +73,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Store assessment result in storage
       await storage.saveAssessment(assessmentResult);
       
-      // Send email with SendGrid
-      const emailSent = await sendAssessmentEmail(
-        assessmentResult, 
-        validatedData.cc // This should be 'la@lawrenceadjah.com'
-      );
+      // Send email with SendGrid - admin email is now CC'd by default
+      const emailSent = await sendAssessmentEmail(assessmentResult);
       
       if (!emailSent) {
         return res.status(500).json({
