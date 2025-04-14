@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { toast } from "@/hooks/use-toast";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Card,
   CardContent,
@@ -11,7 +9,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { DemographicData } from "@/types/assessment";
+import StripePaymentForm from "@/components/payment/StripePaymentForm";
+import PromoCodeForm from "@/components/payment/PromoCodeForm";
 
 interface PaywallViewProps {
   demographicData: DemographicData;
@@ -24,64 +25,16 @@ export default function PaywallView({
   onChange,
   onPaymentComplete
 }: PaywallViewProps) {
-  const [isProcessingPayment, setIsProcessingPayment] = useState<boolean>(false);
-  const [isVerifyingPromo, setIsVerifyingPromo] = useState<boolean>(false);
-  
-  // Valid promo codes (in a real app, these would be stored in a database or validated through an API)
-  const validPromoCodes = ["FREE100", "LA2025", "MARRIAGE100"];
-  
-  // Handle promo code verification
-  const handleVerifyPromoCode = () => {
-    if (!demographicData.promoCode) {
-      toast({
-        title: "Missing Promo Code",
-        description: "Please enter a promo code to verify.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setIsVerifyingPromo(true);
-    
-    // Simulate API call to verify promo code
-    setTimeout(() => {
-      const isValid = validPromoCodes.includes(demographicData.promoCode);
-      
-      if (isValid) {
-        onChange("hasPaid", true);
-        toast({
-          title: "Promo Code Applied",
-          description: "Your promo code has been accepted. You can now proceed to the assessment.",
-          variant: "default"
-        });
-        onPaymentComplete();
-      } else {
-        toast({
-          title: "Invalid Promo Code",
-          description: "The promo code you entered is not valid.",
-          variant: "destructive"
-        });
-      }
-      
-      setIsVerifyingPromo(false);
-    }, 1000);
+  // Handle successful payment
+  const handlePaymentSuccess = () => {
+    onChange("hasPaid", true);
+    onPaymentComplete();
   };
   
-  // Handle mock payment
-  const handleProcessPayment = () => {
-    setIsProcessingPayment(true);
-    
-    // Simulate payment processing
-    setTimeout(() => {
-      onChange("hasPaid", true);
-      setIsProcessingPayment(false);
-      toast({
-        title: "Payment Successful",
-        description: "Thank you for your purchase. You can now access the assessment.",
-        variant: "default"
-      });
-      onPaymentComplete();
-    }, 1500);
+  // Handle successful promo code
+  const handlePromoSuccess = () => {
+    onChange("hasPaid", true);
+    onPaymentComplete();
   };
 
   return (
@@ -132,47 +85,31 @@ export default function PaywallView({
               </ul>
             </div>
           </div>
-            
-          <div className="space-y-3">
-            <Label htmlFor="promoCode" className="text-sm font-medium">
-              Have a promo code?
-            </Label>
-            <div className="flex gap-2">
-              <Input
-                id="promoCode"
-                type="text"
-                placeholder="Enter your promo code"
-                value={demographicData.promoCode}
-                onChange={(e) => onChange("promoCode", e.target.value)}
-                className="flex-1"
+          
+          <Tabs defaultValue="card" className="w-full mt-6">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="card">Pay with Card</TabsTrigger>
+              <TabsTrigger value="promo">Use Promo Code</TabsTrigger>
+            </TabsList>
+            <TabsContent value="card" className="mt-4">
+              <StripePaymentForm onPaymentSuccess={handlePaymentSuccess} />
+            </TabsContent>
+            <TabsContent value="promo" className="mt-4">
+              <PromoCodeForm 
+                promoCode={demographicData.promoCode}
+                onChange={(value) => onChange("promoCode", value)}
+                onSuccess={handlePromoSuccess}
               />
-              <Button 
-                type="button"
-                variant="outline" 
-                onClick={handleVerifyPromoCode}
-                disabled={!demographicData.promoCode || isVerifyingPromo}
-              >
-                {isVerifyingPromo ? "Verifying..." : "Apply"}
-              </Button>
-            </div>
-          </div>
+              <div className="mt-4 text-xs text-gray-500">
+                <p>Valid promo codes: FREE100, LA2025, MARRIAGE100</p>
+                <p className="mt-1">* For demonstration purposes only.</p>
+              </div>
+            </TabsContent>
+          </Tabs>
         </CardContent>
-        <CardFooter className="flex flex-col gap-4">
-          <Button
-            type="button"
-            className="w-full py-6 text-base"
-            onClick={handleProcessPayment}
-            disabled={isProcessingPayment}
-          >
-            {isProcessingPayment ? 
-              <div className="flex items-center gap-2">
-                <span className="animate-spin w-4 h-4 border-2 border-t-transparent rounded-full"></span>
-                Processing...
-              </div> : 
-              "Pay $49 and Start Assessment"
-            }
-          </Button>
-          <p className="text-xs text-center text-gray-500 mt-4">
+        <CardFooter className="flex flex-col gap-2">
+          <Separator className="my-2" />
+          <p className="text-xs text-center text-gray-500">
             By proceeding, you agree to our Terms of Service and Privacy Policy.
             Your report will be delivered to your email immediately after completion.
           </p>
