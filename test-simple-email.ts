@@ -12,7 +12,7 @@ console.log('Sending a simple test email to check SendGrid API...');
 
 const msg = {
   to: 'la@lawrenceadjah.com',
-  from: 'la@lawrenceadjah.com', // Using the same email for testing
+  from: 'la@lawrenceadjah.com', // Verified sender email
   subject: 'Testing SendGrid API',
   text: 'This is a test email to validate the SendGrid API integration.',
   html: '<strong>This is a test email to validate the SendGrid API integration.</strong>'
