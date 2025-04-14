@@ -106,7 +106,7 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
       doc.fontSize(11)
         .font('Helvetica')
         .fillColor('#555')
-        .text('• The most important consideration is how your assessment and approach compares with someone you're married to or discerning marriage with.', {
+        .text('• The most important consideration is how your assessment and approach compares with someone you are married to or discerning marriage with.', {
           width: doc.page.width - 120,
           indent: 10,
         });
