@@ -150,6 +150,69 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Referral Section */}
+      <section className="py-12 px-4 bg-amber-50">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-amber-800 mb-3">
+              Share & Save: Invite Friends for $10 Off
+            </h2>
+            <p className="text-lg text-amber-700">
+              Know someone who could benefit from clarity in their relationship expectations?
+            </p>
+          </div>
+          
+          <div className="bg-white p-6 rounded-lg shadow-md border border-amber-100">
+            <div className="grid md:grid-cols-2 gap-8">
+              <div>
+                <h3 className="text-xl font-semibold text-amber-800 mb-4">How It Works:</h3>
+                <ul className="space-y-3">
+                  <li className="flex items-start">
+                    <div className="bg-amber-100 rounded-full p-1 mr-3 mt-0.5">
+                      <svg className="w-5 h-5 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                      </svg>
+                    </div>
+                    <p className="text-gray-700">Invite 3 friends who could benefit from the assessment</p>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="bg-amber-100 rounded-full p-1 mr-3 mt-0.5">
+                      <svg className="w-5 h-5 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                      </svg>
+                    </div>
+                    <p className="text-gray-700">They'll receive a personalized invitation from you with a $10 discount</p>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="bg-amber-100 rounded-full p-1 mr-3 mt-0.5">
+                      <svg className="w-5 h-5 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                    </div>
+                    <p className="text-gray-700">You immediately get $10 off your assessment ($39 instead of $49)</p>
+                  </li>
+                </ul>
+              </div>
+              <div className="flex flex-col justify-center">
+                <div className="bg-amber-100 p-5 rounded-lg text-center">
+                  <h3 className="text-amber-800 text-xl font-bold mb-2">Everyone benefits!</h3>
+                  <p className="text-amber-700 mb-4">Help friends gain clarity while you save</p>
+                  <Button 
+                    onClick={handleStartAssessment}
+                    className="bg-amber-500 hover:bg-amber-400 text-white font-medium w-full"
+                  >
+                    Start Assessment & Invite Friends
+                  </Button>
+                  <p className="text-xs text-amber-600 mt-3">
+                    You'll have a chance to share with friends during the assessment process
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
       {/* Testimonial Section */}
       <section className="py-12 px-4 bg-gray-100">
         <div className="max-w-3xl mx-auto text-center">
@@ -181,15 +244,27 @@ export default function Home() {
           <h2 className="text-2xl md:text-3xl font-bold mb-6">
             Begin Your Journey to a Thriving Future Today
           </h2>
-          <p className="text-xl mb-8">
+          <p className="text-xl mb-4">
             Unlock insights that will transform your relationship expectations for only $49
           </p>
-          <Button 
-            onClick={handleStartAssessment}
-            className="bg-amber-500 hover:bg-amber-400 text-white py-3 px-8 rounded-md text-lg font-medium"
-          >
-            Start Individual Assessment Now
-          </Button>
+          <p className="text-md mb-8 text-blue-200">
+            Or save $10 by inviting 3 friends who could benefit from clarity in their relationships too!
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <Button 
+              onClick={handleStartAssessment}
+              className="bg-amber-500 hover:bg-amber-400 text-white py-3 px-8 rounded-md text-base md:text-lg font-medium"
+            >
+              Start Assessment Now
+            </Button>
+            <Button 
+              variant="outline"
+              onClick={handleStartAssessment}
+              className="border-amber-500 text-amber-400 hover:bg-blue-800 py-3 px-8 rounded-md text-base md:text-lg font-medium"
+            >
+              Invite Friends & Save $10
+            </Button>
+          </div>
         </div>
       </section>
 

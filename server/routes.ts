@@ -199,7 +199,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Valid promo codes (in a real app, these would be stored in a database)
       // For now, these promo codes work for both individual and couple assessments
-      const validPromoCodes = ["FREE100", "LA2025", "MARRIAGE100"];
+      const validPromoCodes = ["FREE100", "LA2025", "MARRIAGE100", "INVITED10"];
       
       // Future implementation could have type-specific promo codes
       // const individualPromoCodes = [...];
@@ -274,17 +274,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
         contacts: contacts.map(c => `${c.firstName} ${c.lastName} (${c.email})`)
       });
       
-      // Simulate sending emails to contacts
+      // Send emails to contacts
+      const emailPromises = [];
       for (const contact of contacts) {
         console.log(`Sending invitation email to ${contact.email}...`);
         
-        // In a real implementation, this would send a real email
-        // await sendReferralEmail({
-        //   to: contact.email,
-        //   referrerName: `${referrer.firstName} ${referrer.lastName}`,
-        //   referrerEmail: referrer.email,
-        //   recipientName: `${contact.firstName} ${contact.lastName}`
-        // });
+        // Queue up email sending promises
+        emailPromises.push(
+          sendReferralEmail({
+            to: contact.email,
+            referrerName: `${referrer.firstName} ${referrer.lastName}`,
+            referrerEmail: referrer.email,
+            recipientName: `${contact.firstName} ${contact.lastName}`
+          })
+        );
+      }
+      
+      // Wait for all emails to be sent
+      const emailResults = await Promise.all(emailPromises);
+      
+      // Check if any emails failed to send
+      const failedEmails = emailResults.filter(result => !result.success);
+      if (failedEmails.length > 0) {
+        console.warn(`${failedEmails.length} out of ${contacts.length} referral emails failed to send`);
       }
       
       // Return success response
