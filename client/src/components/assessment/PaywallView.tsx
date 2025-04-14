@@ -42,9 +42,15 @@ export default function PaywallView({
       <Card className="w-full max-w-lg border-primary-200 shadow-lg">
         <CardHeader className="text-center pb-6 bg-gradient-to-b from-blue-50 to-white">
           <CardTitle className="text-2xl text-blue-900">The 100 Marriage Assessment - Series 1</CardTitle>
+          <div className="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium mb-2">
+            Individual Assessment ($49)
+          </div>
           <CardDescription className="text-lg mt-2 text-gray-700">
             Misaligned Expectations Can Destroy Relationships—Align Yours for Only $49
           </CardDescription>
+          <p className="text-xs mt-2 text-blue-600">
+            Note: Couples assessment ($79) coming soon! This version is for individual use only.
+          </p>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="text-center px-6">

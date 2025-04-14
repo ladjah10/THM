@@ -18,15 +18,23 @@ export default function Home() {
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-blue-900 font-serif mb-4">
             The 100 Marriage Assessment – Series 1: Align Expectations, Build Your Future
           </h1>
-          <p className="text-xl text-gray-700 mb-8">
+          <p className="text-xl text-gray-700 mb-6">
             Misaligned Expectations Can Derail Your Future—Align Yours for Only $49
           </p>
-          <Button 
-            onClick={handleStartAssessment}
-            className="bg-amber-500 hover:bg-amber-400 text-white py-3 px-8 rounded-md text-lg font-medium"
-          >
-            Start Your Journey Now
-          </Button>
+          <div className="mb-6 px-4 py-3 bg-blue-50 rounded-md border border-blue-100 inline-block">
+            <p className="text-blue-800 font-medium">
+              <span className="font-bold">Individual Assessment Only:</span> Currently available for individual assessment ($49). 
+              Couples assessment ($79) coming soon.
+            </p>
+          </div>
+          <div>
+            <Button 
+              onClick={handleStartAssessment}
+              className="bg-amber-500 hover:bg-amber-400 text-white py-3 px-8 rounded-md text-lg font-medium"
+            >
+              Start Individual Assessment
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -174,7 +182,7 @@ export default function Home() {
             onClick={handleStartAssessment}
             className="bg-amber-500 hover:bg-amber-400 text-white py-3 px-8 rounded-md text-lg font-medium"
           >
-            Take the Assessment Now
+            Start Individual Assessment Now
           </Button>
         </div>
       </section>

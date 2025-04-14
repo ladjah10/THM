@@ -67,7 +67,7 @@ export default function PromoCodeForm({
   return (
     <div className="space-y-3">
       <Label htmlFor="promoCode" className="text-sm font-medium">
-        Enter Your Promo Code to Save
+        Enter Your Individual Assessment Promo Code
       </Label>
       <div className="flex gap-2">
         <Input
@@ -87,6 +87,11 @@ export default function PromoCodeForm({
         >
           {isVerifying ? "Verifying..." : "Apply Code"}
         </Button>
+      </div>
+      <div className="mt-3 px-3 py-2 bg-blue-50 rounded-md border border-blue-100">
+        <p className="text-sm text-blue-800">
+          <span className="font-bold">Individual Assessment Only:</span> This promo code is valid for the $49 individual assessment.
+        </p>
       </div>
       <p className="text-xs text-gray-500 mt-2">
         Upon verification, your report will be available immediately.
