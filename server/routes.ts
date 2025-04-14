@@ -156,23 +156,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Create a Stripe payment intent for assessment purchase
   app.post('/api/create-payment-intent', async (req, res) => {
     try {
-      // Fixed price for the assessment ($49)
-      const amount = 4900; // $49.00 in cents
+      // Get assessment type from request (defaults to 'individual')
+      const { assessmentType = 'individual' } = req.body;
+      
+      // Determine price based on assessment type
+      // Individual: $49, Couple: $79 (for future use)
+      const amount = assessmentType === 'couple' ? 7900 : 4900; // in cents
+      
+      // Create a description based on assessment type
+      const description = `The 100 Marriage Assessment - Series 1 (${assessmentType === 'couple' ? 'Couple' : 'Individual'})`;
 
       // Create a PaymentIntent with the order amount and currency
       const paymentIntent = await stripe.paymentIntents.create({
         amount,
         currency: "usd",
         payment_method_types: ["card"],
-        description: "The 100 Marriage Assessment - Series 1",
+        description,
         metadata: {
-          product: "marriage_assessment"
+          product: "marriage_assessment",
+          type: assessmentType
         }
       });
 
       res.status(200).json({
         clientSecret: paymentIntent.client_secret,
-        amount: amount / 100 // Convert back to dollars for display
+        amount: amount / 100, // Convert back to dollars for display
+        assessmentType
       });
     } catch (error) {
       console.error("Error creating payment intent:", error);
@@ -186,17 +195,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Verify promo code validity
   app.post('/api/verify-promo-code', async (req, res) => {
     try {
-      const { promoCode } = req.body;
+      const { promoCode, assessmentType = 'individual' } = req.body;
       
       // Valid promo codes (in a real app, these would be stored in a database)
+      // For now, these promo codes work for both individual and couple assessments
       const validPromoCodes = ["FREE100", "LA2025", "MARRIAGE100"];
+      
+      // Future implementation could have type-specific promo codes
+      // const individualPromoCodes = [...];
+      // const couplePromoCodes = [...];
       
       // Check if the promo code is valid
       const isValid = validPromoCodes.includes(promoCode);
       
       res.status(200).json({ 
         valid: isValid,
-        message: isValid ? "Promo code applied successfully" : "Invalid promo code"
+        assessmentType,
+        message: isValid 
+          ? `Promo code applied successfully for ${assessmentType} assessment` 
+          : "Invalid promo code"
       });
     } catch (error) {
       console.error("Error verifying promo code:", error);
