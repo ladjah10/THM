@@ -8,14 +8,11 @@ import { AssessmentResult } from "../shared/schema";
 
 // Initialize Stripe with the secret key
 if (!process.env.STRIPE_SECRET_KEY) {
-  console.error('Missing STRIPE_SECRET_KEY environment variable');
-  process.exit(1);
+  throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
 }
 
 // Initialize Stripe - we're using the default API version
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2023-10-16'
-});
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Email sending endpoint
@@ -156,7 +153,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error creating payment intent:", error);
       res.status(500).json({ 
-        error: "Failed to create payment intent" 
+        error: "Failed to create payment intent. Please use a promo code instead.",
+        usePromoCode: true
       });
     }
   });

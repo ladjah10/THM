@@ -53,7 +53,7 @@ function PaymentForm({ onPaymentSuccess }: { onPaymentSuccess: () => void }) {
         console.error('Error fetching payment intent:', error);
         toast({
           title: "Payment Setup Error",
-          description: "Could not set up the payment process. Please try again.",
+          description: "Could not set up the payment process. Please try again or use a promo code.",
           variant: "destructive"
         });
       }
