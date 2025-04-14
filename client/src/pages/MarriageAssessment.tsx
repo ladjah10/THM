@@ -35,7 +35,10 @@ export default function MarriageAssessment() {
     marriageStatus: "",
     desireChildren: "",
     ethnicity: "",
-    purchaseDate: ""
+    hasPurchasedBook: "",
+    purchaseDate: "",
+    promoCode: "",
+    hasPaid: false
   });
   const [scores, setScores] = useState<AssessmentScores | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);

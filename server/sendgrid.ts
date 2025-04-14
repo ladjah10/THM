@@ -26,9 +26,6 @@ interface EmailMessage {
 function formatAssessmentEmail(assessment: AssessmentResult): string {
   const { name, scores, profile, demographics } = assessment;
   
-  const strengthsList = scores.strengths.map(s => `<li>${s}</li>`).join('');
-  const improvementsList = scores.improvementAreas.map(s => `<li>${s}</li>`).join('');
-  
   // Format sections scores
   const sectionsHtml = Object.entries(scores.sections)
     .map(([section, score]) => `
@@ -100,18 +97,10 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
           </div>
         </div>
         
-        <div class="section">
-          <h2>Your Strengths</h2>
-          <ul>
-            ${strengthsList}
-          </ul>
-        </div>
-        
-        <div class="section">
-          <h2>Areas for Growth</h2>
-          <ul>
-            ${improvementsList}
-          </ul>
+        <div class="section" style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin-top: 25px;">
+          <h2 style="margin-top: 0;">Next Steps</h2>
+          <p>If you'd like to discuss your results further, you can schedule a 1-on-1 session here:</p>
+          <p><a href="https://lawrence-adjah.clientsecure.me/request/service" style="color: #3498db; font-weight: bold; text-decoration: none;">Schedule a Consultation</a></p>
         </div>
         
         <div class="footer">

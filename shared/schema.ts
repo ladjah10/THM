@@ -60,7 +60,10 @@ export interface DemographicData {
   marriageStatus: string;
   desireChildren: string;
   ethnicity: string;
+  hasPurchasedBook?: string;
   purchaseDate?: string;
+  promoCode?: string;
+  hasPaid?: boolean;
 }
 
 export interface AssessmentResult {
