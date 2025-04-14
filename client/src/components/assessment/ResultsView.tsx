@@ -46,8 +46,8 @@ export default function ResultsView({
                 : scores.overallPercentage >= 60 
                 ? "Balanced Approach"
                 : scores.overallPercentage >= 40
-                ? "Progressive Approach"
-                : "Highly Progressive"}
+                ? "Less Traditional Approach"
+                : "Highly Non-Traditional"}
             </div>
           </div>
         </div>
@@ -57,16 +57,27 @@ export default function ResultsView({
           Higher percentages indicate alignment with traditional marriage values, while lower percentages suggest 
           less traditional approaches. Neither is inherently better—just different expectations.</p>
           
-          <ul className="text-left mt-3 space-y-2">
-            <li className="flex items-start">
-              <span className="text-blue-500 mr-2">•</span>
-              <span>The most important consideration is how your assessment and approach compares with someone you're married to or discerning marriage with.</span>
-            </li>
-            <li className="flex items-start">
-              <span className="text-blue-500 mr-2">•</span>
-              <span>The closer the percentage (with your spouse), overall, the more aligned and successful you will be.</span>
-            </li>
-          </ul>
+          <div className="bg-blue-50 border border-blue-100 rounded-md p-4 mt-4 text-left">
+            <h5 className="font-medium text-blue-800 mb-2">For Couples: The Value of Comparison</h5>
+            <ul className="space-y-2">
+              <li className="flex items-start">
+                <span className="text-blue-500 mr-2">•</span>
+                <span>The most important consideration is how your assessment compares with your spouse or someone you're discerning marriage with.</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-blue-500 mr-2">•</span>
+                <span>Both spouses should take their own individual assessment and compare overall percentages.</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-blue-500 mr-2">•</span>
+                <span>The closer your percentage scores align, the more aligned your expectations will be in marriage.</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-blue-500 mr-2">•</span>
+                <span>Using your individual results, you can discuss areas of difference and find common ground.</span>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
 

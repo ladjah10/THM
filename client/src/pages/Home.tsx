@@ -22,9 +22,15 @@ export default function Home() {
             Misaligned Expectations Can Derail Your Future—Align Yours for Only $49
           </p>
           <div className="mb-6 px-4 py-3 bg-blue-50 rounded-md border border-blue-100 inline-block">
-            <p className="text-blue-800 font-medium">
-              <span className="font-bold">Individual Assessment Only:</span> Currently available for individual assessment ($49). 
-              Couples assessment ($79) coming soon.
+            <p className="text-blue-800 font-medium mb-2">
+              <span className="font-bold">Individual Assessment ($49):</span> Beneficial for both singles and couples.
+            </p>
+            <p className="text-blue-700 text-sm">
+              <strong>Couples Benefit:</strong> Each spouse can take their own assessment and compare scores.
+              The closer your percentages align, the more aligned your marriage expectations.
+            </p>
+            <p className="text-blue-600 text-xs mt-2">
+              Enhanced couples assessment with comparison analysis coming soon ($79).
             </p>
           </div>
           <div>

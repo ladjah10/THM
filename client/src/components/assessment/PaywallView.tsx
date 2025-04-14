@@ -48,9 +48,17 @@ export default function PaywallView({
           <CardDescription className="text-lg mt-2 text-gray-700">
             Misaligned Expectations Can Destroy Relationships—Align Yours for Only $49
           </CardDescription>
-          <p className="text-xs mt-2 text-blue-600">
-            Note: Couples assessment ($79) coming soon! This version is for individual use only.
-          </p>
+          <div className="mt-3 px-3 py-2 bg-blue-50 rounded-md text-left border border-blue-100">
+            <p className="text-sm text-blue-800 mb-1">
+              <strong>For Couples:</strong> Each spouse can take their own assessment and compare scores.
+            </p>
+            <p className="text-xs text-blue-700">
+              The closer your percentage scores align, the more aligned your expectations will be in marriage.
+            </p>
+            <p className="text-xs mt-2 text-blue-600">
+              Enhanced couples assessment with detailed comparison analysis coming soon ($79).
+            </p>
+          </div>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="text-center px-6">

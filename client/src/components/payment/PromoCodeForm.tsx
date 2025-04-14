@@ -89,8 +89,11 @@ export default function PromoCodeForm({
         </Button>
       </div>
       <div className="mt-3 px-3 py-2 bg-blue-50 rounded-md border border-blue-100">
-        <p className="text-sm text-blue-800">
-          <span className="font-bold">Individual Assessment Only:</span> This promo code is valid for the $49 individual assessment.
+        <p className="text-sm text-blue-800 mb-1">
+          <span className="font-bold">Individual Assessment:</span> This promo code is valid for the $49 individual assessment.
+        </p>
+        <p className="text-xs text-blue-700">
+          <strong>Couples Tip:</strong> Each spouse can take their own assessment and compare overall scores to gauge alignment.
         </p>
       </div>
       <p className="text-xs text-gray-500 mt-2">
