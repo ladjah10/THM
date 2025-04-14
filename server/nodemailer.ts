@@ -85,6 +85,10 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
         
         <div class="section">
           <h2>Your Detailed Scores</h2>
+          <p style="margin-bottom: 15px; color: #555;">
+            These scores show your responses to questions in each area. Each section reveals different aspects of your 
+            relationship approach. Together, they form the basis for your psychographic profile assessment.
+          </p>
           <table class="scores-table">
             <thead>
               <tr>
