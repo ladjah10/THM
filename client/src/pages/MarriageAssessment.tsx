@@ -3,6 +3,7 @@ import QuestionnaireProgress from "@/components/assessment/QuestionnaireProgress
 import QuestionnaireNavigation from "@/components/assessment/QuestionnaireNavigation";
 import QuestionnaireView from "@/components/assessment/QuestionnaireView";
 import DemographicView from "@/components/assessment/DemographicView";
+import PaywallView from "@/components/assessment/PaywallView";
 import ResultsView from "@/components/assessment/ResultsView";
 import EmailSentConfirmation from "@/components/assessment/EmailSentConfirmation";
 import { questions, sections } from "@/data/questionsData";
@@ -18,11 +19,11 @@ import {
 import { toast } from "@/hooks/use-toast";
 import { initializeProtection } from "@/utils/protectionUtils";
 
-type View = "demographics" | "questionnaire" | "results" | "emailSent";
+type View = "paywall" | "demographics" | "questionnaire" | "results" | "emailSent";
 
 export default function MarriageAssessment() {
-  // Force demographics to appear first
-  const [currentView, setCurrentView] = useState<View>("demographics");
+  // Force paywall to appear first
+  const [currentView, setCurrentView] = useState<View>("paywall");
   const [currentSection, setCurrentSection] = useState(sections[0]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userResponses, setUserResponses] = useState<Record<number, UserResponse>>({});
@@ -44,11 +45,11 @@ export default function MarriageAssessment() {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [emailSending, setEmailSending] = useState(false);
 
-  // Initialize protection utilities and ensure demographics first
+  // Initialize protection utilities and show paywall first
   useEffect(() => {
-    console.log("Setting up assessment with demographics first");
+    console.log("Setting up assessment with paywall first");
     initializeProtection();
-    setCurrentView("demographics");
+    setCurrentView("paywall");
   }, []);
 
   // Filter questions by current section
@@ -107,7 +108,7 @@ export default function MarriageAssessment() {
   };
 
   // Handle demographic data changes
-  const handleDemographicChange = (field: keyof DemographicData, value: string) => {
+  const handleDemographicChange = (field: keyof DemographicData, value: string | boolean) => {
     setDemographicData(prev => ({
       ...prev,
       [field]: value
