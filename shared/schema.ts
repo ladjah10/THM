@@ -55,6 +55,8 @@ export interface DemographicData {
   firstName: string;
   lastName: string;
   email: string;
+  lifeStage: string;
+  birthday: string;
   phone?: string;
   gender: string;
   marriageStatus: string;
@@ -64,6 +66,8 @@ export interface DemographicData {
   purchaseDate?: string;
   promoCode?: string;
   hasPaid?: boolean;
+  interestedInArrangedMarriage?: boolean;
+  thmPoolApplied?: boolean;
 }
 
 export interface AssessmentResult {

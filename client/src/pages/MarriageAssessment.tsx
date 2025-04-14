@@ -31,6 +31,8 @@ export default function MarriageAssessment() {
     firstName: "",
     lastName: "",
     email: "",
+    lifeStage: "",
+    birthday: "",
     phone: "",
     gender: "",
     marriageStatus: "",
@@ -39,7 +41,9 @@ export default function MarriageAssessment() {
     hasPurchasedBook: "",
     purchaseDate: "",
     promoCode: "",
-    hasPaid: false
+    hasPaid: false,
+    interestedInArrangedMarriage: false,
+    thmPoolApplied: false
   });
   const [scores, setScores] = useState<AssessmentScores | null>(null);
   const [primaryProfile, setPrimaryProfile] = useState<UserProfile | null>(null);

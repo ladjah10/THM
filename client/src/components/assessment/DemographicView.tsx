@@ -24,7 +24,7 @@ import { demographicQuestions } from "@/data/demographicQuestions";
 
 interface DemographicViewProps {
   demographicData: DemographicData;
-  onChange: (field: keyof DemographicData, value: string) => void;
+  onChange: (field: keyof DemographicData, value: string | boolean) => void;
   onSubmit: () => void;
   onBack: () => void;
 }

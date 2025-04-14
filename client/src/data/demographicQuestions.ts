@@ -19,7 +19,28 @@ export const demographicQuestions = {
     type: "email",
     required: true,
     placeholder: "example@email.com",
-    helpText: "Use this email to send the confirmation of results"
+    helpText: "We'll send your assessment results to this email"
+  },
+  lifeStage: {
+    id: "lifeStage",
+    label: "Life Stage",
+    type: "select",
+    required: true,
+    options: [
+      { value: "single-no-children", label: "Single (No Children)" },
+      { value: "engaged-no-children", label: "Engaged (No Children)" },
+      { value: "engaged-with-children", label: "Engaged (with Children)" },
+      { value: "single-with-children", label: "Single (with Children)" },
+      { value: "married-no-children", label: "Married (No Children)" },
+      { value: "married-with-children", label: "Married (with Children)" }
+    ]
+  },
+  birthday: {
+    id: "birthday",
+    label: "Birthday",
+    type: "date",
+    required: true,
+    helpText: "Your birth date helps us provide more relevant insights"
   },
   phone: {
     id: "phone",
@@ -95,5 +116,16 @@ export const demographicQuestions = {
     type: "text",
     required: true,
     placeholder: "Enter promo code"
+  },
+  interestedInArrangedMarriage: {
+    id: "interestedInArrangedMarriage",
+    label: "Are you interested in being included in our THM Arranged Marriage pool based on your assessment score?",
+    type: "select",
+    required: true,
+    helpText: "There is no guarantee for a match and it is considered on a rolling, real-time basis. Requires an additional $25 fee.",
+    options: [
+      { value: "yes", label: "Yes, I want to be considered for the THM Arranged Marriage Pool ($25)" },
+      { value: "no", label: "No, not at this time" }
+    ]
   }
 };
