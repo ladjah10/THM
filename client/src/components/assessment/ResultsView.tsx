@@ -36,20 +36,26 @@ export default function ResultsView({
 
       {/* Overall Score */}
       <div className="mb-10">
-        <h4 className="text-xl font-medium text-blue-900 mb-5 text-center">Overall Compatibility Score</h4>
+        <h4 className="text-xl font-medium text-blue-900 mb-5 text-center">Overall Assessment Score</h4>
         <div className="flex items-center justify-center">
           <div className="w-52 h-52 rounded-full flex flex-col items-center justify-center border-8 border-blue-500 relative shadow-lg">
             <div className="text-5xl font-bold text-blue-600">{scores.overallPercentage}%</div>
             <div className="text-base font-medium text-gray-700 mt-1">
               {scores.overallPercentage >= 80 
-                ? "Highly Compatible" 
+                ? "Traditional Approach" 
                 : scores.overallPercentage >= 60 
-                ? "Compatible"
+                ? "Balanced Approach"
                 : scores.overallPercentage >= 40
-                ? "Moderately Compatible"
-                : "Less Compatible"}
+                ? "Progressive Approach"
+                : "Highly Progressive"}
             </div>
           </div>
+        </div>
+        
+        <div className="max-w-2xl mx-auto mt-6 text-center text-gray-600 text-sm">
+          <p className="mb-2">Your score reflects how you responded to the assessment questions, not a judgment of readiness. 
+          Higher percentages indicate alignment with traditional marriage values, while lower percentages suggest 
+          more progressive viewpoints. Neither is inherently better—they simply represent different approaches to relationship.</p>
         </div>
       </div>
 
@@ -83,6 +89,11 @@ export default function ResultsView({
       {/* Section Scores */}
       <div className="mb-10 p-6 bg-white rounded-lg border border-gray-100 shadow-sm">
         <h4 className="text-xl font-medium text-blue-900 mb-5">Section Scores</h4>
+        <p className="mb-4 text-gray-600 text-sm">
+          Each section score reflects your perspective in a specific relationship area. These scores provide insights 
+          into your relationship approach and help determine your psychographic profiles. Higher percentages typically 
+          indicate traditional views, while lower percentages suggest more progressive approaches.
+        </p>
         <div className="space-y-6">
           {Object.entries(scores.sections).map(([section, { percentage }]) => (
             <div key={section}>
