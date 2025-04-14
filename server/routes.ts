@@ -1,9 +1,19 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
+import Stripe from "stripe";
 import { storage } from "./storage";
 import { z } from "zod";
 import { sendAssessmentEmail } from "./nodemailer";
 import { AssessmentResult } from "../shared/schema";
+
+// Initialize Stripe with the secret key
+if (!process.env.STRIPE_SECRET_KEY) {
+  throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
+}
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: "2023-10-16",
+});
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Email sending endpoint
@@ -116,6 +126,59 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ 
         success: false,
         message: "Failed to fetch assessments"
+      });
+    }
+  });
+
+  // Create a Stripe payment intent for assessment purchase
+  app.post('/api/create-payment-intent', async (req, res) => {
+    try {
+      // Fixed price for the assessment ($49)
+      const amount = 4900; // $49.00 in cents
+
+      // Create a PaymentIntent with the order amount and currency
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount,
+        currency: "usd",
+        payment_method_types: ["card"],
+        description: "The 100 Marriage Assessment - Series 1",
+        metadata: {
+          product: "marriage_assessment"
+        }
+      });
+
+      res.status(200).json({
+        clientSecret: paymentIntent.client_secret,
+        amount: amount / 100 // Convert back to dollars for display
+      });
+    } catch (error) {
+      console.error("Error creating payment intent:", error);
+      res.status(500).json({ 
+        error: "Failed to create payment intent" 
+      });
+    }
+  });
+
+  // Verify promo code validity
+  app.post('/api/verify-promo-code', async (req, res) => {
+    try {
+      const { promoCode } = req.body;
+      
+      // Valid promo codes (in a real app, these would be stored in a database)
+      const validPromoCodes = ["FREE100", "LA2025", "MARRIAGE100"];
+      
+      // Check if the promo code is valid
+      const isValid = validPromoCodes.includes(promoCode);
+      
+      res.status(200).json({ 
+        valid: isValid,
+        message: isValid ? "Promo code applied successfully" : "Invalid promo code"
+      });
+    } catch (error) {
+      console.error("Error verifying promo code:", error);
+      res.status(500).json({ 
+        valid: false, 
+        message: "Failed to verify promo code" 
       });
     }
   });
