@@ -67,13 +67,13 @@ export default function PromoCodeForm({
   return (
     <div className="space-y-3">
       <Label htmlFor="promoCode" className="text-sm font-medium">
-        Have a promo code?
+        Enter Your Promo Code to Save
       </Label>
       <div className="flex gap-2">
         <Input
           id="promoCode"
           type="text"
-          placeholder="Enter your promo code"
+          placeholder="Enter promo code"
           value={promoCode}
           onChange={(e) => onChange(e.target.value)}
           className="flex-1"
@@ -83,10 +83,14 @@ export default function PromoCodeForm({
           variant="outline" 
           onClick={handleVerifyPromoCode}
           disabled={!promoCode || isVerifying}
+          className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
         >
-          {isVerifying ? "Verifying..." : "Apply"}
+          {isVerifying ? "Verifying..." : "Apply Code"}
         </Button>
       </div>
+      <p className="text-xs text-gray-500 mt-2">
+        Upon verification, your report will be available immediately.
+      </p>
     </div>
   );
 }

@@ -134,7 +134,7 @@ function PaymentForm({ onPaymentSuccess }: { onPaymentSuccess: () => void }) {
             Processing...
           </div>
         ) : (
-          "Pay $49 and Continue"
+          "Pay $49 and Begin Uncovering Your Path to a Thriving Future"
         )}
       </Button>
     </form>
