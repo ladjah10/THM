@@ -45,7 +45,7 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
     <html>
     <head>
       <meta charset="utf-8">
-      <title>100 Marriage Assessment Results</title>
+      <title>The 100 Marriage Assessment - Series 1 Results</title>
       <style>
         body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
@@ -64,12 +64,12 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
     <body>
       <div class="container">
         <div class="header">
-          <h1>100 Marriage Assessment Results</h1>
+          <h1>The 100 Marriage Assessment - Series 1 Results</h1>
         </div>
         
         <div class="section">
           <p>Dear ${demographics.firstName},</p>
-          <p>Thank you for completing the 100 Marriage Assessment. Below are your detailed results. We've also attached a beautifully designed PDF report of your results that you can download, print, or share.</p>
+          <p>Thank you for completing The 100 Marriage Assessment - Series 1. Below are your detailed results. We've also attached a beautifully designed PDF report of your results that you can download, print, or share.</p>
         </div>
         
         <div class="section">
@@ -108,7 +108,7 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
         </div>
         
         <div class="footer">
-          <p>(c) 2025 Lawrence E. Adjah - The 100 Marriage Assessment</p>
+          <p>(c) 2025 Lawrence E. Adjah - The 100 Marriage Assessment - Series 1</p>
           <p>This assessment is designed to help you understand your readiness for marriage and identify areas for growth.</p>
         </div>
       </div>
@@ -134,14 +134,14 @@ export async function sendAssessmentEmail(assessment: AssessmentResult, ccEmail:
     
     // Send mail with defined transport object
     const info = await transporter.sendMail({
-      from: `"100 Marriage Assessment" <${testAccount.user}>`,
+      from: `"The 100 Marriage Assessment" <${testAccount.user}>`,
       to: assessment.email,
       cc: ccEmail, // Always CC the administrator by default
-      subject: `${assessment.name} - 100 Marriage Assessment Results`,
+      subject: `${assessment.name} - The 100 Marriage Assessment - Series 1 Results`,
       html: emailHtml,
       attachments: [
         {
-          filename: '100Marriage-Assessment-Report.pdf',
+          filename: 'The-100-Marriage-Assessment-Series-1-Report.pdf',
           content: pdfBuffer,
           contentType: 'application/pdf',
         },

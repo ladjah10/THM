@@ -11,9 +11,9 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
         size: 'LETTER',
         margin: 50,
         info: {
-          Title: `${assessment.name}s 100 Marriage Assessment Results`,
+          Title: `${assessment.name}'s The 100 Marriage Assessment - Series 1 Results`,
           Author: 'Lawrence E. Adjah',
-          Subject: '100 Marriage Assessment',
+          Subject: 'The 100 Marriage Assessment - Series 1',
         }
       });
 
@@ -30,7 +30,7 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
       doc.fontSize(24)
         .font('Helvetica-Bold')
         .fillColor('#2c3e50')
-        .text('100 Marriage Assessment', { align: 'center' });
+        .text('The 100 Marriage Assessment - Series 1', { align: 'center' });
 
       doc.moveDown(0.5)
         .fontSize(16)
@@ -182,7 +182,7 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
       doc.moveDown(2)
         .fontSize(10)
         .fillColor('#999')
-        .text('(c) 2025 Lawrence E. Adjah - The 100 Marriage Assessment', { align: 'center' });
+        .text('(c) 2025 Lawrence E. Adjah - The 100 Marriage Assessment - Series 1', { align: 'center' });
 
       // Finalize the PDF
       doc.end();
