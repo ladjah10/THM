@@ -1,4 +1,4 @@
-import type { Express } from "express";
+import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { z } from "zod";
@@ -95,6 +95,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(400).json({ 
         success: false,
         message: "Failed to send assessment report"
+      });
+    }
+  });
+
+  // Admin API to fetch all assessments
+  app.get('/api/admin/assessments', async (req: Request, res: Response) => {
+    try {
+      // In a real application, this endpoint would have proper authentication
+      // For now, we'll just return all assessments from storage
+      const assessments = await storage.getAllAssessments();
+      
+      // Return the assessments
+      return res.status(200).json(assessments);
+    } catch (error) {
+      console.error("Error fetching assessments:", error);
+      return res.status(500).json({ 
+        success: false,
+        message: "Failed to fetch assessments"
       });
     }
   });

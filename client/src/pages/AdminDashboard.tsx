@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
-import { AssessmentResult } from "../../shared/schema";
+import type { AssessmentResult } from "../../shared/schema";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -71,12 +71,12 @@ export default function AdminDashboard() {
       female: assessments?.filter(a => a.demographics.gender === "female").length || 0,
     },
     averageScore: assessments?.reduce((sum, assessment) => sum + assessment.scores.overallPercentage, 0) / (assessments?.length || 1) || 0,
-    profileDistribution: {}
+    profileDistribution: {} as Record<string, number>
   };
   
   // Count profiles
   if (assessments?.length) {
-    const profileCounts = {};
+    const profileCounts: Record<string, number> = {};
     assessments.forEach(assessment => {
       const profileName = assessment.profile.name;
       profileCounts[profileName] = (profileCounts[profileName] || 0) + 1;
@@ -85,7 +85,7 @@ export default function AdminDashboard() {
   }
   
   // Handle login
-  const handleLogin = (e) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
@@ -96,7 +96,7 @@ export default function AdminDashboard() {
   };
   
   // Format date for display
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string | undefined) => {
     if (!dateString) return "N/A";
     try {
       return new Date(dateString).toLocaleDateString('en-US', {
@@ -218,7 +218,7 @@ export default function AdminDashboard() {
                             style={{ width: `${(Number(count) / analytics.totalAssessments) * 100}%` }} 
                           />
                         </div>
-                        <span className="text-sm text-gray-500">{count}</span>
+                        <span className="text-sm text-gray-500">{Number(count)}</span>
                       </div>
                     </div>
                   ))}

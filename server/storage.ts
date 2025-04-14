@@ -10,6 +10,7 @@ export interface IStorage {
   createUser(user: InsertUser): Promise<User>;
   saveAssessment(assessment: AssessmentResult): Promise<void>;
   getAssessments(email: string): Promise<AssessmentResult[]>;
+  getAllAssessments(): Promise<AssessmentResult[]>;
 }
 
 export class MemStorage implements IStorage {
@@ -46,6 +47,10 @@ export class MemStorage implements IStorage {
   
   async getAssessments(email: string): Promise<AssessmentResult[]> {
     return this.assessments.filter(a => a.email === email);
+  }
+  
+  async getAllAssessments(): Promise<AssessmentResult[]> {
+    return [...this.assessments];
   }
 }
 
