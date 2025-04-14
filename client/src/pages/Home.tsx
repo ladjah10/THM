@@ -101,6 +101,41 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Book Section */}
+      <section className="py-12 px-4 bg-gradient-to-b from-amber-50 to-white">
+        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8 items-center">
+          <div className="flex justify-center">
+            <img 
+              src="/attached_assets/image_1744661653587.png" 
+              alt="The 100 Marriage Book Cover" 
+              className="h-auto max-w-full shadow-lg rounded-md" 
+              style={{ maxHeight: '500px' }}
+            />
+          </div>
+          <div className="flex flex-col space-y-6">
+            <h2 className="text-2xl md:text-3xl font-bold text-blue-900">
+              Based on the Best-Selling Book
+            </h2>
+            <p className="text-lg text-gray-700">
+              Inspired by the best-selling book <em>The 100 Marriage</em> by Lawrence E. Adjah, this assessment brings the book's proven framework to life—helping you avoid misaligned expectations that can destroy your forever.
+            </p>
+            <div className="pt-4">
+              <Button 
+                onClick={() => window.open('https://lawrenceadjah.com/the100marriagebook', '_blank')}
+                className="bg-amber-500 hover:bg-amber-400 text-white py-3 px-6 rounded-md text-base font-medium"
+              >
+                Purchase or Gift the Book
+              </Button>
+            </div>
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <p className="italic text-gray-600">
+                "The 100 Marriage offers profound wisdom for singles, couples, and marrieds alike, guiding them to create a marriage built on aligned expectations and God's plan."
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Testimonial Section */}
       <section className="py-12 px-4 bg-gray-100">
         <div className="max-w-3xl mx-auto text-center">

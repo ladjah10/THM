@@ -149,13 +149,15 @@ export default function DemographicView({
   };
 
   return (
-    <div className="bg-white shadow-sm rounded-lg p-6 mb-6">
-      <div className="mb-4">
-        <h3 className="text-lg font-semibold text-gray-900">About You</h3>
-        <p className="text-sm text-gray-500">Please provide some information before taking the assessment</p>
+    <div className="bg-white shadow-md rounded-lg p-6 mb-6 border border-gray-100">
+      <div className="mb-6 text-center pb-4 border-b border-gray-100">
+        <h3 className="text-2xl font-semibold text-blue-900 mb-2">About You</h3>
+        <p className="text-gray-600">
+          Please provide your information below to personalize your assessment experience
+        </p>
       </div>
 
-      <form className="space-y-4" onSubmit={handleSubmit}>
+      <form className="space-y-5" onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="firstName" className="text-sm font-medium text-gray-700">
@@ -353,24 +355,54 @@ export default function DemographicView({
         
         {/* Payment Wall */}
         {showPaywall && !demographicData.hasPaid && (
-          <Card className="mt-6 border-primary-200">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-xl text-primary-700">Complete Your Assessment</CardTitle>
-              <CardDescription>
-                The 100 Marriage Assessment is available for $49. You can also use a promo code if you have one.
+          <Card className="mt-6 border border-blue-100 shadow-md">
+            <CardHeader className="pb-4 bg-gradient-to-b from-blue-50 to-white">
+              <CardTitle className="text-xl text-blue-900">Unlock Your Complete Assessment</CardTitle>
+              <CardDescription className="text-gray-700">
+                Misaligned Expectations Can Destroy Relationships—Align Yours for Only $49
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
+            <CardContent className="pt-4">
+              <div className="mb-4 px-2">
+                <p className="text-gray-700 text-sm">
+                  Discover insights from <em>The 100 Marriage</em> by Lawrence E. Adjah—helping you uncover hidden expectations and prepare for a thriving future.
+                </p>
+              </div>
+              
+              <div className="bg-blue-50 p-4 rounded-md mb-4">
+                <h4 className="font-medium text-blue-900 mb-2">Here's What You'll Gain:</h4>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-start">
+                    <svg className="h-5 w-5 mr-2 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>In-Depth Assessment with Personalized Results</span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg className="h-5 w-5 mr-2 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>PDF Report with Insights to Guide Your Journey</span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg className="h-5 w-5 mr-2 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>Exclusive Access to Book Consultation with Lawrence Adjah</span>
+                  </li>
+                </ul>
+              </div>
+              
+              <div className="space-y-4 p-4 bg-gray-50 rounded-md border border-gray-100">
                 <div className="space-y-2">
-                  <Label htmlFor="promoCode" className="text-sm font-medium">
-                    {demographicQuestions.promoCode.label}
+                  <Label htmlFor="demoPromoCode" className="text-sm font-medium text-gray-700">
+                    Enter Your Promo Code to Save
                   </Label>
                   <div className="flex gap-2">
                     <Input
-                      id="promoCode"
+                      id="demoPromoCode"
                       type="text"
-                      placeholder={demographicQuestions.promoCode.placeholder}
+                      placeholder="Enter promo code"
                       value={demographicData.promoCode}
                       onChange={(e) => onChange("promoCode", e.target.value)}
                       className="flex-1"
@@ -380,35 +412,66 @@ export default function DemographicView({
                       variant="outline" 
                       onClick={handleVerifyPromoCode}
                       disabled={!demographicData.promoCode || isVerifyingPromo}
+                      className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
                     >
-                      {isVerifyingPromo ? "Verifying..." : "Apply"}
+                      {isVerifyingPromo ? "Verifying..." : "Apply Code"}
                     </Button>
                   </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Valid promo codes: FREE100, LA2025, MARRIAGE100
+                  </p>
                 </div>
                 
-                <div className="my-4 text-center">
-                  <span className="px-2 text-sm text-gray-500">or</span>
+                <div className="flex items-center gap-2 justify-center text-sm text-gray-500 my-2">
+                  <div className="h-px bg-gray-200 flex-1"></div>
+                  <span>or</span>
+                  <div className="h-px bg-gray-200 flex-1"></div>
                 </div>
                 
                 <Button
                   type="button"
-                  className="w-full"
+                  className="w-full bg-amber-500 hover:bg-amber-400 text-white"
                   onClick={handleProcessPayment}
                   disabled={isProcessingPayment}
                 >
-                  {isProcessingPayment ? "Processing..." : "Pay $49 and Continue"}
+                  {isProcessingPayment ? "Processing..." : "Pay $49 and Begin Your Journey"}
                 </Button>
               </div>
             </CardContent>
           </Card>
         )}
 
-        <div className="flex justify-end pt-4">
+        {/* Book Reference */}
+        <div className="mt-6 pt-5 border-t border-gray-100 flex flex-col sm:flex-row items-center gap-4">
+          <div className="w-32 flex-shrink-0">
+            <img 
+              src="/attached_assets/image_1744661653587.png" 
+              alt="The 100 Marriage Book Cover" 
+              className="h-auto w-full shadow-sm rounded-sm"
+            />
+          </div>
+          <div>
+            <h4 className="text-sm font-medium text-blue-900">Based on the Best-Selling Book</h4>
+            <p className="text-xs text-gray-600 mt-1">
+              Inspired by <em>The 100 Marriage</em> by Lawrence E. Adjah, this assessment brings the book's proven framework to life.
+            </p>
+            <a 
+              href="https://lawrenceadjah.com/the100marriagebook" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-xs text-blue-600 hover:text-blue-800 mt-1 inline-block"
+            >
+              Learn more about the book →
+            </a>
+          </div>
+        </div>
+
+        <div className="flex justify-end pt-6">
           <Button
             type="submit"
-            className="px-6 py-3 text-sm font-medium"
+            className="px-6 py-3 text-sm font-medium bg-blue-600 hover:bg-blue-500 text-white"
           >
-            Start Assessment Questions →
+            Begin Assessment Questions →
           </Button>
         </div>
       </form>
