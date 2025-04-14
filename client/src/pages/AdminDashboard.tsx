@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
-import type { AssessmentResult } from "../../shared/schema";
+import type { AssessmentResult, SectionScore } from "../../shared/schema";
 import {
   Dialog,
   DialogContent,
@@ -482,20 +482,25 @@ export default function AdminDashboard() {
                       
                       <div className="space-y-2">
                         <h4 className="font-medium mb-2">Section Scores:</h4>
-                        {Object.entries(selectedAssessment.scores.sections).map(([section, score]) => (
-                          <div key={section} className="space-y-1">
-                            <div className="flex justify-between items-center">
-                              <span className="text-sm">{section}</span>
-                              <span className="text-sm font-medium">{score.percentage.toFixed(1)}%</span>
+                        {Object.entries(selectedAssessment.scores.sections).map(([section, score]) => {
+                          const sectionScore = score as SectionScore;
+                          return (
+                            <div key={section} className="space-y-1">
+                              <div className="flex justify-between items-center">
+                                <span className="text-sm">{section}</span>
+                                <span className="text-sm font-medium">
+                                  {sectionScore.percentage.toFixed(1)}%
+                                </span>
+                              </div>
+                              <div className="w-full bg-gray-200 rounded-full h-1.5">
+                                <div 
+                                  className="bg-primary h-1.5 rounded-full" 
+                                  style={{ width: `${sectionScore.percentage}%` }}
+                                />
+                              </div>
                             </div>
-                            <div className="w-full bg-gray-200 rounded-full h-1.5">
-                              <div 
-                                className="bg-primary h-1.5 rounded-full" 
-                                style={{ width: `${score.percentage}%` }}
-                              />
-                            </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     </div>
                   </CardContent>
