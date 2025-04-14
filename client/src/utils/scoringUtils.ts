@@ -74,39 +74,62 @@ export function calculateScores(
 }
 
 /**
- * Determine user's psychographic profile based on scores and gender
+ * Determine user's psychographic profiles based on scores and gender
+ * Returns both primary profile and gender-specific profile if available
  */
-export function determineProfile(scores: AssessmentScores, gender?: string) {
-  // Filter profiles by gender compatibility
-  const eligibleProfiles = psychographicProfiles.filter(profile => {
+export function determineProfiles(scores: AssessmentScores, gender?: string) {
+  // Filter unisex profiles
+  const unisexProfiles = psychographicProfiles.filter(profile => !profile.genderSpecific);
+  
+  // Filter gender-specific profiles
+  const genderProfiles = psychographicProfiles.filter(profile => {
     if (profile.genderSpecific === 'male' && gender === 'male') return true;
     if (profile.genderSpecific === 'female' && gender === 'female') return true;
-    if (!profile.genderSpecific) return true;
     return false;
   });
   
-  // Find the best matching profile using criteria matching
-  const matchedProfile = eligibleProfiles.reduce(
-    (best, current) => {
-      let score = 0;
-      
-      // Check section matches
-      current.criteria.forEach(criterion => {
-        const sectionScore = scores.sections[criterion.section]?.percentage || 0;
+  // Function to find best matching profile from a list
+  const findBestMatch = (profiles: UserProfile[]) => {
+    if (profiles.length === 0) return null;
+    
+    return profiles.reduce(
+      (best, current) => {
+        let score = 0;
         
-        if (criterion.min && sectionScore >= criterion.min) {
-          score += 1;
-        }
+        // Check section matches
+        current.criteria.forEach(criterion => {
+          const sectionScore = scores.sections[criterion.section]?.percentage || 0;
+          
+          if (criterion.min && sectionScore >= criterion.min) {
+            score += 1;
+          }
+          
+          if (criterion.max && sectionScore <= criterion.max) {
+            score += 1;
+          }
+        });
         
-        if (criterion.max && sectionScore <= criterion.max) {
-          score += 1;
-        }
-      });
-      
-      return score > best.score ? { profile: current, score } : best;
-    },
-    { profile: eligibleProfiles[0], score: 0 }
-  );
+        return score > best.score ? { profile: current, score } : best;
+      },
+      { profile: profiles[0], score: 0 }
+    ).profile;
+  };
   
-  return matchedProfile.profile;
+  // Find the best matching profiles
+  const primaryProfile = findBestMatch(unisexProfiles);
+  const genderProfile = findBestMatch(genderProfiles);
+  
+  return {
+    primaryProfile,
+    genderProfile
+  };
+}
+
+/**
+ * For backward compatibility, returns the primary profile
+ * (either unisex or gender-specific, with preference to gender-specific)
+ */
+export function determineProfile(scores: AssessmentScores, gender?: string) {
+  const { primaryProfile, genderProfile } = determineProfiles(scores, gender);
+  return genderProfile || primaryProfile;
 }
