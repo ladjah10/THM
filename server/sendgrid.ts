@@ -1,5 +1,6 @@
 import { MailService } from '@sendgrid/mail';
 import { AssessmentResult } from '../shared/schema';
+import { generateAssessmentPDF } from './pdf-generator';
 
 // Initialize SendGrid
 if (!process.env.SENDGRID_API_KEY) {
@@ -18,6 +19,12 @@ interface EmailMessage {
   subject: string;
   text?: string;
   html: string;
+  attachments?: {
+    content: string;
+    filename: string;
+    type: string;
+    disposition: string;
+  }[];
 }
 
 /**
@@ -65,7 +72,7 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
         
         <div class="section">
           <p>Dear ${demographics.firstName},</p>
-          <p>Thank you for completing the 100 Marriage Assessment. Below are your detailed results.</p>
+          <p>Thank you for completing the 100 Marriage Assessment. Below are your detailed results. We've also attached a beautifully designed PDF report of your results that you can download, print, or share.</p>
         </div>
         
         <div class="section">
@@ -104,7 +111,7 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
         </div>
         
         <div class="footer">
-          <p>© 2025 Lawrence E. Adjah - The 100 Marriage Assessment</p>
+          <p>(c) 2025 Lawrence E. Adjah - The 100 Marriage Assessment</p>
           <p>This assessment is designed to help you understand your readiness for marriage and identify areas for growth.</p>
         </div>
       </div>
@@ -114,7 +121,7 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
 }
 
 /**
- * Sends an assessment report email
+ * Sends an assessment report email with PDF attachment
  */
 export async function sendAssessmentEmail(assessment: AssessmentResult, ccEmail: string = "la@lawrenceadjah.com"): Promise<boolean> {
   try {
@@ -123,18 +130,34 @@ export async function sendAssessmentEmail(assessment: AssessmentResult, ccEmail:
       return false;
     }
 
+    // Format the email HTML content
     const emailHtml = formatAssessmentEmail(assessment);
     
+    // Generate PDF report
+    console.log('Generating PDF report...');
+    const pdfBuffer = await generateAssessmentPDF(assessment);
+    
+    // Create the email message
     const message: EmailMessage = {
       to: assessment.email,
       from: 'assessment@100marriage.com', // This should be a verified sender in SendGrid
-      subject: `${assessment.name}'s 100 Marriage Assessment Results`,
+      subject: `${assessment.name} - 100 Marriage Assessment Results`,
       html: emailHtml,
       cc: ccEmail, // Always CC the administrator by default
+      attachments: [
+        {
+          content: pdfBuffer.toString('base64'),
+          filename: `100Marriage-Assessment-Report.pdf`,
+          type: 'application/pdf',
+          disposition: 'attachment'
+        }
+      ]
     };
     
+    // Send the email with attachment
     await mailService.send(message);
-    console.log(`Email sent to ${assessment.email} with CC to ${ccEmail}`);
+    console.log(`Email with PDF attachment sent to ${assessment.email} with CC to ${ccEmail}`);
+    
     return true;
   } catch (error) {
     console.error('SendGrid email error:', error);
