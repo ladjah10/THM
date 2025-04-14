@@ -19,39 +19,41 @@ async function runTestAssessment() {
 
   // Sample psychographic profile
   const profile = {
-    id: 4,
-    name: "The Balanced Visionary",
+    id: 6,
+    name: "Balanced Visionaries",
     description: "You have a strong foundation of faith-centered expectations paired with practical wisdom. You value clear communication, mutual respect, and shared spiritual growth. Your balanced approach to relationships positions you well for a fulfilling marriage built on aligned expectations and shared values.",
     genderSpecific: null,
     criteria: [
-      { section: "Faith & Spirituality", min: 75 },
-      { section: "Communication", min: 70 },
-      { section: "Relationship Dynamics", min: 65 }
+      { section: "Your Faith Life", min: 75 },
+      { section: "Your Marriage Life", min: 70 },
+      { section: "Your Marriage and Boundaries", min: 65 }
     ]
   };
 
   // Sample assessment scores
   const scores = {
     sections: {
-      "Faith & Spirituality": { earned: 85, possible: 100, percentage: 85 },
-      "Communication": { earned: 75, possible: 100, percentage: 75 },
-      "Relationship Dynamics": { earned: 80, possible: 100, percentage: 80 },
-      "Conflict Resolution": { earned: 70, possible: 100, percentage: 70 },
-      "Children & Family": { earned: 72, possible: 100, percentage: 72 }
+      "Your Foundation": { earned: 80, possible: 100, percentage: 80 },
+      "Your Faith Life": { earned: 85, possible: 100, percentage: 85 },
+      "Your Marriage Life": { earned: 78, possible: 100, percentage: 78 },
+      "Your Parenting Life": { earned: 72, possible: 100, percentage: 72 },
+      "Your Family/Home Life": { earned: 75, possible: 100, percentage: 75 },
+      "Your Finances": { earned: 70, possible: 100, percentage: 70 },
+      "Your Health and Wellness": { earned: 68, possible: 100, percentage: 68 },
+      "Your Marriage and Boundaries": { earned: 77, possible: 100, percentage: 77 }
     },
     overallPercentage: 76.4,
     strengths: [
-      "Faith-centered relationship foundation",
-      "Open and honest communication",
-      "Balanced expectations for relationship roles"
+      "Strong faith-centered relationship foundation",
+      "Clear marriage expectations and communication",
+      "Balanced approach to relationship boundaries"
     ],
     improvementAreas: [
-      "Conflict resolution strategies",
-      "Financial planning discussions",
-      "Long-term family planning"
+      "Health and wellness considerations",
+      "Financial planning discussions"
     ],
-    totalEarned: 382,
-    totalPossible: 500
+    totalEarned: 605,
+    totalPossible: 800
   };
 
   // Sample responses (simplified for demonstration)
