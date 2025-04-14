@@ -156,15 +156,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Create a Stripe payment intent for assessment purchase
   app.post('/api/create-payment-intent', async (req, res) => {
     try {
-      // Get assessment type from request (defaults to 'individual')
-      const { assessmentType = 'individual' } = req.body;
+      // Get assessment type and THM pool application status from request
+      const { 
+        assessmentType = 'individual',
+        thmPoolApplied = false 
+      } = req.body;
       
-      // Determine price based on assessment type
+      // Base price calculation
       // Individual: $49, Couple: $79 (for future use)
-      const amount = assessmentType === 'couple' ? 7900 : 4900; // in cents
+      let amount = assessmentType === 'couple' ? 7900 : 4900; // in cents
       
-      // Create a description based on assessment type
-      const description = `The 100 Marriage Assessment - Series 1 (${assessmentType === 'couple' ? 'Couple' : 'Individual'})`;
+      // Add THM Pool application fee if opted in ($25 extra)
+      if (thmPoolApplied) {
+        amount += 2500; // Add $25 in cents
+      }
+      
+      // Create a description based on assessment type and THM pool application
+      let description = `The 100 Marriage Assessment - Series 1 (${assessmentType === 'couple' ? 'Couple' : 'Individual'})`;
+      if (thmPoolApplied) {
+        description += ' + THM Arranged Marriage Pool Application';
+      }
 
       // Create a PaymentIntent with the order amount and currency
       const paymentIntent = await stripe.paymentIntents.create({
@@ -174,14 +185,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         description,
         metadata: {
           product: "marriage_assessment",
-          type: assessmentType
+          type: assessmentType,
+          thmPoolApplied: thmPoolApplied ? "yes" : "no"
         }
       });
 
       res.status(200).json({
         clientSecret: paymentIntent.client_secret,
         amount: amount / 100, // Convert back to dollars for display
-        assessmentType
+        assessmentType,
+        thmPoolApplied
       });
     } catch (error) {
       console.error("Error creating payment intent:", error);

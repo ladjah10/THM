@@ -33,7 +33,13 @@ const cardStyle = {
 };
 
 // Internal payment form component
-function PaymentForm({ onPaymentSuccess }: { onPaymentSuccess: () => void }) {
+function PaymentForm({ 
+  onPaymentSuccess, 
+  thmPoolApplied 
+}: { 
+  onPaymentSuccess: () => void;
+  thmPoolApplied: boolean;
+}) {
   const stripe = useStripe();
   const elements = useElements();
   const [clientSecret, setClientSecret] = useState<string>('');
@@ -45,7 +51,8 @@ function PaymentForm({ onPaymentSuccess }: { onPaymentSuccess: () => void }) {
   useEffect(() => {
     const getPaymentIntent = async () => {
       try {
-        const response = await apiRequest('POST', '/api/create-payment-intent', {});
+        // Include thmPoolApplied in the request to adjust the price if needed
+        const response = await apiRequest('POST', '/api/create-payment-intent', { thmPoolApplied });
         const { clientSecret, amount } = await response.json();
         setClientSecret(clientSecret);
         setAmount(amount);
@@ -60,7 +67,7 @@ function PaymentForm({ onPaymentSuccess }: { onPaymentSuccess: () => void }) {
     };
 
     getPaymentIntent();
-  }, []);
+  }, [thmPoolApplied]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -134,7 +141,9 @@ function PaymentForm({ onPaymentSuccess }: { onPaymentSuccess: () => void }) {
             Processing...
           </div>
         ) : (
-          "Pay $49 for Individual Assessment"
+          thmPoolApplied 
+            ? "Pay $74 for Assessment + THM Pool Application" 
+            : "Pay $49 for Individual Assessment"
         )}
       </Button>
     </form>
@@ -153,7 +162,7 @@ export default function StripePaymentForm({
     <div className="w-full">
       {stripePromise && (
         <Elements stripe={stripePromise}>
-          <PaymentForm onPaymentSuccess={onPaymentSuccess} />
+          <PaymentForm onPaymentSuccess={onPaymentSuccess} thmPoolApplied={thmPoolApplied} />
         </Elements>
       )}
     </div>

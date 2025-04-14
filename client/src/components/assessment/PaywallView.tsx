@@ -118,7 +118,10 @@ export default function PaywallView({
                 <TabsTrigger value="referral">Invite Friends</TabsTrigger>
               </TabsList>
               <TabsContent value="card" className="mt-4">
-                <StripePaymentForm onPaymentSuccess={handlePaymentSuccess} />
+                <StripePaymentForm 
+                  onPaymentSuccess={handlePaymentSuccess} 
+                  thmPoolApplied={demographicData.thmPoolApplied}
+                />
               </TabsContent>
               <TabsContent value="promo" className="mt-4">
                 <PromoCodeForm 
