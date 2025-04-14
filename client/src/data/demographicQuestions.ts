@@ -73,10 +73,27 @@ export const demographicQuestions = {
       { value: "hispanic", label: "Hispanic or Latino" }
     ]
   },
+  hasPurchasedBook: {
+    id: "hasPurchasedBook",
+    label: "Have you purchased a copy of \"The 100 Marriage Decisions + Declarations You Need to Make Before Getting Married\"?",
+    type: "select",
+    required: true,
+    options: [
+      { value: "yes", label: "Yes" },
+      { value: "no", label: "No" }
+    ]
+  },
   purchaseDate: {
     id: "purchaseDate",
-    label: "Date of Purchase (The 100 Marriage)",
+    label: "Date of Purchase (The 100 Marriage: Book)",
     type: "date",
     required: false
+  },
+  promoCode: {
+    id: "promoCode",
+    label: "Promo Code (if you have one)",
+    type: "text",
+    required: false,
+    placeholder: "Enter code"
   }
 };

@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from "@/hooks/use-toast";
 import { 
   Select,
   SelectContent,
@@ -10,6 +11,14 @@ import {
   SelectTrigger,
   SelectValue 
 } from "@/components/ui/select";
+import { 
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { DemographicData } from "@/types/assessment";
 import { demographicQuestions } from "@/data/demographicQuestions";
 
@@ -29,11 +38,32 @@ export default function DemographicView({
   const [selectedEthnicities, setSelectedEthnicities] = useState<string[]>(
     demographicData.ethnicity ? demographicData.ethnicity.split(',') : []
   );
+  const [showPaywall, setShowPaywall] = useState<boolean>(false);
+  const [isProcessingPayment, setIsProcessingPayment] = useState<boolean>(false);
+  const [isVerifyingPromo, setIsVerifyingPromo] = useState<boolean>(false);
+  
+  // Valid promo codes (in a real app, these would be stored in a database or validated through an API)
+  const validPromoCodes = ["FREE100", "LA2025", "MARRIAGE100"];
+
+  // Handle book purchase change
+  useEffect(() => {
+    if (demographicData.hasPurchasedBook === "no") {
+      setShowPaywall(true);
+    } else {
+      setShowPaywall(false);
+    }
+  }, [demographicData.hasPurchasedBook]);
 
   // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit();
+    
+    // Check if user has purchased the book or paid/used valid promo
+    if (demographicData.hasPurchasedBook === "yes" || demographicData.hasPaid) {
+      onSubmit();
+    } else {
+      setShowPaywall(true);
+    }
   };
 
   // Handle ethnicity checkbox changes
@@ -47,6 +77,50 @@ export default function DemographicView({
       onChange("ethnicity", updatedValues.join(','));
       return updatedValues;
     });
+  };
+  
+  // Handle promo code verification
+  const handleVerifyPromoCode = () => {
+    setIsVerifyingPromo(true);
+    
+    // Simulate API call to verify promo code
+    setTimeout(() => {
+      const isValid = validPromoCodes.includes(demographicData.promoCode);
+      
+      if (isValid) {
+        // Convert to boolean since our type requires hasPaid to be boolean
+        onChange("hasPaid", true as any);
+        toast({
+          title: "Promo Code Applied",
+          description: "Your promo code has been accepted. You can now take the assessment.",
+          variant: "default"
+        });
+      } else {
+        toast({
+          title: "Invalid Promo Code",
+          description: "The promo code you entered is not valid.",
+          variant: "destructive"
+        });
+      }
+      
+      setIsVerifyingPromo(false);
+    }, 1000);
+  };
+  
+  // Handle mock payment
+  const handleProcessPayment = () => {
+    setIsProcessingPayment(true);
+    
+    // Simulate payment processing
+    setTimeout(() => {
+      onChange("hasPaid", true as any);
+      setIsProcessingPayment(false);
+      toast({
+        title: "Payment Successful",
+        description: "Thank you for your purchase. You can now take the assessment.",
+        variant: "default"
+      });
+    }, 1500);
   };
 
   return (
@@ -212,25 +286,103 @@ export default function DemographicView({
             ))}
           </div>
         </div>
-
+        
+        {/* Book Purchase Question */}
         <div className="space-y-2">
-          <Label htmlFor="purchaseDate" className="text-sm font-medium text-gray-700">
-            {demographicQuestions.purchaseDate.label}
+          <Label htmlFor="hasPurchasedBook" className="text-sm font-medium text-gray-700">
+            {demographicQuestions.hasPurchasedBook.label}
           </Label>
-          <Input
-            id="purchaseDate"
-            type="date"
-            value={demographicData.purchaseDate}
-            onChange={(e) => onChange("purchaseDate", e.target.value)}
-            required={demographicQuestions.purchaseDate.required}
-            className="mt-1 block w-full"
-          />
+          <Select
+            value={demographicData.hasPurchasedBook}
+            onValueChange={(value) => onChange("hasPurchasedBook", value)}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select an option" />
+            </SelectTrigger>
+            <SelectContent>
+              {demographicQuestions.hasPurchasedBook.options.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
+
+        {/* Conditional Purchase Date Field */}
+        {demographicData.hasPurchasedBook === "yes" && (
+          <div className="space-y-2">
+            <Label htmlFor="purchaseDate" className="text-sm font-medium text-gray-700">
+              {demographicQuestions.purchaseDate.label}
+            </Label>
+            <Input
+              id="purchaseDate"
+              type="date"
+              value={demographicData.purchaseDate}
+              onChange={(e) => onChange("purchaseDate", e.target.value)}
+              required={true}
+              className="mt-1 block w-full"
+            />
+          </div>
+        )}
+        
+        {/* Payment Wall */}
+        {showPaywall && !demographicData.hasPaid && (
+          <Card className="mt-6 border-primary-200">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-xl text-primary-700">Complete Your Assessment</CardTitle>
+              <CardDescription>
+                The 100 Marriage Assessment is available for $49. You can also use a promo code if you have one.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="promoCode" className="text-sm font-medium">
+                    {demographicQuestions.promoCode.label}
+                  </Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="promoCode"
+                      type="text"
+                      placeholder={demographicQuestions.promoCode.placeholder}
+                      value={demographicData.promoCode}
+                      onChange={(e) => onChange("promoCode", e.target.value)}
+                      className="flex-1"
+                    />
+                    <Button 
+                      type="button"
+                      variant="outline" 
+                      onClick={handleVerifyPromoCode}
+                      disabled={!demographicData.promoCode || isVerifyingPromo}
+                    >
+                      {isVerifyingPromo ? "Verifying..." : "Apply"}
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="my-4 text-center">
+                  <span className="px-2 text-sm text-gray-500">or</span>
+                </div>
+                
+                <Button
+                  type="button"
+                  className="w-full"
+                  onClick={handleProcessPayment}
+                  disabled={isProcessingPayment}
+                >
+                  {isProcessingPayment ? "Processing..." : "Pay $49 and Continue"}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <div className="flex justify-end pt-4">
           <Button
             type="submit"
             className="px-6 py-3 text-sm font-medium"
+            disabled={demographicData.hasPurchasedBook === "no" && !demographicData.hasPaid}
           >
             Start Assessment Questions →
           </Button>
