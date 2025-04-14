@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The 100 Marriage Assessment - Sample Results</title>
+  <style>
+    body {
+      font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f7f9fc;
+      padding: 0;
+      margin: 0;
+    }
+    
+    h1, h2, h3, h4 {
+      color: #2c3e50;
+      margin-top: 0;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eaeaea;
+    }
+    
+    .header h1 {
+      font-size: 24px;
+      color: #1a365d;
+      margin-bottom: 10px;
+    }
+    
+    .header p {
+      color: #718096;
+      font-size: 16px;
+    }
+    
+    .score-circle {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background-color: #fff;
+      border: 8px solid #3182ce;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 40px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .score-percent {
+      font-size: 48px;
+      font-weight: bold;
+      color: #3182ce;
+      line-height: 1;
+    }
+    
+    .score-label {
+      font-size: 16px;
+      color: #4a5568;
+      margin-top: 5px;
+    }
+    
+    .section {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 25px;
+      margin-bottom: 25px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .section h2 {
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: #2d3748;
+      border-bottom: 1px solid #edf2f7;
+      padding-bottom: 10px;
+    }
+    
+    .profile-card {
+      border-radius: 6px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .primary-profile {
+      background-color: #ebf8ff;
+      border-left: 4px solid #3182ce;
+    }
+    
+    .gender-profile {
+      background-color: #f8f0fc;
+      border-left: 4px solid #805ad5;
+    }
+    
+    .profile-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .profile-name {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0;
+    }
+    
+    .profile-tag {
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 50px;
+      font-weight: 500;
+    }
+    
+    .primary-tag {
+      background-color: #bee3f8;
+      color: #2c5282;
+    }
+    
+    .gender-tag {
+      background-color: #e9d8fd;
+      color: #553c9a;
+    }
+    
+    .profile-description {
+      color: #4a5568;
+      line-height: 1.7;
+    }
+    
+    .scores-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+    
+    @media (min-width: 640px) {
+      .scores-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    .score-item {
+      margin-bottom: 15px;
+    }
+    
+    .score-label-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    
+    .score-bar-bg {
+      width: 100%;
+      height: 10px;
+      background-color: #edf2f7;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    
+    .score-bar-fill {
+      height: 100%;
+      background-color: #3182ce;
+      border-radius: 5px;
+    }
+    
+    .strengths-section, .improvements-section {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .strengths-section h3 {
+      color: #d69e2e;
+    }
+    
+    .improvements-section h3 {
+      color: #3182ce;
+    }
+    
+    .list-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+    
+    .list-icon {
+      margin-right: 10px;
+      color: #d69e2e;
+      flex-shrink: 0;
+      transform: translateY(4px);
+    }
+    
+    .improvements-icon {
+      color: #3182ce;
+    }
+    
+    .btn {
+      display: inline-block;
+      font-weight: 500;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: middle;
+      border: 1px solid transparent;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      line-height: 1.5;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      transition: all 0.15s ease-in-out;
+      text-decoration: none;
+    }
+    
+    .btn-primary {
+      color: #fff;
+      background-color: #3182ce;
+      border-color: #3182ce;
+    }
+    
+    .btn-primary:hover {
+      background-color: #2b6cb0;
+      border-color: #2b6cb0;
+    }
+    
+    .btn-outline {
+      color: #3182ce;
+      background-color: transparent;
+      border-color: #3182ce;
+    }
+    
+    .btn-outline:hover {
+      color: #fff;
+      background-color: #3182ce;
+    }
+    
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #eaeaea;
+      color: #718096;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>The 100 Marriage Assessment - Series 1</h1>
+      <p>Your personalized assessment results based on your responses</p>
+    </div>
+    
+    <div class="score-circle">
+      <div class="score-percent">83%</div>
+      <div class="score-label">Overall Compatibility</div>
+    </div>
+    
+    <div class="section">
+      <h2>Your Psychographic Profiles</h2>
+      
+      <!-- Primary Profile -->
+      <div class="profile-card primary-profile">
+        <div class="profile-header">
+          <h3 class="profile-name" style="color: #3182ce;">Balanced Visionaries</h3>
+          <span class="profile-tag primary-tag">General Profile</span>
+        </div>
+        <p class="profile-description">
+          Balanced Visionaries approach marriage with a well-rounded perspective, demonstrating high scores across communication, family planning, and life vision areas. They exhibit a thoughtful approach to relationship challenges and possess the ability to maintain calm during conflict. Their relationships are characterized by mutual respect, clear communication, and a shared path forward that honors both partners' dreams.
+        </p>
+      </div>
+      
+      <!-- Gender-specific Profile -->
+      <div class="profile-card gender-profile">
+        <div class="profile-header">
+          <h3 class="profile-name" style="color: #805ad5;">Steadfast Protectors</h3>
+          <span class="profile-tag gender-tag">Male-Specific Profile</span>
+        </div>
+        <p class="profile-description">
+          Steadfast Protectors place a high value on family security and maintaining strong protective boundaries. As male partners, they demonstrate a particular devotion to ensuring their loved ones feel safe and provided for. They excel at conflict resolution and typically approach challenges with a pragmatic mindset. Their strong scores in faith and vision areas reveal a commitment to spiritual leadership within their relationship.
+        </p>
+      </div>
+    </div>
+    
+    <div class="section">
+      <h2>Section Scores</h2>
+      <div class="scores-grid">
+        <div class="score-item">
+          <div class="score-label-row">
+            <span>Communication</span>
+            <span style="color: #3182ce; font-weight: 500;">85%</span>
+          </div>
+          <div class="score-bar-bg">
+            <div class="score-bar-fill" style="width: 85%;"></div>
+          </div>
+        </div>
+        
+        <div class="score-item">
+          <div class="score-label-row">
+            <span>Compatibility</span>
+            <span style="color: #3182ce; font-weight: 500;">90%</span>
+          </div>
+          <div class="score-bar-bg">
+            <div class="score-bar-fill" style="width: 90%;"></div>
+          </div>
+        </div>
+        
+        <div class="score-item">
+          <div class="score-label-row">
+            <span>Faith</span>
+            <span style="color: #3182ce; font-weight: 500;">78%</span>
+          </div>
+          <div class="score-bar-bg">
+            <div class="score-bar-fill" style="width: 78%;"></div>
+          </div>
+        </div>
+        
+        <div class="score-item">
+          <div class="score-label-row">
+            <span>Financial Management</span>
+            <span style="color: #3182ce; font-weight: 500;">65%</span>
+          </div>
+          <div class="score-bar-bg">
+            <div class="score-bar-fill" style="width: 65%;"></div>
+          </div>
+        </div>
+        
+        <div class="score-item">
+          <div class="score-label-row">
+            <span>Family Planning</span>
+            <span style="color: #3182ce; font-weight: 500;">92%</span>
+          </div>
+          <div class="score-bar-bg">
+            <div class="score-bar-fill" style="width: 92%;"></div>
+          </div>
+        </div>
+        
+        <div class="score-item">
+          <div class="score-label-row">
+            <span>Life Vision</span>
+            <span style="color: #3182ce; font-weight: 500;">88%</span>
+          </div>
+          <div class="score-bar-bg">
+            <div class="score-bar-fill" style="width: 88%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="scores-grid">
+      <div class="strengths-section">
+        <h3>Areas of Strength</h3>
+        <div class="list-item">
+          <span class="list-icon">✓</span>
+          <span>Strong communication skills and openness</span>
+        </div>
+        <div class="list-item">
+          <span class="list-icon">✓</span>
+          <span>Aligned on family planning goals</span>
+        </div>
+        <div class="list-item">
+          <span class="list-icon">✓</span>
+          <span>Shared vision for the future</span>
+        </div>
+        <div class="list-item">
+          <span class="list-icon">✓</span>
+          <span>Faith-based foundation for marriage</span>
+        </div>
+      </div>
+      
+      <div class="improvements-section">
+        <h3>Areas for Growth</h3>
+        <div class="list-item">
+          <span class="list-icon improvements-icon">+</span>
+          <span>Financial management and planning</span>
+        </div>
+        <div class="list-item">
+          <span class="list-icon improvements-icon">+</span>
+          <span>Work-life balance expectations</span>
+        </div>
+        <div class="list-item">
+          <span class="list-icon improvements-icon">+</span>
+          <span>Conflict resolution strategies</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="section" style="text-align: center;">
+      <p>Based on your results, you've demonstrated a strong foundation for a healthy marriage.</p>
+      <p>To receive your full report by email, including personalized insights:</p>
+      <a href="#" class="btn btn-primary">Email My PDF Report</a>
+      <p style="margin-top: 15px;">
+        <a href="#" class="btn btn-outline">Retake Assessment</a>
+      </p>
+    </div>
+    
+    <div class="footer">
+      © 2025 Lawrence E. Adjah - The 100 Marriage Assessment - Series 1
+    </div>
+  </div>
+</body>
+</html>
