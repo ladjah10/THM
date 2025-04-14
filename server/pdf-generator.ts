@@ -95,12 +95,13 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
       doc.fontSize(14)
         .font('Helvetica-Bold')
         .fillColor('#2c3e50')
-        .text('Your Psychographic Profile');
-        
+        .text('Your Psychographic Profiles');
+      
+      // Primary Profile
       doc.moveDown(0.5)
         .fontSize(16)
         .fillColor('#3498db')
-        .text(assessment.profile.name);
+        .text(assessment.profile.name + ' (General Profile)');
         
       doc.moveDown(0.5)
         .fontSize(12)
@@ -110,6 +111,24 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
           align: 'justify',
           width: doc.page.width - 100
         });
+        
+      // Gender-specific profile if available
+      if (assessment.genderProfile) {
+        doc.moveDown(1.5)
+          .fontSize(16)
+          .fillColor('#8e44ad') // Purple color for gender profile
+          .text(assessment.genderProfile.name + 
+            (assessment.demographics.gender === 'male' ? ' (Male-Specific Profile)' : ' (Female-Specific Profile)'));
+          
+        doc.moveDown(0.5)
+          .fontSize(12)
+          .fillColor('#555')
+          .font('Helvetica')
+          .text(assessment.genderProfile.description, {
+            align: 'justify',
+            width: doc.page.width - 100
+          });
+      }
 
       // Section scores
       doc.moveDown(1.5)

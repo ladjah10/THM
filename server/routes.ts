@@ -48,6 +48,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
               max: z.number().optional()
             }))
           }),
+          genderProfile: z.object({
+            id: z.number(),
+            name: z.string(),
+            description: z.string(),
+            genderSpecific: z.string().nullable(),
+            criteria: z.array(z.object({
+              section: z.string(),
+              min: z.number().optional(),
+              max: z.number().optional()
+            }))
+          }).nullable().optional(),
           responses: z.record(z.object({
             option: z.string(),
             value: z.number()
@@ -74,6 +85,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         name: validatedData.data.name,
         scores: validatedData.data.scores,
         profile: validatedData.data.profile,
+        genderProfile: validatedData.data.genderProfile || null,
         responses: validatedData.data.responses,
         demographics: validatedData.data.demographics,
         timestamp: new Date().toISOString()

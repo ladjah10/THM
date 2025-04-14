@@ -95,10 +95,21 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
         </div>
         
         <div class="section">
-          <h2>Your Profile: ${profile.name}</h2>
-          <div class="profile-box">
+          <h2>Your Psychographic Profiles</h2>
+          
+          <h3 style="color: #3498db;">General Profile: ${profile.name}</h3>
+          <div class="profile-box" style="border-left: 4px solid #3498db; padding-left: 15px;">
             <p>${profile.description}</p>
           </div>
+          
+          ${assessment.genderProfile ? `
+          <h3 style="color: #8e44ad; margin-top: 20px;">
+            ${assessment.demographics.gender === 'male' ? 'Male' : 'Female'}-Specific Profile: ${assessment.genderProfile.name}
+          </h3>
+          <div class="profile-box" style="border-left: 4px solid #8e44ad; padding-left: 15px;">
+            <p>${assessment.genderProfile.description}</p>
+          </div>
+          ` : ''}
         </div>
         
         <div class="section" style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin-top: 25px;">

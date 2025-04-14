@@ -71,6 +71,7 @@ export interface AssessmentResult {
   name: string;
   scores: AssessmentScores;
   profile: UserProfile;
+  genderProfile?: UserProfile | null;
   responses: Record<string, UserResponse>;
   demographics: DemographicData;
   timestamp: string;
