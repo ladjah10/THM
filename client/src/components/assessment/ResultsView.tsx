@@ -6,7 +6,8 @@ import { AssessmentScores, DemographicData, UserProfile } from "@/types/assessme
 
 interface ResultsViewProps {
   scores: AssessmentScores;
-  profile: UserProfile;
+  primaryProfile: UserProfile;
+  genderProfile: UserProfile | null;
   demographics: DemographicData;
   onSendEmail: () => void;
   onRetakeAssessment: () => void;
@@ -15,7 +16,8 @@ interface ResultsViewProps {
 
 export default function ResultsView({
   scores,
-  profile,
+  primaryProfile,
+  genderProfile,
   demographics,
   onSendEmail,
   onRetakeAssessment,
@@ -51,13 +53,31 @@ export default function ResultsView({
         </div>
       </div>
 
-      {/* Psychographic Profile */}
+      {/* Psychographic Profiles */}
       <div className="mb-10">
-        <h4 className="text-xl font-medium text-blue-900 mb-4">Your Psychographic Profile</h4>
-        <div className="bg-gradient-to-r from-blue-50 to-white p-6 rounded-lg border border-blue-100 shadow-sm">
-          <p className="font-semibold text-lg text-blue-800 mb-3">{profile.name}</p>
-          <p className="text-gray-700 leading-relaxed">{profile.description}</p>
+        <h4 className="text-xl font-medium text-blue-900 mb-4">Your Psychographic Profiles</h4>
+        
+        {/* Primary Profile */}
+        <div className="bg-gradient-to-r from-blue-50 to-white p-6 rounded-lg border border-blue-100 shadow-sm mb-6">
+          <div className="flex justify-between items-center mb-3">
+            <p className="font-semibold text-lg text-blue-800">{primaryProfile.name}</p>
+            <span className="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">General Profile</span>
+          </div>
+          <p className="text-gray-700 leading-relaxed">{primaryProfile.description}</p>
         </div>
+        
+        {/* Gender-Specific Profile (if available) */}
+        {genderProfile && (
+          <div className="bg-gradient-to-r from-purple-50 to-white p-6 rounded-lg border border-purple-100 shadow-sm">
+            <div className="flex justify-between items-center mb-3">
+              <p className="font-semibold text-lg text-purple-800">{genderProfile.name}</p>
+              <span className="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full">
+                {demographics.gender === 'male' ? 'Male-Specific Profile' : 'Female-Specific Profile'}
+              </span>
+            </div>
+            <p className="text-gray-700 leading-relaxed">{genderProfile.description}</p>
+          </div>
+        )}
       </div>
 
       {/* Section Scores */}

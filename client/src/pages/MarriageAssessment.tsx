@@ -42,7 +42,8 @@ export default function MarriageAssessment() {
     hasPaid: false
   });
   const [scores, setScores] = useState<AssessmentScores | null>(null);
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [primaryProfile, setPrimaryProfile] = useState<UserProfile | null>(null);
+  const [genderProfile, setGenderProfile] = useState<UserProfile | null>(null);
   const [emailSending, setEmailSending] = useState(false);
 
   // Initialize protection utilities and show paywall first
@@ -120,13 +121,14 @@ export default function MarriageAssessment() {
     setCurrentView("questionnaire");
   };
 
-  // Calculate scores and determine profile
+  // Calculate scores and determine profiles
   const calculateAssessmentResults = () => {
     const calculatedScores = calculateScores(questions, userResponses);
-    const profile = determineProfile(calculatedScores, demographicData.gender);
+    const { primaryProfile, genderProfile } = determineProfiles(calculatedScores, demographicData.gender);
     
     setScores(calculatedScores);
-    setUserProfile(profile);
+    setPrimaryProfile(primaryProfile);
+    setGenderProfile(genderProfile);
   };
 
   // Handle sending email report
@@ -147,7 +149,8 @@ export default function MarriageAssessment() {
         to: demographicData.email,
         name: `${demographicData.firstName} ${demographicData.lastName}`,
         scores: scores!,
-        profile: userProfile!,
+        profile: primaryProfile!,
+        genderProfile: genderProfile,
         responses: userResponses,
         demographics: demographicData
       });
@@ -250,10 +253,11 @@ export default function MarriageAssessment() {
         )}
 
         {/* Results view */}
-        {currentView === "results" && scores && userProfile && (
+        {currentView === "results" && scores && primaryProfile && (
           <ResultsView 
             scores={scores}
-            profile={userProfile}
+            primaryProfile={primaryProfile}
+            genderProfile={genderProfile}
             demographics={demographicData}
             onSendEmail={handleSendEmail}
             onRetakeAssessment={handleRetakeAssessment}

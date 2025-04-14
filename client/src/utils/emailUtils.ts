@@ -11,6 +11,7 @@ interface EmailReportData {
   name: string;
   scores: AssessmentScores;
   profile: UserProfile;
+  genderProfile?: UserProfile | null;
   responses: Record<number, UserResponse>;
   demographics: DemographicData;
 }
@@ -28,6 +29,7 @@ export async function sendEmailReport(data: EmailReportData): Promise<void> {
         name: data.name,
         scores: data.scores,
         profile: data.profile,
+        genderProfile: data.genderProfile,
         responses: data.responses,
         demographics: data.demographics
       }
