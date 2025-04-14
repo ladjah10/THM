@@ -21,7 +21,8 @@ export interface DemographicData {
   gender: string;
   marriageStatus: string;
   desireChildren: string;
-  ethnicity: string;
+  ethnicity: string; // Comma-separated string of selected ethnicities
+  ethnicities?: string[]; // Array of selected ethnicities (client-side only)
   hasPurchasedBook: string;
   purchaseDate: string;
   promoCode: string;

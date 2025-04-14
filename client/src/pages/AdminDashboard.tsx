@@ -2,6 +2,14 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import type { AssessmentResult } from "../../shared/schema";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter
+} from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -107,6 +115,61 @@ export default function AdminDashboard() {
     } catch (e) {
       return dateString || "N/A";
     }
+  };
+  
+  // Handle CSV export
+  const handleExportCSV = () => {
+    if (!assessments?.length) return;
+    
+    // Define CSV columns
+    const headers = [
+      "Name",
+      "Email",
+      "Date",
+      "Gender",
+      "Marriage Status",
+      "Desire Children",
+      "Ethnicity",
+      "Profile",
+      "Overall Score",
+      "Book Purchased"
+    ];
+    
+    // Convert assessment data to CSV rows
+    const rows = assessments.map(assessment => [
+      assessment.name,
+      assessment.email,
+      assessment.timestamp ? new Date(assessment.timestamp).toISOString().split('T')[0] : '',
+      assessment.demographics.gender,
+      assessment.demographics.marriageStatus,
+      assessment.demographics.desireChildren,
+      assessment.demographics.ethnicity,
+      assessment.profile.name,
+      assessment.scores.overallPercentage.toFixed(1) + '%',
+      assessment.demographics.hasPurchasedBook
+    ]);
+    
+    // Add headers to beginning of rows
+    rows.unshift(headers);
+    
+    // Convert to CSV content
+    const csvContent = rows.map(row => row.map(cell => 
+      // Escape quotes and wrap in quotes if contains comma or quote
+      typeof cell === 'string' && (cell.includes(',') || cell.includes('"')) 
+        ? `"${cell.replace(/"/g, '""')}"` 
+        : cell
+    ).join(',')).join('\n');
+    
+    // Create a download link
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `100-marriage-assessments-${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   // Login form
@@ -229,13 +292,25 @@ export default function AdminDashboard() {
           
           <TabsContent value="assessments" className="space-y-4">
             <div className="bg-white p-4 rounded-lg shadow-sm">
-              <div className="flex justify-between items-center mb-4">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
                 <h2 className="text-lg font-medium">Assessment Results</h2>
-                <div className="w-64">
+                
+                <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleExportCSV}
+                    disabled={!assessments?.length}
+                    className="whitespace-nowrap"
+                  >
+                    Export CSV
+                  </Button>
+                  
                   <Input 
                     placeholder="Search by name, email, etc..." 
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full sm:w-64"
                   />
                 </div>
               </div>

@@ -36,7 +36,7 @@ export default function DemographicView({
   onBack
 }: DemographicViewProps) {
   const [selectedEthnicities, setSelectedEthnicities] = useState<string[]>(
-    demographicData.ethnicity ? demographicData.ethnicity.split(',') : []
+    demographicData.ethnicity ? demographicData.ethnicity.split(',').filter(e => e) : []
   );
   const [showPaywall, setShowPaywall] = useState<boolean>(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState<boolean>(false);
