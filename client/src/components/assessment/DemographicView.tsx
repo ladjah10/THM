@@ -58,7 +58,22 @@ export default function DemographicView({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // We've already validated payment at the paywall step, so proceed directly
+    // Validate the form
+    if (!validateForm()) {
+      return;
+    }
+    
+    // If showing paywall and not paid, prevent submission
+    if (showPaywall && !demographicData.hasPaid) {
+      toast({
+        title: "Payment Required",
+        description: "Please complete the payment or use a valid promo code to continue.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // We've already validated payment at the paywall step, so proceed
     onSubmit();
   };
 
@@ -73,6 +88,20 @@ export default function DemographicView({
       onChange("ethnicity", updatedValues.join(','));
       return updatedValues;
     });
+  };
+  
+  // Validate form before submission
+  const validateForm = () => {
+    // Check if at least one ethnicity is selected
+    if (selectedEthnicities.length === 0) {
+      toast({
+        title: "Missing Information",
+        description: "Please select at least one ethnicity option.",
+        variant: "destructive"
+      });
+      return false;
+    }
+    return true;
   };
   
   // Handle promo code verification

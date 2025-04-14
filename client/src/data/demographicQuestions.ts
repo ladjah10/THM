@@ -25,7 +25,7 @@ export const demographicQuestions = {
     id: "phone",
     label: "Phone Number",
     type: "tel",
-    required: false,
+    required: true,
     placeholder: "(123) 456-7890"
   },
   desireChildren: {
@@ -87,13 +87,13 @@ export const demographicQuestions = {
     id: "purchaseDate",
     label: "Date of Purchase (The 100 Marriage: Book)",
     type: "date",
-    required: false
+    required: true
   },
   promoCode: {
     id: "promoCode",
-    label: "Promo Code (if you have one)",
+    label: "Promo Code",
     type: "text",
-    required: false,
-    placeholder: "Enter code"
+    required: true,
+    placeholder: "Enter promo code"
   }
 };
