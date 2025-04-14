@@ -185,6 +185,15 @@ export default function Home() {
           <p className="text-center text-sm mb-2">
             By proceeding, you agree to our Terms of Service and Privacy Policy. Get ready—your personalized report will be emailed to you right after completion, guiding you toward a thriving future!
           </p>
+          <div className="flex justify-center mt-3 mb-3">
+            <Button 
+              variant="link" 
+              onClick={() => navigate('/samples')}
+              className="text-amber-400 hover:text-amber-300"
+            >
+              View Sample Reports
+            </Button>
+          </div>
           <Separator className="my-4 bg-gray-600" />
           <p className="text-center text-sm text-gray-400">
             © 2025 Lawrence E. Adjah. All rights reserved.
