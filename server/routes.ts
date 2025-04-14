@@ -15,6 +15,18 @@ if (!process.env.STRIPE_SECRET_KEY) {
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Serve sample templates directly
+  app.get('/view-sample-results', (req, res) => {
+    res.sendFile('public/sample-results.html', { root: './client' });
+  });
+  
+  app.get('/view-sample-email', (req, res) => {
+    res.sendFile('public/sample-email.html', { root: './client' });
+  });
+  
+  app.get('/view-sample-pdf', (req, res) => {
+    res.sendFile('public/sample-pdf.html', { root: './client' });
+  });
   // Email sending endpoint
   app.post('/api/email/send', async (req, res) => {
     try {

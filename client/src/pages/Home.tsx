@@ -185,13 +185,27 @@ export default function Home() {
           <p className="text-center text-sm mb-2">
             By proceeding, you agree to our Terms of Service and Privacy Policy. Get ready—your personalized report will be emailed to you right after completion, guiding you toward a thriving future!
           </p>
-          <div className="flex justify-center mt-3 mb-3">
+          <div className="flex justify-center gap-4 mt-3 mb-3">
             <Button 
               variant="link" 
-              onClick={() => navigate('/samples')}
+              onClick={() => window.open('/view-sample-results', '_blank')}
               className="text-amber-400 hover:text-amber-300"
             >
-              View Sample Reports
+              Sample Results
+            </Button>
+            <Button 
+              variant="link" 
+              onClick={() => window.open('/view-sample-email', '_blank')}
+              className="text-amber-400 hover:text-amber-300"
+            >
+              Sample Email
+            </Button>
+            <Button 
+              variant="link" 
+              onClick={() => window.open('/view-sample-pdf', '_blank')}
+              className="text-amber-400 hover:text-amber-300"
+            >
+              Sample PDF
             </Button>
           </div>
           <Separator className="my-4 bg-gray-600" />
