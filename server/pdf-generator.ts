@@ -66,7 +66,7 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
         .fontSize(14)
         .font('Helvetica-Bold')
         .fillColor('#2c3e50')
-        .text('Overall Score');
+        .text('Overall Assessment Score');
 
       // Draw score circle
       const scoreRadius = 40;
@@ -90,6 +90,17 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
       
       // Move past the circle
       doc.moveDown(4);
+      
+      // Add score explanation
+      doc.fontSize(11)
+        .font('Helvetica')
+        .fillColor('#555')
+        .text('Understanding Your Score: Your assessment score reflects your perspectives on relationship, not a judgment of readiness. Higher percentages indicate alignment with traditional marriage values, while lower percentages suggest more progressive viewpoints. Neither approach is inherently better—they simply represent different relationship styles.', {
+          width: doc.page.width - 100,
+          align: 'justify'
+        });
+        
+      doc.moveDown(1);
       
       // Profile section
       doc.fontSize(14)
@@ -138,6 +149,17 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
         .text('Section Scores');
         
       doc.moveDown(0.5);
+      
+      // Add explanation for section scores
+      doc.fontSize(11)
+        .font('Helvetica')
+        .fillColor('#555')
+        .text('Each section score represents your perspective in a specific relationship area. These scores are used to determine your psychographic profiles. Higher percentages typically indicate more traditional views, while lower percentages suggest more progressive approaches to relationships.', {
+          width: doc.page.width - 100,
+          align: 'justify'
+        });
+        
+      doc.moveDown(1);
       
       // Calculate the maximum width available
       const maxBarWidth = doc.page.width - 200;

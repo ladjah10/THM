@@ -76,13 +76,22 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
         </div>
         
         <div class="section">
-          <h2>Your Overall Score</h2>
+          <h2>Your Overall Assessment Score</h2>
           <p class="overall-score">${scores.overallPercentage.toFixed(1)}%</p>
           <p>Total Score: ${scores.totalEarned}/${scores.totalPossible}</p>
+          <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin-top: 10px; font-size: 14px; color: #555;">
+            <strong>Understanding Your Score:</strong> Your score reflects your perspectives on marriage, not a judgment of readiness.
+            Higher percentages indicate more traditional viewpoints on relationships, while lower percentages suggest more progressive approaches.
+            Neither is inherently better—these are simply different approaches to relationship, and your scores help identify your psychographic profile.
+          </div>
         </div>
         
         <div class="section">
           <h2>Your Detailed Scores</h2>
+          <p style="margin-bottom: 15px; color: #555;">
+            These scores show your responses to questions in each area. Each section reveals different aspects of your 
+            relationship approach. Together, they form the basis for your psychographic profile assessment.
+          </p>
           <table class="scores-table">
             <thead>
               <tr>
