@@ -129,10 +129,12 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
           ` : ''}
         </div>
         
-        <div class="section" style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin-top: 25px;">
-          <h2 style="margin-top: 0;">Next Steps</h2>
-          <p>If you'd like to discuss your results further, you can schedule a 1-on-1 session here:</p>
-          <p><a href="https://lawrence-adjah.clientsecure.me/request/service" style="color: #3498db; font-weight: bold; text-decoration: none;">Schedule a Consultation</a></p>
+        <div class="section" style="background-color: #edf7ff; padding: 20px; border-radius: 5px; border-left: 4px solid #3498db; margin-top: 25px;">
+          <h2 style="margin-top: 0; color: #2980b9;">Get Personalized Guidance</h2>
+          <p>Would you like expert help interpreting your results? Schedule a one-on-one consultation with Lawrence E. Adjah to discuss your assessment in detail and get personalized insights about your relationship expectations.</p>
+          <div style="text-align: center; margin-top: 15px;">
+            <a href="https://lawrence-adjah.clientsecure.me/request/service" style="display: inline-block; background-color: #3498db; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">Book Your Consultation Now</a>
+          </div>
         </div>
         
         <div class="footer">
