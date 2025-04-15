@@ -84,142 +84,6 @@ function calculateMatchScore(candidate: AssessmentResult): number {
   return (scoreRank * scoreWeight) + (ageRank * ageWeight) + (locationRank * locationWeight);
 }
 
-interface PoolCandidatesTableProps {
-  candidates: AssessmentResult[];
-}
-
-// Component for pool candidates table with ranked matching
-function PoolCandidatesTable({ candidates }: PoolCandidatesTableProps) {
-  const [selectedCandidates, setSelectedCandidates] = useState<string[]>([]);
-  
-  // Rank candidates by score, age and location
-  const rankedCandidates = useMemo(() => {
-    return [...candidates].sort((a, b) => {
-      const scoreA = calculateMatchScore(a);
-      const scoreB = calculateMatchScore(b);
-      return scoreB - scoreA; // Sort by descending score
-    });
-  }, [candidates]);
-  
-  // Handle checkbox selection
-  const handleSelectCandidate = (email: string) => {
-    setSelectedCandidates(prev => {
-      if (prev.includes(email)) {
-        return prev.filter(e => e !== email);
-      } else {
-        return [...prev, email];
-      }
-    });
-  };
-  
-  // Handle sending match notification emails
-  const handleSendMatchNotifications = async () => {
-    if (selectedCandidates.length < 2) {
-      alert("Please select at least 2 candidates to match");
-      return;
-    }
-    
-    try {
-      // API call would go here
-      // await apiRequest("POST", "/api/admin/send-match-notifications", { candidates: selectedCandidates });
-      alert(`Match notifications would be sent to ${selectedCandidates.length} candidates`);
-      setSelectedCandidates([]);
-    } catch (error) {
-      console.error("Error sending match notifications:", error);
-      alert("Error sending match notifications");
-    }
-  };
-  
-  return (
-    <div className="space-y-4">
-      {selectedCandidates.length > 0 && (
-        <div className="flex justify-between items-center p-3 bg-blue-50 border border-blue-200 rounded-md">
-          <span className="text-sm">
-            <span className="font-medium">{selectedCandidates.length}</span> candidates selected
-          </span>
-          <Button 
-            size="sm" 
-            onClick={handleSendMatchNotifications}
-          >
-            Send Match Notifications
-          </Button>
-        </div>
-      )}
-      
-      <Table>
-        <TableCaption>THM Pool Candidates - Ranked by compatibility</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-12">Select</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Age</TableHead>
-            <TableHead>Gender</TableHead>
-            <TableHead>Location</TableHead>
-            <TableHead>Score</TableHead>
-            <TableHead>Profile</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {rankedCandidates.length ? (
-            rankedCandidates.map((candidate) => {
-              const age = calculateAge(candidate.demographics.birthday);
-              const matchScore = calculateMatchScore(candidate);
-              const location = `${candidate.demographics.city}, ${candidate.demographics.state} ${candidate.demographics.zipCode}`;
-              
-              return (
-                <TableRow key={candidate.email}>
-                  <TableCell>
-                    <input 
-                      type="checkbox" 
-                      className="h-4 w-4 rounded border-gray-300"
-                      checked={selectedCandidates.includes(candidate.email)}
-                      onChange={() => handleSelectCandidate(candidate.email)}
-                    />
-                  </TableCell>
-                  <TableCell className="font-medium">{candidate.name}</TableCell>
-                  <TableCell>{age || "N/A"}</TableCell>
-                  <TableCell>{candidate.demographics.gender}</TableCell>
-                  <TableCell>{location}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <div className="h-2 w-16 bg-gray-200 rounded-full overflow-hidden">
-                        <div 
-                          className="h-full bg-primary" 
-                          style={{ width: `${matchScore}%` }}
-                        />
-                      </div>
-                      <span className="text-sm">{matchScore.toFixed(0)}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="outline">{candidate.profile.name}</Badge>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => alert(`View ${candidate.name}'s profile (would show detailed info)`)}
-                    >
-                      View Profile
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              );
-            })
-          ) : (
-            <TableRow>
-              <TableCell colSpan={8} className="text-center py-8 text-gray-500">
-                No THM pool candidates found
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </div>
-  );
-};
-
 export default function AdminDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState("");
@@ -313,6 +177,138 @@ export default function AdminDashboard() {
     setDetailModalOpen(true);
   };
   
+  // Pool Candidates Table component for THM matching
+  const PoolCandidatesTable = ({ candidates }: { candidates: AssessmentResult[] }) => {
+    const [selectedCandidates, setSelectedCandidates] = useState<string[]>([]);
+    
+    // Rank candidates by score, age and location
+    const rankedCandidates = useMemo(() => {
+      return [...candidates].sort((a, b) => {
+        const scoreA = calculateMatchScore(a);
+        const scoreB = calculateMatchScore(b);
+        return scoreB - scoreA; // Sort by descending score
+      });
+    }, [candidates]);
+    
+    // Handle checkbox selection
+    const handleSelectCandidate = (email: string) => {
+      setSelectedCandidates(prev => {
+        if (prev.includes(email)) {
+          return prev.filter(e => e !== email);
+        } else {
+          return [...prev, email];
+        }
+      });
+    };
+    
+    // Handle sending match notification emails
+    const handleSendMatchNotifications = async () => {
+      if (selectedCandidates.length < 2) {
+        alert("Please select at least 2 candidates to match");
+        return;
+      }
+      
+      try {
+        // API call would go here
+        // await apiRequest("POST", "/api/admin/send-match-notifications", { candidates: selectedCandidates });
+        alert(`Match notifications would be sent to ${selectedCandidates.length} candidates`);
+        setSelectedCandidates([]);
+      } catch (error) {
+        console.error("Error sending match notifications:", error);
+        alert("Error sending match notifications");
+      }
+    };
+    
+    return (
+      <div className="space-y-4">
+        {selectedCandidates.length > 0 && (
+          <div className="flex justify-between items-center p-3 bg-blue-50 border border-blue-200 rounded-md">
+            <span className="text-sm">
+              <span className="font-medium">{selectedCandidates.length}</span> candidates selected
+            </span>
+            <Button 
+              size="sm" 
+              onClick={handleSendMatchNotifications}
+            >
+              Send Match Notifications
+            </Button>
+          </div>
+        )}
+        
+        <Table>
+          <TableCaption>THM Pool Candidates - Ranked by compatibility</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-12">Select</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Age</TableHead>
+              <TableHead>Gender</TableHead>
+              <TableHead>Location</TableHead>
+              <TableHead>Score</TableHead>
+              <TableHead>Profile</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {rankedCandidates.length ? (
+              rankedCandidates.map((candidate) => {
+                const age = calculateAge(candidate.demographics.birthday);
+                const matchScore = calculateMatchScore(candidate);
+                const location = `${candidate.demographics.city}, ${candidate.demographics.state} ${candidate.demographics.zipCode}`;
+                
+                return (
+                  <TableRow key={candidate.email}>
+                    <TableCell>
+                      <input 
+                        type="checkbox" 
+                        className="h-4 w-4 rounded border-gray-300"
+                        checked={selectedCandidates.includes(candidate.email)}
+                        onChange={() => handleSelectCandidate(candidate.email)}
+                      />
+                    </TableCell>
+                    <TableCell className="font-medium">{candidate.name}</TableCell>
+                    <TableCell>{age || "N/A"}</TableCell>
+                    <TableCell>{candidate.demographics.gender}</TableCell>
+                    <TableCell>{location}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <div className="h-2 w-16 bg-gray-200 rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-primary" 
+                            style={{ width: `${matchScore}%` }}
+                          />
+                        </div>
+                        <span className="text-sm">{matchScore.toFixed(0)}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline">{candidate.profile.name}</Badge>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => alert(`View ${candidate.name}'s profile (would show detailed info)`)}
+                      >
+                        View Profile
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
+            ) : (
+              <TableRow>
+                <TableCell colSpan={8} className="text-center py-8 text-gray-500">
+                  No THM pool candidates found
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+    );
+  };
+
   // Handle CSV export
   const handleExportCSV = () => {
     if (!assessments?.length) return;
