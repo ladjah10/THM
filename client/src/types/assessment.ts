@@ -27,6 +27,10 @@ export interface DemographicData {
   purchaseDate: string;
   promoCode: string;
   hasPaid: boolean;
+  lifeStage: string;
+  birthday: string;
+  interestedInArrangedMarriage: boolean;
+  thmPoolApplied: boolean;
 }
 
 export interface SectionScore {
