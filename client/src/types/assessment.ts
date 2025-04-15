@@ -63,6 +63,7 @@ export interface UserProfile {
   description: string;
   genderSpecific: "male" | "female" | null;
   criteria: ProfileCriterion[];
+  iconPath?: string; // Path to the profile icon image
 }
 
 export interface AssessmentResult {

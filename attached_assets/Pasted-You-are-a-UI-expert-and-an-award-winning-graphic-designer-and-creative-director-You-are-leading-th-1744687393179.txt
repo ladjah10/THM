@@ -1,0 +1,73 @@
+You are a UI expert, and an award winning graphic designer and creative director. You are leading the development of a style and design revamp for a assessment tool, which provides psychographic profiles based on a user's responses to the assessment (found here): (https://the100marriageassessment25.replit.app/)
+
+You are tasked with creating image icons / art-like abstract representations of each profile. Here are the profiles you will create these for and short descriptions:
+
+Please develop them and export them in png format, for each:
+
+Profiles:  Here are all the current psychographic profiles we have in the system after our updates:
+Unisex Profiles (For All Genders)
+1. Steadfast Believers
+    * Strong commitment to faith as relationship foundation
+    * Value traditional marriage roles and clear family expectations
+    * Decisions firmly guided by scripture
+    * Criteria: "Your Foundation" ≥ 90%, "Your Faith Life" ≥ 85%
+2. Harmonious Planners
+    * Value structure and planning with strong faith values
+    * Clear expectations and boundaries while prioritizing spiritual foundation
+    * Criteria: "Your Foundation" ≥ 80%, "Your Marriage Life" ≥ 75%, "Your Finances" ≥ 70%
+3. Flexible Faithful
+    * Balance spiritual conviction with practical adaptability
+    * Value communication and compromise
+    * Honor beliefs while remaining flexible in application
+    * Criteria: "Your Faith Life" between 70-85%, "Your Marriage Life" ≥ 80%
+4. Pragmatic Partners
+    * Practical approach to marriage
+    * Value clear communication and shared responsibility
+    * Emphasize mutual respect and fairness
+    * Criteria: "Your Finances" ≥ 85%, "Your Marriage Life" ≥ 80%
+5. Individualist Seekers
+    * Value personal growth and independence
+    * Appreciate spiritual dimension while maintaining individuality
+    * Create a relationship that evolves as both grow
+    * Criteria: "Your Faith Life" ≤ 70%, "Your Marriage Life" between 60-80%
+6. Balanced Visionaries
+    * Strong foundation of faith-centered expectations with practical wisdom
+    * Value clear communication, mutual respect, and shared spiritual growth
+    * Balanced approach to relationships
+    * Criteria: "Your Faith Life" ≥ 75%, "Your Marriage Life" ≥ 70%, "Your Marriage and Boundaries" ≥ 65%
+ Women-Specific Profiles 
+1. Relational Nurturers
+    * Prioritize emotional connection and nurturing
+    * Faith influences care for relationship and family
+    * Value creating supportive, loving environment
+    * Criteria: "Your Parenting Life" ≥ 85%, "Your Marriage Life" ≥ 80%
+2. Adaptive Communicators
+    * Excel at building bridges through communication
+    * Use emotional intelligence for relationship building
+    * Faith informs values, skilled at finding common ground
+    * Criteria: "Your Marriage Life" ≥ 85%, "Your Faith Life" between 60-80%
+3. Independent Traditionalists
+    * Value traditional foundations while maintaining unique identity
+    * Honor faith principles while advocating for equality
+    * Criteria: "Your Foundation" ≥ 75%, "Your Finances" ≥ 80%
+4. Faith-Centered Homemakers
+    * High value on creating nurturing home environment guided by faith principles
+    * Balance traditional family values with modern perspectives
+    * Focus on building strong spiritual foundation for family
+    * Criteria: "Your Faith Life" ≥ 75%, "Your Family/Home Life" ≥ 80%
+Men-Specific Profiles
+1. Faithful Protectors
+    * Spiritual leader and protector of family
+    * Faith influences approach to husband role
+    * Take responsibility for guidance and security
+    * Criteria: "Your Foundation" ≥ 85%, "Your Faith Life" ≥ 80%
+2. Structured Leaders
+    * Value order and clarity in marriage approach
+    * Faith provides framework for leadership
+    * Establish clear boundaries and expectations
+    * Criteria: "Your Finances" ≥ 85%, "Your Parenting Life" ≥ 80%
+3. Balanced Providers
+    * Prioritize providing stability while maintaining strong spiritual values
+    * Seek balance between work, family responsibilities, and personal growth
+    * Combine traditional values with openness to new perspectives
+    * Criteria: "Your Finances" ≥ 75%, "Your Faith Life" ≥ 70%, "Your Health and Wellness" ≥ 70%
