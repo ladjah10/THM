@@ -237,6 +237,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Create payment intent specifically for THM pool application fee
+  app.post('/api/create-thm-payment-intent', async (req, res) => {
+    try {
+      if (!process.env.STRIPE_SECRET_KEY) {
+        throw new Error('Missing Stripe secret key');
+      }
+      
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+        apiVersion: "2023-10-16",
+      });
+      
+      // THM Pool Application Fee is fixed at $25
+      const amount = 2500; // in cents
+      
+      // Create a payment intent
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount,
+        currency: 'usd',
+        metadata: {
+          purpose: 'THM_Pool_Application_Fee_Only'
+        },
+        description: 'THM Arranged Marriage Pool Application Fee'
+      });
+      
+      res.status(200).json({
+        clientSecret: paymentIntent.client_secret,
+        amount: amount / 100 // Convert back to dollars for display
+      });
+    } catch (error) {
+      console.error("Error creating THM payment intent:", error);
+      res.status(500).json({
+        message: "Failed to create payment intent for THM pool application"
+      });
+    }
+  });
+  
   // Send referral invitations and apply discount
   app.post('/api/send-referrals', async (req, res) => {
     try {

@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/card";
 import { DemographicData } from "@/types/assessment";
 import { demographicQuestions } from "@/data/demographicQuestions";
+import THMPoolPaymentForm from "@/components/payment/THMPoolPaymentForm";
 
 interface DemographicViewProps {
   demographicData: DemographicData;
@@ -41,6 +42,7 @@ export default function DemographicView({
   const [showPaywall, setShowPaywall] = useState<boolean>(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState<boolean>(false);
   const [isVerifyingPromo, setIsVerifyingPromo] = useState<boolean>(false);
+  const [showTHMPoolPayment, setShowTHMPoolPayment] = useState<boolean>(false);
   
   // Valid promo codes (in a real app, these would be stored in a database or validated through an API)
   const validPromoCodes = ["FREE100", "LA2025", "MARRIAGE100"];
@@ -73,7 +75,19 @@ export default function DemographicView({
       return;
     }
     
-    // We've already validated payment at the paywall step, so proceed
+    // Check if user needs to pay THM Pool application fee
+    if (demographicData.interestedInArrangedMarriage && demographicData.hasPaid && demographicData.promoCode && !demographicData.thmPoolApplied) {
+      // User has entered a promo code to bypass the main payment but needs to pay for THM
+      setShowTHMPoolPayment(true);
+      toast({
+        title: "THM Pool Application Fee Required",
+        description: "You need to pay the $25 THM Pool application fee to proceed.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // We've validated all payment requirements, so proceed
     onSubmit();
   };
 
@@ -408,9 +422,19 @@ export default function DemographicView({
               onChange("interestedInArrangedMarriage", isInterested);
               
               // If they select yes, we'll charge them $25 more in the payment step
-              if (isInterested && !demographicData.thmPoolApplied) {
+              if (isInterested) {
                 // Mark that they need to pay the extra fee
                 onChange("thmPoolApplied", true);
+                
+                // If they already have access via promo code but need to pay for THM,
+                // show the THM payment section
+                if (demographicData.hasPaid && !demographicData.promoCode) {
+                  setShowTHMPoolPayment(true);
+                }
+              } else {
+                // If they're not interested, they don't need to pay the fee
+                onChange("thmPoolApplied", false);
+                setShowTHMPoolPayment(false);
               }
             }}
           >
