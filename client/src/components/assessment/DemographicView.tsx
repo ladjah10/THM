@@ -428,7 +428,7 @@ export default function DemographicView({
                 
                 // If they already have access via promo code but need to pay for THM,
                 // show the THM payment section
-                if (demographicData.hasPaid && !demographicData.promoCode) {
+                if (demographicData.hasPaid && demographicData.promoCode) {
                   setShowTHMPoolPayment(true);
                 }
               } else {
@@ -563,6 +563,56 @@ export default function DemographicView({
             </a>
           </div>
         </div>
+        
+        {/* THM Pool Application Fee Payment */}
+        {showTHMPoolPayment && (
+          <Card className="mt-6 border border-blue-100 shadow-md">
+            <CardHeader className="pb-4 bg-gradient-to-b from-blue-50 to-white">
+              <CardTitle className="text-xl text-blue-900">THM Arranged Marriage Pool Application</CardTitle>
+              <CardDescription className="text-gray-700">
+                Complete your $25 application fee to join the THM Arranged Marriage Pool
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-4">
+              <div className="mb-4 px-2">
+                <p className="text-gray-700 text-sm">
+                  You've indicated interest in the THM Arranged Marriage Pool. This requires a one-time $25 application fee.
+                </p>
+              </div>
+              
+              <div className="bg-blue-50 p-4 rounded-md mb-4">
+                <h4 className="font-medium text-blue-900 mb-2">What You'll Receive:</h4>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-start">
+                    <svg className="h-5 w-5 mr-2 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>Consideration for the THM Arranged Marriage Pool</span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg className="h-5 w-5 mr-2 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>Special matching opportunities with compatible prospects</span>
+                  </li>
+                </ul>
+              </div>
+              
+              <THMPoolPaymentForm 
+                onPaymentSuccess={() => {
+                  // Update that they've paid the THM pool fee
+                  onChange("thmPoolApplied", true);
+                  setShowTHMPoolPayment(false);
+                  toast({
+                    title: "THM Pool Fee Processed",
+                    description: "Your application to the THM Arranged Marriage Pool has been submitted successfully.",
+                    variant: "default"
+                  });
+                }} 
+              />
+            </CardContent>
+          </Card>
+        )}
 
         <div className="flex justify-end pt-6">
           <Button
