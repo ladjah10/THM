@@ -115,6 +115,37 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Research Section */}
+      <section className="py-12 px-4 bg-gray-50">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-2xl md:text-3xl font-bold text-blue-900 text-center mb-6">
+            Backed by Research
+          </h2>
+          <div className="bg-white rounded-lg shadow-md p-6 md:p-8">
+            <p className="text-gray-700 mb-4">
+              Our psychographic profiles are grounded in the proven framework of The 100 Marriage and supported by leading research on marital success. Studies show that aligning expectations is key to a thriving marriage.
+            </p>
+            <div className="grid md:grid-cols-3 gap-6 mt-6">
+              <div className="bg-blue-50 p-4 rounded-md">
+                <h3 className="text-blue-800 font-semibold mb-2">Dr. Donald Baucom's Research</h3>
+                <p className="text-sm text-gray-600">Demonstrates that shared expectations lead to greater relationship satisfaction and stability over time.</p>
+              </div>
+              <div className="bg-blue-50 p-4 rounded-md">
+                <h3 className="text-blue-800 font-semibold mb-2">Eli Finkel's Studies</h3>
+                <p className="text-sm text-gray-600">Emphasizes the importance of adjusting expectations to realistic relationship dynamics for long-term success.</p>
+              </div>
+              <div className="bg-blue-50 p-4 rounded-md">
+                <h3 className="text-blue-800 font-semibold mb-2">The Gottman Institute</h3>
+                <p className="text-sm text-gray-600">Highlights that effective communication and mutual respect are essential for managing expectations in marriage.</p>
+              </div>
+            </div>
+            <p className="text-gray-700 mt-6">
+              Whether you're a Steadfast Believer seeking spiritual alignment or a Pragmatic Partner focused on practical compatibility, our assessment helps you understand your expectations and build a stronger future, backed by science and wisdom.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Book Section */}
       <section className="py-12 px-4 bg-gradient-to-b from-amber-50 to-white">
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8 items-center">
