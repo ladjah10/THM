@@ -7,7 +7,7 @@ import PaywallView from "@/components/assessment/PaywallView";
 import ResultsView from "@/components/assessment/ResultsView";
 import EmailSentConfirmation from "@/components/assessment/EmailSentConfirmation";
 import { questions, sections } from "@/data/questionsData";
-import { calculateScores, determineProfile } from "@/utils/scoringUtils";
+import { calculateScores, determineProfile, determineProfiles } from "@/utils/scoringUtils";
 import { sendEmailReport } from "@/utils/emailUtils";
 import { 
   Question, 
@@ -43,7 +43,10 @@ export default function MarriageAssessment() {
     promoCode: "",
     hasPaid: false,
     interestedInArrangedMarriage: false,
-    thmPoolApplied: false
+    thmPoolApplied: false,
+    city: "",
+    state: "",
+    zipCode: ""
   });
   const [scores, setScores] = useState<AssessmentScores | null>(null);
   const [primaryProfile, setPrimaryProfile] = useState<UserProfile | null>(null);

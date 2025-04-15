@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
-import type { AssessmentResult, SectionScore } from "../../shared/schema";
+import type { AssessmentResult } from "@/types/assessment";
+import type { SectionScore } from "../../../shared/schema";
 import {
   Dialog,
   DialogContent,
@@ -233,6 +234,7 @@ export default function AdminDashboard() {
           <TabsList>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="assessments">Assessment Results</TabsTrigger>
+            <TabsTrigger value="matching">THM Pool Matching</TabsTrigger>
           </TabsList>
           
           <TabsContent value="analytics" className="space-y-4">
