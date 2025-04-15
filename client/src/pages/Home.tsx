@@ -305,28 +305,38 @@ export default function Home() {
           <p className="text-center text-sm mb-2">
             By proceeding, you agree to our Terms of Service and Privacy Policy. Get ready—your personalized report will be emailed to you right after completion, guiding you toward a thriving future!
           </p>
-          <div className="flex justify-center gap-4 mt-3 mb-3">
-            <Button 
-              variant="link" 
-              onClick={() => window.open('/view-sample-results', '_blank')}
-              className="text-amber-400 hover:text-amber-300"
-            >
-              Sample Results
-            </Button>
-            <Button 
-              variant="link" 
-              onClick={() => window.open('/view-sample-email', '_blank')}
-              className="text-amber-400 hover:text-amber-300"
-            >
-              Sample Email
-            </Button>
-            <Button 
-              variant="link" 
-              onClick={() => window.open('/view-sample-pdf', '_blank')}
-              className="text-amber-400 hover:text-amber-300"
-            >
-              Sample PDF
-            </Button>
+          <div className="text-center mt-3 mb-3">
+            <p className="text-white text-sm mb-2">✨ <span className="font-semibold">New:</span> Enhanced with visual psychographic profile icons! <span className="text-amber-300">View our samples:</span></p>
+            <div className="flex justify-center gap-4">
+              <Button 
+                variant="outline" 
+                onClick={() => window.open('/samples', '_blank')}
+                className="text-amber-400 hover:text-amber-300 border-amber-500 hover:bg-amber-950 hover:bg-opacity-30"
+              >
+                View All Samples
+              </Button>
+              <Button 
+                variant="link" 
+                onClick={() => window.open('/sample-results.html', '_blank')}
+                className="text-amber-400 hover:text-amber-300"
+              >
+                Results
+              </Button>
+              <Button 
+                variant="link" 
+                onClick={() => window.open('/sample-email.html', '_blank')}
+                className="text-amber-400 hover:text-amber-300"
+              >
+                Email
+              </Button>
+              <Button 
+                variant="link" 
+                onClick={() => window.open('/sample-pdf.html', '_blank')}
+                className="text-amber-400 hover:text-amber-300"
+              >
+                PDF
+              </Button>
+            </div>
           </div>
           <Separator className="my-4 bg-gray-600" />
           <p className="text-center text-sm text-gray-400">

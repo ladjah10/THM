@@ -5,10 +5,19 @@ export default function SamplesPage() {
     <div className="container mx-auto p-6 max-w-6xl">
       <h1 className="text-3xl font-bold text-primary mb-8 pb-2 border-b">The 100 Marriage Assessment - Sample Templates</h1>
       
-      <p className="text-gray-700 mb-8">
-        These samples showcase the updated score explanations and dual profile display 
-        (both unisex and gender-specific) across different formats.
+      <p className="text-gray-700 mb-4">
+        These samples showcase the updated design including psychographic profile icons, 
+        dual profile display (both unisex and gender-specific), and enhanced score explanations
+        across different formats.
       </p>
+      <div className="bg-blue-50 p-4 rounded-lg border border-blue-100 mb-8">
+        <h3 className="text-blue-800 font-medium mb-2">✨ New: Visual Psychographic Profiles</h3>
+        <p className="text-gray-700">
+          We've enhanced the assessment with visual profile icons that symbolize each psychographic profile type.
+          These icons appear alongside profile descriptions in assessment results, emails, and PDF reports,
+          creating a more engaging and memorable user experience.
+        </p>
+      </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
         {/* Sample Results */}
