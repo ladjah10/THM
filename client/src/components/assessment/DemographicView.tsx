@@ -275,6 +275,55 @@ export default function DemographicView({
             />
           </div>
         </div>
+        
+        {/* Location Information */}
+        <div className="space-y-2">
+          <h4 className="text-sm font-semibold text-gray-700 border-b pb-2 mb-2">Your Location</h4>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div className="space-y-2">
+              <Label htmlFor="city" className="text-sm font-medium text-gray-700">
+                {demographicQuestions.city.label}
+              </Label>
+              <Input
+                id="city"
+                type="text"
+                placeholder={demographicQuestions.city.placeholder}
+                value={demographicData.city}
+                onChange={(e) => onChange("city", e.target.value)}
+                required={demographicQuestions.city.required}
+                className="mt-1 block w-full"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="state" className="text-sm font-medium text-gray-700">
+                {demographicQuestions.state.label}
+              </Label>
+              <Input
+                id="state"
+                type="text"
+                placeholder={demographicQuestions.state.placeholder}
+                value={demographicData.state}
+                onChange={(e) => onChange("state", e.target.value)}
+                required={demographicQuestions.state.required}
+                className="mt-1 block w-full"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="zipCode" className="text-sm font-medium text-gray-700">
+                {demographicQuestions.zipCode.label}
+              </Label>
+              <Input
+                id="zipCode"
+                type="text"
+                placeholder={demographicQuestions.zipCode.placeholder}
+                value={demographicData.zipCode}
+                onChange={(e) => onChange("zipCode", e.target.value)}
+                required={demographicQuestions.zipCode.required}
+                className="mt-1 block w-full"
+              />
+            </div>
+          </div>
+        </div>
 
         <div className="space-y-2">
           <Label htmlFor="desireChildren" className="text-sm font-medium text-gray-700">

@@ -68,6 +68,9 @@ export interface DemographicData {
   hasPaid?: boolean;
   interestedInArrangedMarriage?: boolean;
   thmPoolApplied?: boolean;
+  city: string;
+  state: string;
+  zipCode: string;
 }
 
 export interface AssessmentResult {

@@ -49,6 +49,27 @@ export const demographicQuestions = {
     required: true,
     placeholder: "(123) 456-7890"
   },
+  city: {
+    id: "city",
+    label: "City",
+    type: "text",
+    required: true,
+    placeholder: "Enter your city"
+  },
+  state: {
+    id: "state",
+    label: "State/Province",
+    type: "text",
+    required: true,
+    placeholder: "Enter your state or province"
+  },
+  zipCode: {
+    id: "zipCode",
+    label: "Zip/Postal Code",
+    type: "text",
+    required: true,
+    placeholder: "Enter your zip/postal code"
+  },
   desireChildren: {
     id: "desireChildren",
     label: "Do You Want Children?",
