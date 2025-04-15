@@ -10,7 +10,8 @@ export const psychographicProfiles: UserProfile[] = [
     criteria: [
       { section: "Your Foundation", min: 90 },
       { section: "Your Faith Life", min: 85 }
-    ]
+    ],
+    iconPath: "/icons/profiles/SB 1.png"
   },
   {
     id: 2,
@@ -21,7 +22,8 @@ export const psychographicProfiles: UserProfile[] = [
       { section: "Your Foundation", min: 80 },
       { section: "Your Marriage Life", min: 75 },
       { section: "Your Finances", min: 70 }
-    ]
+    ],
+    iconPath: "/icons/profiles/HP.png"
   },
   {
     id: 3,
@@ -31,7 +33,8 @@ export const psychographicProfiles: UserProfile[] = [
     criteria: [
       { section: "Your Faith Life", min: 70, max: 85 },
       { section: "Your Marriage Life", min: 80 }
-    ]
+    ],
+    iconPath: "/icons/profiles/FF 3.png"
   },
   {
     id: 4,
@@ -41,7 +44,8 @@ export const psychographicProfiles: UserProfile[] = [
     criteria: [
       { section: "Your Finances", min: 85 },
       { section: "Your Marriage Life", min: 80 }
-    ]
+    ],
+    iconPath: "/icons/profiles/PP 4.png"
   },
   {
     id: 5,
@@ -51,7 +55,8 @@ export const psychographicProfiles: UserProfile[] = [
     criteria: [
       { section: "Your Faith Life", max: 70 },
       { section: "Your Marriage Life", min: 60, max: 80 }
-    ]
+    ],
+    iconPath: "/icons/profiles/IS 5.png"
   },
   {
     id: 6,
@@ -62,7 +67,8 @@ export const psychographicProfiles: UserProfile[] = [
       { section: "Your Faith Life", min: 75 },
       { section: "Your Marriage Life", min: 70 },
       { section: "Your Marriage and Boundaries", min: 65 }
-    ]
+    ],
+    iconPath: "/icons/profiles/BV 6.png"
   },
   
   // Women-specific profiles
@@ -74,7 +80,8 @@ export const psychographicProfiles: UserProfile[] = [
     criteria: [
       { section: "Your Parenting Life", min: 85 },
       { section: "Your Marriage Life", min: 80 }
-    ]
+    ],
+    iconPath: "/icons/profiles/RN 7.png"
   },
   {
     id: 8,
@@ -84,7 +91,8 @@ export const psychographicProfiles: UserProfile[] = [
     criteria: [
       { section: "Your Marriage Life", min: 85 },
       { section: "Your Faith Life", min: 60, max: 80 }
-    ]
+    ],
+    iconPath: "/icons/profiles/AC 8.png"
   },
   {
     id: 9,
@@ -94,7 +102,8 @@ export const psychographicProfiles: UserProfile[] = [
     criteria: [
       { section: "Your Foundation", min: 75 },
       { section: "Your Finances", min: 80 }
-    ]
+    ],
+    iconPath: "/icons/profiles/IT 9.png"
   },
   {
     id: 10,
@@ -104,7 +113,8 @@ export const psychographicProfiles: UserProfile[] = [
     criteria: [
       { section: "Your Faith Life", min: 75 },
       { section: "Your Family/Home Life", min: 80 }
-    ]
+    ],
+    iconPath: "/icons/profiles/FCH 10.png"
   },
   
   // Men-specific profiles
@@ -116,7 +126,8 @@ export const psychographicProfiles: UserProfile[] = [
     criteria: [
       { section: "Your Foundation", min: 85 },
       { section: "Your Faith Life", min: 80 }
-    ]
+    ],
+    iconPath: "/icons/profiles/FP 11.png"
   },
   {
     id: 12,
@@ -126,7 +137,8 @@ export const psychographicProfiles: UserProfile[] = [
     criteria: [
       { section: "Your Finances", min: 85 },
       { section: "Your Parenting Life", min: 80 }
-    ]
+    ],
+    iconPath: "/icons/profiles/SL 12.png"
   },
   {
     id: 13,
@@ -137,6 +149,7 @@ export const psychographicProfiles: UserProfile[] = [
       { section: "Your Finances", min: 75 },
       { section: "Your Faith Life", min: 70 },
       { section: "Your Health and Wellness", min: 70 }
-    ]
+    ],
+    iconPath: "/icons/profiles/BP 13.png"
   }
 ];

@@ -87,23 +87,49 @@ export default function ResultsView({
         
         {/* Primary Profile */}
         <div className="bg-gradient-to-r from-blue-50 to-white p-6 rounded-lg border border-blue-100 shadow-sm mb-6">
-          <div className="flex justify-between items-center mb-3">
-            <p className="font-semibold text-lg text-blue-800">{primaryProfile.name}</p>
-            <span className="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">General Profile</span>
+          <div className="flex items-start mb-4">
+            {primaryProfile.iconPath && (
+              <div className="mr-4 flex-shrink-0">
+                <img 
+                  src={primaryProfile.iconPath} 
+                  alt={primaryProfile.name}
+                  className="w-24 h-24 object-contain rounded-full border-2 border-blue-100"
+                />
+              </div>
+            )}
+            <div className="flex-1">
+              <div className="flex justify-between items-center mb-3">
+                <p className="font-semibold text-lg text-blue-800">{primaryProfile.name}</p>
+                <span className="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">General Profile</span>
+              </div>
+              <p className="text-gray-700 leading-relaxed">{primaryProfile.description}</p>
+            </div>
           </div>
-          <p className="text-gray-700 leading-relaxed">{primaryProfile.description}</p>
         </div>
         
         {/* Gender-Specific Profile (if available) */}
         {genderProfile && (
           <div className="bg-gradient-to-r from-purple-50 to-white p-6 rounded-lg border border-purple-100 shadow-sm">
-            <div className="flex justify-between items-center mb-3">
-              <p className="font-semibold text-lg text-purple-800">{genderProfile.name}</p>
-              <span className="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full">
-                {demographics.gender === 'male' ? 'Male-Specific Profile' : 'Female-Specific Profile'}
-              </span>
+            <div className="flex items-start mb-4">
+              {genderProfile.iconPath && (
+                <div className="mr-4 flex-shrink-0">
+                  <img 
+                    src={genderProfile.iconPath} 
+                    alt={genderProfile.name}
+                    className="w-24 h-24 object-contain rounded-full border-2 border-purple-100"
+                  />
+                </div>
+              )}
+              <div className="flex-1">
+                <div className="flex justify-between items-center mb-3">
+                  <p className="font-semibold text-lg text-purple-800">{genderProfile.name}</p>
+                  <span className="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full">
+                    {demographics.gender === 'male' ? 'Male-Specific Profile' : 'Female-Specific Profile'}
+                  </span>
+                </div>
+                <p className="text-gray-700 leading-relaxed">{genderProfile.description}</p>
+              </div>
             </div>
-            <p className="text-gray-700 leading-relaxed">{genderProfile.description}</p>
           </div>
         )}
       </div>
