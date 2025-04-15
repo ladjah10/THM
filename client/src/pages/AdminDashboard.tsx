@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
-import type { AssessmentResult } from "@/types/assessment";
-import type { SectionScore } from "../../../shared/schema";
+import type { AssessmentScores, UserProfile, DemographicData, AssessmentResult, SectionScore } from "@/types/assessment";
 import {
   Dialog,
   DialogContent,
@@ -34,6 +33,192 @@ import {
 // Simple admin authentication
 const ADMIN_USERNAME = "admin";
 const ADMIN_PASSWORD = "100marriage";
+
+// Calculate age from birthday string (YYYY-MM-DD format)
+function calculateAge(birthday: string): number {
+  if (!birthday) return 0;
+  
+  try {
+    const birthDate = new Date(birthday);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    
+    return age;
+  } catch (e) {
+    return 0;
+  }
+}
+
+// Calculate match compatibility score (higher is better)
+function calculateMatchScore(candidate: AssessmentResult): number {
+  const scoreWeight = 0.5;
+  const ageWeight = 0.3;
+  const locationWeight = 0.2;
+  
+  // Score ranking - higher scores are better for traditional match
+  const scoreRank = candidate.scores.overallPercentage;
+  
+  // Age ranking - optimal age range is 25-35
+  const age = calculateAge(candidate.demographics.birthday);
+  let ageRank = 0;
+  if (age >= 25 && age <= 35) {
+    ageRank = 100; // Optimal age range
+  } else if (age < 25) {
+    ageRank = 100 - ((25 - age) * 5); // 5% penalty per year under 25
+  } else {
+    ageRank = 100 - ((age - 35) * 3); // 3% penalty per year over 35
+  }
+  
+  // Location ranking - placeholder (would use zipcode proximity in real implementation)
+  // For now, just check if location info is complete
+  const locationRank = candidate.demographics.city && 
+    candidate.demographics.state && 
+    candidate.demographics.zipCode ? 100 : 50;
+  
+  // Calculate weighted score
+  return (scoreRank * scoreWeight) + (ageRank * ageWeight) + (locationRank * locationWeight);
+}
+
+interface PoolCandidatesTableProps {
+  candidates: AssessmentResult[];
+}
+
+// Component for pool candidates table with ranked matching
+function PoolCandidatesTable({ candidates }: PoolCandidatesTableProps) {
+  const [selectedCandidates, setSelectedCandidates] = useState<string[]>([]);
+  
+  // Rank candidates by score, age and location
+  const rankedCandidates = useMemo(() => {
+    return [...candidates].sort((a, b) => {
+      const scoreA = calculateMatchScore(a);
+      const scoreB = calculateMatchScore(b);
+      return scoreB - scoreA; // Sort by descending score
+    });
+  }, [candidates]);
+  
+  // Handle checkbox selection
+  const handleSelectCandidate = (email: string) => {
+    setSelectedCandidates(prev => {
+      if (prev.includes(email)) {
+        return prev.filter(e => e !== email);
+      } else {
+        return [...prev, email];
+      }
+    });
+  };
+  
+  // Handle sending match notification emails
+  const handleSendMatchNotifications = async () => {
+    if (selectedCandidates.length < 2) {
+      alert("Please select at least 2 candidates to match");
+      return;
+    }
+    
+    try {
+      // API call would go here
+      // await apiRequest("POST", "/api/admin/send-match-notifications", { candidates: selectedCandidates });
+      alert(`Match notifications would be sent to ${selectedCandidates.length} candidates`);
+      setSelectedCandidates([]);
+    } catch (error) {
+      console.error("Error sending match notifications:", error);
+      alert("Error sending match notifications");
+    }
+  };
+  
+  return (
+    <div className="space-y-4">
+      {selectedCandidates.length > 0 && (
+        <div className="flex justify-between items-center p-3 bg-blue-50 border border-blue-200 rounded-md">
+          <span className="text-sm">
+            <span className="font-medium">{selectedCandidates.length}</span> candidates selected
+          </span>
+          <Button 
+            size="sm" 
+            onClick={handleSendMatchNotifications}
+          >
+            Send Match Notifications
+          </Button>
+        </div>
+      )}
+      
+      <Table>
+        <TableCaption>THM Pool Candidates - Ranked by compatibility</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-12">Select</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Age</TableHead>
+            <TableHead>Gender</TableHead>
+            <TableHead>Location</TableHead>
+            <TableHead>Score</TableHead>
+            <TableHead>Profile</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {rankedCandidates.length ? (
+            rankedCandidates.map((candidate) => {
+              const age = calculateAge(candidate.demographics.birthday);
+              const matchScore = calculateMatchScore(candidate);
+              const location = `${candidate.demographics.city}, ${candidate.demographics.state} ${candidate.demographics.zipCode}`;
+              
+              return (
+                <TableRow key={candidate.email}>
+                  <TableCell>
+                    <input 
+                      type="checkbox" 
+                      className="h-4 w-4 rounded border-gray-300"
+                      checked={selectedCandidates.includes(candidate.email)}
+                      onChange={() => handleSelectCandidate(candidate.email)}
+                    />
+                  </TableCell>
+                  <TableCell className="font-medium">{candidate.name}</TableCell>
+                  <TableCell>{age || "N/A"}</TableCell>
+                  <TableCell>{candidate.demographics.gender}</TableCell>
+                  <TableCell>{location}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <div className="h-2 w-16 bg-gray-200 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-primary" 
+                          style={{ width: `${matchScore}%` }}
+                        />
+                      </div>
+                      <span className="text-sm">{matchScore.toFixed(0)}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="outline">{candidate.profile.name}</Badge>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => alert(`View ${candidate.name}'s profile (would show detailed info)`)}
+                    >
+                      View Profile
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              );
+            })
+          ) : (
+            <TableRow>
+              <TableCell colSpan={8} className="text-center py-8 text-gray-500">
+                No THM pool candidates found
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </div>
+  );
+};
 
 export default function AdminDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -81,7 +266,9 @@ export default function AdminDashboard() {
       male: assessments?.filter(a => a.demographics.gender === "male").length || 0,
       female: assessments?.filter(a => a.demographics.gender === "female").length || 0,
     },
-    averageScore: assessments?.reduce((sum, assessment) => sum + assessment.scores.overallPercentage, 0) / (assessments?.length || 1) || 0,
+    averageScore: assessments && assessments.length > 0 
+      ? assessments.reduce((sum, assessment) => sum + assessment.scores.overallPercentage, 0) / assessments.length 
+      : 0,
     profileDistribution: {} as Record<string, number>
   };
   
@@ -380,6 +567,61 @@ export default function AdminDashboard() {
                       )}
                     </TableBody>
                   </Table>
+                </div>
+              )}
+            </div>
+          </TabsContent>
+          <TabsContent value="matching" className="space-y-4">
+            <div className="bg-white p-4 rounded-lg shadow-sm">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+                <div>
+                  <h2 className="text-lg font-medium">THM Pool Matching</h2>
+                  <p className="text-sm text-gray-500">
+                    View and match candidates who opted into The 100 Marriage Arranged pool
+                  </p>
+                </div>
+              </div>
+              
+              {isLoading ? (
+                <div className="flex justify-center py-8">
+                  <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
+                </div>
+              ) : error ? (
+                <div className="text-center py-8 text-red-500">
+                  Error loading assessment data
+                </div>
+              ) : (
+                <div className="overflow-auto">
+                  {/* Filter by gender tabs */}
+                  <Tabs defaultValue="all" className="mb-6">
+                    <TabsList className="w-full sm:w-auto">
+                      <TabsTrigger value="all">All Candidates</TabsTrigger>
+                      <TabsTrigger value="male">Male Candidates</TabsTrigger>
+                      <TabsTrigger value="female">Female Candidates</TabsTrigger>
+                    </TabsList>
+                    
+                    <TabsContent value="all" className="mt-4">
+                      <PoolCandidatesTable 
+                        candidates={assessments?.filter(a => a.demographics.thmPoolApplied) || []} 
+                      />
+                    </TabsContent>
+                    
+                    <TabsContent value="male" className="mt-4">
+                      <PoolCandidatesTable 
+                        candidates={assessments?.filter(
+                          a => a.demographics.thmPoolApplied && a.demographics.gender === "male"
+                        ) || []} 
+                      />
+                    </TabsContent>
+                    
+                    <TabsContent value="female" className="mt-4">
+                      <PoolCandidatesTable 
+                        candidates={assessments?.filter(
+                          a => a.demographics.thmPoolApplied && a.demographics.gender === "female"
+                        ) || []} 
+                      />
+                    </TabsContent>
+                  </Tabs>
                 </div>
               )}
             </div>

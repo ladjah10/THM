@@ -64,3 +64,14 @@ export interface UserProfile {
   genderSpecific: "male" | "female" | null;
   criteria: ProfileCriterion[];
 }
+
+export interface AssessmentResult {
+  email: string;
+  name: string;
+  scores: AssessmentScores;
+  profile: UserProfile;
+  genderProfile?: UserProfile | null;
+  responses: Record<number, UserResponse>;
+  demographics: DemographicData;
+  timestamp: string;
+}
