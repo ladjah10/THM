@@ -411,9 +411,22 @@ export default function DemographicView({
           <Label htmlFor="interestedInArrangedMarriage" className="text-sm font-medium text-gray-700">
             {demographicQuestions.interestedInArrangedMarriage.label}
           </Label>
-          {demographicQuestions.interestedInArrangedMarriage.helpText && (
-            <p className="text-xs text-gray-500">{demographicQuestions.interestedInArrangedMarriage.helpText}</p>
-          )}
+          <div className="flex items-center gap-2">
+            <p className="text-xs text-gray-500">
+              {demographicQuestions.interestedInArrangedMarriage.helpText}
+            </p>
+            <a 
+              href="https://lawrenceadjah.com/the-100-marriage-arranged" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-xs text-blue-600 hover:text-blue-800 inline-flex items-center"
+            >
+              Learn More
+              <svg className="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+              </svg>
+            </a>
+          </div>
           <Select
             value={demographicData.interestedInArrangedMarriage ? "yes" : "no"}
             onValueChange={(value) => {
@@ -578,6 +591,17 @@ export default function DemographicView({
                 <p className="text-gray-700 text-sm">
                   You've indicated interest in the THM Arranged Marriage Pool. This requires a one-time $25 application fee.
                 </p>
+                <a 
+                  href="https://lawrenceadjah.com/the-100-marriage-arranged" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-800 inline-flex items-center mt-2 text-sm"
+                >
+                  Learn More About THM Arranged Marriage
+                  <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                  </svg>
+                </a>
               </div>
               
               <div className="bg-blue-50 p-4 rounded-md mb-4">

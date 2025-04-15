@@ -4,7 +4,11 @@ import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-
 import { Button } from "@/components/ui/button";
 import { apiRequest } from "@/lib/queryClient";
 import { toast } from "@/hooks/use-toast";
-import type { StripeElementsOptions } from '@stripe/stripe-js';
+import type { 
+  StripeElementsOptions, 
+  StripeElementsOptionsClientSecret, 
+  Appearance 
+} from '@stripe/stripe-js';
 
 if (!import.meta.env.VITE_STRIPE_PUBLIC_KEY) {
   console.error('Missing Stripe public key');
@@ -89,6 +93,17 @@ function THMFeeForm({
         <div className="bg-blue-50 p-4 rounded-md text-sm text-blue-800 mb-4">
           <p className="font-medium mb-2">THM Arranged Marriage Pool Application Fee: $25</p>
           <p>This one-time fee is required to be considered for the THM Arranged Marriage Pool.</p>
+          <a 
+            href="https://lawrenceadjah.com/the-100-marriage-arranged" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-blue-700 hover:text-blue-900 inline-flex items-center mt-2 font-medium"
+          >
+            Learn More
+            <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+            </svg>
+          </a>
         </div>
         
         <PaymentElement id="payment-element" />
@@ -163,9 +178,9 @@ export default function THMPoolPaymentForm({ onPaymentSuccess }: { onPaymentSucc
   }
   
   // Configure Stripe Elements with the client secret
-  const elementOptions = {
-    ...stripeElementsOptions,
-    clientSecret
+  const elementOptions: StripeElementsOptionsClientSecret = {
+    clientSecret,
+    appearance: stripeElementsOptions.appearance as Appearance
   };
   
   return (
