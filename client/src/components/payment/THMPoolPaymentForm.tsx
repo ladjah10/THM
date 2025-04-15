@@ -74,11 +74,9 @@ function THMFeeForm({
     setProcessing(true);
     
     try {
+      // Don't use return_url to avoid page redirects, just handle it in-page
       const { error, paymentIntent } = await stripe.confirmPayment({
         elements,
-        confirmParams: {
-          return_url: window.location.href,
-        },
         redirect: 'if_required'
       });
       

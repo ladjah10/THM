@@ -602,6 +602,7 @@ export default function DemographicView({
                 onPaymentSuccess={() => {
                   // Update that they've paid the THM pool fee
                   onChange("thmPoolApplied", true);
+                  // Hide the payment form now that they've paid
                   setShowTHMPoolPayment(false);
                   toast({
                     title: "THM Pool Fee Processed",
