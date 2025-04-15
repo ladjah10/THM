@@ -250,10 +250,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
+      // Validate referrer email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(referrer.email)) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Invalid referrer email address" 
+        });
+      }
+      
       if (!contacts || !Array.isArray(contacts) || contacts.length < 3) {
         return res.status(400).json({ 
           success: false, 
           message: "Must provide information for 3 contacts" 
+        });
+      }
+      
+      // Check for duplicate emails among contacts
+      const contactEmails = new Set<string>();
+      
+      // Check if any contact email matches the referrer's email
+      if (contacts.some(c => c.email.toLowerCase() === referrer.email.toLowerCase())) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "You cannot refer yourself" 
         });
       }
       
@@ -265,14 +285,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
           });
         }
         
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        // Validate email format
         if (!emailRegex.test(contact.email)) {
           return res.status(400).json({ 
             success: false, 
             message: `Invalid email address: ${contact.email}` 
           });
         }
+        
+        // Check for duplicate emails among contacts
+        const lowerCaseEmail = contact.email.toLowerCase();
+        if (contactEmails.has(lowerCaseEmail)) {
+          return res.status(400).json({ 
+            success: false, 
+            message: `Duplicate email address: ${contact.email}` 
+          });
+        }
+        
+        contactEmails.add(lowerCaseEmail);
       }
+      
+      // In a production system, we would also check:
+      // 1. Has this email been referred before?
+      // 2. Are these emails on a spam/throwaway email domain blacklist?
+      // 3. Is the referrer attempting to abuse the system with multiple referrals?
       
       // In a production system, we would:
       // 1. Store the referrals in a database

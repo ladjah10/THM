@@ -235,20 +235,23 @@ function formatReferralEmail(data: ReferralEmailData): string {
         
         <div class="section">
           <p>Dear ${recipientName},</p>
-          <p>${referrerName} thought you might benefit from taking The 100 Marriage Assessment - Series 1, an innovative tool designed to help you understand your expectations in relationships and marriage.</p>
+          <p>${referrerName} thought you might benefit from taking <strong>The 100 Marriage Assessment - Series 1</strong>, an innovative tool designed to help you understand your expectations in relationships and marriage.</p>
         </div>
         
         <div class="highlight-box">
           <h2 style="margin-top: 0;">What is The 100 Marriage Assessment?</h2>
           <p>
-            Based on the best-selling book by Lawrence E. Adjah, this assessment helps you:
+            Based on the best-selling book by Lawrence E. Adjah, this individual assessment helps you:
           </p>
           <ul>
             <li>Understand your expectations for dating, engagement, and marriage</li>
             <li>Discover your unique relationship approach and psychographic profile</li>
             <li>Identify potential areas of misalignment with your spouse or future spouse</li>
             <li>Gain clarity on what truly matters to you in a lifelong commitment</li>
+            <li>Learn if you have traditional or progressive views on marriage and relationships</li>
+            <li>Receive a personalized analysis of your results via email</li>
           </ul>
+          <p><strong>Note:</strong> This is currently an individual assessment. The couples assessment option will be available soon!</p>
         </div>
         
         <div class="section" style="text-align: center;">
@@ -257,7 +260,7 @@ function formatReferralEmail(data: ReferralEmailData): string {
           <p>Use code <strong>INVITED10</strong> at checkout</p>
           <a href="https://100marriage.com/assessment" class="cta-button">Take The Assessment Now</a>
           <p style="font-size: 14px; color: #7f8c8d; margin-top: 15px;">
-            *For couples: Both spouses can take their individual assessments and compare results to strengthen their relationship.
+            <strong>Couples Tip:</strong> Both you and your significant other can take your individual assessments and compare results to strengthen your relationship. Higher matching percentages indicate better alignment in your expectations!
           </p>
         </div>
         

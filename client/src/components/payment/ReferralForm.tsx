@@ -44,6 +44,8 @@ export default function ReferralForm({
   // Validate all inputs
   const validateInputs = (): boolean => {
     // Check if all 3 contacts have valid information
+    const contactEmails = new Set<string>();
+    
     for (let i = 0; i < 3; i++) {
       const contact = contacts[i];
       
@@ -65,6 +67,29 @@ export default function ReferralForm({
         });
         return false;
       }
+      
+      // Check if the contact email is the same as the user's email
+      if (contact.email.toLowerCase() === userEmail.toLowerCase()) {
+        toast({
+          title: "Invalid Referral",
+          description: "You cannot refer yourself. Please provide a different email address.",
+          variant: "destructive"
+        });
+        return false;
+      }
+      
+      // Check for duplicate emails among contacts
+      const lowerCaseEmail = contact.email.toLowerCase();
+      if (contactEmails.has(lowerCaseEmail)) {
+        toast({
+          title: "Duplicate Email",
+          description: `You've entered the same email address (${contact.email}) more than once. Please provide unique email addresses.`,
+          variant: "destructive"
+        });
+        return false;
+      }
+      
+      contactEmails.add(lowerCaseEmail);
     }
     
     return true;
