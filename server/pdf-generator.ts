@@ -1,6 +1,28 @@
 import PDFDocument from 'pdfkit';
 import { AssessmentResult } from '../shared/schema';
 import fs from 'fs';
+import path from 'path';
+
+// Function to get the absolute path of profile icons
+function getProfileIconPath(relativePath: string | undefined): string | null {
+  if (!relativePath) return null;
+  
+  try {
+    // Remove leading slash if present
+    const cleanPath = relativePath.startsWith('/') ? relativePath.substring(1) : relativePath;
+    // Create absolute path to the public directory
+    const absPath = path.join(process.cwd(), 'client', 'public', cleanPath);
+    
+    // Check if file exists
+    if (fs.existsSync(absPath)) {
+      return absPath;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error finding profile icon:', error);
+    return null;
+  }
+}
 
 // Function to create a PDF buffer from an assessment result
 export async function generateAssessmentPDF(assessment: AssessmentResult): Promise<Buffer> {
@@ -133,36 +155,110 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
         .text('Your Psychographic Profiles');
       
       // Primary Profile
-      doc.moveDown(0.5)
-        .fontSize(16)
-        .fillColor('#3498db')
-        .text(assessment.profile.name + ' (General Profile)');
+      doc.moveDown(0.5);
+      
+      // Try to add profile icon if available
+      const primaryIconPath = getProfileIconPath(assessment.profile.iconPath);
+      if (primaryIconPath) {
+        const iconSize = 60;
+        const iconY = doc.y;
+        const textX = 120; // Space for the icon plus some margin
         
-      doc.moveDown(0.5)
-        .fontSize(12)
-        .fillColor('#555')
-        .font('Helvetica')
-        .text(assessment.profile.description, {
-          align: 'justify',
-          width: doc.page.width - 100
+        // Add the icon
+        doc.image(primaryIconPath, 50, iconY, { 
+          width: iconSize,
+          height: iconSize,
+          fit: [iconSize, iconSize]
         });
         
-      // Gender-specific profile if available
-      if (assessment.genderProfile) {
-        doc.moveDown(1.5)
-          .fontSize(16)
-          .fillColor('#8e44ad') // Purple color for gender profile
-          .text(assessment.genderProfile.name + 
-            (assessment.demographics.gender === 'male' ? ' (Male-Specific Profile)' : ' (Female-Specific Profile)'));
+        // Add profile name with adjusted position
+        doc.fontSize(16)
+          .fillColor('#3498db')
+          .text(assessment.profile.name + ' (General Profile)', textX, iconY);
+        
+        // Add profile description with adjusted position
+        doc.moveDown(0.5)
+          .fontSize(12)
+          .fillColor('#555')
+          .font('Helvetica')
+          .text(assessment.profile.description, textX, doc.y, {
+            align: 'justify',
+            width: doc.page.width - 150 // Adjust width to account for icon
+          });
+          
+        // Ensure we move past the icon
+        const newY = Math.max(doc.y, iconY + iconSize + 10);
+        doc.y = newY;
+      } else {
+        // Fallback if icon is not available
+        doc.fontSize(16)
+          .fillColor('#3498db')
+          .text(assessment.profile.name + ' (General Profile)');
           
         doc.moveDown(0.5)
           .fontSize(12)
           .fillColor('#555')
           .font('Helvetica')
-          .text(assessment.genderProfile.description, {
+          .text(assessment.profile.description, {
             align: 'justify',
             width: doc.page.width - 100
           });
+      }
+      
+      // Gender-specific profile if available
+      if (assessment.genderProfile) {
+        doc.moveDown(1.5);
+        
+        // Try to add gender profile icon if available
+        const genderIconPath = getProfileIconPath(assessment.genderProfile.iconPath);
+        if (genderIconPath) {
+          const iconSize = 60;
+          const iconY = doc.y;
+          const textX = 120; // Space for the icon plus some margin
+          
+          // Add the icon
+          doc.image(genderIconPath, 50, iconY, { 
+            width: iconSize,
+            height: iconSize,
+            fit: [iconSize, iconSize]
+          });
+          
+          // Add gender profile name with adjusted position
+          doc.fontSize(16)
+            .fillColor('#8e44ad') // Purple color for gender profile
+            .text(assessment.genderProfile.name + 
+              (assessment.demographics.gender === 'male' ? ' (Male-Specific Profile)' : ' (Female-Specific Profile)'), 
+              textX, iconY);
+          
+          // Add gender profile description with adjusted position
+          doc.moveDown(0.5)
+            .fontSize(12)
+            .fillColor('#555')
+            .font('Helvetica')
+            .text(assessment.genderProfile.description, textX, doc.y, {
+              align: 'justify',
+              width: doc.page.width - 150 // Adjust width to account for icon
+            });
+            
+          // Ensure we move past the icon
+          const newY = Math.max(doc.y, iconY + iconSize + 10);
+          doc.y = newY;
+        } else {
+          // Fallback if icon is not available
+          doc.fontSize(16)
+            .fillColor('#8e44ad') // Purple color for gender profile
+            .text(assessment.genderProfile.name + 
+              (assessment.demographics.gender === 'male' ? ' (Male-Specific Profile)' : ' (Female-Specific Profile)'));
+            
+          doc.moveDown(0.5)
+            .fontSize(12)
+            .fillColor('#555')
+            .font('Helvetica')
+            .text(assessment.genderProfile.description, {
+              align: 'justify',
+              width: doc.page.width - 100
+            });
+        }
       }
 
       // Section scores

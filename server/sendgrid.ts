@@ -31,7 +31,7 @@ interface EmailMessage {
  * Formats assessment data into a nice HTML email
  */
 function formatAssessmentEmail(assessment: AssessmentResult): string {
-  const { name, scores, profile, demographics } = assessment;
+  const { name, scores, profile, genderProfile, demographics } = assessment;
   
   // Format sections scores
   const sectionsHtml = Object.entries(scores.sections)
@@ -42,6 +42,49 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
         <td style="padding: 8px; border: 1px solid #ddd;">${score.percentage.toFixed(1)}%</td>
       </tr>
     `).join('');
+
+  // URL for the profile icon
+  const baseUrl = 'https://100marriage-assessment.replit.app';
+  const primaryIconUrl = profile.iconPath ? `${baseUrl}${profile.iconPath}` : '';
+  const genderIconUrl = genderProfile?.iconPath ? `${baseUrl}${genderProfile.iconPath}` : '';
+
+  // Create profile HTML with icon if available
+  const primaryProfileHtml = primaryIconUrl ? `
+    <div class="profile-box" style="display: flex; align-items: flex-start;">
+      <div style="margin-right: 15px; flex-shrink: 0;">
+        <img src="${primaryIconUrl}" alt="${profile.name}" style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid #3498db; object-fit: cover;" />
+      </div>
+      <div>
+        <h3 style="margin-top: 0; color: #3498db;">${profile.name} (General Profile)</h3>
+        <p>${profile.description}</p>
+      </div>
+    </div>
+  ` : `
+    <div class="profile-box">
+      <h3 style="margin-top: 0; color: #3498db;">${profile.name} (General Profile)</h3>
+      <p>${profile.description}</p>
+    </div>
+  `;
+
+  // Create gender profile HTML with icon if available
+  const genderProfileHtml = genderProfile ? (
+    genderIconUrl ? `
+      <div class="profile-box" style="display: flex; align-items: flex-start; background-color: #f8f4fa; border-left: 4px solid #8e44ad;">
+        <div style="margin-right: 15px; flex-shrink: 0;">
+          <img src="${genderIconUrl}" alt="${genderProfile.name}" style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid #8e44ad; object-fit: cover;" />
+        </div>
+        <div>
+          <h3 style="margin-top: 0; color: #8e44ad;">${genderProfile.name} (${demographics.gender === 'male' ? 'Male' : 'Female'}-Specific Profile)</h3>
+          <p>${genderProfile.description}</p>
+        </div>
+      </div>
+    ` : `
+      <div class="profile-box" style="background-color: #f8f4fa; border-left: 4px solid #8e44ad;">
+        <h3 style="margin-top: 0; color: #8e44ad;">${genderProfile.name} (${demographics.gender === 'male' ? 'Male' : 'Female'}-Specific Profile)</h3>
+        <p>${genderProfile.description}</p>
+      </div>
+    `
+  ) : '';
 
   return `
     <!DOCTYPE html>
@@ -107,10 +150,9 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
         </div>
         
         <div class="section">
-          <h2>Your Profile: ${profile.name}</h2>
-          <div class="profile-box">
-            <p>${profile.description}</p>
-          </div>
+          <h2>Your Psychographic Profiles</h2>
+          ${primaryProfileHtml}
+          ${genderProfileHtml}
         </div>
         
         <div class="section" style="background-color: #edf7ff; padding: 20px; border-radius: 5px; border-left: 4px solid #3498db; margin-top: 25px;">

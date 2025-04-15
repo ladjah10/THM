@@ -44,6 +44,7 @@ export interface UserProfile {
   description: string;
   genderSpecific: string | null;
   criteria: ProfileCriterion[];
+  iconPath?: string; // Path to the profile icon image
 }
 
 export interface UserResponse {
