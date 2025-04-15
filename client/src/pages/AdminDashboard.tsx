@@ -89,6 +89,7 @@ export default function AdminDashboard() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [filterGender, setFilterGender] = useState<"all" | "male" | "female">("all");
   const [selectedAssessment, setSelectedAssessment] = useState<AssessmentResult | null>(null);
   const [detailModalOpen, setDetailModalOpen] = useState(false);
 
@@ -122,6 +123,21 @@ export default function AdminDashboard() {
       assessment.profile.name.toLowerCase().includes(searchLower)
     );
   });
+  
+  // Filter THM pool candidates by gender
+  const filteredPoolCandidates = useMemo(() => {
+    if (!assessments) return [];
+    
+    // First filter by THM pool opt-in
+    const poolCandidates = assessments.filter(a => a.demographics.thmPoolApplied);
+    
+    // Then filter by gender if needed
+    if (filterGender === "all") {
+      return poolCandidates;
+    } else {
+      return poolCandidates.filter(a => a.demographics.gender === filterGender);
+    }
+  }, [assessments, filterGender]);
   
   // Calculate analytics
   const analytics = {
@@ -576,6 +592,32 @@ export default function AdminDashboard() {
                     View and match candidates who opted into The 100 Marriage Arranged pool
                   </p>
                 </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setFilterGender("all")}
+                    className={filterGender === "all" ? "bg-primary-50" : ""}
+                  >
+                    All Candidates
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setFilterGender("male")}
+                    className={filterGender === "male" ? "bg-primary-50" : ""}
+                  >
+                    Male Candidates
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setFilterGender("female")}
+                    className={filterGender === "female" ? "bg-primary-50" : ""}
+                  >
+                    Female Candidates
+                  </Button>
+                </div>
               </div>
               
               {isLoading ? (
@@ -588,36 +630,13 @@ export default function AdminDashboard() {
                 </div>
               ) : (
                 <div className="overflow-auto">
-                  {/* Filter by gender tabs */}
-                  <Tabs defaultValue="all" className="mb-6">
-                    <TabsList className="w-full sm:w-auto">
-                      <TabsTrigger value="all">All Candidates</TabsTrigger>
-                      <TabsTrigger value="male">Male Candidates</TabsTrigger>
-                      <TabsTrigger value="female">Female Candidates</TabsTrigger>
-                    </TabsList>
-                    
-                    <TabsContent value="all" className="mt-4">
-                      <PoolCandidatesTable 
-                        candidates={assessments?.filter(a => a.demographics.thmPoolApplied) || []} 
-                      />
-                    </TabsContent>
-                    
-                    <TabsContent value="male" className="mt-4">
-                      <PoolCandidatesTable 
-                        candidates={assessments?.filter(
-                          a => a.demographics.thmPoolApplied && a.demographics.gender === "male"
-                        ) || []} 
-                      />
-                    </TabsContent>
-                    
-                    <TabsContent value="female" className="mt-4">
-                      <PoolCandidatesTable 
-                        candidates={assessments?.filter(
-                          a => a.demographics.thmPoolApplied && a.demographics.gender === "female"
-                        ) || []} 
-                      />
-                    </TabsContent>
-                  </Tabs>
+                  {filteredPoolCandidates?.length ? (
+                    <PoolCandidatesTable candidates={filteredPoolCandidates} />
+                  ) : (
+                    <div className="text-center py-8 text-gray-500">
+                      No THM pool candidates found
+                    </div>
+                  )}
                 </div>
               )}
             </div>
