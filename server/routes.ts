@@ -324,6 +324,52 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     }
   });
+  
+  // Send email for a couple assessment
+  app.post('/api/couple-assessment/email', async (req: Request, res: Response) => {
+    try {
+      const { coupleId } = req.body;
+      
+      if (!coupleId) {
+        return res.status(400).json({
+          success: false,
+          message: 'Couple ID is required'
+        });
+      }
+      
+      // Get the couple assessment report
+      const report = await storage.getCoupleAssessment(coupleId);
+      
+      if (!report) {
+        return res.status(404).json({
+          success: false,
+          message: 'Couple assessment not found or incomplete'
+        });
+      }
+      
+      // Import the sendCoupleAssessmentEmail function from nodemailer.ts
+      const { sendCoupleAssessmentEmail } = await import('./nodemailer');
+      
+      // Send email with the report
+      const emailResult = await sendCoupleAssessmentEmail(report);
+      
+      if (emailResult.success) {
+        return res.status(200).json({
+          success: true,
+          message: 'Couple assessment email sent successfully',
+          previewUrl: emailResult.previewUrl
+        });
+      } else {
+        throw new Error('Failed to send email');
+      }
+    } catch (error) {
+      console.error('Error sending couple assessment email:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to send couple assessment email'
+      });
+    }
+  });
 
   // Create a Stripe payment intent for assessment purchase
   app.post('/api/create-payment-intent', async (req, res) => {
