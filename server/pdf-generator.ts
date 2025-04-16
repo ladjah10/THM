@@ -314,22 +314,31 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
       
       // Add comparative statistics section
       doc.addPage(); // Start on a new page
-      doc.fontSize(14)
+      
+      const genderKey = assessment.demographics.gender === 'male' ? 'male' : 'female';
+      const genderText = assessment.demographics.gender === 'male' ? 'men' : 'women';
+      
+      // Add gender-specific header with background
+      doc.rect(0, 0, doc.page.width, 80).fill('#f0f7ff');
+      
+      doc.fontSize(18)
         .font('Helvetica-Bold')
-        .fillColor('#2c3e50')
-        .text('How You Compare to Others', { align: 'center' });
+        .fillColor('#2c5282')
+        .text(`How You Compare to Other ${genderText.charAt(0).toUpperCase() + genderText.slice(1)}`, 50, 30, { 
+          align: 'center',
+          width: doc.page.width - 100
+        });
       
       doc.moveDown(0.5)
         .fontSize(11)
         .font('Helvetica')
-        .fillColor('#555')
-        .text('Based on responses from others who have taken this assessment, here\'s how your scores compare.', {
+        .fillColor('#4a5568')
+        .text(`Based on responses from other ${genderText} who have taken this assessment, we've prepared gender-specific comparisons to help you understand your results in context.`, {
           width: doc.page.width - 100,
           align: 'center'
-        });
+        }, 50, 55);
       
       // Calculate percentile for overall score
-      const genderKey = assessment.demographics.gender === 'male' ? 'male' : 'female';
       const overallScore = assessment.scores.overallPercentage;
       const { mean, standardDeviation } = baselineStatistics.overall.byGender[genderKey];
       
@@ -338,59 +347,97 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
       const percentile = Math.min(99, Math.max(1, Math.round(50 + (zScore * 30))));
       const percentileDesc = getPercentileDescription(percentile);
       
-      // Draw overall percentile section
-      doc.moveDown(1.5)
-        .fontSize(12)
+      // Draw overall percentile section with box
+      doc.roundedRect(50, 100, doc.page.width - 100, 160, 8)
+        .fillAndStroke('white', '#e2e8f0');
+      
+      doc.fontSize(14)
         .font('Helvetica-Bold')
         .fillColor('#2c3e50')
-        .text('Overall Score Comparison:');
+        .text('Overall Score Comparison', 70, 115);
       
-      doc.moveDown(0.5)
-        .fontSize(11)
+      // Draw the actual comparison visualization
+      const overallBoxY = 145;
+      
+      // Your score info box
+      doc.roundedRect(70, overallBoxY, 150, 60, 5).fillAndStroke('#f8fafc', '#e2e8f0');
+      doc.fontSize(12)
+        .font('Helvetica-Bold')
+        .fillColor('#2d3748')
+        .text('Your Score:', 85, overallBoxY + 10);
+      
+      doc.fontSize(22)
+        .font('Helvetica-Bold')
+        .fillColor('#3182ce')
+        .text(`${overallScore.toFixed(1)}%`, 85, overallBoxY + 30);
+      
+      // Average score info box
+      doc.roundedRect(250, overallBoxY, 150, 60, 5).fillAndStroke('#f8fafc', '#e2e8f0');
+      doc.fontSize(12)
+        .font('Helvetica-Bold')
+        .fillColor('#2d3748')
+        .text(`${genderText.charAt(0).toUpperCase() + genderText.slice(1)} Average:`, 265, overallBoxY + 10);
+      
+      doc.fontSize(22)
+        .font('Helvetica-Bold')
+        .fillColor('#718096')
+        .text(`${mean.toFixed(1)}%`, 265, overallBoxY + 30);
+      
+      // Percentile visualization
+      doc.roundedRect(70, overallBoxY + 70, 330, 40, 5).fillAndStroke('#f0f5fa', '#e2e8f0');
+      
+      // Draw percentile indicator
+      const percentileWidth = 330;
+      const arrowPosition = Math.min(percentileWidth - 10, Math.max(10, (percentile / 100) * percentileWidth));
+      
+      // Draw percentile scale
+      doc.fontSize(9)
         .font('Helvetica')
-        .fillColor('#555');
+        .fillColor('#718096');
       
-      // Show score and average
-      doc.text(`Your score: ${overallScore.toFixed(1)}%`, { continued: true })
-        .text(`Average for ${assessment.demographics.gender === 'male' ? 'men' : 'women'}: ${mean.toFixed(1)}%`, { align: 'right' });
+      // Scale markers
+      for (let i = 0; i <= 100; i += 25) {
+        const markerX = 70 + (i / 100) * percentileWidth;
+        doc.moveTo(markerX, overallBoxY + 95)
+           .lineTo(markerX, overallBoxY + 100)
+           .stroke('#cbd5e0');
+        
+        doc.text(`${i}%`, markerX - 8, overallBoxY + 102);
+      }
       
-      // Draw percentile bar
-      doc.moveDown(0.5);
-      const barY = doc.y;
-      const barHeight = 20;
-      const statsBarWidth = doc.page.width - 100;
-      
-      // Background bar
-      doc.rect(50, barY, statsBarWidth, barHeight)
-        .fillColor('#f0f0f0');
-      
-      // Percentile bar
-      doc.rect(50, barY, (percentile / 100) * statsBarWidth, barHeight)
-        .fillColor('#3498db');
+      // Draw triangle pointer
+      const triangleY = overallBoxY + 85;
+      doc.polygon(
+        [70 + arrowPosition, triangleY],
+        [70 + arrowPosition - 8, triangleY - 8], 
+        [70 + arrowPosition + 8, triangleY - 8]
+      ).fill('#3182ce');
       
       // Percentile text
-      doc.fillColor('white')
-        .fontSize(10)
-        .text(percentileDesc, 50 + (statsBarWidth / 2) - 60, barY + 6);
+      doc.fontSize(10)
+        .font('Helvetica-Bold')
+        .fillColor('#3182ce')
+        .text(`${percentile}th Percentile`, 70 + arrowPosition - 35, triangleY - 25, { width: 70, align: 'center' });
       
-      // Explanation text
-      doc.moveDown(1.5)
-        .fillColor('#555')
-        .fontSize(11)
-        .text(`Your score is ${percentile > 50 ? 'above' : 'below'} average compared to other ${assessment.demographics.gender === 'male' ? 'men' : 'women'} who have taken this assessment.`);
+      // Explanation text below visualization
+      doc.fontSize(11)
+        .font('Helvetica')
+        .fillColor('#4a5568')
+        .text(`Your overall score of ${overallScore.toFixed(1)}% is ${percentile > 60 ? 'significantly higher than' : percentile > 50 ? 'higher than' : percentile > 40 ? 'close to' : percentile > 25 ? 'lower than' : 'significantly lower than'} the average of ${mean.toFixed(1)}% for ${genderText}. This places you in the ${percentile}th percentile.`, 
+          70, overallBoxY + 120, { width: 330 });
       
-      // Section comparisons
-      doc.moveDown(1.5)
-        .fontSize(12)
+      // Section comparisons - start at new position
+      doc.fontSize(14)
         .font('Helvetica-Bold')
         .fillColor('#2c3e50')
-        .text('Section Comparisons:');
+        .text(`Section Comparisons (${genderText.charAt(0).toUpperCase() + genderText.slice(1)}-specific)`, 50, 290);
       
-      // Draw section percentiles
-      doc.moveDown(1);
-      const sectionColumnWidth = (doc.page.width - 100) / 2;
+      // Draw section percentiles in a better layout
+      const sectionStartY = 320;
+      const sectionWidth = (doc.page.width - 110) / 2;
+      const sectionHeight = 90;
       let currentX = 50;
-      let currentY = doc.y;
+      let currentY = sectionStartY;
       let rowIndex = 0;
       
       Object.entries(assessment.scores.sections).forEach(([sectionName, sectionScore]) => {
@@ -406,70 +453,91 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
         // Calculate percentile for this section
         const sectionZScore = (sectionScore.percentage - sectionMean) / sectionStdDev;
         const sectionPercentile = Math.min(99, Math.max(1, Math.round(50 + (sectionZScore * 30))));
+        const scoreDiff = Math.abs(sectionScore.percentage - sectionMean).toFixed(1);
+        const scoreComparison = sectionScore.percentage > sectionMean ? 'higher' : 'lower';
         
         // If we've done 2 sections in this row, move to new row
         if (rowIndex === 2) {
           rowIndex = 0;
           currentX = 50;
-          currentY += 70; // Move down for next row
+          currentY += sectionHeight + 15; // Move down for next row
+          
+          // Add new page if needed
+          if (currentY + sectionHeight > doc.page.height - 50) {
+            doc.addPage();
+            currentY = 50;
+          }
         }
         
-        // Draw section card
-        doc.rect(currentX, currentY, sectionColumnWidth, 60)
-          .fillColor('white')
-          .strokeColor('#e2e8f0')
-          .lineWidth(0.5)
-          .fillAndStroke();
+        // Draw section card with rounded corners
+        doc.roundedRect(currentX, currentY, sectionWidth, sectionHeight, 8)
+          .fillAndStroke('white', '#e2e8f0');
         
         // Section title and score
         doc.fillColor('#2c3e50')
-          .fontSize(10)
+          .fontSize(12)
           .font('Helvetica-Bold')
-          .text(sectionName, currentX + 10, currentY + 10, { continued: true })
-          .fillColor('#3498db')
-          .text(` ${sectionScore.percentage.toFixed(1)}%`, { align: 'right', width: sectionColumnWidth - 20 });
+          .text(sectionName, currentX + 15, currentY + 15, { continued: true })
+          .fillColor('#3182ce')
+          .text(` ${sectionScore.percentage.toFixed(1)}%`, { align: 'right', width: sectionWidth - 30 });
+        
+        // Add percentile info
+        doc.fontSize(10)
+          .font('Helvetica')
+          .fillColor('#718096')
+          .text(`(${sectionPercentile}th percentile)`, currentX + 15, currentY + 35);
         
         // Draw percentile bar
-        const sectionBarY = currentY + 30;
-        const sectionBarHeight = 8;
-        const sectionBarWidth = sectionColumnWidth - 20;
+        const sectionBarY = currentY + 50;
+        const sectionBarHeight = 10;
+        const sectionBarWidth = sectionWidth - 30;
         
         // Background bar
-        doc.rect(currentX + 10, sectionBarY, sectionBarWidth, sectionBarHeight)
+        doc.roundedRect(currentX + 15, sectionBarY, sectionBarWidth, sectionBarHeight, 5)
           .fillColor('#f0f0f0');
         
         // Percentile bar
-        doc.rect(currentX + 10, sectionBarY, (sectionPercentile / 100) * sectionBarWidth, sectionBarHeight)
-          .fillColor('#3498db');
+        doc.roundedRect(currentX + 15, sectionBarY, (sectionPercentile / 100) * sectionBarWidth, sectionBarHeight, 5)
+          .fillColor('#3182ce');
         
-        // Percentile description
-        doc.fillColor('#666')
-          .fontSize(8)
+        // Add comparative text with more detail
+        doc.fillColor('#4a5568')
+          .fontSize(9)
           .font('Helvetica')
-          .text(
-            `${sectionPercentile > 75 ? 'Higher' : sectionPercentile > 40 ? 'Average' : 'Lower'} than most ${assessment.demographics.gender === 'male' ? 'men' : 'women'}`,
-            currentX + 10, sectionBarY + 15
-          );
+          .text(`${sectionPercentile > 75 ? 'Higher' : sectionPercentile > 40 ? 'Average' : 'Lower'} than most ${genderText}: ${scoreDiff}% ${scoreComparison} than average`, 
+            currentX + 15, sectionBarY + 15);
         
         // Move to next column
-        currentX += sectionColumnWidth + 10;
         rowIndex++;
+        if (rowIndex < 2) {
+          currentX += sectionWidth + 10;
+        }
       });
       
-      // Interpretation text
-      doc.moveDown(8)  // Move past the section cards
-        .fontSize(11)
+      // Add interpretation guide - adjust position based on last section
+      if (currentY + 180 > doc.page.height - 50) {
+        doc.addPage();
+        currentY = 50;
+      } else {
+        currentY += sectionHeight + 40;
+      }
+      
+      // Draw blue box with rounded corners for interpretation guide
+      doc.roundedRect(50, currentY, doc.page.width - 100, 100, 8).fillAndStroke('#ebf8ff', '#90cdf4');
+      
+      doc.fillColor('#2c5282')
+        .fontSize(14)
         .font('Helvetica-Bold')
-        .fillColor('#2c3e50')
-        .text('Understanding These Comparisons:');
+        .text('Understanding These Gender-Specific Comparisons', 70, currentY + 15);
       
       doc.moveDown(0.5)
+        .fillColor('#2c5282')
+        .fontSize(11)
         .font('Helvetica')
-        .fillColor('#555')
-        .text('These statistics are comparative, not evaluative. Higher or lower scores indicate different approaches to marriage, not better or worse ones. The most important consideration is how your assessment compares with your spouse or future spouse, as closer percentages typically indicate better alignment in expectations.', {
-          width: doc.page.width - 100,
-          align: 'justify'
-        });
+        .text(`These statistics compare your results specifically with other ${genderText}. Higher or lower scores indicate different approaches to marriage, not better or worse ones. The most important consideration is how your assessment compares with your spouse or future spouse, as closer percentages typically indicate better alignment in expectations.`, {
+          width: doc.page.width - 140,
+          align: 'left'
+        }, 70, doc.y);
 
       // Add compatibility section
       doc.moveDown(1)

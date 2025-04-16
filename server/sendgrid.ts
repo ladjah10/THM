@@ -36,6 +36,7 @@ interface EmailMessage {
  */
 function generateComparativeStatsHtml(scores: any, demographics: any): string {
   const genderKey = demographics.gender === 'male' ? 'male' : 'female';
+  const genderText = demographics.gender === 'male' ? 'men' : 'women';
   
   // Calculate overall percentile (simulated until we have real stats)
   const overallScore = scores.overallPercentage;
@@ -64,6 +65,7 @@ function generateComparativeStatsHtml(scores: any, demographics: any): string {
     return {
       name: sectionName,
       score: sectionScore.percentage,
+      mean: sectionMean,
       percentile: sectionPercentile,
       description: getPercentileDescription(sectionPercentile)
     };
@@ -72,56 +74,87 @@ function generateComparativeStatsHtml(scores: any, demographics: any): string {
   // Create the HTML for statistics
   return `
     <div class="section" style="background-color: #f5faff; border-radius: 5px; padding: 20px; margin: 25px 0; border-left: 4px solid #3498db;">
-      <h2 style="color: #2980b9; margin-top: 0;">How You Compare to Others</h2>
-      <p style="margin-bottom: 20px;">Based on responses from others who have taken this assessment, here's how your scores compare.</p>
+      <h2 style="color: #2980b9; margin-top: 0;">How You Compare to Other ${genderText.charAt(0).toUpperCase() + genderText.slice(1)}</h2>
+      <p style="margin-bottom: 20px;">
+        Based on responses from other ${genderText} who have taken this assessment, here's how your scores compare.
+        <span style="font-weight: bold;">These gender-specific statistics provide insight into how your perspectives align with others of your gender.</span>
+      </p>
       
-      <div style="margin-bottom: 20px;">
-        <h3 style="color: #34495e; font-size: 16px; margin-bottom: 10px;">Overall Score Comparison</h3>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-          <span style="font-weight: bold;">Your Score: ${overallScore.toFixed(1)}%</span>
-          <span style="color: #7f8c8d;">Average for ${demographics.gender === 'male' ? 'men' : 'women'}: ${mean.toFixed(1)}%</span>
-        </div>
+      <div style="margin-bottom: 25px; background-color: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h3 style="color: #34495e; font-size: 18px; margin-bottom: 12px; border-bottom: 1px solid #e0e0e0; padding-bottom: 8px;">
+          Overall Score Comparison
+        </h3>
         
-        <div style="position: relative; height: 24px; background-color: #ecf0f1; border-radius: 12px; overflow: hidden; margin-bottom: 10px;">
-          <div style="position: absolute; height: 100%; width: ${percentile}%; background: linear-gradient(to right, #3498db, #2980b9); border-radius: 12px;"></div>
-          <div style="position: absolute; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; text-shadow: 0px 1px 2px rgba(0,0,0,0.2);">
-            ${percentileDesc}
+        <div style="display: flex; align-items: center; margin-bottom: 15px;">
+          <div style="flex: 1; margin-right: 20px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+              <span style="font-weight: bold; font-size: 16px;">Your Score: ${overallScore.toFixed(1)}%</span>
+              <span style="color: #7f8c8d; font-size: 16px;">Average for ${genderText}: ${mean.toFixed(1)}%</span>
+            </div>
+            
+            <div style="position: relative; height: 24px; background-color: #ecf0f1; border-radius: 12px; overflow: hidden; margin-bottom: 10px;">
+              <div style="position: absolute; height: 100%; width: ${percentile}%; background: linear-gradient(to right, #3498db, #2980b9); border-radius: 12px;"></div>
+              <div style="position: absolute; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; text-shadow: 0px 1px 2px rgba(0,0,0,0.2);">
+                ${percentileDesc}
+              </div>
+            </div>
+          </div>
+          
+          <div style="min-width: 120px; text-align: center; background-color: ${percentile > 75 ? '#daf1ff' : percentile > 40 ? '#e8f4f8' : '#f2f7fa'}; padding: 10px; border-radius: 8px;">
+            <span style="font-size: 22px; font-weight: bold; color: #2980b9;">${percentile}%</span>
+            <div style="font-size: 12px; color: #555; margin-top: 4px;">Percentile Rank<br>among ${genderText}</div>
           </div>
         </div>
         
-        <p style="font-size: 14px; color: #7f8c8d; margin-top: 5px;">
-          Your score is ${percentile > 50 ? 'above' : 'below'} average compared to other ${demographics.gender === 'male' ? 'men' : 'women'} who have taken this assessment.
+        <p style="font-size: 14px; color: #4a5568; margin: 8px 0 0; line-height: 1.5;">
+          Your overall score of <b>${overallScore.toFixed(1)}%</b> is <b>${percentile > 60 ? 'significantly higher than' : percentile > 50 ? 'higher than' : percentile > 40 ? 'close to' : percentile > 25 ? 'lower than' : 'significantly lower than'}</b> 
+          the average of <b>${mean.toFixed(1)}%</b> for ${genderText} respondents. This places you in the <b>${percentile}th percentile</b>.
         </p>
       </div>
       
-      <h3 style="color: #34495e; font-size: 16px; margin-bottom: 10px; border-bottom: 1px solid #e0e0e0; padding-bottom: 5px;">
-        Section Comparisons
+      <h3 style="color: #34495e; font-size: 18px; margin: 15px 0; border-bottom: 1px solid #e0e0e0; padding-bottom: 8px;">
+        Section Comparisons (${genderText.charAt(0).toUpperCase() + genderText.slice(1)}-specific)
       </h3>
       
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-        ${sectionPercentiles.map((section: any) => `
-          <div style="background-color: white; padding: 12px; border-radius: 4px; border: 1px solid #e0e0e0;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-              <span style="font-weight: bold; color: #34495e;">${section.name}</span>
-              <span style="color: #3498db;">${section.score.toFixed(1)}%</span>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+        ${sectionPercentiles.map((section: any) => {
+          const scoreComparison = section.score > section.mean ? 'higher' : 'lower';
+          const scoreDiff = Math.abs(section.score - section.mean).toFixed(1);
+          return `
+          <div style="background-color: white; padding: 15px; border-radius: 8px; border: 1px solid #e0e0e0;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+              <span style="font-weight: bold; color: #2d3748; font-size: 15px;">${section.name}</span>
+              <div>
+                <span style="color: #3182ce; font-weight: bold;">${section.score.toFixed(1)}%</span>
+                <span style="color: #718096; font-size: 12px; margin-left: 4px;">(${section.percentile}th percentile)</span>
+              </div>
             </div>
-            <div style="position: relative; height: 8px; background-color: #ecf0f1; border-radius: 4px; overflow: hidden; margin-bottom: 5px;">
-              <div style="position: absolute; height: 100%; width: ${section.percentile}%; background-color: #3498db; border-radius: 4px;"></div>
+            
+            <div style="position: relative; height: 10px; background-color: #edf2f7; border-radius: 5px; overflow: hidden; margin-bottom: 10px;">
+              <div style="position: absolute; height: 100%; width: ${section.percentile}%; background-color: #3182ce; border-radius: 5px;"></div>
             </div>
-            <p style="font-size: 12px; color: #7f8c8d; margin: 0;">
-              ${section.percentile > 75 ? 'Higher' : section.percentile > 40 ? 'Average' : 'Lower'} than most ${demographics.gender === 'male' ? 'men' : 'women'}
+            
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 12px;">
+              <span style="color: #718096;">0%</span>
+              <span style="color: #718096; font-weight: 500;">${genderText.charAt(0).toUpperCase() + genderText.slice(1)} average: ${section.mean.toFixed(1)}%</span>
+              <span style="color: #718096;">100%</span>
+            </div>
+            
+            <p style="font-size: 13px; color: #4a5568; margin: 8px 0 0;">
+              <span style="font-weight: 500;">${section.description}:</span> 
+              ${scoreDiff}% ${scoreComparison} than the average ${genderText} respondent
             </p>
           </div>
-        `).join('')}
+        `}).join('')}
       </div>
       
-      <div style="background-color: #edf7ff; padding: 15px; border-radius: 4px; margin-top: 20px; font-size: 14px;">
-        <p style="margin-top: 0; font-weight: bold; color: #2980b9;">Understanding These Comparisons</p>
-        <p style="margin-bottom: 0;">
-          These statistics are comparative, not evaluative. Higher or lower scores indicate different 
-          approaches to marriage, not better or worse ones. The most important consideration is how 
-          your assessment compares with your spouse or future spouse, as closer percentages typically 
-          indicate better alignment in expectations.
+      <div style="background-color: #edf8ff; padding: 15px; border-radius: 8px; margin-top: 20px; border: 1px solid #bee3f8;">
+        <h4 style="margin-top: 0; color: #2c5282; font-size: 16px; margin-bottom: 8px;">Understanding These Gender-Specific Comparisons</h4>
+        <p style="margin-bottom: 0; color: #2d3748; line-height: 1.5;">
+          <span style="font-weight: bold;">These statistics compare your results specifically with other ${genderText}.</span> 
+          Higher or lower scores indicate different approaches to marriage, not better or worse ones.
+          The most important consideration is how your assessment compares with your spouse or
+          future spouse, as closer percentages typically indicate better alignment in expectations.
         </p>
       </div>
     </div>
