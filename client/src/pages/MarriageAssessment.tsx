@@ -7,7 +7,7 @@ import DemographicView from "@/components/assessment/DemographicView";
 import PaywallView from "@/components/assessment/PaywallView";
 import ResultsView from "@/components/assessment/ResultsView";
 import EmailSentConfirmation from "@/components/assessment/EmailSentConfirmation";
-import { CoupleAssessmentView } from "@/components/couple/CoupleAssessmentView";
+import { CoupleInviteForm } from "@/components/couple/CoupleInviteForm";
 import { apiRequest } from "@/lib/queryClient";
 import { questions, sections } from "@/data/questionsData";
 import { calculateScores, determineProfile, determineProfiles } from "@/utils/scoringUtils";
@@ -352,7 +352,7 @@ export default function MarriageAssessment() {
         
         {/* Couple invite view */}
         {currentView === "coupleInvite" && (
-          <CoupleAssessmentView
+          <CoupleInviteForm
             primaryEmail={demographicData.email}
             onSpouseEmailChange={setSpouseEmail}
             spouseEmail={spouseEmail}
