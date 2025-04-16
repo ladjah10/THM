@@ -286,11 +286,16 @@ export default function CoupleAssessmentInvite() {
   if (currentView === 'demographics') {
     return (
       <div className="container max-w-5xl mx-auto py-8 px-4">
-        <DemographicView 
-          onComplete={handleCompleteDemographics}
-          initialData={demographicData}
-          hidePaywall={true} // Skip paywall for spouse assessment
-        />
+        <div className="demographic-wrapper">
+          <h2 className="text-2xl font-bold mb-4">Tell Us About Yourself</h2>
+          <p className="mb-6">As the spouse in this assessment, we need to gather some information about you.</p>
+          <DemographicView 
+            demographicData={demographicData}
+            onChange={(field, value) => setDemographicData({...demographicData, [field]: value})}
+            onSubmit={handleCompleteDemographics}
+            onBack={() => setCurrentView('intro')}
+          />
+        </div>
       </div>
     );
   }
