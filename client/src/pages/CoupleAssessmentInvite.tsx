@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'wouter';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
-import { DemographicData, AssessmentResult } from '@shared/schema';
+import { AssessmentResult } from '@shared/schema';
+import { DemographicData } from '@/types/assessment';
 import { 
   Card, 
   CardContent, 

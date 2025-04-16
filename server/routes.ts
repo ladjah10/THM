@@ -174,6 +174,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           name: z.string(),
           scores: z.any(),
           profile: z.any(),
+          genderProfile: z.any().optional(),
           responses: z.record(z.any()),
           demographics: z.any(),
           timestamp: z.string().optional()
@@ -223,6 +224,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           name: z.string(),
           scores: z.any(),
           profile: z.any(),
+          genderProfile: z.any().optional(),
           responses: z.record(z.any()),
           demographics: z.any(),
           timestamp: z.string().optional()

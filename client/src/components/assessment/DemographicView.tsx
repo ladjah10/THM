@@ -26,7 +26,7 @@ import THMPoolPaymentForm from "@/components/payment/THMPoolPaymentForm";
 interface DemographicViewProps {
   demographicData: DemographicData;
   onChange: (field: keyof DemographicData, value: string | boolean) => void;
-  onSubmit: () => void;
+  onSubmit: (data: DemographicData) => void;
   onBack: () => void;
 }
 
@@ -88,7 +88,7 @@ export default function DemographicView({
     }
     
     // We've validated all payment requirements, so proceed
-    onSubmit();
+    onSubmit(demographicData);
   };
 
   // Handle ethnicity checkbox changes
