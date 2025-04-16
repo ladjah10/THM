@@ -329,14 +329,15 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
           width: doc.page.width - 100
         });
       
-      doc.moveDown(0.5)
-        .fontSize(11)
+      // Position text manually with proper parameters
+      doc.fontSize(11)
         .font('Helvetica')
         .fillColor('#4a5568')
-        .text(`Based on responses from other ${genderText} who have taken this assessment, we've prepared gender-specific comparisons to help you understand your results in context.`, {
-          width: doc.page.width - 100,
-          align: 'center'
-        }, 50, 55);
+        .text(`Based on responses from other ${genderText} who have taken this assessment, we've prepared gender-specific comparisons to help you understand your results in context.`, 
+          50, 55, {
+            width: doc.page.width - 100,
+            align: 'center'
+          });
       
       // Calculate percentile for overall score
       const overallScore = assessment.scores.overallPercentage;
@@ -530,14 +531,15 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
         .font('Helvetica-Bold')
         .text('Understanding These Gender-Specific Comparisons', 70, currentY + 15);
       
-      doc.moveDown(0.5)
-        .fillColor('#2c5282')
+      // Position text manually with proper parameters
+      doc.fillColor('#2c5282')
         .fontSize(11)
         .font('Helvetica')
-        .text(`These statistics compare your results specifically with other ${genderText}. Higher or lower scores indicate different approaches to marriage, not better or worse ones. The most important consideration is how your assessment compares with your spouse or future spouse, as closer percentages typically indicate better alignment in expectations.`, {
-          width: doc.page.width - 140,
-          align: 'left'
-        }, 70, doc.y);
+        .text(`These statistics compare your results specifically with other ${genderText}. Higher or lower scores indicate different approaches to marriage, not better or worse ones. The most important consideration is how your assessment compares with your spouse or future spouse, as closer percentages typically indicate better alignment in expectations.`, 
+          70, currentY + 40, {
+            width: doc.page.width - 140,
+            align: 'left'
+          });
 
       // Add compatibility section
       doc.moveDown(1)

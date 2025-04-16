@@ -77,19 +77,19 @@ export function calculateStandardDeviation(dataset: number[]): number {
 export const baselineStatistics = {
   // Overall scores
   overall: {
-    mean: 547, // Mean overall score
-    median: 555, // Median overall score
-    standardDeviation: 38, // Standard deviation of overall scores
+    mean: 83.6, // Mean overall score (percentage)
+    median: 85.5, // Median overall score
+    standardDeviation: 8.5, // Standard deviation of overall scores
     byGender: {
       male: {
-        mean: 540,
-        median: 547, 
-        standardDeviation: 35
+        mean: 81.2,
+        median: 83.5, 
+        standardDeviation: 9.2
       },
       female: {
-        mean: 550,
-        median: 562,
-        standardDeviation: 40
+        mean: 85.0,
+        median: 87.2,
+        standardDeviation: 7.5
       }
     }
   },
@@ -115,15 +115,24 @@ export const baselineStatistics = {
       }
     },
     faith: {
-      mean: 92,
-      median: 95,
-      standardDeviation: 6,
+      mean: 87,
+      median: 89,
+      standardDeviation: 8,
       byGender: {
-        male: { mean: 90, median: 93, standardDeviation: 7 },
-        female: { mean: 93, median: 96, standardDeviation: 5 }
+        male: { mean: 85, median: 87, standardDeviation: 9 },
+        female: { mean: 89, median: 91, standardDeviation: 7 }
       }
     },
-    financialManagement: {
+    family: {
+      mean: 83,
+      median: 85,
+      standardDeviation: 9,
+      byGender: {
+        male: { mean: 81, median: 84, standardDeviation: 10 },
+        female: { mean: 85, median: 87, standardDeviation: 8 }
+      }
+    },
+    finances: {
       mean: 78,
       median: 80,
       standardDeviation: 12,
@@ -132,24 +141,24 @@ export const baselineStatistics = {
         female: { mean: 76, median: 78, standardDeviation: 13 }
       }
     },
-    familyPlanning: {
-      mean: 88,
-      median: 90,
-      standardDeviation: 7,
+    romance: {
+      mean: 80,
+      median: 82,
+      standardDeviation: 10,
       byGender: {
-        male: { mean: 87, median: 89, standardDeviation: 8 },
-        female: { mean: 89, median: 91, standardDeviation: 7 }
+        male: { mean: 82, median: 84, standardDeviation: 9 },
+        female: { mean: 78, median: 81, standardDeviation: 11 }
       }
     },
-    lifeVision: {
+    "gender roles": {
       mean: 84,
       median: 86,
-      standardDeviation: 9,
+      standardDeviation: 11,
       byGender: {
-        male: { mean: 82, median: 85, standardDeviation: 10 },
-        female: { mean: 85, median: 87, standardDeviation: 8 }
+        male: { mean: 87, median: 89, standardDeviation: 9 },
+        female: { mean: 81, median: 83, standardDeviation: 12 }
       }
-    }
+    },
   },
   
   // Profile distributions
