@@ -287,6 +287,7 @@ export default function MarriageAssessment() {
             demographicData={demographicData}
             onChange={handleDemographicChange}
             onPaymentComplete={() => setCurrentView("demographics")}
+            assessmentType={assessmentType}
           />
         )}
         

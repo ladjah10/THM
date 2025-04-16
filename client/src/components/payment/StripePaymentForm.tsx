@@ -35,10 +35,12 @@ const cardStyle = {
 // Internal payment form component
 function PaymentForm({ 
   onPaymentSuccess, 
-  thmPoolApplied 
+  thmPoolApplied,
+  assessmentType = 'individual'
 }: { 
   onPaymentSuccess: () => void;
   thmPoolApplied: boolean;
+  assessmentType?: 'individual' | 'couple';
 }) {
   const stripe = useStripe();
   const elements = useElements();
@@ -51,8 +53,11 @@ function PaymentForm({
   useEffect(() => {
     const getPaymentIntent = async () => {
       try {
-        // Include thmPoolApplied in the request to adjust the price if needed
-        const response = await apiRequest('POST', '/api/create-payment-intent', { thmPoolApplied });
+        // Include assessment type and THM pool option in the request to determine price
+        const response = await apiRequest('POST', '/api/create-payment-intent', { 
+          thmPoolApplied,
+          assessmentType 
+        });
         const { clientSecret, amount } = await response.json();
         setClientSecret(clientSecret);
         setAmount(amount);
@@ -67,7 +72,7 @@ function PaymentForm({
     };
 
     getPaymentIntent();
-  }, [thmPoolApplied]);
+  }, [thmPoolApplied, assessmentType]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -141,9 +146,15 @@ function PaymentForm({
             Processing...
           </div>
         ) : (
-          thmPoolApplied 
-            ? "Pay $74 for Assessment + THM Pool Application" 
-            : "Pay $49 for Individual Assessment"
+          assessmentType === 'individual' ? (
+            thmPoolApplied 
+              ? "Pay $74 for Assessment + THM Pool Application" 
+              : "Pay to Experience Clarity ($49)"
+          ) : (
+            thmPoolApplied 
+              ? "Pay $104 for Couple Assessment + THM Pool" 
+              : "Pay to Experience Clarity Together ($79)"
+          )
         )}
       </Button>
     </form>
@@ -153,16 +164,22 @@ function PaymentForm({
 // Exported wrapper component that provides Stripe context
 export default function StripePaymentForm({ 
   onPaymentSuccess, 
-  thmPoolApplied = false 
+  thmPoolApplied = false,
+  assessmentType = 'individual'
 }: { 
   onPaymentSuccess: () => void;
   thmPoolApplied?: boolean;
+  assessmentType?: 'individual' | 'couple';
 }) {
   return (
     <div className="w-full">
       {stripePromise && (
         <Elements stripe={stripePromise}>
-          <PaymentForm onPaymentSuccess={onPaymentSuccess} thmPoolApplied={thmPoolApplied} />
+          <PaymentForm 
+            onPaymentSuccess={onPaymentSuccess} 
+            thmPoolApplied={thmPoolApplied} 
+            assessmentType={assessmentType}
+          />
         </Elements>
       )}
     </div>
