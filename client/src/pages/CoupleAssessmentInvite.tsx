@@ -14,9 +14,9 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle, Check, XCircle } from 'lucide-react';
-import { DemographicView } from '@/components/assessment/DemographicView';
-import { QuestionnaireView } from '@/components/assessment/QuestionnaireView';
-import { ResultsView } from '@/components/assessment/ResultsView';
+import DemographicView from '@/components/assessment/DemographicView';
+import QuestionnaireView from '@/components/assessment/QuestionnaireView';
+import ResultsView from '@/components/assessment/ResultsView';
 
 const VIEWS = ['intro', 'demographics', 'questionnaire', 'results', 'complete'] as const;
 type ViewType = typeof VIEWS[number];

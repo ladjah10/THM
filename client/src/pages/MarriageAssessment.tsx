@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "wouter";
 import QuestionnaireProgress from "@/components/assessment/QuestionnaireProgress";
 import QuestionnaireNavigation from "@/components/assessment/QuestionnaireNavigation";
 import QuestionnaireView from "@/components/assessment/QuestionnaireView";
@@ -6,6 +7,8 @@ import DemographicView from "@/components/assessment/DemographicView";
 import PaywallView from "@/components/assessment/PaywallView";
 import ResultsView from "@/components/assessment/ResultsView";
 import EmailSentConfirmation from "@/components/assessment/EmailSentConfirmation";
+import { CoupleAssessmentView } from "@/components/couple/CoupleAssessmentView";
+import { apiRequest } from "@/lib/queryClient";
 import { questions, sections } from "@/data/questionsData";
 import { calculateScores, determineProfile, determineProfiles } from "@/utils/scoringUtils";
 import { sendEmailReport } from "@/utils/emailUtils";
@@ -19,7 +22,7 @@ import {
 import { toast } from "@/hooks/use-toast";
 import { initializeProtection } from "@/utils/protectionUtils";
 
-type View = "paywall" | "demographics" | "questionnaire" | "results" | "emailSent";
+type View = "paywall" | "demographics" | "questionnaire" | "results" | "emailSent" | "coupleInvite";
 
 export default function MarriageAssessment() {
   // Force paywall to appear first
@@ -180,6 +183,75 @@ export default function MarriageAssessment() {
     setCurrentView("results");
   };
 
+  // Handle starting a couple assessment
+  const [, setLocation] = useLocation();
+  const [coupleLoading, setCoupleLoading] = useState(false);
+  const [spouseEmail, setSpouseEmail] = useState("");
+  
+  const handleStartCoupleAssessment = async () => {
+    if (!demographicData.email) {
+      toast({
+        title: "Email Required",
+        description: "Please ensure your email is provided in demographics.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    if (!spouseEmail) {
+      toast({
+        title: "Spouse Email Required",
+        description: "Please enter your spouse's email address to send the invitation.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    setCoupleLoading(true);
+    
+    try {
+      // Create an assessment result object
+      const assessmentResult = {
+        email: demographicData.email,
+        name: `${demographicData.firstName} ${demographicData.lastName}`,
+        scores: scores!,
+        profile: primaryProfile!,
+        genderProfile: genderProfile,
+        responses: userResponses,
+        demographics: demographicData,
+        timestamp: new Date().toISOString()
+      };
+      
+      // Start a couple assessment
+      const response = await apiRequest("POST", "/api/couple-assessment/start", {
+        primaryAssessment: assessmentResult,
+        spouseEmail: spouseEmail
+      });
+      
+      if (!response.ok) {
+        throw new Error("Failed to start couple assessment");
+      }
+      
+      const { coupleId } = await response.json();
+      
+      toast({
+        title: "Couple Assessment Started",
+        description: "An invitation has been sent to your spouse to complete their assessment."
+      });
+      
+      // Redirect to the couple assessment report page
+      setLocation(`/couple-assessment/report/${coupleId}`);
+    } catch (error) {
+      console.error("Error starting couple assessment:", error);
+      toast({
+        title: "Error",
+        description: "There was a problem starting the couple assessment. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setCoupleLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans antialiased text-gray-800">
@@ -255,12 +327,25 @@ export default function MarriageAssessment() {
             demographics={demographicData}
             onSendEmail={handleSendEmail}
             emailSending={emailSending}
+            onStartCoupleAssessment={() => setCurrentView("coupleInvite")}
           />
         )}
 
         {/* Email sent confirmation */}
         {currentView === "emailSent" && (
           <EmailSentConfirmation onBackToResults={handleBackToResults} />
+        )}
+        
+        {/* Couple invite view */}
+        {currentView === "coupleInvite" && (
+          <CoupleAssessmentView
+            primaryEmail={demographicData.email}
+            onSpouseEmailChange={setSpouseEmail}
+            spouseEmail={spouseEmail}
+            onSubmit={handleStartCoupleAssessment}
+            onCancel={() => setCurrentView("results")}
+            loading={coupleLoading}
+          />
         )}
       </main>
     </div>

@@ -7,6 +7,8 @@ import Home from "@/pages/Home";
 import MarriageAssessment from "@/pages/MarriageAssessment";
 import AdminDashboard from "@/pages/AdminDashboard";
 import SamplesPage from "@/pages/SamplesPage";
+import CoupleAssessmentInvite from "@/pages/CoupleAssessmentInvite";
+import CoupleAssessmentReport from "@/pages/CoupleAssessmentReport";
 
 function Router() {
   return (
@@ -15,6 +17,8 @@ function Router() {
       <Route path="/assessment" component={MarriageAssessment} />
       <Route path="/admin" component={AdminDashboard} />
       <Route path="/samples" component={SamplesPage} />
+      <Route path="/couple-assessment/invite/:coupleId" component={CoupleAssessmentInvite} />
+      <Route path="/couple-assessment/report/:coupleId" component={CoupleAssessmentReport} />
       <Route component={NotFound} />
     </Switch>
   );
