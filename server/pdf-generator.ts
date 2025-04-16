@@ -531,15 +531,15 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
         .font('Helvetica-Bold')
         .text('Understanding These Gender-Specific Comparisons', 70, currentY + 15);
       
-      // Position text manually with proper parameters
+      // Position text manually with correct parameters
+      const interpretationText = `These statistics compare your results specifically with other ${genderText}. Higher or lower scores indicate different approaches to marriage, not better or worse ones. The most important consideration is how your assessment compares with your spouse or future spouse, as closer percentages typically indicate better alignment in expectations.`;
+      
       doc.fillColor('#2c5282')
         .fontSize(11)
         .font('Helvetica')
-        .text(`These statistics compare your results specifically with other ${genderText}. Higher or lower scores indicate different approaches to marriage, not better or worse ones. The most important consideration is how your assessment compares with your spouse or future spouse, as closer percentages typically indicate better alignment in expectations.`, 
-          70, currentY + 40, {
-            width: doc.page.width - 140,
-            align: 'left'
-          });
+        .text(interpretationText, 70, currentY + 40, {
+          width: doc.page.width - 140
+        });
 
       // Add compatibility section
       doc.moveDown(1)

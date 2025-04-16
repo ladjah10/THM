@@ -1,4 +1,4 @@
-import { sendAssessmentEmail } from './server/sendgrid';
+import { sendAssessmentEmail } from './server/nodemailer';
 import { AssessmentResult, UserProfile } from './shared/schema';
 
 // First, create a male test assessment
@@ -164,8 +164,9 @@ async function runTests() {
   console.log('Sending test email to:', maleTestAssessment.email);
   try {
     const maleResult = await sendAssessmentEmail(maleTestAssessment);
-    if (maleResult) {
+    if (maleResult.success) {
       console.log('✅ Male test email sent successfully!');
+      console.log('📧 Preview URL:', maleResult.previewUrl);
     } else {
       console.error('❌ Failed to send male test email');
     }
@@ -181,8 +182,9 @@ async function runTests() {
   console.log('Sending test email to:', femaleTestAssessment.email);
   try {
     const femaleResult = await sendAssessmentEmail(femaleTestAssessment);
-    if (femaleResult) {
+    if (femaleResult.success) {
       console.log('✅ Female test email sent successfully!');
+      console.log('📧 Preview URL:', femaleResult.previewUrl);
     } else {
       console.error('❌ Failed to send female test email');
     }
