@@ -185,7 +185,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Create assessment result object
       const primaryAssessment: AssessmentResult = {
-        ...validatedData.primaryAssessment,
+        email: validatedData.primaryAssessment.email,
+        name: validatedData.primaryAssessment.name,
+        scores: validatedData.primaryAssessment.scores,
+        profile: validatedData.primaryAssessment.profile,
+        genderProfile: validatedData.primaryAssessment.genderProfile,
+        responses: validatedData.primaryAssessment.responses,
+        demographics: validatedData.primaryAssessment.demographics,
         timestamp: validatedData.primaryAssessment.timestamp || new Date().toISOString()
       };
       
@@ -227,7 +233,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Create assessment result object
       const spouseAssessment: AssessmentResult = {
-        ...validatedData.spouseAssessment,
+        email: validatedData.spouseAssessment.email,
+        name: validatedData.spouseAssessment.name,
+        scores: validatedData.spouseAssessment.scores,
+        profile: validatedData.spouseAssessment.profile,
+        genderProfile: validatedData.spouseAssessment.genderProfile,
+        responses: validatedData.spouseAssessment.responses,
+        demographics: validatedData.spouseAssessment.demographics,
         coupleId: validatedData.coupleId,
         coupleRole: 'spouse',
         timestamp: validatedData.spouseAssessment.timestamp || new Date().toISOString()
