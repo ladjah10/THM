@@ -19,12 +19,14 @@ interface PaywallViewProps {
   demographicData: DemographicData;
   onChange: (field: keyof DemographicData, value: string | boolean) => void;
   onPaymentComplete: () => void;
+  assessmentType?: 'individual' | 'couple';
 }
 
 export default function PaywallView({
   demographicData,
   onChange,
-  onPaymentComplete
+  onPaymentComplete,
+  assessmentType = 'individual'
 }: PaywallViewProps) {
   // Handle successful payment
   const handlePaymentSuccess = () => {
@@ -43,23 +45,42 @@ export default function PaywallView({
       <Card className="w-full max-w-lg border-primary-200 shadow-lg">
         <CardHeader className="text-center pb-6 bg-gradient-to-b from-blue-50 to-white">
           <CardTitle className="text-2xl text-blue-900">The 100 Marriage Assessment - Series 1</CardTitle>
-          <div className="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium mb-2">
-            Individual Assessment ($49)
-          </div>
-          <CardDescription className="text-lg mt-2 text-gray-700">
-            Misaligned Expectations Can Destroy Relationships—Align Yours for Only $49
-          </CardDescription>
-          <div className="mt-3 px-3 py-2 bg-blue-50 rounded-md text-left border border-blue-100">
-            <p className="text-sm text-blue-800 mb-1">
-              <strong>For Couples:</strong> Each spouse can take their own assessment and compare scores.
-            </p>
-            <p className="text-xs text-blue-700">
-              The closer your percentage scores align, the more aligned your expectations will be in marriage.
-            </p>
-            <p className="text-xs mt-2 text-blue-600">
-              Enhanced couples assessment with detailed comparison analysis coming soon ($79).
-            </p>
-          </div>
+          
+          {assessmentType === 'individual' ? (
+            <>
+              <div className="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium mb-2">
+                Individual Assessment ($49)
+              </div>
+              <CardDescription className="text-lg mt-2 text-gray-700">
+                Misaligned Expectations Can Destroy Relationships—Align Yours for Only $49
+              </CardDescription>
+              <div className="mt-3 px-3 py-2 bg-blue-50 rounded-md text-left border border-blue-100">
+                <p className="text-sm text-blue-800 mb-1">
+                  <strong>For Couples:</strong> Each spouse can take their own assessment and compare scores.
+                </p>
+                <p className="text-xs text-blue-700">
+                  The closer your percentage scores align, the more aligned your expectations will be in marriage.
+                </p>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="inline-block bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium mb-2">
+                Couple Assessment ($79)
+              </div>
+              <CardDescription className="text-lg mt-2 text-gray-700">
+                Discover Your Compatibility—One Assessment for You, One for Your Spouse
+              </CardDescription>
+              <div className="mt-3 px-3 py-2 bg-purple-50 rounded-md text-left border border-purple-100">
+                <p className="text-sm text-purple-800 mb-1">
+                  <strong>What's Included:</strong> Two full assessments with comprehensive compatibility analysis
+                </p>
+                <p className="text-xs text-purple-700">
+                  Get a detailed analysis of where you align and differ, with recommendations for growing together
+                </p>
+              </div>
+            </>
+          )}
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="text-center px-6">
@@ -73,32 +94,63 @@ export default function PaywallView({
           
           <div className="space-y-4 mt-6">
             <h3 className="font-semibold text-blue-900 text-lg">Here's What You'll Gain:</h3>
-            <div className="bg-blue-50 p-4 rounded-md space-y-3">
+            <div className={`${assessmentType === 'individual' ? 'bg-blue-50' : 'bg-purple-50'} p-4 rounded-md space-y-3`}>
               <ul className="space-y-3 text-gray-700">
-                <li className="flex items-start">
-                  <svg className="h-5 w-5 mr-2 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                  <span>In-Depth ~100 Question Assessment to Uncover Expectations for Dating, Engagement, or Marriage</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="h-5 w-5 mr-2 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                  <span>Personalized PDF Report with Insights to Guide Your Journey to a Lasting Relationship</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="h-5 w-5 mr-2 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                  <span>Custom Profile to Clarify Your Expectations and Dynamics—Perfect for Dating or Deepening Commitment</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="h-5 w-5 mr-2 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                  <span>Exclusive Access to Book a 1:1 Consultation with Marriage Expert Lawrence Adjah for Personalized Guidance</span>
-                </li>
+                {assessmentType === 'individual' ? (
+                  <>
+                    <li className="flex items-start">
+                      <svg className="h-5 w-5 mr-2 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>In-Depth ~100 Question Assessment to Uncover Expectations for Dating, Engagement, or Marriage</span>
+                    </li>
+                    <li className="flex items-start">
+                      <svg className="h-5 w-5 mr-2 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Personalized PDF Report with Insights to Guide Your Journey to a Lasting Relationship</span>
+                    </li>
+                    <li className="flex items-start">
+                      <svg className="h-5 w-5 mr-2 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Custom Profile to Clarify Your Expectations and Dynamics—Perfect for Dating or Deepening Commitment</span>
+                    </li>
+                    <li className="flex items-start">
+                      <svg className="h-5 w-5 mr-2 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Exclusive Access to Book a 1:1 Consultation with Marriage Expert Lawrence Adjah for Personalized Guidance</span>
+                    </li>
+                  </>
+                ) : (
+                  <>
+                    <li className="flex items-start">
+                      <svg className="h-5 w-5 mr-2 text-purple-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Two Complete Assessments - One for You and One for Your Spouse</span>
+                    </li>
+                    <li className="flex items-start">
+                      <svg className="h-5 w-5 mr-2 text-purple-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Comprehensive Comparison Analysis Showing Your Alignment and Differences</span>
+                    </li>
+                    <li className="flex items-start">
+                      <svg className="h-5 w-5 mr-2 text-purple-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Joint PDF Report with Customized Recommendation for Growth Together</span>
+                    </li>
+                    <li className="flex items-start">
+                      <svg className="h-5 w-5 mr-2 text-purple-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Priority Access to Book a Couple's Consultation with Marriage Expert Lawrence Adjah</span>
+                    </li>
+                  </>
+                )}
               </ul>
             </div>
           </div>
@@ -121,6 +173,7 @@ export default function PaywallView({
                 <StripePaymentForm 
                   onPaymentSuccess={handlePaymentSuccess} 
                   thmPoolApplied={demographicData.thmPoolApplied}
+                  assessmentType={assessmentType}
                 />
               </TabsContent>
               <TabsContent value="promo" className="mt-4">
@@ -128,6 +181,7 @@ export default function PaywallView({
                   promoCode={demographicData.promoCode}
                   onChange={(value) => onChange("promoCode", value)}
                   onSuccess={handlePromoSuccess}
+                  assessmentType={assessmentType}
                 />
                 <div className="mt-4 text-xs text-gray-500">
                   <p>Valid promo codes: FREE100, LA2025, MARRIAGE100</p>
