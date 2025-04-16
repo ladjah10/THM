@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { AssessmentScores, DemographicData, UserProfile } from "@/types/assessment";
+import { ComparativeStats } from "./ComparativeStats";
 
 interface ResultsViewProps {
   scores: AssessmentScores;
@@ -466,6 +467,11 @@ export default function ResultsView({
             </p>
           )}
         </div>
+      </div>
+      
+      {/* Comparative Statistics Section */}
+      <div className="mb-10">
+        <ComparativeStats scores={scores} demographics={demographics} />
       </div>
 
       {/* Book Reference */}
