@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
-import { AssessmentResult } from '../shared/schema';
-import { generateAssessmentPDF } from './pdf-generator';
+import { AssessmentResult, CoupleAssessmentReport } from '../shared/schema';
+import { generateAssessmentPDF, generateCoupleAssessmentPDF } from './pdf-generator';
+import { formatCoupleAssessmentEmail } from './couple-email-template';
 
 // Interface for referral email data
 interface ReferralEmailData {
@@ -313,6 +314,61 @@ export async function sendReferralEmail(data: ReferralEmailData): Promise<{ succ
     };
   } catch (error) {
     console.error('Referral email error:', error);
+    return { success: false };
+  }
+}
+
+/**
+ * Sends a couple assessment report email with PDF attachment
+ */
+export async function sendCoupleAssessmentEmail(
+  report: CoupleAssessmentReport, 
+  ccEmail: string = "la@lawrenceadjah.com"
+): Promise<{ success: boolean, previewUrl?: string }> {
+  try {
+    // Generate PDF report
+    console.log('Generating couple assessment PDF report...');
+    const pdfBuffer = await generateCoupleAssessmentPDF(report);
+    
+    // Format couple email
+    const emailHtml = formatCoupleAssessmentEmail(report);
+    
+    // Get emails from both partners
+    const primaryEmail = report.primaryAssessment.email;
+    const spouseEmail = report.spouseAssessment.email;
+    
+    // Format names for the email
+    const primaryName = report.primaryAssessment.demographics.firstName;
+    const spouseName = report.spouseAssessment.demographics.firstName;
+    
+    // Create transporter
+    const { transporter, testAccount } = await createTransporter();
+    
+    // Send mail with defined transport object to both partners
+    const info = await transporter.sendMail({
+      from: `"The 100 Marriage Assessment" <${testAccount.user}>`,
+      to: [primaryEmail, spouseEmail].join(', '), // Send to both partners
+      cc: ccEmail, // Always CC the administrator
+      subject: `${primaryName} & ${spouseName} - Couple Assessment Report - The 100 Marriage`,
+      html: emailHtml,
+      attachments: [
+        {
+          filename: 'The-100-Marriage-Couple-Assessment-Report.pdf',
+          content: pdfBuffer,
+          contentType: 'application/pdf',
+        },
+      ],
+    });
+
+    console.log(`Couple assessment email with PDF attachment sent: ${info.messageId}`);
+    console.log(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
+    
+    return { 
+      success: true,
+      previewUrl: nodemailer.getTestMessageUrl(info)
+    };
+  } catch (error) {
+    console.error('Couple email error:', error);
     return { success: false };
   }
 }
