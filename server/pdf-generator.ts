@@ -358,20 +358,20 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
       doc.moveDown(0.5);
       const barY = doc.y;
       const barHeight = 20;
-      const maxBarWidth = doc.page.width - 100;
+      const statsBarWidth = doc.page.width - 100;
       
       // Background bar
-      doc.rect(50, barY, maxBarWidth, barHeight)
+      doc.rect(50, barY, statsBarWidth, barHeight)
         .fillColor('#f0f0f0');
       
       // Percentile bar
-      doc.rect(50, barY, (percentile / 100) * maxBarWidth, barHeight)
+      doc.rect(50, barY, (percentile / 100) * statsBarWidth, barHeight)
         .fillColor('#3498db');
       
       // Percentile text
       doc.fillColor('white')
         .fontSize(10)
-        .text(percentileDesc, 50 + (maxBarWidth / 2) - 60, barY + 6);
+        .text(percentileDesc, 50 + (statsBarWidth / 2) - 60, barY + 6);
       
       // Explanation text
       doc.moveDown(1.5)
