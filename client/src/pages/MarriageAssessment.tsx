@@ -180,19 +180,6 @@ export default function MarriageAssessment() {
     setCurrentView("results");
   };
 
-  // Handle retaking the assessment
-  const handleRetakeAssessment = () => {
-    setUserResponses({});
-    setCurrentSection(sections[0]);
-    setCurrentQuestionIndex(0);
-    
-    // Reset payment status and return to paywall
-    setDemographicData(prev => ({
-      ...prev,
-      hasPaid: false
-    }));
-    setCurrentView("paywall");
-  };
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans antialiased text-gray-800">
@@ -267,7 +254,6 @@ export default function MarriageAssessment() {
             genderProfile={genderProfile}
             demographics={demographicData}
             onSendEmail={handleSendEmail}
-            onRetakeAssessment={handleRetakeAssessment}
             emailSending={emailSending}
           />
         )}

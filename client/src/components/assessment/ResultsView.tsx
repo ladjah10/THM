@@ -13,7 +13,6 @@ interface ResultsViewProps {
   genderProfile: UserProfile | null;
   demographics: DemographicData;
   onSendEmail: () => void;
-  onRetakeAssessment: () => void;
   emailSending: boolean;
 }
 
@@ -23,7 +22,6 @@ export default function ResultsView({
   genderProfile,
   demographics,
   onSendEmail,
-  onRetakeAssessment,
   emailSending
 }: ResultsViewProps) {
   const [userEmail, setUserEmail] = useState(demographics.email);
@@ -534,14 +532,7 @@ export default function ResultsView({
       </div>
 
       {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
-        <Button 
-          variant="outline" 
-          className="px-5 py-3 text-sm font-medium border-blue-200 text-blue-700 hover:bg-blue-50"
-          onClick={onRetakeAssessment}
-        >
-          Retake Assessment
-        </Button>
+      <div className="flex justify-center pt-4">
         <Button
           className="px-5 py-3 text-sm font-medium bg-amber-500 hover:bg-amber-400 text-white"
           onClick={() => window.open('https://lawrenceadjah.com/the100marriagebook', '_blank')}
