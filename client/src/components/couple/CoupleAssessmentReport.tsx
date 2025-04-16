@@ -1,329 +1,475 @@
 import React from 'react';
-import { CoupleAssessmentReport } from '@shared/schema';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle 
-} from '@/components/ui/card';
+import { CoupleAssessmentReport, AssessmentResult } from '@shared/schema';
 import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { 
-  ArrowRight, 
-  CheckCircle2, 
-  AlertTriangle, 
-  BarChart2,
-  ArrowUpDown,
-  HelpCircle
-} from 'lucide-react';
+import { Check, AlertTriangle, Users, Info, AlertCircle, Heart } from 'lucide-react';
 
 interface CoupleReportProps {
   report: CoupleAssessmentReport;
 }
 
 export const CoupleReport: React.FC<CoupleReportProps> = ({ report }) => {
-  const formatPercentage = (value: number) => {
-    return `${Math.round(value)}%`;
-  };
-
-  // Determine compatibility level based on percentage
-  const getCompatibilityLevel = (percentage: number) => {
-    if (percentage >= 80) return 'High';
-    if (percentage >= 60) return 'Moderate';
-    if (percentage >= 40) return 'Fair';
-    return 'Low';
-  };
-
-  // Determine color class based on compatibility level
-  const getCompatibilityColorClass = (percentage: number) => {
-    if (percentage >= 80) return 'text-green-600';
-    if (percentage >= 60) return 'text-blue-600';
-    if (percentage >= 40) return 'text-amber-600';
+  const { primaryAssessment, spouseAssessment, differenceAnalysis, overallCompatibility } = report;
+  
+  // Format names
+  const primaryName = primaryAssessment.demographics.firstName;
+  const spouseName = spouseAssessment.demographics.firstName;
+  
+  // Calculate color class based on compatibility score
+  const getCompatibilityColor = (score: number) => {
+    if (score >= 80) return 'text-green-600';
+    if (score >= 60) return 'text-blue-600';
+    if (score >= 40) return 'text-amber-600';
     return 'text-red-600';
   };
-
-  // Sort major differences by weight (most significant first)
-  const sortedMajorDifferences = [...report.differenceAnalysis.majorDifferences]
-    .sort((a, b) => b.questionWeight - a.questionWeight);
-
+  
+  // Calculate background color class based on compatibility score
+  const getCompatibilityBgColor = (score: number) => {
+    if (score >= 80) return 'bg-green-50 border-green-200';
+    if (score >= 60) return 'bg-blue-50 border-blue-200';
+    if (score >= 40) return 'bg-amber-50 border-amber-200';
+    return 'bg-red-50 border-red-200';
+  };
+  
+  // Get percentage difference between scores
+  const getScoreDifference = (section: string) => {
+    const primaryScore = primaryAssessment.scores.sections[section]?.percentage || 0;
+    const spouseScore = spouseAssessment.scores.sections[section]?.percentage || 0;
+    return Math.abs(primaryScore - spouseScore);
+  };
+  
+  // Get difference level for severity indication
+  const getDifferenceLevel = (difference: number) => {
+    if (difference <= 10) return { color: 'bg-green-100 text-green-800', text: 'Very Close' };
+    if (difference <= 20) return { color: 'bg-blue-100 text-blue-800', text: 'Close' };
+    if (difference <= 35) return { color: 'bg-amber-100 text-amber-800', text: 'Moderate Difference' };
+    return { color: 'bg-red-100 text-red-800', text: 'Significant Difference' };
+  };
+  
   return (
     <div className="space-y-8">
-      {/* Overall Compatibility Score */}
-      <Card>
+      {/* Overall Compatibility Card */}
+      <Card className={`${getCompatibilityBgColor(overallCompatibility)}`}>
         <CardHeader className="pb-3">
-          <CardTitle className="text-xl">Couple Compatibility Assessment</CardTitle>
+          <div className="flex justify-between items-center">
+            <CardTitle className="text-2xl font-bold">Couple Compatibility Report</CardTitle>
+            <Badge variant="outline" className="text-sm font-normal px-3 py-1">
+              {new Date(report.timestamp).toLocaleDateString()}
+            </Badge>
+          </div>
           <CardDescription>
-            Based on the responses from both {report.primaryAssessment.demographics.firstName} and {report.spouseAssessment.demographics.firstName}
+            {primaryName} & {spouseName}'s relationship dynamics assessment
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col items-center mb-6">
-            <div className="text-4xl font-bold mb-2 flex items-center">
-              <span className={getCompatibilityColorClass(report.overallCompatibility)}>
-                {formatPercentage(report.overallCompatibility)}
-              </span>
-              <span className="text-lg ml-2 text-gray-500">
-                {getCompatibilityLevel(report.overallCompatibility)} Compatibility
-              </span>
+          <div className="flex flex-col md:flex-row items-center gap-6">
+            {/* Compatibility Score */}
+            <div className="w-40 h-40 rounded-full flex flex-col items-center justify-center border-8 border-blue-500 relative shadow-lg bg-white">
+              <div className={`text-4xl font-bold ${getCompatibilityColor(overallCompatibility)}`}>
+                {overallCompatibility}%
+              </div>
+              <div className="text-sm font-medium text-gray-700 mt-1">Compatibility</div>
             </div>
-            <Progress 
-              value={report.overallCompatibility} 
-              className="h-2 w-full max-w-md" 
-            />
-            <p className="mt-4 text-sm text-gray-600 max-w-xl text-center">
-              This score represents how well your responses match and how similar your perspectives are on key marriage topics. 
-              The closer your responses, the higher your compatibility score.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-            <Card className="border bg-blue-50 border-blue-100">
-              <CardHeader className="pb-2">
-                <div className="flex items-center">
-                  <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
-                    <span className="text-blue-800 font-bold">{report.primaryAssessment.demographics.firstName.charAt(0)}</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold">{report.primaryAssessment.demographics.firstName} {report.primaryAssessment.demographics.lastName}</h3>
-                    <p className="text-sm text-gray-600">{formatPercentage(report.primaryAssessment.scores.overallPercentage)} Overall Score</p>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-sm">
-                  <p className="mb-2">Profile: <Badge variant="outline">{report.primaryAssessment.profile.name}</Badge></p>
-                  {report.primaryAssessment.genderProfile && (
-                    <p>Gender Profile: <Badge variant="outline" className="bg-purple-50">{report.primaryAssessment.genderProfile.name}</Badge></p>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
             
-            <Card className="border bg-green-50 border-green-100">
-              <CardHeader className="pb-2">
-                <div className="flex items-center">
-                  <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mr-3">
-                    <span className="text-green-800 font-bold">{report.spouseAssessment.demographics.firstName.charAt(0)}</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold">{report.spouseAssessment.demographics.firstName} {report.spouseAssessment.demographics.lastName}</h3>
-                    <p className="text-sm text-gray-600">{formatPercentage(report.spouseAssessment.scores.overallPercentage)} Overall Score</p>
-                  </div>
+            <div className="flex-1">
+              <h3 className="text-xl font-semibold mb-2">Overall Compatibility Analysis</h3>
+              <p className="text-gray-700 mb-4">
+                {overallCompatibility >= 80 && (
+                  "You have excellent compatibility! Your relationship benefits from highly aligned views on marriage, family, and relationship dynamics. Continue building on this strong foundation."
+                )}
+                {overallCompatibility >= 60 && overallCompatibility < 80 && (
+                  "You have good compatibility. While you align well on many important aspects, there are some areas where your perspectives differ. Focus on understanding these differences."
+                )}
+                {overallCompatibility >= 40 && overallCompatibility < 60 && (
+                  "You have moderate compatibility. Your relationship has both areas of strong alignment and significant differences. Success will require intentional communication about expectations."
+                )}
+                {overallCompatibility < 40 && (
+                  "You have notable differences in your marriage expectations. This doesn't mean a relationship cannot work, but it will require consistent effort to bridge these gaps through communication."
+                )}
+              </p>
+              
+              <div className="flex flex-wrap gap-2">
+                <div className="flex items-center bg-white px-3 py-1 rounded-full border shadow-sm">
+                  <span className="mr-1 text-sm text-gray-600">{primaryName}:</span>
+                  <span className="font-medium">{primaryAssessment.scores.overallPercentage}%</span>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-sm">
-                  <p className="mb-2">Profile: <Badge variant="outline">{report.spouseAssessment.profile.name}</Badge></p>
-                  {report.spouseAssessment.genderProfile && (
-                    <p>Gender Profile: <Badge variant="outline" className="bg-purple-50">{report.spouseAssessment.genderProfile.name}</Badge></p>
-                  )}
+                <div className="flex items-center bg-white px-3 py-1 rounded-full border shadow-sm">
+                  <span className="mr-1 text-sm text-gray-600">{spouseName}:</span>
+                  <span className="font-medium">{spouseAssessment.scores.overallPercentage}%</span>
                 </div>
-              </CardContent>
-            </Card>
+                <div className="flex items-center bg-white px-3 py-1 rounded-full border shadow-sm">
+                  <span className="mr-1 text-sm text-gray-600">Difference:</span>
+                  <span className="font-medium">
+                    {Math.abs(primaryAssessment.scores.overallPercentage - spouseAssessment.scores.overallPercentage)}%
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>
-
-      {/* Key Relationship Strengths */}
+      
+      {/* Relationship Insights */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <CheckCircle2 className="h-5 w-5 text-green-600" />
-            Relationship Strengths
+            <Users className="h-5 w-5" />
+            Relationship Insights
           </CardTitle>
           <CardDescription>
-            Areas where you and your spouse have the most alignment
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {report.differenceAnalysis.strengthAreas.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {report.differenceAnalysis.strengthAreas.map((area, index) => (
-                <div key={index} className="bg-green-50 p-4 rounded-lg border border-green-100">
-                  <h4 className="font-medium text-green-800 mb-1">{area}</h4>
-                  <p className="text-sm text-gray-600">
-                    You have strong alignment in this area, which provides a solid foundation for your relationship.
-                  </p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-gray-500 italic">No specific strength areas identified. This may happen if your responses differ across most categories.</p>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Areas for Growth */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <AlertTriangle className="h-5 w-5 text-amber-600" /> 
-            Potential Vulnerability Areas
-          </CardTitle>
-          <CardDescription>
-            Areas with significant differences that may require intentional discussion
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {report.differenceAnalysis.vulnerabilityAreas.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {report.differenceAnalysis.vulnerabilityAreas.map((area, index) => (
-                <div key={index} className="bg-amber-50 p-4 rounded-lg border border-amber-100">
-                  <h4 className="font-medium text-amber-800 mb-1">{area}</h4>
-                  <p className="text-sm text-gray-600">
-                    This area shows notable differences in perspective that may benefit from open discussion and mutual understanding.
-                  </p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-gray-500 italic">No significant vulnerability areas identified. You appear to have good alignment across most categories.</p>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Key Differences Analysis */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <ArrowUpDown className="h-5 w-5 text-blue-600" />
-            Major Differences Analysis
-          </CardTitle>
-          <CardDescription>
-            Key questions where you had different responses (sorted by significance)
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {sortedMajorDifferences.length > 0 ? (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[40%]">Question</TableHead>
-                    <TableHead className="w-[25%]">{report.primaryAssessment.demographics.firstName}'s Response</TableHead>
-                    <TableHead className="w-[25%]">{report.spouseAssessment.demographics.firstName}'s Response</TableHead>
-                    <TableHead className="text-right">Weight</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {sortedMajorDifferences.map((difference, index) => (
-                    <TableRow key={index}>
-                      <TableCell className="font-medium">
-                        <div className="flex flex-col">
-                          <span>{difference.questionText}</span>
-                          <span className="text-xs text-gray-500">{difference.section}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>{difference.primaryResponse}</TableCell>
-                      <TableCell>{difference.spouseResponse}</TableCell>
-                      <TableCell className="text-right">{difference.questionWeight}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          ) : (
-            <p className="text-gray-500 italic">No major differences identified in high-weight questions. This is a positive sign for your relationship compatibility!</p>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Section Comparison */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <BarChart2 className="h-5 w-5 text-indigo-600" />
-            Section Score Comparison
-          </CardTitle>
-          <CardDescription>
-            How your scores compare across different assessment areas
+            Key observations about your relationship compatibility
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {Object.keys(report.primaryAssessment.scores.sections).map((section) => {
-              const primaryScore = report.primaryAssessment.scores.sections[section].percentage;
-              const spouseScore = report.spouseAssessment.scores.sections[section]?.percentage || 0;
-              const difference = Math.abs(primaryScore - spouseScore);
+            {/* Strength Areas */}
+            <Alert className="bg-green-50 border-green-200">
+              <Check className="h-4 w-4 text-green-600" />
+              <AlertTitle className="text-green-800">Areas of Strong Alignment</AlertTitle>
+              <AlertDescription className="text-green-700">
+                <ul className="mt-2 space-y-1 list-disc list-inside">
+                  {differenceAnalysis.strengthAreas.length > 0 ? (
+                    differenceAnalysis.strengthAreas.map((area, index) => (
+                      <li key={index}>{area}</li>
+                    ))
+                  ) : (
+                    <li>No significant areas of strong alignment identified</li>
+                  )}
+                </ul>
+              </AlertDescription>
+            </Alert>
+            
+            {/* Vulnerability Areas */}
+            <Alert className="bg-amber-50 border-amber-200">
+              <AlertTriangle className="h-4 w-4 text-amber-600" />
+              <AlertTitle className="text-amber-800">Areas for Growth</AlertTitle>
+              <AlertDescription className="text-amber-700">
+                <ul className="mt-2 space-y-1 list-disc list-inside">
+                  {differenceAnalysis.vulnerabilityAreas.length > 0 ? (
+                    differenceAnalysis.vulnerabilityAreas.map((area, index) => (
+                      <li key={index}>{area}</li>
+                    ))
+                  ) : (
+                    <li>No significant areas of vulnerability identified</li>
+                  )}
+                </ul>
+              </AlertDescription>
+            </Alert>
+            
+            <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <Info className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <h4 className="font-medium text-blue-800 mb-1">Recommendation</h4>
+                  <p className="text-blue-700 text-sm">
+                    Focus your discussions on the areas of significant difference. These represent the most important 
+                    opportunities to align expectations and strengthen your relationship. Use the detailed comparison 
+                    tab to identify specific topics for conversation.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      
+      {/* Psychographic Profile Comparison */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Psychographic Profile Comparison</CardTitle>
+          <CardDescription>
+            How your personality types complement each other
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Primary Person */}
+            <div className="border rounded-lg p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                  <span className="font-semibold text-blue-700">{primaryName.charAt(0)}</span>
+                </div>
+                <h3 className="font-medium">{primaryName}</h3>
+              </div>
               
-              let differenceColor = 'text-green-600';
-              if (difference > 20) differenceColor = 'text-amber-600';
-              if (difference > 35) differenceColor = 'text-red-600';
+              {/* Primary profile */}
+              <div className="mb-3">
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-sm font-medium text-gray-700">Primary Profile:</span>
+                  <Badge variant="outline" className="bg-blue-50">
+                    {primaryAssessment.profile.name}
+                  </Badge>
+                </div>
+                <p className="text-sm text-gray-600">{primaryAssessment.profile.description.substring(0, 120)}...</p>
+              </div>
+              
+              {/* Gender-specific profile if available */}
+              {primaryAssessment.genderProfile && (
+                <div>
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="text-sm font-medium text-gray-700">Gender-Specific Profile:</span>
+                    <Badge variant="outline" className="bg-purple-50">
+                      {primaryAssessment.genderProfile.name}
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-gray-600">
+                    {primaryAssessment.genderProfile.description.substring(0, 120)}...
+                  </p>
+                </div>
+              )}
+            </div>
+            
+            {/* Spouse */}
+            <div className="border rounded-lg p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                  <span className="font-semibold text-blue-700">{spouseName.charAt(0)}</span>
+                </div>
+                <h3 className="font-medium">{spouseName}</h3>
+              </div>
+              
+              {/* Primary profile */}
+              <div className="mb-3">
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-sm font-medium text-gray-700">Primary Profile:</span>
+                  <Badge variant="outline" className="bg-blue-50">
+                    {spouseAssessment.profile.name}
+                  </Badge>
+                </div>
+                <p className="text-sm text-gray-600">{spouseAssessment.profile.description.substring(0, 120)}...</p>
+              </div>
+              
+              {/* Gender-specific profile if available */}
+              {spouseAssessment.genderProfile && (
+                <div>
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="text-sm font-medium text-gray-700">Gender-Specific Profile:</span>
+                    <Badge variant="outline" className="bg-purple-50">
+                      {spouseAssessment.genderProfile.name}
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-gray-600">
+                    {spouseAssessment.genderProfile.description.substring(0, 120)}...
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+          
+          {/* Compatibility analysis */}
+          <div className="mt-6 pt-4 border-t">
+            <h3 className="font-medium mb-2 flex items-center gap-2">
+              <Heart className="h-4 w-4 text-pink-500" />
+              Compatibility Analysis
+            </h3>
+            <p className="text-sm text-gray-700 mb-4">
+              {primaryAssessment.profile.name === spouseAssessment.profile.name ? (
+                <span>
+                  You share the same primary profile ({primaryAssessment.profile.name}), which suggests 
+                  strong alignment in your general approach to relationships and marriage. This is a positive 
+                  indicator for compatibility.
+                </span>
+              ) : (
+                <span>
+                  You have different primary profiles, which means you may approach relationships with different 
+                  perspectives. This diversity can be a strength if you learn to appreciate and leverage your 
+                  complementary approaches.
+                </span>
+              )}
+            </p>
+            
+            {primaryAssessment.genderProfile && spouseAssessment.genderProfile && (
+              <div className="bg-slate-50 p-3 rounded-md">
+                <p className="text-sm text-gray-700">
+                  <span className="font-medium">{primaryName}</span>'s {primaryAssessment.demographics.gender === 'male' ? 'male' : 'female'}-specific 
+                  profile as a <span className="font-medium">{primaryAssessment.genderProfile.name}</span> typically matches well with 
+                  a <span className="font-medium">{spouseAssessment.genderProfile.name}</span> {spouseAssessment.demographics.gender === 'male' ? 'male' : 'female'} profile. Your specific 
+                  combination suggests {overallCompatibility >= 70 ? 'strong potential for compatibility' : 'opportunity for growth through intentional communication'}.
+                </p>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+      
+      {/* Section Score Comparison */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Section Score Comparison</CardTitle>
+          <CardDescription>
+            How your perspectives align across different relationship areas
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-6">
+            {Object.entries(primaryAssessment.scores.sections).map(([section, { percentage: primaryPercentage }]) => {
+              const spousePercentage = spouseAssessment.scores.sections[section]?.percentage || 0;
+              const difference = Math.abs(primaryPercentage - spousePercentage);
+              const { color, text } = getDifferenceLevel(difference);
               
               return (
-                <div key={section}>
-                  <div className="flex justify-between mb-1">
-                    <span className="font-medium">{section}</span>
-                    <span className={`font-medium ${differenceColor}`}>
-                      {difference.toFixed(1)}% difference
-                    </span>
+                <div key={section} className="border p-4 rounded-lg">
+                  <div className="flex flex-wrap justify-between items-center mb-3">
+                    <h4 className="font-medium text-gray-800">{section}</h4>
+                    <Badge className={color}>
+                      {text} ({difference}% difference)
+                    </Badge>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm w-6 text-blue-700">{formatPercentage(primaryScore)}</span>
-                    <div className="flex-1 h-4 rounded-full bg-blue-100 relative">
-                      <div 
-                        className="absolute top-0 left-0 h-full bg-blue-600 rounded-full" 
-                        style={{ width: `${primaryScore}%` }}
-                      ></div>
+                  
+                  <div className="grid gap-3">
+                    <div>
+                      <div className="flex justify-between mb-1">
+                        <span className="text-sm">{primaryName}</span>
+                        <span className="text-sm font-medium">{primaryPercentage}%</span>
+                      </div>
+                      <Progress value={primaryPercentage} className="h-2 bg-slate-100" />
                     </div>
-                    <ArrowRight className="h-4 w-4 text-gray-500" />
-                    <div className="flex-1 h-4 rounded-full bg-green-100 relative">
-                      <div 
-                        className="absolute top-0 left-0 h-full bg-green-600 rounded-full" 
-                        style={{ width: `${spouseScore}%` }}
-                      ></div>
+                    
+                    <div>
+                      <div className="flex justify-between mb-1">
+                        <span className="text-sm">{spouseName}</span>
+                        <span className="text-sm font-medium">{spousePercentage}%</span>
+                      </div>
+                      <Progress value={spousePercentage} className="h-2 bg-slate-100" />
                     </div>
-                    <span className="text-sm w-6 text-green-700">{formatPercentage(spouseScore)}</span>
                   </div>
+                  
+                  {difference > 20 && (
+                    <div className="mt-3 text-sm bg-amber-50 p-2 rounded border border-amber-100">
+                      <p className="text-amber-800">
+                        This area shows a noteworthy difference in perspectives that may benefit from discussion.
+                      </p>
+                    </div>
+                  )}
                 </div>
               );
             })}
           </div>
-          <div className="mt-6 pt-4 border-t">
-            <div className="flex items-start gap-2">
-              <HelpCircle className="h-5 w-5 text-gray-400 flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-gray-600">
-                <strong>Understanding these scores:</strong> Higher percentages indicate more traditional marriage viewpoints, while lower percentages suggest less traditional approaches. Neither is inherently better—just different expectations. The important factor is how close your scores are to each other, which indicates alignment in your relationship expectations.
-              </p>
-            </div>
-          </div>
         </CardContent>
       </Card>
-
-      {/* Recommendation for Discussion */}
-      <Card className="bg-blue-50">
+      
+      {/* Response Differences Tab Interface */}
+      <Card>
         <CardHeader>
-          <CardTitle>Recommendations for Ongoing Growth</CardTitle>
+          <CardTitle>Response Differences</CardTitle>
+          <CardDescription>
+            Specific questions where your answers differed
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Tabs defaultValue="major">
+            <TabsList className="mb-4">
+              <TabsTrigger value="major">Major Differences</TabsTrigger>
+              <TabsTrigger value="all">All Differences</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="major" className="space-y-4">
+              {differenceAnalysis.majorDifferences.length > 0 ? (
+                differenceAnalysis.majorDifferences.map((item, index) => (
+                  <div key={index} className="border rounded-lg p-4 bg-red-50 border-red-100">
+                    <div className="flex items-start gap-2 mb-2">
+                      <AlertCircle className="h-5 w-5 text-red-500 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <h4 className="font-medium">{item.questionText}</h4>
+                        <p className="text-sm text-gray-500 mt-1">Category: {item.section} • Weight: {item.questionWeight}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="grid md:grid-cols-2 gap-3 mt-3">
+                      <div className="bg-white p-3 rounded border">
+                        <p className="text-sm font-medium mb-1">{primaryName}'s Response:</p>
+                        <p className="text-gray-700">{item.primaryResponse}</p>
+                      </div>
+                      <div className="bg-white p-3 rounded border">
+                        <p className="text-sm font-medium mb-1">{spouseName}'s Response:</p>
+                        <p className="text-gray-700">{item.spouseResponse}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <Alert>
+                  <Info className="h-4 w-4" />
+                  <AlertTitle>No Major Differences</AlertTitle>
+                  <AlertDescription>
+                    You don't have any major differences in your responses. This is a positive sign!
+                  </AlertDescription>
+                </Alert>
+              )}
+            </TabsContent>
+            
+            <TabsContent value="all" className="space-y-4">
+              {differenceAnalysis.differentResponses.length > 0 ? (
+                differenceAnalysis.differentResponses.map((item, index) => (
+                  <div key={index} className="border rounded-lg p-4">
+                    <div className="mb-2">
+                      <h4 className="font-medium">{item.questionText}</h4>
+                      <p className="text-sm text-gray-500 mt-1">Category: {item.section} • Weight: {item.questionWeight}</p>
+                    </div>
+                    
+                    <div className="grid md:grid-cols-2 gap-3 mt-3">
+                      <div className="bg-slate-50 p-3 rounded border">
+                        <p className="text-sm font-medium mb-1">{primaryName}'s Response:</p>
+                        <p className="text-gray-700">{item.primaryResponse}</p>
+                      </div>
+                      <div className="bg-slate-50 p-3 rounded border">
+                        <p className="text-sm font-medium mb-1">{spouseName}'s Response:</p>
+                        <p className="text-gray-700">{item.spouseResponse}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <Alert>
+                  <Info className="h-4 w-4" />
+                  <AlertTitle>No Differences</AlertTitle>
+                  <AlertDescription>
+                    You don't have any differences in your responses. This is a very positive sign!
+                  </AlertDescription>
+                </Alert>
+              )}
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
+      
+      {/* Next Steps */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Next Steps for Your Relationship</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <p className="text-gray-700">
-              Based on your assessment results, we recommend setting aside time to discuss the following:
-            </p>
+            <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
+              <h4 className="font-medium text-blue-800 mb-2">Recommended Actions</h4>
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-start">
+                  <Check className="h-4 w-4 text-blue-600 mt-0.5 mr-2 flex-shrink-0" />
+                  <span>Discuss the areas where you have significant differences to better understand each other's perspectives</span>
+                </li>
+                <li className="flex items-start">
+                  <Check className="h-4 w-4 text-blue-600 mt-0.5 mr-2 flex-shrink-0" />
+                  <span>Celebrate and build upon the areas where you have strong alignment</span>
+                </li>
+                <li className="flex items-start">
+                  <Check className="h-4 w-4 text-blue-600 mt-0.5 mr-2 flex-shrink-0" />
+                  <span>Consider scheduling regular check-ins to discuss relationship expectations</span>
+                </li>
+              </ul>
+            </div>
             
-            <ul className="list-disc pl-5 space-y-2 text-gray-700">
-              <li>Review the major differences identified in this report, particularly focusing on the highly weighted questions where your perspectives differ the most.</li>
-              <li>Discuss your different perspectives on the vulnerability areas highlighted above. These are potential growth opportunities for your relationship.</li>
-              <li>Celebrate and continue building on your relationship strengths, which provide a solid foundation.</li>
-              <li>Consider a consultation with Lawrence E. Adjah to discuss your results in depth and receive personalized guidance.</li>
-            </ul>
-            
-            <div className="bg-white p-4 rounded-lg border border-blue-100 mt-4">
-              <h4 className="font-medium text-blue-800 mb-1">Next Steps</h4>
-              <p className="text-sm text-gray-600 mb-3">
-                Schedule a consultation to discuss your assessment results and receive personalized guidance on strengthening your relationship.
-              </p>
-              <a 
-                href="https://lawrence-adjah.clientsecure.me/request/service" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="inline-block bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
-              >
-                Book a Consultation
-              </a>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
+              <Button onClick={() => window.open('https://lawrenceadjah.com/the100marriagebook', '_blank')} variant="outline">
+                Explore The 100 Marriage Book
+              </Button>
+              <Button onClick={() => window.open('https://lawrence-adjah.clientsecure.me/request/service', '_blank')}>
+                Schedule Relationship Consultation
+              </Button>
             </div>
           </div>
         </CardContent>
