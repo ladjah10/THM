@@ -15,7 +15,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle, Check, XCircle } from 'lucide-react';
 import DemographicView from '@/components/assessment/DemographicView';
-import QuestionnaireView from '@/components/assessment/QuestionnaireView';
+import QuestionnaireWrapper from '@/components/assessment/QuestionnaireWrapper';
 import ResultsView from '@/components/assessment/ResultsView';
 
 const VIEWS = ['intro', 'demographics', 'questionnaire', 'results', 'complete'] as const;

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { questions, sections } from '@/data/questionsData';
 import { calculateScores, determineProfiles } from '@/utils/scoringUtils';
-import { DemographicData, UserProfile } from '@shared/schema';
+import { DemographicData } from '@/types/assessment';
 import QuestionnaireView from './QuestionnaireView';
 import QuestionnaireNavigation from './QuestionnaireNavigation';
 import QuestionnaireProgress from './QuestionnaireProgress';
@@ -26,7 +26,7 @@ export default function QuestionnaireWrapper({
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   
   // Calculate derived state
-  const sectionsQuestions = questions.filter(q => q.category === currentSection);
+  const sectionsQuestions = questions.filter(q => q.section === currentSection);
   const currentQuestion = sectionsQuestions[currentQuestionIndex];
   const answeredQuestions = Object.keys(userResponses).length;
   const totalQuestions = questions.length;
@@ -55,11 +55,11 @@ export default function QuestionnaireWrapper({
         setCurrentQuestionIndex(0);
       } else {
         // Finished with all sections, calculate results
-        const scores = calculateScores(userResponses);
-        const { mainProfile, genderSpecificProfile } = determineProfiles(scores, demographics.gender);
+        const scores = calculateScores(questions, userResponses);
+        const { primaryProfile, genderProfile } = determineProfiles(scores, demographics.gender);
         
         // Call the onComplete callback with results
-        onComplete(userResponses, scores, mainProfile, genderSpecificProfile);
+        onComplete(userResponses, scores, primaryProfile, genderProfile);
       }
     }
   };
@@ -79,7 +79,7 @@ export default function QuestionnaireWrapper({
         setCurrentSection(prevSection);
         
         // Get the questions of previous section and set index to last question
-        const prevSectionQuestions = questions.filter(q => q.category === prevSection);
+        const prevSectionQuestions = questions.filter(q => q.section === prevSection);
         setCurrentQuestionIndex(prevSectionQuestions.length - 1);
       }
       // If it's the first question of the first section, there's no previous
