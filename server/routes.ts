@@ -88,7 +88,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
             marriageStatus: z.string(),
             desireChildren: z.string(),
             ethnicity: z.string(),
-            purchaseDate: z.string().optional()
+            purchaseDate: z.string().optional(),
+            lifeStage: z.string().default("Not specified"),
+            birthday: z.string().default("Not specified"),
+            city: z.string().default("Not specified"),
+            state: z.string().default("Not specified"),
+            zipCode: z.string().default("Not specified"),
+            interestedInArrangedMarriage: z.boolean().default(false),
+            thmPoolApplied: z.boolean().default(false)
           })
         })
       });
@@ -248,9 +255,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         throw new Error('Missing Stripe secret key');
       }
       
-      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-        apiVersion: "2023-10-16",
-      });
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
       
       // THM Pool Application Fee is fixed at $25
       const amount = 2500; // in cents

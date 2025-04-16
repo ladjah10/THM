@@ -4,6 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { AssessmentScores, DemographicData, UserProfile } from "@/types/assessment";
 import { ComparativeStats } from "./ComparativeStats";
+import { SocialShareButtons } from "./SocialShareButtons";
+import { ShareableImage } from "./ShareableImage";
 
 interface ResultsViewProps {
   scores: AssessmentScores;
@@ -507,6 +509,28 @@ export default function ResultsView({
             </a>
           </div>
         </div>
+      </div>
+
+      {/* Social Sharing Section */}
+      <div className="mb-10">
+        <h4 className="text-xl font-medium text-blue-900 mb-4">Share Your Results</h4>
+        
+        {/* Shareable Image Component */}
+        <ShareableImage 
+          profile={primaryProfile} 
+          genderProfile={genderProfile} 
+          scores={scores} 
+          name={demographics.firstName} 
+        />
+        
+        {/* Social Share Buttons */}
+        <SocialShareButtons 
+          profile={primaryProfile} 
+          genderProfile={genderProfile} 
+          scores={scores} 
+          name={demographics.firstName} 
+          gender={demographics.gender} 
+        />
       </div>
 
       {/* Action Buttons */}
