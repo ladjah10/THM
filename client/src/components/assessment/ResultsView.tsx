@@ -543,8 +543,8 @@ export default function ResultsView({
 
       {/* Action Buttons */}
       <div className="flex flex-col md:flex-row justify-center gap-4 pt-4">
-        {/* Couple Assessment Button - Only show if spouse assessment option is available */}
-        {onStartCoupleAssessment && (
+        {/* Couple Assessment Button - Only show for individual assessments */}
+        {onStartCoupleAssessment && assessmentType === 'individual' && (
           <Button
             className="px-5 py-3 text-sm font-medium bg-green-600 hover:bg-green-500 text-white"
             onClick={onStartCoupleAssessment}

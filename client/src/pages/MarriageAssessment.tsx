@@ -341,6 +341,7 @@ export default function MarriageAssessment() {
             onSendEmail={handleSendEmail}
             emailSending={emailSending}
             onStartCoupleAssessment={() => setCurrentView("coupleInvite")}
+            assessmentType={assessmentType}
           />
         )}
 
