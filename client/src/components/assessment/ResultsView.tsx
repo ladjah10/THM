@@ -11,9 +11,13 @@ interface ResultsViewProps {
   scores: AssessmentScores;
   primaryProfile: UserProfile;
   genderProfile: UserProfile | null;
-  demographics: DemographicData;
+  demographics?: DemographicData;
+  userEmail?: string;
   onSendEmail: () => void;
   emailSending: boolean;
+  hideRetakeButton?: boolean;
+  onStartCoupleAssessment?: () => void;
+  additionalActions?: React.ReactNode;
 }
 
 export default function ResultsView({
@@ -21,10 +25,14 @@ export default function ResultsView({
   primaryProfile,
   genderProfile,
   demographics,
+  userEmail: initialUserEmail,
   onSendEmail,
-  emailSending
+  emailSending,
+  hideRetakeButton = false,
+  onStartCoupleAssessment,
+  additionalActions
 }: ResultsViewProps) {
-  const [userEmail, setUserEmail] = useState(demographics.email);
+  const [userEmail, setUserEmail] = useState(initialUserEmail || (demographics?.email || ""));
 
   return (
     <div className="bg-white shadow-md rounded-lg p-6 mb-6 border border-gray-100">
@@ -532,7 +540,18 @@ export default function ResultsView({
       </div>
 
       {/* Action Buttons */}
-      <div className="flex justify-center pt-4">
+      <div className="flex flex-col md:flex-row justify-center gap-4 pt-4">
+        {/* Couple Assessment Button - Only show if spouse assessment option is available */}
+        {onStartCoupleAssessment && (
+          <Button
+            className="px-5 py-3 text-sm font-medium bg-green-600 hover:bg-green-500 text-white"
+            onClick={onStartCoupleAssessment}
+          >
+            Start Couple Assessment
+          </Button>
+        )}
+        
+        {/* Book Button */}
         <Button
           className="px-5 py-3 text-sm font-medium bg-amber-500 hover:bg-amber-400 text-white"
           onClick={() => window.open('https://lawrenceadjah.com/the100marriagebook', '_blank')}
@@ -540,6 +559,13 @@ export default function ResultsView({
           Learn More About The 100 Marriage Book
         </Button>
       </div>
+      
+      {/* Additional Actions (if provided) */}
+      {additionalActions && (
+        <div className="mt-6 flex justify-center">
+          {additionalActions}
+        </div>
+      )}
     </div>
   );
 }
