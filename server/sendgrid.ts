@@ -1,6 +1,10 @@
 import { MailService } from '@sendgrid/mail';
 import { AssessmentResult } from '../shared/schema';
 import { generateAssessmentPDF } from './pdf-generator';
+import { 
+  baselineStatistics, 
+  getPercentileDescription 
+} from '../client/src/utils/statisticsUtils';
 
 // Initialize SendGrid
 if (!process.env.SENDGRID_API_KEY) {
@@ -25,6 +29,103 @@ interface EmailMessage {
     type: string;
     disposition: string;
   }[];
+}
+
+/**
+ * Generates a comparative statistics HTML section for email reporting
+ */
+function generateComparativeStatsHtml(scores: any, demographics: any): string {
+  const genderKey = demographics.gender === 'male' ? 'male' : 'female';
+  
+  // Calculate overall percentile (simulated until we have real stats)
+  const overallScore = scores.overallPercentage;
+  const { mean, standardDeviation } = baselineStatistics.overall.byGender[genderKey];
+  
+  // Simplified z-score to percentile calculation
+  const zScore = (overallScore - mean) / standardDeviation;
+  const percentile = Math.min(99, Math.max(1, Math.round(50 + (zScore * 30))));
+  const percentileDesc = getPercentileDescription(percentile);
+  
+  // Calculate section percentiles
+  const sectionPercentiles = Object.entries(scores.sections).map(([sectionName, sectionScore]: [string, any]) => {
+    // Map section names to baseline statistic keys
+    const statsKey = sectionName.replace(/\s+/g, '').toLowerCase();
+    const sectionStats = baselineStatistics.sections[statsKey as keyof typeof baselineStatistics.sections];
+    
+    if (!sectionStats) return null;
+    
+    const sectionMean = sectionStats.byGender[genderKey].mean;
+    const sectionStdDev = sectionStats.byGender[genderKey].standardDeviation;
+    
+    // Calculate percentile for this section
+    const sectionZScore = (sectionScore.percentage - sectionMean) / sectionStdDev;
+    const sectionPercentile = Math.min(99, Math.max(1, Math.round(50 + (sectionZScore * 30))));
+    
+    return {
+      name: sectionName,
+      score: sectionScore.percentage,
+      percentile: sectionPercentile,
+      description: getPercentileDescription(sectionPercentile)
+    };
+  }).filter(Boolean);
+  
+  // Create the HTML for statistics
+  return `
+    <div class="section" style="background-color: #f5faff; border-radius: 5px; padding: 20px; margin: 25px 0; border-left: 4px solid #3498db;">
+      <h2 style="color: #2980b9; margin-top: 0;">How You Compare to Others</h2>
+      <p style="margin-bottom: 20px;">Based on responses from others who have taken this assessment, here's how your scores compare.</p>
+      
+      <div style="margin-bottom: 20px;">
+        <h3 style="color: #34495e; font-size: 16px; margin-bottom: 10px;">Overall Score Comparison</h3>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+          <span style="font-weight: bold;">Your Score: ${overallScore.toFixed(1)}%</span>
+          <span style="color: #7f8c8d;">Average for ${demographics.gender === 'male' ? 'men' : 'women'}: ${mean.toFixed(1)}%</span>
+        </div>
+        
+        <div style="position: relative; height: 24px; background-color: #ecf0f1; border-radius: 12px; overflow: hidden; margin-bottom: 10px;">
+          <div style="position: absolute; height: 100%; width: ${percentile}%; background: linear-gradient(to right, #3498db, #2980b9); border-radius: 12px;"></div>
+          <div style="position: absolute; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; text-shadow: 0px 1px 2px rgba(0,0,0,0.2);">
+            ${percentileDesc}
+          </div>
+        </div>
+        
+        <p style="font-size: 14px; color: #7f8c8d; margin-top: 5px;">
+          Your score is ${percentile > 50 ? 'above' : 'below'} average compared to other ${demographics.gender === 'male' ? 'men' : 'women'} who have taken this assessment.
+        </p>
+      </div>
+      
+      <h3 style="color: #34495e; font-size: 16px; margin-bottom: 10px; border-bottom: 1px solid #e0e0e0; padding-bottom: 5px;">
+        Section Comparisons
+      </h3>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        ${sectionPercentiles.map((section: any) => `
+          <div style="background-color: white; padding: 12px; border-radius: 4px; border: 1px solid #e0e0e0;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+              <span style="font-weight: bold; color: #34495e;">${section.name}</span>
+              <span style="color: #3498db;">${section.score.toFixed(1)}%</span>
+            </div>
+            <div style="position: relative; height: 8px; background-color: #ecf0f1; border-radius: 4px; overflow: hidden; margin-bottom: 5px;">
+              <div style="position: absolute; height: 100%; width: ${section.percentile}%; background-color: #3498db; border-radius: 4px;"></div>
+            </div>
+            <p style="font-size: 12px; color: #7f8c8d; margin: 0;">
+              ${section.percentile > 75 ? 'Higher' : section.percentile > 40 ? 'Average' : 'Lower'} than most ${demographics.gender === 'male' ? 'men' : 'women'}
+            </p>
+          </div>
+        `).join('')}
+      </div>
+      
+      <div style="background-color: #edf7ff; padding: 15px; border-radius: 4px; margin-top: 20px; font-size: 14px;">
+        <p style="margin-top: 0; font-weight: bold; color: #2980b9;">Understanding These Comparisons</p>
+        <p style="margin-bottom: 0;">
+          These statistics are comparative, not evaluative. Higher or lower scores indicate different 
+          approaches to marriage, not better or worse ones. The most important consideration is how 
+          your assessment compares with your spouse or future spouse, as closer percentages typically 
+          indicate better alignment in expectations.
+        </p>
+      </div>
+    </div>
+  `;
 }
 
 /**
@@ -148,6 +249,8 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
             </tbody>
           </table>
         </div>
+        
+        ${generateComparativeStatsHtml(scores, demographics)}
         
         <div class="section">
           <h2>Your Psychographic Profiles</h2>
