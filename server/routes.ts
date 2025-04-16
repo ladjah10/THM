@@ -163,6 +163,153 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     }
   });
+  
+  // API to start a couple assessment
+  app.post('/api/couple-assessment/start', async (req: Request, res: Response) => {
+    try {
+      // Validate the request body
+      const startCoupleSchema = z.object({
+        primaryAssessment: z.object({
+          email: z.string().email(),
+          name: z.string(),
+          scores: z.any(),
+          profile: z.any(),
+          responses: z.record(z.any()),
+          demographics: z.any(),
+          timestamp: z.string().optional()
+        }),
+        spouseEmail: z.string().email()
+      });
+      
+      const validatedData = startCoupleSchema.parse(req.body);
+      
+      // Create assessment result object
+      const primaryAssessment: AssessmentResult = {
+        ...validatedData.primaryAssessment,
+        timestamp: validatedData.primaryAssessment.timestamp || new Date().toISOString()
+      };
+      
+      // Generate coupleId and save primary assessment
+      const coupleId = await storage.saveCoupleAssessment(primaryAssessment, validatedData.spouseEmail);
+      
+      return res.status(200).json({ 
+        success: true,
+        coupleId,
+        message: "Couple assessment started successfully"
+      });
+    } catch (error) {
+      console.error("Error starting couple assessment:", error);
+      return res.status(400).json({ 
+        success: false,
+        message: error instanceof Error ? error.message : "Failed to start couple assessment"
+      });
+    }
+  });
+  
+  // API to submit spouse assessment
+  app.post('/api/couple-assessment/submit-spouse', async (req: Request, res: Response) => {
+    try {
+      // Validate the request body
+      const submitSpouseSchema = z.object({
+        coupleId: z.string(),
+        spouseAssessment: z.object({
+          email: z.string().email(),
+          name: z.string(),
+          scores: z.any(),
+          profile: z.any(),
+          responses: z.record(z.any()),
+          demographics: z.any(),
+          timestamp: z.string().optional()
+        })
+      });
+      
+      const validatedData = submitSpouseSchema.parse(req.body);
+      
+      // Create assessment result object
+      const spouseAssessment: AssessmentResult = {
+        ...validatedData.spouseAssessment,
+        coupleId: validatedData.coupleId,
+        coupleRole: 'spouse',
+        timestamp: validatedData.spouseAssessment.timestamp || new Date().toISOString()
+      };
+      
+      // Save spouse assessment
+      await storage.saveAssessment(spouseAssessment);
+      
+      // Generate couple report
+      const coupleReport = await storage.getCoupleAssessment(validatedData.coupleId);
+      
+      if (!coupleReport) {
+        return res.status(404).json({
+          success: false,
+          message: "Could not generate couple report. Primary assessment not found."
+        });
+      }
+      
+      return res.status(200).json({ 
+        success: true,
+        coupleReport,
+        message: "Spouse assessment submitted successfully"
+      });
+    } catch (error) {
+      console.error("Error submitting spouse assessment:", error);
+      return res.status(400).json({ 
+        success: false,
+        message: error instanceof Error ? error.message : "Failed to submit spouse assessment"
+      });
+    }
+  });
+  
+  // API to fetch a couple assessment report
+  app.get('/api/couple-assessment/:coupleId', async (req: Request, res: Response) => {
+    try {
+      const coupleId = req.params.coupleId;
+      
+      if (!coupleId) {
+        return res.status(400).json({
+          success: false,
+          message: "Couple ID is required"
+        });
+      }
+      
+      const coupleReport = await storage.getCoupleAssessment(coupleId);
+      
+      if (!coupleReport) {
+        return res.status(404).json({
+          success: false,
+          message: "Couple assessment not found or incomplete"
+        });
+      }
+      
+      return res.status(200).json({ 
+        success: true,
+        coupleReport
+      });
+    } catch (error) {
+      console.error("Error fetching couple assessment:", error);
+      return res.status(500).json({ 
+        success: false,
+        message: "Failed to fetch couple assessment"
+      });
+    }
+  });
+  
+  // Admin API to fetch all couple assessments
+  app.get('/api/admin/couple-assessments', async (req: Request, res: Response) => {
+    try {
+      // In a real application, this endpoint would have proper authentication
+      const coupleAssessments = await storage.getAllCoupleAssessments();
+      
+      // Return the couple assessments
+      return res.status(200).json(coupleAssessments);
+    } catch (error) {
+      console.error("Error fetching couple assessments:", error);
+      return res.status(500).json({ 
+        success: false,
+        message: "Failed to fetch couple assessments"
+      });
+    }
+  });
 
   // Create a Stripe payment intent for assessment purchase
   app.post('/api/create-payment-intent', async (req, res) => {
