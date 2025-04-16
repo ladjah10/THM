@@ -18,6 +18,7 @@ interface ResultsViewProps {
   hideRetakeButton?: boolean;
   onStartCoupleAssessment?: () => void;
   additionalActions?: React.ReactNode;
+  assessmentType?: 'individual' | 'couple';
 }
 
 export default function ResultsView({
@@ -30,7 +31,8 @@ export default function ResultsView({
   emailSending,
   hideRetakeButton = false,
   onStartCoupleAssessment,
-  additionalActions
+  additionalActions,
+  assessmentType = 'individual'
 }: ResultsViewProps) {
   const [userEmail, setUserEmail] = useState(initialUserEmail || (demographics?.email || ""));
 
