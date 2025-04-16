@@ -180,11 +180,12 @@ export async function sendAssessmentEmail(assessment: AssessmentResult, ccEmail:
     });
 
     console.log(`Email with PDF attachment sent: ${info.messageId}`);
-    console.log(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
+    const previewUrl = nodemailer.getTestMessageUrl(info);
+    console.log(`Preview URL: ${previewUrl}`);
     
     return { 
       success: true,
-      previewUrl: nodemailer.getTestMessageUrl(info)
+      previewUrl: previewUrl ? previewUrl : undefined
     };
   } catch (error) {
     console.error('Email error:', error);
@@ -306,11 +307,12 @@ export async function sendReferralEmail(data: ReferralEmailData): Promise<{ succ
     });
 
     console.log(`Referral invitation email sent: ${info.messageId}`);
-    console.log(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
+    const previewUrl = nodemailer.getTestMessageUrl(info);
+    console.log(`Preview URL: ${previewUrl}`);
     
     return { 
       success: true,
-      previewUrl: nodemailer.getTestMessageUrl(info)
+      previewUrl: previewUrl ? previewUrl : undefined
     };
   } catch (error) {
     console.error('Referral email error:', error);
@@ -361,11 +363,12 @@ export async function sendCoupleAssessmentEmail(
     });
 
     console.log(`Couple assessment email with PDF attachment sent: ${info.messageId}`);
-    console.log(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
+    const previewUrl = nodemailer.getTestMessageUrl(info);
+    console.log(`Preview URL: ${previewUrl}`);
     
     return { 
       success: true,
-      previewUrl: nodemailer.getTestMessageUrl(info)
+      previewUrl: previewUrl ? previewUrl : undefined
     };
   } catch (error) {
     console.error('Couple email error:', error);

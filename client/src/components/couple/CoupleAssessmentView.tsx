@@ -1,171 +1,371 @@
-import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { CoupleAssessmentReport } from '@shared/schema';
+import { CoupleReportSummary } from './CoupleReportSummary';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Progress } from '@/components/ui/progress';
-import { InfoIcon, UsersIcon, Mail, User, HeartHandshake } from 'lucide-react';
+import { Loader2, Share2, Mail, FileText, ArrowLeft, ChevronDown, ChevronUp } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { apiRequest } from '@/lib/queryClient';
 
 interface CoupleAssessmentViewProps {
-  primaryEmail: string;
-  spouseEmail: string;
-  onSpouseEmailChange: (email: string) => void;
-  onSubmit: () => void;
-  onCancel: () => void;
-  loading: boolean;
+  coupleId: string;
+  onBack?: () => void;
 }
 
-export function CoupleAssessmentView({
-  primaryEmail,
-  spouseEmail,
-  onSpouseEmailChange,
-  onSubmit,
-  onCancel,
-  loading
-}: CoupleAssessmentViewProps) {
-  // State to validate email format
-  const [emailError, setEmailError] = useState<string | null>(null);
+export const CoupleAssessmentView: React.FC<CoupleAssessmentViewProps> = ({ 
+  coupleId,
+  onBack 
+}) => {
+  const { toast } = useToast();
+  const [isExpanded, setIsExpanded] = useState(true);
+  const [showDetailedView, setShowDetailedView] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
+  const [sendingEmail, setSendingEmail] = useState(false);
 
-  // Validate email format and ensure it's different from primary email
-  const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
-    if (!email) {
-      setEmailError("Please enter your spouse's email address");
-      return false;
+  // Fetch couple assessment data
+  const { data: report, isLoading, error } = useQuery({
+    queryKey: ['/api/couple-assessment', coupleId],
+    queryFn: () => apiRequest('GET', `/api/couple-assessment/${coupleId}`).then(res => res.json()),
+    enabled: !!coupleId
+  });
+
+  const handleSendEmail = async () => {
+    if (emailSent || !report) return;
+
+    try {
+      setSendingEmail(true);
+      const response = await apiRequest('POST', '/api/couple-assessment/email', { coupleId });
+      
+      if (response.ok) {
+        setEmailSent(true);
+        toast({
+          title: "Email Sent",
+          description: "Your couple assessment report has been sent to both email addresses.",
+          variant: "default",
+        });
+      } else {
+        throw new Error('Failed to send email');
+      }
+    } catch (error) {
+      toast({
+        title: "Email Send Failed",
+        description: "There was an error sending your assessment report. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setSendingEmail(false);
     }
-    
-    if (!emailRegex.test(email)) {
-      setEmailError("Please enter a valid email address");
-      return false;
-    }
-    
-    if (email.toLowerCase() === primaryEmail.toLowerCase()) {
-      setEmailError("Please enter a different email address than your own");
-      return false;
-    }
-    
-    setEmailError(null);
-    return true;
   };
 
-  // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (validateEmail(spouseEmail)) {
-      onSubmit();
-    }
+  const handleShare = () => {
+    // For now, just show a toast indicating the feature is available
+    toast({
+      title: "Share Report",
+      description: "Share functionality will be implemented in a future update.",
+      variant: "default",
+    });
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12">
+        <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
+        <p className="text-gray-500">Loading your couple assessment results...</p>
+      </div>
+    );
+  }
+
+  if (error || !report) {
+    return (
+      <Card className="w-full max-w-3xl mx-auto my-8 border-red-200">
+        <CardHeader className="bg-red-50">
+          <CardTitle className="text-red-700">Error Loading Assessment</CardTitle>
+        </CardHeader>
+        <CardContent className="pt-6">
+          <p className="text-gray-700">
+            We couldn't load your couple assessment report. This could be because:
+          </p>
+          <ul className="list-disc pl-6 mt-2 text-gray-700 space-y-1">
+            <li>The coupleId provided is incorrect</li>
+            <li>Your spouse hasn't completed their assessment yet</li>
+            <li>There was a technical error with the assessment data</li>
+          </ul>
+          {onBack && (
+            <Button 
+              variant="outline" 
+              className="mt-6" 
+              onClick={onBack}
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" /> Go Back
+            </Button>
+          )}
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // We have a valid report
+  const { primaryAssessment, spouseAssessment } = report as CoupleAssessmentReport;
 
   return (
-    <Card className="w-full border-blue-200">
-      <CardHeader className="bg-blue-50 border-b border-blue-100">
-        <div className="flex items-center gap-2">
-          <HeartHandshake className="h-6 w-6 text-blue-600" />
-          <CardTitle>Couple Assessment Invitation</CardTitle>
-        </div>
-        <CardDescription>
-          Invite your spouse to complete their assessment for a detailed compatibility report
-        </CardDescription>
-      </CardHeader>
-      
-      <CardContent className="pt-6 space-y-6">
-        {/* Explanation */}
-        <div className="rounded-lg bg-blue-50 p-4 text-sm text-blue-800">
-          <div className="flex items-start gap-3">
-            <InfoIcon className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
-            <div>
-              <p className="font-medium mb-1">How the Couple Assessment Works</p>
-              <ol className="list-decimal list-inside space-y-1 text-blue-700">
-                <li>You'll provide your spouse's email address</li>
-                <li>They'll receive an invitation to complete the same assessment</li>
-                <li>Once they finish, you'll both receive a comprehensive compatibility report</li>
-              </ol>
-            </div>
-          </div>
+    <div className="max-w-4xl mx-auto mb-12">
+      {/* Header and actions */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Couple Assessment Report</h1>
+          <p className="text-gray-600 mt-1">
+            {primaryAssessment.demographics.firstName} & {spouseAssessment.demographics.firstName}'s Marriage Compatibility Results
+          </p>
         </div>
         
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="primaryEmail" className="text-gray-600">Your Email</Label>
-              <div className="flex items-center mt-1.5 border rounded-md bg-gray-50 px-3 py-2 text-gray-600">
-                <User className="h-4 w-4 text-gray-400 mr-2" />
-                <span>{primaryEmail}</span>
-              </div>
-            </div>
-            
-            <div>
-              <Label htmlFor="spouseEmail" className="text-gray-600">
-                Spouse's Email <span className="text-red-500">*</span>
-              </Label>
-              <div className="flex items-center mt-1.5">
-                <div className="relative flex-1">
-                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <Mail className="h-4 w-4 text-gray-400" />
-                  </div>
-                  <Input
-                    id="spouseEmail"
-                    type="email"
-                    placeholder="partner@example.com"
-                    value={spouseEmail}
-                    onChange={(e) => {
-                      onSpouseEmailChange(e.target.value);
-                      validateEmail(e.target.value);
-                    }}
-                    className={`pl-10 ${emailError ? 'border-red-300 focus:ring-red-500' : ''}`}
-                    disabled={loading}
-                  />
-                </div>
-              </div>
-              {emailError && (
-                <p className="mt-1.5 text-sm text-red-600">{emailError}</p>
-              )}
-            </div>
-          </div>
-          
-          {/* Additional info */}
-          <Alert className="bg-amber-50 border-amber-200">
-            <AlertTitle className="text-amber-800">Couple Assessment Fee</AlertTitle>
-            <AlertDescription className="text-amber-700">
-              The couple assessment costs $79 (instead of $98 for two individual assessments).
-              This fee covers both your completed assessment and your spouse's assessment.
-            </AlertDescription>
-          </Alert>
-        </form>
-      </CardContent>
-      
-      <CardFooter className="flex justify-between bg-gray-50 border-t gap-4 flex-wrap">
-        <Button 
-          variant="outline"
-          onClick={onCancel}
-          disabled={loading}
-        >
-          Cancel
-        </Button>
-        
-        <div className="flex items-center gap-3">
-          {loading && (
-            <div className="flex items-center gap-2">
-              <Progress value={80} className="w-20 h-2" />
-              <span className="text-sm text-gray-600">Processing...</span>
-            </div>
-          )}
-          
+        <div className="flex space-x-2 mt-4 md:mt-0">
           <Button 
-            type="submit"
-            onClick={handleSubmit}
-            disabled={loading}
-            className="bg-blue-600 hover:bg-blue-700"
+            variant="outline" 
+            size="sm" 
+            onClick={handleShare}
           >
-            <UsersIcon className="mr-2 h-4 w-4" />
-            Send Invitation
+            <Share2 className="h-4 w-4 mr-1" /> Share
+          </Button>
+
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={handleSendEmail}
+            disabled={emailSent || sendingEmail}
+          >
+            {sendingEmail ? (
+              <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+            ) : (
+              <Mail className="h-4 w-4 mr-1" />
+            )}
+            {emailSent ? "Email Sent" : "Email Report"}
+          </Button>
+          
+          {onBack && (
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={onBack}
+            >
+              <ArrowLeft className="h-4 w-4 mr-1" /> Back
+            </Button>
+          )}
+        </div>
+      </div>
+
+      {/* Couple Report Summary */}
+      <div className="mb-6">
+        <div 
+          className="flex items-center justify-between cursor-pointer p-2 hover:bg-gray-50 rounded-lg"
+          onClick={() => setIsExpanded(!isExpanded)}
+        >
+          <h2 className="text-lg font-medium text-gray-900">Couple Compatibility Summary</h2>
+          <Button variant="ghost" size="sm">
+            {isExpanded ? (
+              <ChevronUp className="h-5 w-5" />
+            ) : (
+              <ChevronDown className="h-5 w-5" />
+            )}
           </Button>
         </div>
-      </CardFooter>
-    </Card>
+        
+        {isExpanded && (
+          <div className="mt-2">
+            <CoupleReportSummary report={report as CoupleAssessmentReport} showDetailedView={showDetailedView} />
+            
+            <div className="text-center mt-4">
+              <Button
+                variant="outline"
+                onClick={() => setShowDetailedView(!showDetailedView)}
+              >
+                {showDetailedView ? "Show Less Details" : "Show More Details"}
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Assessment Tabs */}
+      <Tabs defaultValue="combined">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="combined">Combined Analysis</TabsTrigger>
+          <TabsTrigger value="primary">{primaryAssessment.demographics.firstName}'s Assessment</TabsTrigger>
+          <TabsTrigger value="spouse">{spouseAssessment.demographics.firstName}'s Assessment</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="combined" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Compatibility Analysis</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <p className="text-gray-700">
+                  This combined view provides insights into how your relationship expectations align. Understanding areas of both agreement and difference 
+                  is crucial for building a strong foundation for marriage.
+                </p>
+                
+                <h3 className="text-lg font-medium mt-6">What Your Compatibility Score Means</h3>
+                <p className="text-gray-700">
+                  Your compatibility score of <span className="font-medium">{Math.round(report.overallCompatibility)}%</span> indicates 
+                  {report.overallCompatibility >= 80 ? (
+                    " a very high level of alignment in your marriage expectations. You share many of the same values and perspectives on important relationship areas."
+                  ) : report.overallCompatibility >= 60 ? (
+                    " a good level of alignment in your marriage expectations. You have alignment in many key areas, with some differences to be aware of."
+                  ) : report.overallCompatibility >= 40 ? (
+                    " a moderate level of alignment in your marriage expectations. You have some shared perspectives, but also significant areas where you may need to grow in understanding each other."
+                  ) : (
+                    " areas that need attention in your marriage expectations. You may have different perspectives on several key areas that would benefit from discussion and mutual understanding."
+                  )}
+                </p>
+                
+                <h3 className="text-lg font-medium mt-6">Next Steps for Your Relationship</h3>
+                <ul className="list-disc pl-6 space-y-2 text-gray-700">
+                  <li>
+                    <span className="font-medium">Review your areas of difference</span> - Pay special attention to the "Areas Needing Alignment" and discuss these topics openly.
+                  </li>
+                  <li>
+                    <span className="font-medium">Build on your strengths</span> - Your common ground forms a solid foundation; acknowledge and celebrate these shared values.
+                  </li>
+                  <li>
+                    <span className="font-medium">Consider a consultation</span> - Speaking with Lawrence E. Adjah can provide valuable insights on navigating your specific differences.
+                  </li>
+                  <li>
+                    <span className="font-medium">Read "The 100 Marriage"</span> - The book provides deeper context on the principles behind this assessment and practical guidance.
+                  </li>
+                </ul>
+                
+                <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-md flex items-start gap-4">
+                  <FileText className="h-6 w-6 text-blue-600 flex-shrink-0 mt-1" />
+                  <div>
+                    <h4 className="font-medium text-blue-800">Download or Email Your Report</h4>
+                    <p className="text-sm text-blue-700 mt-1">
+                      For a complete assessment with more detailed analysis, we recommend saving or emailing your full report. 
+                      Use the "Email Report" button at the top of the page.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="primary" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>{primaryAssessment.demographics.firstName}'s Assessment</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-24 h-24 rounded-full flex items-center justify-center bg-blue-100 border-4 border-blue-300">
+                    <span className="text-2xl font-bold text-blue-600">{primaryAssessment.scores.overallPercentage}%</span>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-medium text-blue-800">Overall Score</h3>
+                    <p className="text-sm text-gray-600">
+                      Based on responses across all assessment areas
+                    </p>
+                  </div>
+                </div>
+                
+                <h3 className="text-lg font-medium">Psychographic Profiles</h3>
+                <div className="p-4 border border-blue-200 rounded-md bg-blue-50 mb-4">
+                  <h4 className="font-medium text-blue-800">{primaryAssessment.profile.name} (General Profile)</h4>
+                  <p className="text-sm text-gray-700 mt-1">{primaryAssessment.profile.description}</p>
+                </div>
+                
+                {primaryAssessment.genderProfile && (
+                  <div className="p-4 border border-purple-200 rounded-md bg-purple-50">
+                    <h4 className="font-medium text-purple-800">
+                      {primaryAssessment.genderProfile.name} 
+                      ({primaryAssessment.demographics.gender === 'male' ? 'Male' : 'Female'}-Specific Profile)
+                    </h4>
+                    <p className="text-sm text-gray-700 mt-1">{primaryAssessment.genderProfile.description}</p>
+                  </div>
+                )}
+                
+                <h3 className="text-lg font-medium mt-6">Section Scores</h3>
+                <div className="space-y-3">
+                  {Object.entries(primaryAssessment.scores.sections).map(([section, score]) => (
+                    <div key={section} className="space-y-1">
+                      <div className="flex justify-between">
+                        <span className="text-sm font-medium text-gray-700">{section}</span>
+                        <span className="text-sm font-medium text-blue-600">{score.percentage}%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-blue-600 h-2 rounded-full" 
+                          style={{ width: `${score.percentage}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="spouse" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>{spouseAssessment.demographics.firstName}'s Assessment</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-24 h-24 rounded-full flex items-center justify-center bg-purple-100 border-4 border-purple-300">
+                    <span className="text-2xl font-bold text-purple-600">{spouseAssessment.scores.overallPercentage}%</span>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-medium text-purple-800">Overall Score</h3>
+                    <p className="text-sm text-gray-600">
+                      Based on responses across all assessment areas
+                    </p>
+                  </div>
+                </div>
+                
+                <h3 className="text-lg font-medium">Psychographic Profiles</h3>
+                <div className="p-4 border border-purple-200 rounded-md bg-purple-50 mb-4">
+                  <h4 className="font-medium text-purple-800">{spouseAssessment.profile.name} (General Profile)</h4>
+                  <p className="text-sm text-gray-700 mt-1">{spouseAssessment.profile.description}</p>
+                </div>
+                
+                {spouseAssessment.genderProfile && (
+                  <div className="p-4 border border-purple-200 rounded-md bg-purple-50">
+                    <h4 className="font-medium text-purple-800">
+                      {spouseAssessment.genderProfile.name} 
+                      ({spouseAssessment.demographics.gender === 'male' ? 'Male' : 'Female'}-Specific Profile)
+                    </h4>
+                    <p className="text-sm text-gray-700 mt-1">{spouseAssessment.genderProfile.description}</p>
+                  </div>
+                )}
+                
+                <h3 className="text-lg font-medium mt-6">Section Scores</h3>
+                <div className="space-y-3">
+                  {Object.entries(spouseAssessment.scores.sections).map(([section, score]) => (
+                    <div key={section} className="space-y-1">
+                      <div className="flex justify-between">
+                        <span className="text-sm font-medium text-gray-700">{section}</span>
+                        <span className="text-sm font-medium text-purple-600">{score.percentage}%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-purple-600 h-2 rounded-full" 
+                          style={{ width: `${score.percentage}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
   );
-}
+};
