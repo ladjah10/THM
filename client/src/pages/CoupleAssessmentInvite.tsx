@@ -304,7 +304,7 @@ export default function CoupleAssessmentInvite() {
   if (currentView === 'questionnaire') {
     return (
       <div className="container max-w-5xl mx-auto py-8 px-4">
-        <QuestionnaireView 
+        <QuestionnaireWrapper 
           onComplete={handleCompleteQuestionnaire}
           demographics={demographicData}
         />
