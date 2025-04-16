@@ -83,4 +83,38 @@ export interface AssessmentResult {
   responses: Record<string, UserResponse>;
   demographics: DemographicData;
   timestamp: string;
+  coupleId?: string; // Links two assessments in a couple
+  coupleRole?: 'primary' | 'spouse'; // Role in the couple assessment
+}
+
+// Interface for comparing assessment responses between partners
+export interface DifferenceAnalysis {
+  differentResponses: {
+    questionId: string;
+    questionText: string;
+    questionWeight: number;
+    section: string;
+    primaryResponse: string;
+    spouseResponse: string;
+  }[];
+  majorDifferences: {
+    questionId: string;
+    questionText: string;
+    questionWeight: number;
+    section: string;
+    primaryResponse: string;
+    spouseResponse: string;
+  }[];
+  strengthAreas: string[];
+  vulnerabilityAreas: string[];
+}
+
+// Interface for couples assessment report
+export interface CoupleAssessmentReport {
+  coupleId: string;
+  timestamp: string;
+  primaryAssessment: AssessmentResult;
+  spouseAssessment: AssessmentResult;
+  differenceAnalysis: DifferenceAnalysis;
+  overallCompatibility: number;
 }

@@ -1,5 +1,5 @@
 import { users, type User, type InsertUser } from "@shared/schema";
-import { AssessmentResult } from "@shared/schema";
+import { AssessmentResult, CoupleAssessmentReport } from "@shared/schema";
 
 // modify the interface with any CRUD methods
 // you might need
@@ -11,6 +11,12 @@ export interface IStorage {
   saveAssessment(assessment: AssessmentResult): Promise<void>;
   getAssessments(email: string): Promise<AssessmentResult[]>;
   getAllAssessments(): Promise<AssessmentResult[]>;
+  
+  // Couple assessment methods
+  saveCoupleAssessment(primaryAssessment: AssessmentResult, spouseEmail: string): Promise<string>; // Returns coupleId
+  getSpouseAssessment(coupleId: string, role: 'primary' | 'spouse'): Promise<AssessmentResult | null>;
+  getCoupleAssessment(coupleId: string): Promise<CoupleAssessmentReport | null>;
+  getAllCoupleAssessments(): Promise<CoupleAssessmentReport[]>;
 }
 
 export class MemStorage implements IStorage {
