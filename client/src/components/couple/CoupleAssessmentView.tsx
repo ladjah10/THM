@@ -2,10 +2,22 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { CoupleAssessmentReport } from '@shared/schema';
 import { CoupleReportSummary } from './CoupleReportSummary';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Loader2, Share2, Mail, FileText, ArrowLeft, ChevronDown, ChevronUp } from 'lucide-react';
+import { 
+  Loader2, 
+  Mail, 
+  FileText, 
+  ArrowLeft, 
+  ChevronDown, 
+  ChevronUp,
+  Download,
+  Share2,
+  Heart,
+  UserCircle2,
+  HeartHandshake
+} from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 
@@ -173,7 +185,7 @@ export const CoupleAssessmentView: React.FC<CoupleAssessmentViewProps> = ({
         
         {isExpanded && (
           <div className="mt-2">
-            <CoupleReportSummary report={report as CoupleAssessmentReport} showDetailedView={showDetailedView} />
+            <CoupleReportSummary report={report as CoupleAssessmentReport} isExpanded={showDetailedView} />
             
             <div className="text-center mt-4">
               <Button
