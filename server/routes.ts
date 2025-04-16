@@ -4,6 +4,7 @@ import Stripe from "stripe";
 import { storage } from "./storage";
 import { z } from "zod";
 import { sendAssessmentEmail, sendReferralEmail } from "./nodemailer";
+import { generateShareImage } from "./shareImage";
 import { AssessmentResult } from "../shared/schema";
 
 // Initialize Stripe with the secret key
@@ -27,6 +28,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/view-sample-pdf', (req, res) => {
     res.sendFile('public/sample-pdf.html', { root: './client' });
   });
+  
+  // Share image generation endpoint for social media sharing
+  app.get('/api/share-image', generateShareImage);
   // Email sending endpoint
   app.post('/api/email/send', async (req, res) => {
     try {
