@@ -5,8 +5,12 @@ import { Separator } from "@/components/ui/separator";
 export default function Home() {
   const [_, navigate] = useLocation();
   
-  const handleStartAssessment = () => {
-    navigate('/assessment');
+  const handleStartIndividualAssessment = () => {
+    navigate('/assessment', { replace: true, state: { assessmentType: 'individual' } });
+  };
+  
+  const handleStartCoupleAssessment = () => {
+    navigate('/assessment', { replace: true, state: { assessmentType: 'couple' } });
   };
   
   return (
@@ -21,25 +25,42 @@ export default function Home() {
           <p className="text-xl text-gray-700 mb-6">
             Misaligned Expectations Can Derail Your Future—Align Yours for Only $49
           </p>
-          <div className="mb-6 px-4 py-3 bg-blue-50 rounded-md border border-blue-100 inline-block">
-            <p className="text-blue-800 font-medium mb-2">
-              <span className="font-bold">Individual Assessment ($49):</span> Beneficial for both singles and couples.
-            </p>
-            <p className="text-blue-700 text-sm">
-              <strong>Couples Benefit:</strong> Each spouse can take their own assessment and compare scores.
-              The closer your percentages align, the more aligned your marriage expectations.
-            </p>
-            <p className="text-blue-600 text-xs mt-2">
-              Enhanced couples assessment with comparison analysis coming soon ($79).
-            </p>
-          </div>
-          <div>
-            <Button 
-              onClick={handleStartAssessment}
-              className="bg-amber-500 hover:bg-amber-400 text-white py-3 px-8 rounded-md text-lg font-medium"
-            >
-              Start Individual Assessment
-            </Button>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl mx-auto">
+            <div className="p-4 bg-blue-50 rounded-md border border-blue-100">
+              <h3 className="text-xl font-bold text-blue-800 mb-2">Individual Assessment</h3>
+              <p className="text-blue-700 mb-3">
+                Perfect for singles, or couples who want individual insights.
+              </p>
+              <div className="bg-white rounded p-2 mb-4">
+                <p className="text-gray-700 text-sm mb-1"><strong>Price:</strong> $49</p>
+                <p className="text-gray-700 text-sm mb-1"><strong>What you get:</strong> Personal profile, detailed PDF report</p>
+                <p className="text-gray-700 text-sm"><strong>Best for:</strong> Personal clarity on marriage expectations</p>
+              </div>
+              <Button 
+                onClick={handleStartIndividualAssessment}
+                className="bg-amber-500 hover:bg-amber-400 text-white py-2 px-6 rounded-md font-medium w-full"
+              >
+                Start Individual Assessment
+              </Button>
+            </div>
+            
+            <div className="p-4 bg-purple-50 rounded-md border border-purple-100">
+              <h3 className="text-xl font-bold text-purple-800 mb-2">Couple Assessment</h3>
+              <p className="text-purple-700 mb-3">
+                For couples who want to compare and align expectations.
+              </p>
+              <div className="bg-white rounded p-2 mb-4">
+                <p className="text-gray-700 text-sm mb-1"><strong>Price:</strong> $79</p>
+                <p className="text-gray-700 text-sm mb-1"><strong>What you get:</strong> Two assessments + compatibility analysis</p>
+                <p className="text-gray-700 text-sm"><strong>Best for:</strong> Understanding relationship dynamics together</p>
+              </div>
+              <Button 
+                onClick={handleStartCoupleAssessment}
+                className="bg-purple-600 hover:bg-purple-500 text-white py-2 px-6 rounded-md font-medium w-full"
+              >
+                Start Couple Assessment
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -229,7 +250,7 @@ export default function Home() {
                   <h3 className="text-amber-800 text-xl font-bold mb-2">Everyone benefits!</h3>
                   <p className="text-amber-700 mb-4">Help friends gain clarity while you save</p>
                   <Button 
-                    onClick={handleStartAssessment}
+                    onClick={handleStartIndividualAssessment}
                     className="bg-amber-500 hover:bg-amber-400 text-white font-medium w-full"
                   >
                     Start Assessment & Invite Friends
@@ -283,17 +304,16 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Button 
-              onClick={handleStartAssessment}
+              onClick={handleStartIndividualAssessment}
               className="bg-amber-500 hover:bg-amber-400 text-white py-3 px-8 rounded-md text-base md:text-lg font-medium"
             >
-              Start Assessment Now
+              Start Individual Assessment
             </Button>
             <Button 
-              variant="outline"
-              onClick={handleStartAssessment}
-              className="border-amber-500 text-amber-400 hover:bg-blue-800 py-3 px-8 rounded-md text-base md:text-lg font-medium"
+              onClick={handleStartCoupleAssessment}
+              className="bg-purple-600 hover:bg-purple-500 text-white py-3 px-8 rounded-md text-base md:text-lg font-medium"
             >
-              Invite Friends & Save $10
+              Start Couple Assessment
             </Button>
           </div>
         </div>

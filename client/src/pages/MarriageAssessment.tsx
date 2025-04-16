@@ -25,6 +25,11 @@ import { initializeProtection } from "@/utils/protectionUtils";
 type View = "paywall" | "demographics" | "questionnaire" | "results" | "emailSent" | "coupleInvite";
 
 export default function MarriageAssessment() {
+  const [_, params] = useLocation();
+  
+  // Get assessment type from location state or default to individual
+  const [assessmentType, setAssessmentType] = useState<'individual' | 'couple'>('individual');
+  
   // Force paywall to appear first
   const [currentView, setCurrentView] = useState<View>("paywall");
   const [currentSection, setCurrentSection] = useState(sections[0]);
@@ -55,12 +60,19 @@ export default function MarriageAssessment() {
   const [primaryProfile, setPrimaryProfile] = useState<UserProfile | null>(null);
   const [genderProfile, setGenderProfile] = useState<UserProfile | null>(null);
   const [emailSending, setEmailSending] = useState(false);
+  const [coupleId, setCoupleId] = useState<string | null>(null);
 
-  // Initialize protection utilities and show paywall first
+  // Initialize protection utilities and determine assessment type
   useEffect(() => {
     console.log("Setting up assessment with paywall first");
     initializeProtection();
     setCurrentView("paywall");
+    
+    // Try to get the assessment type from the router state
+    const state = window.history.state;
+    if (state && state.assessmentType) {
+      setAssessmentType(state.assessmentType);
+    }
   }, []);
 
   // Filter questions by current section
