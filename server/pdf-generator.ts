@@ -308,8 +308,194 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
         doc.moveDown(1);
       });
 
-      // Add a divider
+      // Add compatibility section
       doc.moveDown(1)
+        .fontSize(14)
+        .font('Helvetica-Bold')
+        .fillColor('#2c3e50')
+        .text('Your Compatibility Profile');
+      
+      // Add compatibility explanation
+      doc.moveDown(0.5)
+        .fontSize(11)
+        .font('Helvetica')
+        .fillColor('#555')
+        .text('Based on your psychographic profile, we\'ve identified the types of people you\'d likely be most compatible with. Closer alignment in expectations suggests better compatibility, but isn\'t mandatory for a successful relationship.', {
+          width: doc.page.width - 100,
+          align: 'justify'
+        });
+        
+      doc.moveDown(1);
+      
+      // Create compatibility table
+      const tableTop = doc.y;
+      const colWidth1 = 150;
+      const colWidth2 = 150;
+      const colWidth3 = 200;
+      const rowHeight = 25;
+      
+      // Table headers
+      doc.rect(50, tableTop, colWidth1, rowHeight).fillAndStroke('#f8f9fa', '#e2e8f0');
+      doc.rect(50 + colWidth1, tableTop, colWidth2, rowHeight).fillAndStroke('#f8f9fa', '#e2e8f0');
+      doc.rect(50 + colWidth1 + colWidth2, tableTop, colWidth3, rowHeight).fillAndStroke('#f8f9fa', '#e2e8f0');
+      
+      doc.fontSize(10)
+        .fillColor('#2c3e50')
+        .text('Compatibility Type', 60, tableTop + 8)
+        .text('Ideal Match', 60 + colWidth1, tableTop + 8)
+        .text('Next-Best Matches', 60 + colWidth1 + colWidth2, tableTop + 8);
+      
+      // Unisex row
+      const unisexRowTop = tableTop + rowHeight;
+      doc.rect(50, unisexRowTop, colWidth1, rowHeight).stroke('#e2e8f0');
+      doc.rect(50 + colWidth1, unisexRowTop, colWidth2, rowHeight).stroke('#e2e8f0');
+      doc.rect(50 + colWidth1 + colWidth2, unisexRowTop, colWidth3, rowHeight).stroke('#e2e8f0');
+      
+      doc.fontSize(10)
+        .fillColor('#333')
+        .text('Unisex Profile Match', 60, unisexRowTop + 8)
+        .fillColor('#3498db')
+        .text(assessment.profile.name, 60 + colWidth1, unisexRowTop + 8);
+      
+      // Determine next best matches based on profile
+      let nextBestMatches = '';
+      if (assessment.profile.name === "Steadfast Believers") {
+        nextBestMatches = "Harmonious Planners, Balanced Visionaries";
+      } else if (assessment.profile.name === "Harmonious Planners") {
+        nextBestMatches = "Steadfast Believers, Balanced Visionaries";
+      } else if (assessment.profile.name === "Flexible Faithful") {
+        nextBestMatches = "Balanced Visionaries, Pragmatic Partners";
+      } else if (assessment.profile.name === "Pragmatic Partners") {
+        nextBestMatches = "Flexible Faithful, Individualist Seekers";
+      } else if (assessment.profile.name === "Individualist Seekers") {
+        nextBestMatches = "Pragmatic Partners, Flexible Faithful";
+      } else if (assessment.profile.name === "Balanced Visionaries") {
+        nextBestMatches = "Harmonious Planners, Flexible Faithful";
+      }
+      
+      doc.fillColor('#555')
+        .text(nextBestMatches, 60 + colWidth1 + colWidth2, unisexRowTop + 8);
+      
+      // Gender-specific row (if available)
+      if (assessment.genderProfile) {
+        const genderRowTop = unisexRowTop + rowHeight;
+        doc.rect(50, genderRowTop, colWidth1, rowHeight).stroke('#e2e8f0');
+        doc.rect(50 + colWidth1, genderRowTop, colWidth2, rowHeight).stroke('#e2e8f0');
+        doc.rect(50 + colWidth1 + colWidth2, genderRowTop, colWidth3, rowHeight).stroke('#e2e8f0');
+        
+        const genderLabel = assessment.demographics.gender === 'female' ? 'Female-Specific Match' : 'Male-Specific Match';
+        doc.fontSize(10)
+          .fillColor('#333')
+          .text(genderLabel, 60, genderRowTop + 8);
+        
+        // Determine ideal and next-best matches based on gender profile
+        let idealMatch = '';
+        let nextBestGenderMatches = '';
+        
+        if (assessment.demographics.gender === 'female') {
+          if (assessment.genderProfile.name === "Relational Nurturers") {
+            idealMatch = "Faithful Protectors";
+            nextBestGenderMatches = "Balanced Providers, Structured Leaders";
+          } else if (assessment.genderProfile.name === "Adaptive Communicators") {
+            idealMatch = "Structured Leaders";
+            nextBestGenderMatches = "Faithful Protectors, Balanced Providers";
+          } else if (assessment.genderProfile.name === "Independent Traditionalists") {
+            idealMatch = "Balanced Providers";
+            nextBestGenderMatches = "Faithful Protectors, Structured Leaders";
+          } else if (assessment.genderProfile.name === "Faith-Centered Homemakers") {
+            idealMatch = "Faithful Protectors";
+            nextBestGenderMatches = "Balanced Providers, Structured Leaders";
+          }
+        } else if (assessment.demographics.gender === 'male') {
+          if (assessment.genderProfile.name === "Faithful Protectors") {
+            idealMatch = "Faith-Centered Homemakers";
+            nextBestGenderMatches = "Relational Nurturers, Independent Traditionalists";
+          } else if (assessment.genderProfile.name === "Structured Leaders") {
+            idealMatch = "Adaptive Communicators";
+            nextBestGenderMatches = "Relational Nurturers, Faith-Centered Homemakers";
+          } else if (assessment.genderProfile.name === "Balanced Providers") {
+            idealMatch = "Independent Traditionalists";
+            nextBestGenderMatches = "Faith-Centered Homemakers, Relational Nurturers";
+          }
+        }
+        
+        doc.fillColor('#8e44ad')
+          .text(idealMatch, 60 + colWidth1, genderRowTop + 8)
+          .fillColor('#555')
+          .text(nextBestGenderMatches, 60 + colWidth1 + colWidth2, genderRowTop + 8);
+        
+        doc.moveDown(3);
+      } else {
+        doc.moveDown(2);
+      }
+      
+      // Add implications box
+      doc.rect(50, doc.y, doc.page.width - 100, 80).fillAndStroke('#ebf8ff', '#3498db');
+      
+      doc.fillColor('#1e40af')
+        .fontSize(12)
+        .font('Helvetica-Bold')
+        .text('Implications for Your Relationships', 60, doc.y - 70);
+      
+      // Determine implications text based on primary profile
+      let implicationsText = '';
+      if (assessment.profile.name === "Steadfast Believers") {
+        implicationsText = "Your strong faith and traditional values mean you'll thrive with someone who shares your spiritual commitment and family focus. Expectation alignment is highest with other Steadfast Believers, but Harmonious Planners and Balanced Visionaries can also complement your values if faith is openly discussed.";
+      } else if (assessment.profile.name === "Harmonious Planners") {
+        implicationsText = "You value structure and faith, so you'll connect best with partners who share your planning mindset. Harmonious Planners are your ideal match, while Steadfast Believers and Balanced Visionaries offer similar alignment with slight variations in emphasis.";
+      } else if (assessment.profile.name === "Flexible Faithful") {
+        implicationsText = "Your balance of faith and adaptability makes you a versatile partner. Flexible Faithful matches align best, but Balanced Visionaries and Pragmatic Partners can complement your communication focus with mutual respect.";
+      } else if (assessment.profile.name === "Pragmatic Partners") {
+        implicationsText = "You prioritize practicality and communication, so you'll thrive with partners who value fairness. Pragmatic Partners are ideal, while Flexible Faithful and Individualist Seekers can align on practicality with less faith intensity.";
+      } else if (assessment.profile.name === "Individualist Seekers") {
+        implicationsText = "Your focus on independence means you'll connect with partners who respect autonomy. Individualist Seekers are your best match, while Pragmatic Partners and Flexible Faithful can offer complementary practicality and adaptability.";
+      } else if (assessment.profile.name === "Balanced Visionaries") {
+        implicationsText = "Your balanced approach to faith and practicality pairs well with similar mindsets. Balanced Visionaries are ideal, while Harmonious Planners and Flexible Faithful share your values with slight variations.";
+      }
+      
+      doc.fillColor('#333')
+        .fontSize(10)
+        .font('Helvetica')
+        .text(implicationsText, 60, doc.y - 50, {
+          width: doc.page.width - 120
+        });
+      
+      // Add gender implications if applicable
+      if (assessment.genderProfile) {
+        let genderImplicationsText = '';
+        
+        if (assessment.demographics.gender === 'female') {
+          if (assessment.genderProfile.name === "Relational Nurturers") {
+            genderImplicationsText = "As a Relational Nurturer: Your nurturing nature thrives with a partner who values family and faith. A Faithful Protector's leadership aligns best, while Balanced Providers and Structured Leaders offer stability and structure to support your family focus.";
+          } else if (assessment.genderProfile.name === "Adaptive Communicators") {
+            genderImplicationsText = "As an Adaptive Communicator: Your communication skills pair well with a partner who values clarity. Structured Leaders are ideal, while Faithful Protectors and Balanced Providers complement your faith and balance.";
+          } else if (assessment.genderProfile.name === "Independent Traditionalists") {
+            genderImplicationsText = "As an Independent Traditionalist: Your blend of tradition and independence matches with a stable partner. Balanced Providers align best, while Faithful Protectors and Structured Leaders share your traditional values.";
+          } else if (assessment.genderProfile.name === "Faith-Centered Homemakers") {
+            genderImplicationsText = "As a Faith-Centered Homemaker: Your spiritual home focus thrives with a faith-driven partner. Faithful Protectors are ideal, while Balanced Providers and Structured Leaders support your family values.";
+          }
+        } else if (assessment.demographics.gender === 'male') {
+          if (assessment.genderProfile.name === "Faithful Protectors") {
+            genderImplicationsText = "As a Faithful Protector: Your leadership and faith pair well with a spiritually focused partner. Faith-Centered Homemakers align best, while Relational Nurturers and Independent Traditionalists share your family and traditional values.";
+          } else if (assessment.genderProfile.name === "Structured Leaders") {
+            genderImplicationsText = "As a Structured Leader: Your clarity and structure match with a communicative partner. Adaptive Communicators are ideal, while Relational Nurturers and Faith-Centered Homemakers complement your family focus.";
+          } else if (assessment.genderProfile.name === "Balanced Providers") {
+            genderImplicationsText = "As a Balanced Provider: Your stability and balance pair well with an independent partner. Independent Traditionalists align best, while Faith-Centered Homemakers and Relational Nurturers support your faith and family priorities.";
+          }
+        }
+        
+        doc.rect(50, doc.y + 10, doc.page.width - 100, 50).fillAndStroke('#f5f0ff', '#8e44ad');
+        
+        doc.fillColor('#333')
+          .fontSize(10)
+          .font('Helvetica')
+          .text(genderImplicationsText, 60, doc.y + 20, {
+            width: doc.page.width - 120
+          });
+      }
+
+      // Add a divider
+      doc.moveDown(3)
         .strokeColor('#ddd')
         .lineWidth(1)
         .moveTo(50, doc.y)

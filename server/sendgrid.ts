@@ -155,6 +155,112 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
           ${genderProfileHtml}
         </div>
         
+        <div class="section">
+          <h2>Your Compatibility Profile</h2>
+          <p>Based on your psychographic profile, we've identified the types of people you'd likely be most compatible with. 
+             Closer alignment in expectations suggests better compatibility, but isn't mandatory for a successful relationship.</p>
+          
+          <table style="width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 14px;">
+            <thead>
+              <tr>
+                <th style="padding: 10px; background-color: #f2f2f2; border: 1px solid #ddd; text-align: left; width: 30%;">Compatibility Type</th>
+                <th style="padding: 10px; background-color: #f2f2f2; border: 1px solid #ddd; text-align: left; width: 30%;">Ideal Match</th>
+                <th style="padding: 10px; background-color: #f2f2f2; border: 1px solid #ddd; text-align: left; width: 40%;">Next-Best Matches</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Unisex Profile Match</td>
+                <td style="padding: 10px; border: 1px solid #ddd; color: #3498db;">${profile.name}</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">
+                  ${profile.name === "Steadfast Believers" ? "Harmonious Planners, Balanced Visionaries" : ""}
+                  ${profile.name === "Harmonious Planners" ? "Steadfast Believers, Balanced Visionaries" : ""}
+                  ${profile.name === "Flexible Faithful" ? "Balanced Visionaries, Pragmatic Partners" : ""}
+                  ${profile.name === "Pragmatic Partners" ? "Flexible Faithful, Individualist Seekers" : ""}
+                  ${profile.name === "Individualist Seekers" ? "Pragmatic Partners, Flexible Faithful" : ""}
+                  ${profile.name === "Balanced Visionaries" ? "Harmonious Planners, Flexible Faithful" : ""}
+                </td>
+              </tr>
+              ${genderProfile ? `
+              <tr>
+                <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">${demographics.gender === 'female' ? 'Female' : 'Male'}-Specific Match</td>
+                <td style="padding: 10px; border: 1px solid #ddd; color: #8e44ad;">
+                  ${demographics.gender === 'female' && genderProfile.name === "Relational Nurturers" ? "Faithful Protectors" : ""}
+                  ${demographics.gender === 'female' && genderProfile.name === "Adaptive Communicators" ? "Structured Leaders" : ""}
+                  ${demographics.gender === 'female' && genderProfile.name === "Independent Traditionalists" ? "Balanced Providers" : ""}
+                  ${demographics.gender === 'female' && genderProfile.name === "Faith-Centered Homemakers" ? "Faithful Protectors" : ""}
+                  ${demographics.gender === 'male' && genderProfile.name === "Faithful Protectors" ? "Faith-Centered Homemakers" : ""}
+                  ${demographics.gender === 'male' && genderProfile.name === "Structured Leaders" ? "Adaptive Communicators" : ""}
+                  ${demographics.gender === 'male' && genderProfile.name === "Balanced Providers" ? "Independent Traditionalists" : ""}
+                </td>
+                <td style="padding: 10px; border: 1px solid #ddd;">
+                  ${demographics.gender === 'female' && genderProfile.name === "Relational Nurturers" ? "Balanced Providers, Structured Leaders" : ""}
+                  ${demographics.gender === 'female' && genderProfile.name === "Adaptive Communicators" ? "Faithful Protectors, Balanced Providers" : ""}
+                  ${demographics.gender === 'female' && genderProfile.name === "Independent Traditionalists" ? "Faithful Protectors, Structured Leaders" : ""}
+                  ${demographics.gender === 'female' && genderProfile.name === "Faith-Centered Homemakers" ? "Balanced Providers, Structured Leaders" : ""}
+                  ${demographics.gender === 'male' && genderProfile.name === "Faithful Protectors" ? "Relational Nurturers, Independent Traditionalists" : ""}
+                  ${demographics.gender === 'male' && genderProfile.name === "Structured Leaders" ? "Relational Nurturers, Faith-Centered Homemakers" : ""}
+                  ${demographics.gender === 'male' && genderProfile.name === "Balanced Providers" ? "Faith-Centered Homemakers, Relational Nurturers" : ""}
+                </td>
+              </tr>
+              ` : ``}
+            </tbody>
+          </table>
+          
+          <div style="background-color: #f4f9ff; padding: 15px; border-left: 4px solid #3498db; margin-top: 15px;">
+            <h3 style="margin-top: 0; color: #2980b9; font-size: 16px;">Implications for Your Relationships</h3>
+            <p>
+              ${profile.name === "Steadfast Believers" ? 
+                "Your strong faith and traditional values mean you'll thrive with someone who shares your spiritual commitment and family focus. Expectation alignment is highest with other Steadfast Believers, but Harmonious Planners and Balanced Visionaries can also complement your values if faith is openly discussed." : ""}
+              ${profile.name === "Harmonious Planners" ? 
+                "You value structure and faith, so you'll connect best with partners who share your planning mindset. Harmonious Planners are your ideal match, while Steadfast Believers and Balanced Visionaries offer similar alignment with slight variations in emphasis." : ""}
+              ${profile.name === "Flexible Faithful" ? 
+                "Your balance of faith and adaptability makes you a versatile partner. Flexible Faithful matches align best, but Balanced Visionaries and Pragmatic Partners can complement your communication focus with mutual respect." : ""}
+              ${profile.name === "Pragmatic Partners" ? 
+                "You prioritize practicality and communication, so you'll thrive with partners who value fairness. Pragmatic Partners are ideal, while Flexible Faithful and Individualist Seekers can align on practicality with less faith intensity." : ""}
+              ${profile.name === "Individualist Seekers" ? 
+                "Your focus on independence means you'll connect with partners who respect autonomy. Individualist Seekers are your best match, while Pragmatic Partners and Flexible Faithful can offer complementary practicality and adaptability." : ""}
+              ${profile.name === "Balanced Visionaries" ? 
+                "Your balanced approach to faith and practicality pairs well with similar mindsets. Balanced Visionaries are ideal, while Harmonious Planners and Flexible Faithful share your values with slight variations." : ""}
+            </p>
+            
+            ${genderProfile ? `
+            <p style="margin-top: 10px; color: #8e44ad; font-weight: bold;">
+              ${demographics.gender === 'female' && genderProfile.name === "Relational Nurturers" ? 
+                "As a Relational Nurturer:" : ""}
+              ${demographics.gender === 'female' && genderProfile.name === "Adaptive Communicators" ? 
+                "As an Adaptive Communicator:" : ""}
+              ${demographics.gender === 'female' && genderProfile.name === "Independent Traditionalists" ? 
+                "As an Independent Traditionalist:" : ""}
+              ${demographics.gender === 'female' && genderProfile.name === "Faith-Centered Homemakers" ? 
+                "As a Faith-Centered Homemaker:" : ""}
+              ${demographics.gender === 'male' && genderProfile.name === "Faithful Protectors" ? 
+                "As a Faithful Protector:" : ""}
+              ${demographics.gender === 'male' && genderProfile.name === "Structured Leaders" ? 
+                "As a Structured Leader:" : ""}
+              ${demographics.gender === 'male' && genderProfile.name === "Balanced Providers" ? 
+                "As a Balanced Provider:" : ""}
+            </p>
+            <p style="color: #333;">
+              ${demographics.gender === 'female' && genderProfile.name === "Relational Nurturers" ? 
+                "Your nurturing nature thrives with a partner who values family and faith. A Faithful Protector's leadership aligns best, while Balanced Providers and Structured Leaders offer stability and structure to support your family focus." : ""}
+              ${demographics.gender === 'female' && genderProfile.name === "Adaptive Communicators" ? 
+                "Your communication skills pair well with a partner who values clarity. Structured Leaders are ideal, while Faithful Protectors and Balanced Providers complement your faith and balance." : ""}
+              ${demographics.gender === 'female' && genderProfile.name === "Independent Traditionalists" ? 
+                "Your blend of tradition and independence matches with a stable partner. Balanced Providers align best, while Faithful Protectors and Structured Leaders share your traditional values." : ""}
+              ${demographics.gender === 'female' && genderProfile.name === "Faith-Centered Homemakers" ? 
+                "Your spiritual home focus thrives with a faith-driven partner. Faithful Protectors are ideal, while Balanced Providers and Structured Leaders support your family values." : ""}
+              ${demographics.gender === 'male' && genderProfile.name === "Faithful Protectors" ? 
+                "Your leadership and faith pair well with a spiritually focused partner. Faith-Centered Homemakers align best, while Relational Nurturers and Independent Traditionalists share your family and traditional values." : ""}
+              ${demographics.gender === 'male' && genderProfile.name === "Structured Leaders" ? 
+                "Your clarity and structure match with a communicative partner. Adaptive Communicators are ideal, while Relational Nurturers and Faith-Centered Homemakers complement your family focus." : ""}
+              ${demographics.gender === 'male' && genderProfile.name === "Balanced Providers" ? 
+                "Your stability and balance pair well with an independent partner. Independent Traditionalists align best, while Faith-Centered Homemakers and Relational Nurturers support your faith and family priorities." : ""}
+            </p>
+            ` : ``}
+          </div>
+        </div>
+        
         <div class="section" style="background-color: #edf7ff; padding: 20px; border-radius: 5px; border-left: 4px solid #3498db; margin-top: 25px;">
           <h2 style="margin-top: 0; color: #2980b9;">Get Personalized Guidance</h2>
           <p>Would you like expert help interpreting your results? Schedule a one-on-one consultation with Lawrence E. Adjah to discuss your assessment in detail and get personalized insights about your relationship expectations.</p>

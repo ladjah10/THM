@@ -232,6 +232,242 @@ export default function ResultsView({
         </div>
       </div>
 
+      {/* Compatibility Match Section */}
+      <div className="mb-10 bg-gradient-to-r from-slate-50 to-white p-6 rounded-lg border border-slate-100 shadow-sm">
+        <h4 className="text-xl font-medium text-blue-900 mb-4">Your Compatibility Profile</h4>
+        
+        <p className="text-gray-700 mb-4">
+          Based on your psychographic profile, we've identified the types of people you'd likely be most compatible with. 
+          Closer alignment in expectations suggests better compatibility, but isn't mandatory for a successful relationship.
+        </p>
+
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse mb-4">
+            <thead>
+              <tr className="bg-slate-100">
+                <th className="border border-slate-200 px-3 py-2 text-left text-sm text-slate-700">Compatibility Type</th>
+                <th className="border border-slate-200 px-3 py-2 text-left text-sm text-slate-700">Ideal Match</th>
+                <th className="border border-slate-200 px-3 py-2 text-left text-sm text-slate-700">Next-Best Matches</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border border-slate-200 px-3 py-2 font-medium">Unisex Profile Match</td>
+                <td className="border border-slate-200 px-3 py-2">
+                  <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                    {primaryProfile.name}
+                  </span>
+                </td>
+                <td className="border border-slate-200 px-3 py-2">
+                  {primaryProfile.name === "Steadfast Believers" && (
+                    <div className="flex flex-wrap gap-1">
+                      <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Harmonious Planners</span>
+                      <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Balanced Visionaries</span>
+                    </div>
+                  )}
+                  {primaryProfile.name === "Harmonious Planners" && (
+                    <div className="flex flex-wrap gap-1">
+                      <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Steadfast Believers</span>
+                      <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Balanced Visionaries</span>
+                    </div>
+                  )}
+                  {primaryProfile.name === "Flexible Faithful" && (
+                    <div className="flex flex-wrap gap-1">
+                      <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Balanced Visionaries</span>
+                      <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Pragmatic Partners</span>
+                    </div>
+                  )}
+                  {primaryProfile.name === "Pragmatic Partners" && (
+                    <div className="flex flex-wrap gap-1">
+                      <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Flexible Faithful</span>
+                      <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Individualist Seekers</span>
+                    </div>
+                  )}
+                  {primaryProfile.name === "Individualist Seekers" && (
+                    <div className="flex flex-wrap gap-1">
+                      <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Pragmatic Partners</span>
+                      <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Flexible Faithful</span>
+                    </div>
+                  )}
+                  {primaryProfile.name === "Balanced Visionaries" && (
+                    <div className="flex flex-wrap gap-1">
+                      <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Harmonious Planners</span>
+                      <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Flexible Faithful</span>
+                    </div>
+                  )}
+                </td>
+              </tr>
+              {genderProfile && (
+                <tr>
+                  <td className="border border-slate-200 px-3 py-2 font-medium">
+                    {demographics.gender === 'female' ? 'Female-Specific Match' : 'Male-Specific Match'}
+                  </td>
+                  <td className="border border-slate-200 px-3 py-2">
+                    {demographics.gender === 'female' && genderProfile.name === "Relational Nurturers" && (
+                      <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Faithful Protectors</span>
+                    )}
+                    {demographics.gender === 'female' && genderProfile.name === "Adaptive Communicators" && (
+                      <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Structured Leaders</span>
+                    )}
+                    {demographics.gender === 'female' && genderProfile.name === "Independent Traditionalists" && (
+                      <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Balanced Providers</span>
+                    )}
+                    {demographics.gender === 'female' && genderProfile.name === "Faith-Centered Homemakers" && (
+                      <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Faithful Protectors</span>
+                    )}
+                    {demographics.gender === 'male' && genderProfile.name === "Faithful Protectors" && (
+                      <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Faith-Centered Homemakers</span>
+                    )}
+                    {demographics.gender === 'male' && genderProfile.name === "Structured Leaders" && (
+                      <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Adaptive Communicators</span>
+                    )}
+                    {demographics.gender === 'male' && genderProfile.name === "Balanced Providers" && (
+                      <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Independent Traditionalists</span>
+                    )}
+                  </td>
+                  <td className="border border-slate-200 px-3 py-2">
+                    {demographics.gender === 'female' && genderProfile.name === "Relational Nurturers" && (
+                      <div className="flex flex-wrap gap-1">
+                        <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Balanced Providers</span>
+                        <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Structured Leaders</span>
+                      </div>
+                    )}
+                    {demographics.gender === 'female' && genderProfile.name === "Adaptive Communicators" && (
+                      <div className="flex flex-wrap gap-1">
+                        <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Faithful Protectors</span>
+                        <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Balanced Providers</span>
+                      </div>
+                    )}
+                    {demographics.gender === 'female' && genderProfile.name === "Independent Traditionalists" && (
+                      <div className="flex flex-wrap gap-1">
+                        <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Faithful Protectors</span>
+                        <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Structured Leaders</span>
+                      </div>
+                    )}
+                    {demographics.gender === 'female' && genderProfile.name === "Faith-Centered Homemakers" && (
+                      <div className="flex flex-wrap gap-1">
+                        <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Balanced Providers</span>
+                        <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Structured Leaders</span>
+                      </div>
+                    )}
+                    {demographics.gender === 'male' && genderProfile.name === "Faithful Protectors" && (
+                      <div className="flex flex-wrap gap-1">
+                        <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Relational Nurturers</span>
+                        <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Independent Traditionalists</span>
+                      </div>
+                    )}
+                    {demographics.gender === 'male' && genderProfile.name === "Structured Leaders" && (
+                      <div className="flex flex-wrap gap-1">
+                        <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Relational Nurturers</span>
+                        <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Faith-Centered Homemakers</span>
+                      </div>
+                    )}
+                    {demographics.gender === 'male' && genderProfile.name === "Balanced Providers" && (
+                      <div className="flex flex-wrap gap-1">
+                        <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Faith-Centered Homemakers</span>
+                        <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Relational Nurturers</span>
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="p-4 bg-blue-50 rounded-md border border-blue-100">
+          <h5 className="font-medium text-blue-800 mb-2">Implications for Your Relationships</h5>
+          {primaryProfile.name === "Steadfast Believers" && (
+            <p className="text-gray-700 text-sm">
+              Your strong faith and traditional values mean you'll thrive with someone who shares your spiritual commitment and family focus. 
+              Expectation alignment is highest with other Steadfast Believers, but Harmonious Planners and Balanced Visionaries can 
+              also complement your values if faith is openly discussed.
+            </p>
+          )}
+          {primaryProfile.name === "Harmonious Planners" && (
+            <p className="text-gray-700 text-sm">
+              You value structure and faith, so you'll connect best with partners who share your planning mindset. 
+              Harmonious Planners are your ideal match, while Steadfast Believers and Balanced Visionaries offer 
+              similar alignment with slight variations in emphasis.
+            </p>
+          )}
+          {primaryProfile.name === "Flexible Faithful" && (
+            <p className="text-gray-700 text-sm">
+              Your balance of faith and adaptability makes you a versatile partner. Flexible Faithful matches align best, 
+              but Balanced Visionaries and Pragmatic Partners can complement your communication focus with mutual respect.
+            </p>
+          )}
+          {primaryProfile.name === "Pragmatic Partners" && (
+            <p className="text-gray-700 text-sm">
+              You prioritize practicality and communication, so you'll thrive with partners who value fairness. 
+              Pragmatic Partners are ideal, while Flexible Faithful and Individualist Seekers can align on 
+              practicality with less faith intensity.
+            </p>
+          )}
+          {primaryProfile.name === "Individualist Seekers" && (
+            <p className="text-gray-700 text-sm">
+              Your focus on independence means you'll connect with partners who respect autonomy. 
+              Individualist Seekers are your best match, while Pragmatic Partners and Flexible Faithful 
+              can offer complementary practicality and adaptability.
+            </p>
+          )}
+          {primaryProfile.name === "Balanced Visionaries" && (
+            <p className="text-gray-700 text-sm">
+              Your balanced approach to faith and practicality pairs well with similar mindsets. 
+              Balanced Visionaries are ideal, while Harmonious Planners and Flexible Faithful share 
+              your values with slight variations.
+            </p>
+          )}
+          {genderProfile && demographics.gender === 'female' && genderProfile.name === "Relational Nurturers" && (
+            <p className="text-gray-700 text-sm mt-2">
+              <span className="text-purple-800 font-medium">As a Relational Nurturer:</span> Your nurturing nature thrives with a partner 
+              who values family and faith. A Faithful Protector's leadership aligns best, while Balanced Providers and 
+              Structured Leaders offer stability and structure to support your family focus.
+            </p>
+          )}
+          {genderProfile && demographics.gender === 'female' && genderProfile.name === "Adaptive Communicators" && (
+            <p className="text-gray-700 text-sm mt-2">
+              <span className="text-purple-800 font-medium">As an Adaptive Communicator:</span> Your communication skills pair well with a partner 
+              who values clarity. Structured Leaders are ideal, while Faithful Protectors and Balanced Providers 
+              complement your faith and balance.
+            </p>
+          )}
+          {genderProfile && demographics.gender === 'female' && genderProfile.name === "Independent Traditionalists" && (
+            <p className="text-gray-700 text-sm mt-2">
+              <span className="text-purple-800 font-medium">As an Independent Traditionalist:</span> Your blend of tradition and independence matches with a stable partner. 
+              Balanced Providers align best, while Faithful Protectors and Structured Leaders share your traditional values.
+            </p>
+          )}
+          {genderProfile && demographics.gender === 'female' && genderProfile.name === "Faith-Centered Homemakers" && (
+            <p className="text-gray-700 text-sm mt-2">
+              <span className="text-purple-800 font-medium">As a Faith-Centered Homemaker:</span> Your spiritual home focus thrives with a faith-driven partner. 
+              Faithful Protectors are ideal, while Balanced Providers and Structured Leaders support your family values.
+            </p>
+          )}
+          {genderProfile && demographics.gender === 'male' && genderProfile.name === "Faithful Protectors" && (
+            <p className="text-gray-700 text-sm mt-2">
+              <span className="text-purple-800 font-medium">As a Faithful Protector:</span> Your leadership and faith pair well with a spiritually focused partner. 
+              Faith-Centered Homemakers align best, while Relational Nurturers and Independent Traditionalists 
+              share your family and traditional values.
+            </p>
+          )}
+          {genderProfile && demographics.gender === 'male' && genderProfile.name === "Structured Leaders" && (
+            <p className="text-gray-700 text-sm mt-2">
+              <span className="text-purple-800 font-medium">As a Structured Leader:</span> Your clarity and structure match with a communicative partner. 
+              Adaptive Communicators are ideal, while Relational Nurturers and Faith-Centered Homemakers 
+              complement your family focus.
+            </p>
+          )}
+          {genderProfile && demographics.gender === 'male' && genderProfile.name === "Balanced Providers" && (
+            <p className="text-gray-700 text-sm mt-2">
+              <span className="text-purple-800 font-medium">As a Balanced Provider:</span> Your stability and balance pair well with an independent partner. 
+              Independent Traditionalists align best, while Faith-Centered Homemakers and Relational Nurturers 
+              support your faith and family priorities.
+            </p>
+          )}
+        </div>
+      </div>
+
       {/* Book Reference */}
       <div className="mb-10 pt-6 pb-8 border-t border-gray-100 flex flex-col sm:flex-row items-center gap-6">
         <div className="w-32 flex-shrink-0">
