@@ -463,10 +463,23 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
       let rowIndex = 0;
       
       Object.entries(assessment.scores.sections).forEach(([sectionName, sectionScore]) => {
-        // Map section names to our baseline statistic keys
-        const statsKey = sectionName.replace(/\s+/g, '').toLowerCase();
-        const sectionStats = baselineStatistics.sections[statsKey as keyof typeof baselineStatistics.sections];
+        // Create a mapping from authentic section names to baseline statistic keys
+        const sectionToStatsKeyMap: Record<string, string> = {
+          'Your Foundation': 'faith',
+          'Your Faith Life': 'faith',
+          'Your Marriage Life': 'compatibility',
+          'Your Parenting Life': 'family',
+          'Your Family/Home Life': 'family',
+          'Your Finances': 'finances',
+          'Your Health and Wellness': 'romance',
+          'Your Marriage and Boundaries': 'communication'
+        };
         
+        // Get the corresponding stats key for this section
+        const statsKey = sectionToStatsKeyMap[sectionName];
+        if (!statsKey) return;
+        
+        const sectionStats = baselineStatistics.sections[statsKey as keyof typeof baselineStatistics.sections];
         if (!sectionStats) return;
         
         const sectionMean = sectionStats.byGender[genderKey].mean;
@@ -816,9 +829,9 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         size: 'LETTER',
         margin: 50,
         info: {
-          Title: `${primaryName} & ${spouseName} - The 100 Marriage Couple Assessment Report`,
+          Title: `${primaryName} & ${spouseName} - The 100 Marriage Assessment - Series 1`,
           Author: 'Lawrence E. Adjah',
-          Subject: 'The 100 Marriage Assessment - Series 1',
+          Subject: 'Couple Assessment Report',
         }
       });
 
