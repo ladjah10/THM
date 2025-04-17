@@ -897,9 +897,9 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           }
         );
           
-      // Strengths and Areas for Alignment - position consistently
-      // Use fixed positioning for the first heading after compatibility score
-      doc.y = circleY + scoreRadius + 150; // Reduced spacing for better page flow
+      // Strengths and Areas for Alignment - position consistently 
+      // Use fixed positioning for the first heading after compatibility score with more space
+      doc.y = circleY + scoreRadius + 170; // Better position to avoid overlapping with explanation text
       doc.fontSize(16)
         .font('Helvetica-Bold')
         .fillColor('#2c3e50')
@@ -1221,21 +1221,19 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           width: doc.page.width - 100
         });
       
-      // Top differences for discussion - add page break to ensure clean layout
-      if (doc.y > doc.page.height - 400) {
-        doc.addPage();
-      }
-      doc.moveDown(1.5)
-        .fontSize(16)
+      // Top differences for discussion - always start on a fresh page for consistency
+      doc.addPage(); // Force a new page for better spacing and layout
+      doc.fontSize(16)
         .font('Helvetica-Bold')
         .fillColor('#7e22ce')
         .text('Top Differences to Discuss Together:', {
-          align: 'left',
-          width: doc.page.width - 120
+          align: 'center', // Center this heading
+          width: doc.page.width - 100
         });
-        
-      // Draw a purple border box around the differences section
-      const startY = doc.y + 5;
+      
+      doc.moveDown(0.5); // Reduced space after heading
+      
+      // No need for border box around the entire differences section
       
       // Loop through top differences, showing more detail
       differenceAnalysis.majorDifferences.slice(0, 5).forEach((diff, idx) => {
@@ -1364,21 +1362,26 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           link: 'https://www.amazon.com/100-MARRIAGE-Lawrence-Adjah-ebook/dp/B09S3FBLN7'
         });
       
+      // Start a new page for key sections and book recommendation for better layout
+      doc.addPage();
+      
       // Key sections heading
-      doc.moveDown(3)
-        .fontSize(14)
+      doc.fontSize(16) // Larger font for consistency
         .font('Helvetica-Bold')
         .fillColor('#0f172a')
-        .text('Additional Key Sections for Discussion:');
+        .text('Additional Key Sections for Discussion', {
+          align: 'center',
+          width: doc.page.width - 100
+        });
       
-      doc.moveDown(0.5)
+      doc.moveDown(1)
         .fontSize(12)
         .font('Helvetica')
         .fillColor('#334155');
       
       // List the vulnerability areas
       report.differenceAnalysis.vulnerabilityAreas.forEach((area, index) => {
-        doc.moveDown(0.5)
+        doc.moveDown(0.8) // More consistent spacing
           .font('Helvetica-Bold')
           .fillColor('#0e7490')
           .text(`Section: ${area}`, 60)
@@ -1391,7 +1394,8 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       });
       
       // Book recommendation box - improved layout and spacing
-      const boxY = doc.y + 30; // More space before box
+      // Always start with proper spacing
+      const boxY = doc.y + 40; // More space before box
       const boxHeight = 80;    // Slightly shorter
       const boxWidth = 400;    // Fixed width, centered
       const boxX = (doc.page.width - boxWidth) / 2; // Center the box
@@ -1429,18 +1433,17 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           width: boxWidth - 100
         });
       
-      // Check if we need a new page for Next Steps section
-      if (doc.y > doc.page.height - 200) {
-        doc.addPage();
-      } else {
-        doc.moveDown(3);
-      }
+      // Always start Next Steps on a new page for consistent layout
+      doc.addPage();
       
-      // Next Steps section
-      doc.fontSize(14)
+      // Next Steps section with centered heading
+      doc.fontSize(16) // Larger font for consistency with other headings
         .font('Helvetica-Bold')
         .fillColor('#2c3e50')
-        .text('Next Steps for Your Relationship');
+        .text('Next Steps for Your Relationship', {
+          align: 'center',
+          width: doc.page.width - 100
+        });
         
       doc.moveDown(0.5)
         .fontSize(11)
