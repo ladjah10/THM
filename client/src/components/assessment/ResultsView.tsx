@@ -308,80 +308,93 @@ export default function ResultsView({
                   )}
                 </td>
               </tr>
-              {genderProfile && (
-                <tr>
-                  <td className="border border-slate-200 px-3 py-2 font-medium">
-                    {demographics.gender === 'female' ? 'Female-Specific Match' : 'Male-Specific Match'}
-                  </td>
-                  <td className="border border-slate-200 px-3 py-2">
-                    {demographics.gender === 'female' && genderProfile.name === "Relational Nurturers" && (
-                      <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Faithful Protectors</span>
-                    )}
-                    {demographics.gender === 'female' && genderProfile.name === "Adaptive Communicators" && (
-                      <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Structured Leaders</span>
-                    )}
-                    {demographics.gender === 'female' && genderProfile.name === "Independent Traditionalists" && (
-                      <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Balanced Providers</span>
-                    )}
-                    {demographics.gender === 'female' && genderProfile.name === "Faith-Centered Homemakers" && (
-                      <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Faithful Protectors</span>
-                    )}
-                    {demographics.gender === 'male' && genderProfile.name === "Faithful Protectors" && (
-                      <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Faith-Centered Homemakers</span>
-                    )}
-                    {demographics.gender === 'male' && genderProfile.name === "Structured Leaders" && (
-                      <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Adaptive Communicators</span>
-                    )}
-                    {demographics.gender === 'male' && genderProfile.name === "Balanced Providers" && (
-                      <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Independent Traditionalists</span>
-                    )}
-                  </td>
-                  <td className="border border-slate-200 px-3 py-2">
-                    {demographics.gender === 'female' && genderProfile.name === "Relational Nurturers" && (
-                      <div className="flex flex-wrap gap-1">
-                        <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Balanced Providers</span>
-                        <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Structured Leaders</span>
-                      </div>
-                    )}
-                    {demographics.gender === 'female' && genderProfile.name === "Adaptive Communicators" && (
-                      <div className="flex flex-wrap gap-1">
-                        <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Faithful Protectors</span>
-                        <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Balanced Providers</span>
-                      </div>
-                    )}
-                    {demographics.gender === 'female' && genderProfile.name === "Independent Traditionalists" && (
-                      <div className="flex flex-wrap gap-1">
-                        <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Faithful Protectors</span>
-                        <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Structured Leaders</span>
-                      </div>
-                    )}
-                    {demographics.gender === 'female' && genderProfile.name === "Faith-Centered Homemakers" && (
-                      <div className="flex flex-wrap gap-1">
-                        <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Balanced Providers</span>
-                        <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Structured Leaders</span>
-                      </div>
-                    )}
-                    {demographics.gender === 'male' && genderProfile.name === "Faithful Protectors" && (
-                      <div className="flex flex-wrap gap-1">
-                        <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Relational Nurturers</span>
-                        <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Independent Traditionalists</span>
-                      </div>
-                    )}
-                    {demographics.gender === 'male' && genderProfile.name === "Structured Leaders" && (
-                      <div className="flex flex-wrap gap-1">
-                        <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Relational Nurturers</span>
-                        <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Faith-Centered Homemakers</span>
-                      </div>
-                    )}
-                    {demographics.gender === 'male' && genderProfile.name === "Balanced Providers" && (
-                      <div className="flex flex-wrap gap-1">
-                        <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Faith-Centered Homemakers</span>
-                        <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Relational Nurturers</span>
-                      </div>
-                    )}
-                  </td>
-                </tr>
-              )}
+              {genderProfile && demographics && (() => {
+                // Safely extract gender and profile name once
+                const gender = demographics.gender;
+                const profileName = genderProfile.name;
+                const isFemale = gender === 'female';
+                
+                return (
+                  <tr>
+                    <td className="border border-slate-200 px-3 py-2 font-medium">
+                      {isFemale ? 'Female-Specific Match' : 'Male-Specific Match'}
+                    </td>
+                    <td className="border border-slate-200 px-3 py-2">
+                      {/* Female profiles */}
+                      {isFemale && profileName === "Relational Nurturers" && (
+                        <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Faithful Protectors</span>
+                      )}
+                      {isFemale && profileName === "Adaptive Communicators" && (
+                        <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Structured Leaders</span>
+                      )}
+                      {isFemale && profileName === "Independent Traditionalists" && (
+                        <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Balanced Providers</span>
+                      )}
+                      {isFemale && profileName === "Faith-Centered Homemakers" && (
+                        <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Faithful Protectors</span>
+                      )}
+                      
+                      {/* Male profiles */}
+                      {!isFemale && profileName === "Faithful Protectors" && (
+                        <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Faith-Centered Homemakers</span>
+                      )}
+                      {!isFemale && profileName === "Structured Leaders" && (
+                        <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Adaptive Communicators</span>
+                      )}
+                      {!isFemale && profileName === "Balanced Providers" && (
+                        <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Independent Traditionalists</span>
+                      )}
+                    </td>
+                    <td className="border border-slate-200 px-3 py-2">
+                      {/* Female profiles */}
+                      {isFemale && profileName === "Relational Nurturers" && (
+                        <div className="flex flex-wrap gap-1">
+                          <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Balanced Providers</span>
+                          <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Structured Leaders</span>
+                        </div>
+                      )}
+                      {isFemale && profileName === "Adaptive Communicators" && (
+                        <div className="flex flex-wrap gap-1">
+                          <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Faithful Protectors</span>
+                          <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Balanced Providers</span>
+                        </div>
+                      )}
+                      {isFemale && profileName === "Independent Traditionalists" && (
+                        <div className="flex flex-wrap gap-1">
+                          <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Faithful Protectors</span>
+                          <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Structured Leaders</span>
+                        </div>
+                      )}
+                      {isFemale && profileName === "Faith-Centered Homemakers" && (
+                        <div className="flex flex-wrap gap-1">
+                          <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Balanced Providers</span>
+                          <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Structured Leaders</span>
+                        </div>
+                      )}
+                      
+                      {/* Male profiles */}
+                      {!isFemale && profileName === "Faithful Protectors" && (
+                        <div className="flex flex-wrap gap-1">
+                          <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Relational Nurturers</span>
+                          <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Independent Traditionalists</span>
+                        </div>
+                      )}
+                      {!isFemale && profileName === "Structured Leaders" && (
+                        <div className="flex flex-wrap gap-1">
+                          <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Relational Nurturers</span>
+                          <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Faith-Centered Homemakers</span>
+                        </div>
+                      )}
+                      {!isFemale && profileName === "Balanced Providers" && (
+                        <div className="flex flex-wrap gap-1">
+                          <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Faith-Centered Homemakers</span>
+                          <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded-full">Relational Nurturers</span>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })()}
             </tbody>
           </table>
         </div>
@@ -429,53 +442,84 @@ export default function ResultsView({
               your values with slight variations.
             </p>
           )}
-          {genderProfile && demographics && demographics.gender === 'female' && genderProfile.name === "Relational Nurturers" && (
-            <p className="text-gray-700 text-sm mt-2">
-              <span className="text-purple-800 font-medium">As a Relational Nurturer:</span> Your nurturing nature thrives with a spouse 
-              who values family and faith. A Faithful Protector's leadership aligns best, while Balanced Providers and 
-              Structured Leaders offer stability and structure to support your family focus.
-            </p>
-          )}
-          {genderProfile && demographics && demographics.gender === 'female' && genderProfile.name === "Adaptive Communicators" && (
-            <p className="text-gray-700 text-sm mt-2">
-              <span className="text-purple-800 font-medium">As an Adaptive Communicator:</span> Your communication skills pair well with a spouse 
-              who values clarity. Structured Leaders are ideal, while Faithful Protectors and Balanced Providers 
-              complement your faith and balance.
-            </p>
-          )}
-          {genderProfile && demographics && demographics.gender === 'female' && genderProfile.name === "Independent Traditionalists" && (
-            <p className="text-gray-700 text-sm mt-2">
-              <span className="text-purple-800 font-medium">As an Independent Traditionalist:</span> Your blend of tradition and independence matches with a stable spouse. 
-              Balanced Providers align best, while Faithful Protectors and Structured Leaders share your traditional values.
-            </p>
-          )}
-          {genderProfile && demographics && demographics.gender === 'female' && genderProfile.name === "Faith-Centered Homemakers" && (
-            <p className="text-gray-700 text-sm mt-2">
-              <span className="text-purple-800 font-medium">As a Faith-Centered Homemaker:</span> Your spiritual home focus thrives with a faith-driven spouse. 
-              Faithful Protectors are ideal, while Balanced Providers and Structured Leaders support your family values.
-            </p>
-          )}
-          {genderProfile && demographics && demographics.gender === 'male' && genderProfile.name === "Faithful Protectors" && (
-            <p className="text-gray-700 text-sm mt-2">
-              <span className="text-purple-800 font-medium">As a Faithful Protector:</span> Your leadership and faith pair well with a spiritually focused spouse. 
-              Faith-Centered Homemakers align best, while Relational Nurturers and Independent Traditionalists 
-              share your family and traditional values.
-            </p>
-          )}
-          {genderProfile && demographics && demographics.gender === 'male' && genderProfile.name === "Structured Leaders" && (
-            <p className="text-gray-700 text-sm mt-2">
-              <span className="text-purple-800 font-medium">As a Structured Leader:</span> Your clarity and structure match with a communicative spouse. 
-              Adaptive Communicators are ideal, while Relational Nurturers and Faith-Centered Homemakers 
-              complement your family focus.
-            </p>
-          )}
-          {genderProfile && demographics && demographics.gender === 'male' && genderProfile.name === "Balanced Providers" && (
-            <p className="text-gray-700 text-sm mt-2">
-              <span className="text-purple-800 font-medium">As a Balanced Provider:</span> Your stability and balance pair well with an independent spouse. 
-              Independent Traditionalists align best, while Faith-Centered Homemakers and Relational Nurturers 
-              support your faith and family priorities.
-            </p>
-          )}
+          {genderProfile && demographics && (() => {
+            // Safely extract gender and profile name once
+            const gender = demographics.gender;
+            const profileName = genderProfile.name;
+            const isFemale = gender === 'female';
+            
+            // Female profiles
+            if (isFemale && profileName === "Relational Nurturers") {
+              return (
+                <p className="text-gray-700 text-sm mt-2">
+                  <span className="text-purple-800 font-medium">As a Relational Nurturer:</span> Your nurturing nature thrives with a spouse 
+                  who values family and faith. A Faithful Protector's leadership aligns best, while Balanced Providers and 
+                  Structured Leaders offer stability and structure to support your family focus.
+                </p>
+              );
+            }
+            
+            if (isFemale && profileName === "Adaptive Communicators") {
+              return (
+                <p className="text-gray-700 text-sm mt-2">
+                  <span className="text-purple-800 font-medium">As an Adaptive Communicator:</span> Your communication skills pair well with a spouse 
+                  who values clarity. Structured Leaders are ideal, while Faithful Protectors and Balanced Providers 
+                  complement your faith and balance.
+                </p>
+              );
+            }
+            
+            if (isFemale && profileName === "Independent Traditionalists") {
+              return (
+                <p className="text-gray-700 text-sm mt-2">
+                  <span className="text-purple-800 font-medium">As an Independent Traditionalist:</span> Your blend of tradition and independence matches with a stable spouse. 
+                  Balanced Providers align best, while Faithful Protectors and Structured Leaders share your traditional values.
+                </p>
+              );
+            }
+            
+            if (isFemale && profileName === "Faith-Centered Homemakers") {
+              return (
+                <p className="text-gray-700 text-sm mt-2">
+                  <span className="text-purple-800 font-medium">As a Faith-Centered Homemaker:</span> Your spiritual home focus thrives with a faith-driven spouse. 
+                  Faithful Protectors are ideal, while Balanced Providers and Structured Leaders support your family values.
+                </p>
+              );
+            }
+            
+            // Male profiles
+            if (!isFemale && profileName === "Faithful Protectors") {
+              return (
+                <p className="text-gray-700 text-sm mt-2">
+                  <span className="text-purple-800 font-medium">As a Faithful Protector:</span> Your leadership and faith pair well with a spiritually focused spouse. 
+                  Faith-Centered Homemakers align best, while Relational Nurturers and Independent Traditionalists 
+                  share your family and traditional values.
+                </p>
+              );
+            }
+            
+            if (!isFemale && profileName === "Structured Leaders") {
+              return (
+                <p className="text-gray-700 text-sm mt-2">
+                  <span className="text-purple-800 font-medium">As a Structured Leader:</span> Your clarity and structure match with a communicative spouse. 
+                  Adaptive Communicators are ideal, while Relational Nurturers and Faith-Centered Homemakers 
+                  complement your family focus.
+                </p>
+              );
+            }
+            
+            if (!isFemale && profileName === "Balanced Providers") {
+              return (
+                <p className="text-gray-700 text-sm mt-2">
+                  <span className="text-purple-800 font-medium">As a Balanced Provider:</span> Your stability and balance pair well with an independent spouse. 
+                  Independent Traditionalists align best, while Faith-Centered Homemakers and Relational Nurturers 
+                  support your faith and family priorities.
+                </p>
+              );
+            }
+            
+            return null;
+          })()}
         </div>
       </div>
       
