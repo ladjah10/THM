@@ -20,7 +20,7 @@ export default function CoupleAssessmentInvite() {
   
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [primaryPartner, setPrimaryPartner] = useState<{
+  const [primarySpouse, setPrimarySpouse] = useState<{
     name?: string;
     email?: string;
     completed: boolean;
@@ -52,8 +52,8 @@ export default function CoupleAssessmentInvite() {
         const data = await response.json();
         
         if (data.coupleReport) {
-          // Both partners have already completed the assessment
-          setPrimaryPartner({
+          // Both spouses have already completed the assessment
+          setPrimarySpouse({
             name: data.coupleReport.primaryAssessment.demographics.firstName,
             email: data.coupleReport.primaryAssessment.email,
             completed: true
@@ -61,8 +61,8 @@ export default function CoupleAssessmentInvite() {
           
           setError('Both assessments have already been completed. You can view your compatibility report below.');
         } else if (data.primaryAssessment) {
-          // Only primary partner has completed their assessment
-          setPrimaryPartner({
+          // Only primary spouse has completed their assessment
+          setPrimarySpouse({
             name: data.primaryAssessment.demographics.firstName,
             email: data.primaryAssessment.email,
             completed: true
@@ -111,7 +111,7 @@ export default function CoupleAssessmentInvite() {
               <AlertTriangle className="h-5 w-5 text-amber-600" />
               <AlertDescription className="ml-2">{error}</AlertDescription>
               
-              {primaryPartner.completed && (
+              {primarySpouse.completed && (
                 <div className="mt-4">
                   <Button 
                     onClick={viewCoupleReport} 
@@ -128,8 +128,8 @@ export default function CoupleAssessmentInvite() {
                 <CheckCircle className="h-12 w-12 text-green-600 mx-auto mb-4" />
                 <h3 className="text-xl font-medium text-green-800 mb-2">Your Invitation is Valid!</h3>
                 <p className="text-gray-600">
-                  {primaryPartner.name 
-                    ? `${primaryPartner.name} has invited you to take the 100 Marriage Assessment.` 
+                  {primarySpouse.name 
+                    ? `${primarySpouse.name} has invited you to take the 100 Marriage Assessment.` 
                     : 'Your significant other has invited you to take the 100 Marriage Assessment.'}
                 </p>
               </div>

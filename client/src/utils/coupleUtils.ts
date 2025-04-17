@@ -1,8 +1,8 @@
 import { apiRequest } from '@/lib/queryClient';
 
 /**
- * Registers a couple assessment early in the process, before either partner completes their assessment
- * @param primaryEmail Email of the primary partner who initiated the assessment
+ * Registers a couple assessment early in the process, before either spouse completes their assessment
+ * @param primaryEmail Email of the primary spouse who initiated the assessment
  * @param spouseEmail Email of the spouse who was invited
  * @returns The generated coupleId that will link both assessments
  */
@@ -29,10 +29,10 @@ export async function registerEarlyCoupleAssessment(
 }
 
 /**
- * Sends invitation emails to both partners for a couple assessment
- * @param coupleId The unique identifier linking both partner's assessments
- * @param primaryEmail Email of the primary partner who initiated the assessment
- * @param primaryName Name of the primary partner (optional)
+ * Sends invitation emails to both spouses for a couple assessment
+ * @param coupleId The unique identifier linking both spouse's assessments
+ * @param primaryEmail Email of the primary spouse who initiated the assessment
+ * @param primaryName Name of the primary spouse (optional)
  * @param spouseEmail Email of the spouse who was invited
  * @param spouseName Name of the spouse (optional)
  * @returns Success status and any additional information
