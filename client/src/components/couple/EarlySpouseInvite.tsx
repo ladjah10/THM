@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { CheckCircle2, Loader2, AlertCircle } from 'lucide-react';
+import { registerEarlyCoupleAssessment, sendCoupleInvitations } from '@/utils/coupleUtils';
+import { useToast } from '@/hooks/use-toast';
 
 interface EarlySpouseInviteProps {
   primaryEmail: string;
@@ -20,6 +22,7 @@ export const EarlySpouseInvite: React.FC<EarlySpouseInviteProps> = ({
   isInviteSent,
   setIsInviteSent
 }) => {
+  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
@@ -37,14 +40,37 @@ export const EarlySpouseInvite: React.FC<EarlySpouseInviteProps> = ({
       return;
     }
     
+    if (!primaryEmail || !primaryEmail.includes('@')) {
+      setError('Your email is not valid. Please enter your email in the demographic section first.');
+      return;
+    }
+    
     setIsLoading(true);
     setError(null);
     
-    // Simulate sending invitation (in a real implementation, this would call an API endpoint)
-    setTimeout(() => {
+    try {
+      // Register the couple assessment early
+      const { coupleId } = await registerEarlyCoupleAssessment(primaryEmail, spouseEmail);
+      
+      // Send invitations to both partners
+      const { success } = await sendCoupleInvitations(coupleId, primaryEmail, spouseEmail);
+      
+      if (success) {
+        setIsInviteSent(true);
+        toast({
+          title: "Invitation Sent!",
+          description: `An email has been sent to ${spouseEmail} with instructions to take their assessment.`,
+          variant: "default",
+        });
+      } else {
+        throw new Error("Failed to send invitation");
+      }
+    } catch (err) {
+      console.error("Error inviting spouse:", err);
+      setError('Failed to send invitation. Please try again later.');
+    } finally {
       setIsLoading(false);
-      setIsInviteSent(true);
-    }, 1000);
+    }
   };
   
   return (

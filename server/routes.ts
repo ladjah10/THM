@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import Stripe from "stripe";
 import { storage } from "./storage";
 import { z } from "zod";
-import { sendAssessmentEmail, sendReferralEmail } from "./nodemailer";
+import { sendAssessmentEmail, sendReferralEmail, sendCoupleInvitationEmails } from "./nodemailer";
 import { generateShareImage } from "./shareImage";
 import { AssessmentResult } from "../shared/schema";
 
@@ -321,6 +321,82 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ 
         success: false,
         message: "Failed to fetch couple assessments"
+      });
+    }
+  });
+  
+  // API to register a couple assessment early (before assessments are completed)
+  app.post('/api/couple-assessment/register-early', async (req: Request, res: Response) => {
+    try {
+      // Validate the request body
+      const earlyRegisterSchema = z.object({
+        primaryEmail: z.string().email(),
+        spouseEmail: z.string().email()
+      });
+      
+      const validatedData = earlyRegisterSchema.parse(req.body);
+      
+      // Generate a unique coupleId (UUID format)
+      const coupleId = `couple-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+      
+      // In a real implementation, we would store this pending couple registration
+      // For now, we'll return the coupleId that can be used later
+      console.log(`Early couple registration: ${validatedData.primaryEmail} and ${validatedData.spouseEmail} with ID ${coupleId}`);
+      
+      return res.status(200).json({ 
+        success: true,
+        coupleId,
+        message: "Couple assessment registered successfully"
+      });
+    } catch (error) {
+      console.error("Error registering early couple assessment:", error);
+      return res.status(400).json({ 
+        success: false,
+        message: error instanceof Error ? error.message : "Failed to register couple assessment"
+      });
+    }
+  });
+  
+  // API to send invitations to both partners for a couple assessment
+  app.post('/api/couple-assessment/send-invitations', async (req: Request, res: Response) => {
+    try {
+      // Validate the request body
+      const sendInvitationsSchema = z.object({
+        coupleId: z.string(),
+        primaryEmail: z.string().email(),
+        spouseEmail: z.string().email()
+      });
+      
+      const validatedData = sendInvitationsSchema.parse(req.body);
+      
+      // Import the sendReferralEmail function from nodemailer.ts to send invitations
+      // In a full implementation, we would have a dedicated invitation email template
+      
+      // Send invitation to primary partner
+      await sendReferralEmail({
+        to: validatedData.primaryEmail,
+        referrerName: "The 100 Marriage Assessment",
+        referrerEmail: "assessment@100marriage.com",
+        recipientName: "Primary Partner"
+      });
+      
+      // Send invitation to spouse
+      await sendReferralEmail({
+        to: validatedData.spouseEmail,
+        referrerName: "The 100 Marriage Assessment",
+        referrerEmail: "assessment@100marriage.com",
+        recipientName: "Spouse"
+      });
+      
+      return res.status(200).json({ 
+        success: true,
+        message: "Invitations sent successfully"
+      });
+    } catch (error) {
+      console.error("Error sending couple invitations:", error);
+      return res.status(400).json({ 
+        success: false,
+        message: error instanceof Error ? error.message : "Failed to send invitations"
       });
     }
   });

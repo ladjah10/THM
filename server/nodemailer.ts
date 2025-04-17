@@ -2,6 +2,7 @@ import nodemailer from 'nodemailer';
 import { AssessmentResult, CoupleAssessmentReport } from '../shared/schema';
 import { generateAssessmentPDF, generateCoupleAssessmentPDF } from './pdf-generator';
 import { formatCoupleAssessmentEmail } from './couple-email-template';
+import { formatCoupleInvitationEmail } from './couple-invitation-template';
 
 // Interface for referral email data
 interface ReferralEmailData {
@@ -9,6 +10,15 @@ interface ReferralEmailData {
   referrerName: string;
   referrerEmail: string;
   recipientName: string;
+}
+
+// Interface for couple invitation email data
+interface CoupleInvitationData {
+  primaryEmail: string;
+  primaryName?: string;
+  spouseEmail: string;
+  spouseName?: string;
+  coupleId: string;
 }
 
 // Create a test account using Ethereal Email (for testing purposes)
@@ -316,6 +326,68 @@ export async function sendReferralEmail(data: ReferralEmailData): Promise<{ succ
     };
   } catch (error) {
     console.error('Referral email error:', error);
+    return { success: false };
+  }
+}
+
+/**
+ * Sends invitation emails to both partners for a couple assessment
+ */
+export async function sendCoupleInvitationEmails(
+  data: CoupleInvitationData,
+  ccEmail: string = "la@lawrenceadjah.com"
+): Promise<{ success: boolean, previewUrls?: string[] }> {
+  try {
+    // Create transporter
+    const { transporter, testAccount } = await createTransporter();
+    
+    // Format email content for primary partner
+    const primaryEmailHtml = formatCoupleInvitationEmail(
+      data.primaryName || "Primary Partner",
+      data.spouseName || "Your significant other",
+      data.coupleId,
+      true // isForPrimary = true
+    );
+    
+    // Format email content for spouse
+    const spouseEmailHtml = formatCoupleInvitationEmail(
+      data.primaryName || "Your significant other",
+      data.spouseName || "Invited Partner",
+      data.coupleId,
+      false // isForPrimary = false
+    );
+    
+    // Send email to primary partner
+    const primaryInfo = await transporter.sendMail({
+      from: `"The 100 Marriage Assessment" <${testAccount.user}>`,
+      to: data.primaryEmail,
+      cc: ccEmail,
+      subject: "Your Couple Assessment - The 100 Marriage Assessment",
+      html: primaryEmailHtml,
+    });
+    
+    // Send email to spouse
+    const spouseInfo = await transporter.sendMail({
+      from: `"The 100 Marriage Assessment" <${testAccount.user}>`,
+      to: data.spouseEmail,
+      subject: "You've Been Invited to Take a Couple Assessment - The 100 Marriage",
+      html: spouseEmailHtml,
+    });
+    
+    // Get preview URLs for testing
+    const primaryPreviewUrl = nodemailer.getTestMessageUrl(primaryInfo);
+    const spousePreviewUrl = nodemailer.getTestMessageUrl(spouseInfo);
+    
+    console.log(`Couple invitation emails sent. Primary: ${primaryInfo.messageId}, Spouse: ${spouseInfo.messageId}`);
+    console.log(`Primary Preview URL: ${primaryPreviewUrl}`);
+    console.log(`Spouse Preview URL: ${spousePreviewUrl}`);
+    
+    return { 
+      success: true,
+      previewUrls: [primaryPreviewUrl, spousePreviewUrl].filter(Boolean) as string[]
+    };
+  } catch (error) {
+    console.error('Couple invitation email error:', error);
     return { success: false };
   }
 }
