@@ -50,11 +50,7 @@ export default function DemographicView({
   const [isVerifyingPromo, setIsVerifyingPromo] = useState<boolean>(false);
   const [showTHMPoolPayment, setShowTHMPoolPayment] = useState<boolean>(false);
   
-  // Spouse invitation state for couple assessments
-  const [spouseEmail, setSpouseEmail] = useState<string>("");
-  const [isInviteSent, setIsInviteSent] = useState<boolean>(false);
-  const [isInviteLoading, setIsInviteLoading] = useState<boolean>(false);
-  const [inviteError, setInviteError] = useState<string | null>(null);
+  // We don't need these state variables anymore since we're using the SpouseInvite component
   
   // Valid promo codes (in a real app, these would be stored in a database or validated through an API)
   const validPromoCodes = ["FREE100", "LA2025", "MARRIAGE100"];
@@ -174,63 +170,7 @@ export default function DemographicView({
     }, 1500);
   };
   
-  // Handle spouse invitation for couple assessments
-  const handleInvite = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Basic validation
-    if (!spouseEmail || !spouseEmail.includes('@')) {
-      setInviteError('Please enter a valid email address');
-      return;
-    }
-    
-    if (spouseEmail === demographicData.email) {
-      setInviteError('You cannot invite yourself. Please enter your significant other\'s email.');
-      return;
-    }
-    
-    if (!demographicData.email || !demographicData.email.includes('@')) {
-      setInviteError('Your email is not valid. Please ensure your email is correctly entered above.');
-      return;
-    }
-    
-    setIsInviteLoading(true);
-    setInviteError(null);
-    
-    try {
-      // Extract name from primary email for better personalization
-      const primaryName = demographicData.firstName 
-        ? `${demographicData.firstName} ${demographicData.lastName || ''}`.trim()
-        : demographicData.email.split('@')[0];
-      
-      // Register the couple assessment early
-      const { coupleId } = await registerEarlyCoupleAssessment(demographicData.email, spouseEmail);
-      
-      // Send invitations to both partners
-      const { success } = await sendCoupleInvitations(
-        coupleId, 
-        demographicData.email, 
-        spouseEmail,
-        primaryName
-      );
-      
-      if (success) {
-        setIsInviteSent(true);
-        toast({
-          title: "Invitation Sent!",
-          description: `An email has been sent to ${spouseEmail} with instructions to take their assessment.`,
-          variant: "default",
-        });
-      } else {
-        throw new Error("Failed to send invitation");
-      }
-    } catch (err) {
-      console.error("Error inviting spouse:", err);
-      setInviteError('Failed to send invitation. Please try again later.');
-    } finally {
-      setIsInviteLoading(false);
-    }
-  };
+  // We've moved spouse invitation functionality to the SpouseInvite component
 
   return (
     <div className="bg-white shadow-md rounded-lg p-6 mb-6 border border-gray-100">
@@ -756,6 +696,16 @@ export default function DemographicView({
               />
             </CardContent>
           </Card>
+        )}
+
+        {/* Spouse Invite Component - Only shown for couple assessments and after email is provided */}
+        {assessmentType === 'couple' && demographicData.email && (
+          <div className="mt-6 mb-3">
+            <SpouseInvite
+              primaryEmail={demographicData.email}
+              primaryName={demographicData.firstName ? `${demographicData.firstName} ${demographicData.lastName || ''}`.trim() : undefined}
+            />
+          </div>
         )}
 
         <div className="flex justify-end pt-6">
