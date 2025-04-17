@@ -24,7 +24,7 @@ import { CheckCircle2, Loader2, AlertCircle } from "lucide-react";
 import { DemographicData } from "@/types/assessment";
 import { demographicQuestions } from "@/data/demographicQuestions";
 import THMPoolPaymentForm from "@/components/payment/THMPoolPaymentForm";
-import { registerEarlyCoupleAssessment, sendCoupleInvitations } from "@/utils/coupleUtils";
+import SpouseInvite from "@/components/couple/SpouseInvite";
 
 interface DemographicViewProps {
   demographicData: DemographicData;
