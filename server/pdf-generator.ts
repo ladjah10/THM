@@ -1421,24 +1421,39 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           lineBreak: false
         });
       
-      // Add description text with better formatting - wider width for comfortable reading
+      // Add description text with better formatting - width limited to prevent overlap with button
       doc.moveDown(0.8)
         .fontSize(11) // Slightly larger font
         .font('Helvetica')
         .fillColor('#4b5563')
-        .text('This book provides the perfect framework to navigate important conversations about marriage expectations and alignment. Get your copy today to strengthen your relationship.', {
+        .text('This book provides the perfect framework to navigate important conversations about marriage expectations and alignment.', {
           width: bookTextWidth,
           align: 'left',
           lineGap: 3 // Add more spacing between lines
         });
+        
+      // Add the second part of the text with sufficient spacing from button
+      doc.moveDown(0.5);
       
-      // Add a better styled button with more space
+      // Add a better styled button on the right side of the content for cleaner layout
       const buttonWidth = 150; // Wider button
       const buttonHeight = 35; // Taller button
-      const buttonX = bookTextX + 50; // Move button to center of text area
-      const buttonY = bookBoxY + bookBoxHeight - 45; // More space at bottom
       
-      // Draw button after positioning all text
+      // Position button at the bottom right of the text area
+      const buttonX = doc.page.width - 150 - 50; // Right side of page with margin
+      const buttonY = bookBoxY + bookBoxHeight - 45; // Position from bottom of box
+      
+      // Add the second part of text with no chance of overlap
+      doc.fontSize(11)
+        .font('Helvetica')
+        .fillColor('#4b5563')
+        .text('Get your copy today to strengthen your relationship.', {
+          width: bookTextWidth - 180, // Limit width to prevent overlap with button area
+          align: 'left',
+          lineGap: 3
+        });
+      
+      // Draw button
       doc.rect(buttonX, buttonY, buttonWidth, buttonHeight)
         .fillAndStroke('#7e22ce', '#6b21a8');
       
