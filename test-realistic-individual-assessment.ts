@@ -51,7 +51,7 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
         <div class="section">
           <h2>Your Overall Assessment Score</h2>
           <p class="overall-score">${Math.round(scores.overallPercentage)}%</p>
-          <p>Total Score: ${scores.overallEarned}/${scores.overallPossible}</p>
+          <p>Total Score: ${scores.sections ? Object.values(scores.sections).reduce((sum, section) => sum + section.earned, 0) : 0}/${scores.sections ? Object.values(scores.sections).reduce((sum, section) => sum + section.possible, 0) : 0}</p>
           <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin-top: 10px; font-size: 14px; color: #555;">
             <strong>Understanding Your Score:</strong> Your score reflects your perspectives on marriage, not a judgment of readiness.
             Higher percentages indicate more traditional viewpoints on relationships, while lower percentages suggest less traditional approaches.
@@ -128,31 +128,24 @@ async function generateRealisticIndividualAssessment() {
       marriageStatus: 'Single',
       desireChildren: 'Yes',
       hasPaid: true,
-      coupleId: null,
-      coupleRole: null
+      lifeStage: 'Established Adult',
+      birthday: '1985-06-15',
+      city: 'New York',
+      state: 'NY',
+      zipCode: '10001'
     },
     profile: {
       id: 2,
       name: 'Balanced Visionary',
       description: 'You have a thoughtful, balanced approach to marriage. You value both tradition and modern perspectives, seeking harmony between stability and flexibility. Your responses show a well-rounded understanding of marriage dynamics with a natural ability to adapt while maintaining core values.',
-      genderSpecific: false,
+      genderSpecific: 'false', // String as required by schema
       criteria: [
         { section: 'Spiritual Beliefs', min: 70 },
         { section: 'Family Planning', min: 65 },
         { section: 'Role Expectations', min: 65 }
       ]
     },
-    genderSpecificProfile: {
-      id: 8,
-      name: 'Intentional Traditionalist',
-      description: 'As a male with intentional traditional values, you place high emphasis on family leadership roles and clear expectations in a marriage. You value stability, structure and clearly defined responsibilities, preferring established gender roles while still respecting your partner\'s opinions and growth.',
-      genderSpecific: true,
-      criteria: [
-        { section: 'Role Expectations', min: 75 },
-        { section: 'Family Planning', min: 70 },
-        { section: 'Spiritual Beliefs', min: 70 }
-      ]
-    },
+    // Removed genderSpecificProfile as it's not in the schema
     responses: {
       '1': { option: 'StronglyAgree', value: 32 },
       '2': { option: 'Agree', value: 4 },
@@ -267,12 +260,12 @@ async function generateRealisticIndividualAssessment() {
         'Support Networks': { earned: 72, possible: 100, percentage: 72 },
         'Recreation & Leisure': { earned: 68, possible: 100, percentage: 68 }
       },
-      overallEarned: 726,
-      overallPossible: 900,
-      overallPercentage: 80.67
-    },
-    strengths: ['Spiritual Beliefs', 'Role Expectations', 'Communication'],
-    improvements: ['Recreation & Leisure', 'Support Networks', 'Financial Values']
+      totalEarned: 726,
+      totalPossible: 900,
+      overallPercentage: 80.67,
+      strengths: ['Spiritual Beliefs', 'Role Expectations', 'Communication'],
+      improvementAreas: ['Recreation & Leisure', 'Support Networks', 'Financial Values']
+    }
   };
 
   try {
