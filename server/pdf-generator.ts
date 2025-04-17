@@ -120,13 +120,14 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
       // Move past the circle
       doc.moveDown(4);
       
-      // Add score explanation
+      // Add score explanation with better width constraints
       doc.fontSize(11)
         .font('Helvetica')
         .fillColor('#555')
         .text('Understanding Your Score: Your assessment score reflects your perspectives on relationship, not a judgment of readiness. Higher percentages indicate alignment with traditional marriage values, while lower percentages suggest less traditional approaches. Neither is inherently better—just different expectations.', {
-          width: doc.page.width - 100,
-          align: 'justify'
+          width: doc.page.width - 120,
+          align: 'left',
+          columns: 1
         });
         
       doc.moveDown(0.5);
@@ -136,8 +137,10 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
         .font('Helvetica')
         .fillColor('#555')
         .text('• The most important consideration is how your assessment and approach compares with someone you are married to or discerning marriage with.', {
-          width: doc.page.width - 120,
+          width: doc.page.width - 140,
           indent: 10,
+          align: 'left',
+          columns: 1
         });
         
       doc.moveDown(0.3);
@@ -146,8 +149,10 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
         .font('Helvetica')
         .fillColor('#555')
         .text('• The closer the percentage (with your spouse), overall, the more aligned and successful you will be.', {
-          width: doc.page.width - 120,
+          width: doc.page.width - 140,
           indent: 10,
+          align: 'left',
+          columns: 1
         });
         
       doc.moveDown(1);
@@ -180,14 +185,15 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
           .fillColor('#3498db')
           .text(assessment.profile.name + ' (General Profile)', textX, iconY);
         
-        // Add profile description with adjusted position
+        // Add profile description with adjusted position - fixed to prevent overflow
         doc.moveDown(0.5)
-          .fontSize(12)
+          .fontSize(11)
           .fillColor('#555')
           .font('Helvetica')
           .text(assessment.profile.description, textX, doc.y, {
-            align: 'justify',
-            width: doc.page.width - 150 // Adjust width to account for icon
+            align: 'left',
+            width: doc.page.width - 170, // Reduce width to prevent overflow
+            columns: 1
           });
           
         // Ensure we move past the icon
@@ -200,12 +206,13 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
           .text(assessment.profile.name + ' (General Profile)');
           
         doc.moveDown(0.5)
-          .fontSize(12)
+          .fontSize(11)
           .fillColor('#555')
           .font('Helvetica')
           .text(assessment.profile.description, {
-            align: 'justify',
-            width: doc.page.width - 100
+            align: 'left',
+            width: doc.page.width - 120,
+            columns: 1
           });
       }
       
@@ -234,14 +241,15 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
               (assessment.demographics.gender === 'male' ? ' (Male-Specific Profile)' : ' (Female-Specific Profile)'), 
               textX, iconY);
           
-          // Add gender profile description with adjusted position
+          // Add gender profile description with adjusted position - fixed to prevent overflow
           doc.moveDown(0.5)
-            .fontSize(12)
+            .fontSize(11)
             .fillColor('#555')
             .font('Helvetica')
             .text(assessment.genderProfile.description, textX, doc.y, {
-              align: 'justify',
-              width: doc.page.width - 150 // Adjust width to account for icon
+              align: 'left',
+              width: doc.page.width - 170, // Reduce width to prevent overflow
+              columns: 1
             });
             
           // Ensure we move past the icon
@@ -255,12 +263,13 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
               (assessment.demographics.gender === 'male' ? ' (Male-Specific Profile)' : ' (Female-Specific Profile)'));
             
           doc.moveDown(0.5)
-            .fontSize(12)
+            .fontSize(11)
             .fillColor('#555')
             .font('Helvetica')
             .text(assessment.genderProfile.description, {
-              align: 'justify',
-              width: doc.page.width - 100
+              align: 'left',
+              width: doc.page.width - 120,
+              columns: 1
             });
         }
       }
@@ -279,8 +288,9 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
         .font('Helvetica')
         .fillColor('#555')
         .text('Each section score represents your perspective in a specific relationship area. These scores are used to determine your psychographic profiles. Higher percentages typically indicate more traditional views, while lower percentages suggest less traditional approaches to relationships.', {
-          width: doc.page.width - 100,
-          align: 'justify'
+          width: doc.page.width - 120,
+          align: 'left',
+          columns: 1
         });
         
       doc.moveDown(1);
@@ -666,7 +676,7 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
       doc.rect(50, doc.y, doc.page.width - 100, 80).fillAndStroke('#ebf8ff', '#3498db');
       
       doc.fillColor('#1e40af')
-        .fontSize(12)
+        .fontSize(14)
         .font('Helvetica-Bold')
         .text('Implications for Your Relationships', 60, doc.y - 70);
       
@@ -687,10 +697,12 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
       }
       
       doc.fillColor('#333')
-        .fontSize(10)
+        .fontSize(11)
         .font('Helvetica')
         .text(implicationsText, 60, doc.y - 50, {
-          width: doc.page.width - 120
+          width: doc.page.width - 120,
+          align: 'left',
+          columns: 1
         });
       
       // Add gender implications if applicable
@@ -717,13 +729,15 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
           }
         }
         
-        doc.rect(50, doc.y + 10, doc.page.width - 100, 50).fillAndStroke('#f5f0ff', '#8e44ad');
+        doc.rect(50, doc.y + 10, doc.page.width - 100, 60).fillAndStroke('#f5f0ff', '#8e44ad');
         
         doc.fillColor('#333')
-          .fontSize(10)
+          .fontSize(11)
           .font('Helvetica')
           .text(genderImplicationsText, 60, doc.y + 20, {
-            width: doc.page.width - 120
+            width: doc.page.width - 120,
+            align: 'left',
+            columns: 1
           });
       }
 
