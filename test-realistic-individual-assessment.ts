@@ -123,7 +123,7 @@ async function generateRealisticIndividualAssessment() {
       lastName: 'Smith',
       email: 'john.smith@example.com',
       phone: '212-555-1234',
-      gender: 'Male',
+      gender: 'male',
       ethnicity: 'White, Caucasian',
       marriageStatus: 'Single',
       desireChildren: 'Yes',
@@ -145,7 +145,18 @@ async function generateRealisticIndividualAssessment() {
         { section: 'Role Expectations', min: 65 }
       ]
     },
-    // Removed genderSpecificProfile as it's not in the schema
+    genderProfile: {
+      id: 7,
+      name: 'Structured Leader',
+      description: 'As a Structured Leader, you bring organization and clarity to relationships. You value defined roles and clear communication. Your thoughtful approach to leadership means you provide stability while still valuing input from your spouse. You excel at creating systems that help marriages thrive.',
+      genderSpecific: 'male',
+      iconPath: 'attached_assets/SL 12.png',
+      criteria: [
+        { section: 'Role Expectations', min: 70 },
+        { section: 'Financial Values', min: 65 },
+        { section: 'Communication', min: 75 }
+      ]
+    },
     responses: {
       '1': { option: 'StronglyAgree', value: 32 },
       '2': { option: 'Agree', value: 4 },
