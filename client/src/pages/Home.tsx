@@ -23,21 +23,19 @@ export default function Home() {
           </div>
           <div className="hidden md:flex items-center space-x-8">
             <Link href="/">
-              <a className="text-gray-700 hover:text-blue-700 font-medium">Home</a>
+              <span className="text-gray-700 hover:text-blue-700 font-medium cursor-pointer">Home</span>
             </Link>
             <Link href="/about">
-              <a className="text-gray-700 hover:text-blue-700 font-medium">About</a>
+              <span className="text-gray-700 hover:text-blue-700 font-medium cursor-pointer">About</span>
             </Link>
-            <a 
-              href="#assessment" 
-              className="text-gray-700 hover:text-blue-700 font-medium"
-              onClick={(e) => {
-                e.preventDefault();
+            <span 
+              className="text-gray-700 hover:text-blue-700 font-medium cursor-pointer"
+              onClick={() => {
                 document.getElementById('assessment')?.scrollIntoView({ behavior: 'smooth' });
               }}
             >
               Take Assessment
-            </a>
+            </span>
             <a 
               href="https://lawrenceadjah.com/the100marriagebook" 
               target="_blank" 
@@ -85,16 +83,12 @@ export default function Home() {
               </Button>
             </div>
           </div>
-          <div className="relative rounded-lg overflow-hidden shadow-xl">
+          <div className="rounded-lg overflow-hidden shadow-xl">
             <img 
-              src="/assets/couple1.jpeg" 
+              src="/assets/couple1a.jpeg" 
               alt="Happy couple embracing" 
               className="w-full h-auto object-cover rounded-lg"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-blue-900/40 to-transparent"></div>
-            <div className="absolute bottom-0 left-0 right-0 p-4 text-white text-center">
-              <p className="text-lg font-medium">"This assessment transformed our understanding of each other."</p>
-            </div>
           </div>
         </div>
       </div>
