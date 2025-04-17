@@ -897,26 +897,32 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           }
         );
           
-      // Strengths and Areas for Alignment - position consistently 
-      // Use fixed positioning for the first heading after compatibility score with more space
+      // Strengths and Areas for Alignment - centered heading with decorative line
+      // Calculate exact center position on the page
       doc.y = circleY + scoreRadius + 170; // Better position to avoid overlapping with explanation text
-      // Add decorative line above heading for visual emphasis
-      const relInsightsLineWidth = 180;
+      
+      // Centered decorative line
+      const relInsightsLineWidth = 220;
       const relInsightsLineStart = (doc.page.width - relInsightsLineWidth) / 2;
-      doc.moveTo(relInsightsLineStart, doc.y - 5)
-        .lineTo(relInsightsLineStart + relInsightsLineWidth, doc.y - 5)
+      doc.moveTo(relInsightsLineStart, doc.y)
+        .lineTo(relInsightsLineStart + relInsightsLineWidth, doc.y)
         .strokeColor('#2c3e50')
         .lineWidth(1)
         .stroke();
       
-      doc.fontSize(18) // Larger font for more emphasis
+      // Add centered heading with no text styling (PDFKit sometimes has issues with underline)
+      doc.moveDown(0.5)
+        .fontSize(18) 
         .font('Helvetica-Bold')
-        .fillColor('#2c3e50')
-        .text('Relationship Insights', { 
-          align: 'center',
-          width: doc.page.width - 100,
-          underline: true
-        });
+        .fillColor('#2c3e50');
+      
+      // Calculate exact center position for the text
+      const relationshipInsightsText = 'Relationship Insights';
+      const relationshipTextWidth = doc.widthOfString(relationshipInsightsText);
+      const relationshipTextX = (doc.page.width - relationshipTextWidth) / 2;
+      
+      // Position text exactly at center X coordinates
+      doc.text(relationshipInsightsText, relationshipTextX, doc.y);
       
       // Two columns for strengths and alignment areas
       const colWidth = (doc.page.width - 120) / 2;
@@ -961,26 +967,29 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       // Move to maximum Y position from both columns
       doc.y = Math.max(doc.y, vulnerabilityY, strengthY);
       
-      // Individual assessment scores section - with centered heading and matching styling
-      doc.moveDown(1.2) // More space before this important section
+      // Individual assessment scores section - starting a new page to ensure it's fully visible
+      doc.addPage(); // Force a new page for the Individual Assessment scores
       
-      // Add decorative line above heading for visual emphasis to match Relationship Insights
-      const indAssessLineWidth = 180;
+      // Centered decorative line
+      const indAssessLineWidth = 250; // Wider for "Individual Assessment Scores"
       const indAssessLineStart = (doc.page.width - indAssessLineWidth) / 2;
-      doc.moveTo(indAssessLineStart, doc.y - 5)
-        .lineTo(indAssessLineStart + indAssessLineWidth, doc.y - 5)
+      doc.moveTo(indAssessLineStart, doc.y + 30) // Position at top of page with margin
+        .lineTo(indAssessLineStart + indAssessLineWidth, doc.y + 30)
         .strokeColor('#2c3e50')
         .lineWidth(1)
         .stroke();
       
-      doc.fontSize(18) // Larger font for more emphasis
+      // Calculate exact center position for the text
+      const individualAssessmentText = 'Individual Assessment Scores';
+      doc.fontSize(18)
         .font('Helvetica-Bold')
-        .fillColor('#2c3e50')
-        .text('Individual Assessment Scores', {
-          align: 'center',
-          width: doc.page.width - 100,
-          underline: true
-        });
+        .fillColor('#2c3e50');
+      
+      const individualTextWidth = doc.widthOfString(individualAssessmentText);
+      const individualTextX = (doc.page.width - individualTextWidth) / 2;
+      
+      // Position text exactly at center X coordinates with proper Y position
+      doc.text(individualAssessmentText, individualTextX, doc.y + 45);
       
       // Create two columns for partner scores
       const scoreColY = doc.y + 15; // More space below heading
@@ -1329,29 +1338,29 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         .fillAndStroke('#faf5ff', '#e9d5ff');
       
       // Better spacing for content
-      const imageX = 70;
-      const imageWidth = 70;
-      const textX = imageX + imageWidth + 30;
-      const bookTextWidth = doc.page.width - textX - 70;
+      const bookImageX = 70;
+      const bookImageWidth = 70;
+      const bookTextX = bookImageX + bookImageWidth + 30;
+      const bookTextWidth = doc.page.width - bookTextX - 70;
       
       // Add book cover
-      doc.rect(imageX, bookBoxY + 20, imageWidth, bookBoxHeight - 40)
+      doc.rect(bookImageX, bookBoxY + 20, bookImageWidth, bookBoxHeight - 40)
         .fillAndStroke('#7e22ce', '#6b21a8');
       
       // Add "THE 100 MARRIAGE BOOK" text with better vertical centering
       doc.fontSize(12)
         .font('Helvetica-Bold')
         .fillColor('#ffffff')
-        .text('THE 100\nMARRIAGE\nBOOK', imageX, bookBoxY + 35, {
+        .text('THE 100\nMARRIAGE\nBOOK', bookImageX, bookBoxY + 35, {
           align: 'center',
-          width: imageWidth
+          width: bookImageWidth
         });
       
       // Add book promotion heading with better positioning - smaller font to fit better
       doc.fontSize(14)
         .font('Helvetica-Bold')
         .fillColor('#7e22ce')
-        .text('Use The 100 Marriage Book as Your Discussion Companion', textX, bookBoxY + 20, {
+        .text('Use The 100 Marriage Book as Your Discussion Companion', bookTextX, bookBoxY + 20, {
           width: bookTextWidth - 10,
           lineBreak: false
         });
@@ -1368,7 +1377,7 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       // Add a better styled button
       const buttonWidth = 130;
       const buttonHeight = 30;
-      const buttonX = textX;
+      const buttonX = bookTextX;
       const buttonY = bookBoxY + bookBoxHeight - 40;
       
       doc.rect(buttonX, buttonY, buttonWidth, buttonHeight)
