@@ -390,7 +390,7 @@ export default function ResultsView({
           <h5 className="font-medium text-blue-800 mb-2">Implications for Your Relationships</h5>
           {primaryProfile.name === "Steadfast Believers" && (
             <p className="text-gray-700 text-sm">
-              Your strong faith and traditional values mean you'll thrive with someone who shares your spiritual commitment and family focus. 
+              Your strong faith and traditional values mean you'll thrive with a spouse who shares your spiritual commitment and family focus. 
               Expectation alignment is highest with other Steadfast Believers, but Harmonious Planners and Balanced Visionaries can 
               also complement your values if faith is openly discussed.
             </p>

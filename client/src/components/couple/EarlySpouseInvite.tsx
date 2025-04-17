@@ -59,7 +59,7 @@ export const EarlySpouseInvite: React.FC<EarlySpouseInviteProps> = ({
       // Register the couple assessment early
       const { coupleId } = await registerEarlyCoupleAssessment(primaryEmail, spouseEmail);
       
-      // Send invitations to both partners - include the guessed name for better personalization
+      // Send invitations to both spouses - include the guessed name for better personalization
       const { success } = await sendCoupleInvitations(
         coupleId, 
         primaryEmail, 
@@ -111,7 +111,7 @@ export const EarlySpouseInvite: React.FC<EarlySpouseInviteProps> = ({
               <Input
                 id="spouseEmail"
                 type="email"
-                placeholder="partner@example.com"
+                placeholder="spouse@example.com"
                 value={spouseEmail}
                 onChange={(e) => onSpouseEmailChange(e.target.value)}
                 className="border-purple-200 focus:border-purple-400"

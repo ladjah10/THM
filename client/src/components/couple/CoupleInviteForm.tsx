@@ -59,7 +59,7 @@ export const CoupleInviteForm: React.FC<CoupleInviteFormProps> = ({
                 </label>
                 <Input
                   type="email"
-                  placeholder="partner@example.com"
+                  placeholder="spouse@example.com"
                   value={spouseEmail}
                   onChange={(e) => onSpouseEmailChange(e.target.value)}
                   required
