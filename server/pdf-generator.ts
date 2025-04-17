@@ -340,7 +340,7 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
           });
       
       // Calculate percentile for overall score
-      const overallScore = assessment.scores.overallPercentage;
+      const overallScore = Math.round(assessment.scores.overallPercentage);
       const { mean, standardDeviation } = baselineStatistics.overall.byGender[genderKey];
       
       // Simplified z-score to percentile calculation
@@ -348,8 +348,8 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
       const percentile = Math.min(99, Math.max(1, Math.round(50 + (zScore * 30))));
       const percentileDesc = getPercentileDescription(percentile);
       
-      // Draw overall percentile section with box
-      doc.roundedRect(50, 100, doc.page.width - 100, 160, 8)
+      // Draw overall percentile section with box (removed rounded corners)
+      doc.rect(50, 100, doc.page.width - 100, 160)
         .fillAndStroke('white', '#e2e8f0');
       
       doc.fontSize(14)
@@ -361,7 +361,7 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
       const overallBoxY = 145;
       
       // Your score info box
-      doc.roundedRect(70, overallBoxY, 150, 60, 5).fillAndStroke('#f8fafc', '#e2e8f0');
+      doc.rect(70, overallBoxY, 150, 60).fillAndStroke('#f8fafc', '#e2e8f0');
       doc.fontSize(12)
         .font('Helvetica-Bold')
         .fillColor('#2d3748')
@@ -373,7 +373,7 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
         .text(`${Math.round(overallScore)}%`, 85, overallBoxY + 30);
       
       // Average score info box
-      doc.roundedRect(250, overallBoxY, 150, 60, 5).fillAndStroke('#f8fafc', '#e2e8f0');
+      doc.rect(250, overallBoxY, 150, 60).fillAndStroke('#f8fafc', '#e2e8f0');
       doc.fontSize(12)
         .font('Helvetica-Bold')
         .fillColor('#2d3748')
@@ -385,7 +385,7 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
         .text(`${Math.round(mean)}%`, 265, overallBoxY + 30);
       
       // Percentile visualization
-      doc.roundedRect(70, overallBoxY + 70, 330, 40, 5).fillAndStroke('#f0f5fa', '#e2e8f0');
+      doc.rect(70, overallBoxY + 70, 330, 40).fillAndStroke('#f0f5fa', '#e2e8f0');
       
       // Draw percentile indicator
       const percentileWidth = 330;
@@ -471,7 +471,7 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
         }
         
         // Draw section card with rounded corners
-        doc.roundedRect(currentX, currentY, sectionWidth, sectionHeight, 8)
+        doc.rect(currentX, currentY, sectionWidth, sectionHeight)
           .fillAndStroke('white', '#e2e8f0');
         
         // Section title and score
@@ -494,11 +494,11 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
         const sectionBarWidth = sectionWidth - 30;
         
         // Background bar
-        doc.roundedRect(currentX + 15, sectionBarY, sectionBarWidth, sectionBarHeight, 5)
+        doc.rect(currentX + 15, sectionBarY, sectionBarWidth, sectionBarHeight)
           .fillColor('#f0f0f0');
         
         // Percentile bar
-        doc.roundedRect(currentX + 15, sectionBarY, (sectionPercentile / 100) * sectionBarWidth, sectionBarHeight, 5)
+        doc.rect(currentX + 15, sectionBarY, (sectionPercentile / 100) * sectionBarWidth, sectionBarHeight)
           .fillColor('#3182ce');
         
         // Add comparative text with more detail
@@ -524,7 +524,7 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
       }
       
       // Draw blue box with rounded corners for interpretation guide
-      doc.roundedRect(50, currentY, doc.page.width - 100, 100, 8).fillAndStroke('#ebf8ff', '#90cdf4');
+      doc.rect(50, currentY, doc.page.width - 100, 100).fillAndStroke('#ebf8ff', '#90cdf4');
       
       doc.fillColor('#2c5282')
         .fontSize(14)
@@ -962,7 +962,7 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       doc.fontSize(11)
         .font('Helvetica')
         .fillColor('#555')
-        .text(`Overall Score: ${primaryAssessment.scores.overallPercentage}%`, 60, scoreColY + 25);
+        .text(`Overall Score: ${Math.round(primaryAssessment.scores.overallPercentage)}%`, 60, scoreColY + 25);
         
       // Gender-specific profile if available
       if (primaryAssessment.genderProfile) {
@@ -980,7 +980,7 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       doc.fontSize(11)
         .font('Helvetica')
         .fillColor('#555')
-        .text(`Overall Score: ${spouseAssessment.scores.overallPercentage}%`, doc.page.width / 2 + 10, scoreColY + 25);
+        .text(`Overall Score: ${Math.round(spouseAssessment.scores.overallPercentage)}%`, doc.page.width / 2 + 10, scoreColY + 25);
         
       // Gender-specific profile if available
       if (spouseAssessment.genderProfile) {
