@@ -1196,7 +1196,7 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           .fontSize(10)
           .font('Helvetica-Bold')
           .fillColor('#7e22ce')
-          .text(`${primaryName}'s Response:`, 60, null, { width: colWidth });
+          .text(`${primaryName}'s Response:`, 60, undefined, { width: colWidth });
           
         doc.moveUp()
           .text(`${spouseName}'s Response:`, 60 + colWidth + 20, doc.y, { width: colWidth });
@@ -1205,7 +1205,7 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         doc.fontSize(10)
           .font('Helvetica')
           .fillColor('#4b5563')
-          .text(diff.primaryResponse, 60, null, { width: colWidth });
+          .text(diff.primaryResponse, 60, undefined, { width: colWidth });
           
         doc.moveUp()
           .text(diff.spouseResponse, 60 + colWidth + 20, doc.y, { width: colWidth });
@@ -1248,7 +1248,7 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         .fontSize(10)
         .font('Helvetica')
         .fillColor('#4b5563')
-        .text('This book provides the perfect framework to navigate important conversations about marriage expectations and alignment. Get your copy today to strengthen your relationship.', 130, null, {
+        .text('This book provides the perfect framework to navigate important conversations about marriage expectations and alignment. Get your copy today to strengthen your relationship.', 130, undefined, {
           width: doc.page.width - 200
         });
         

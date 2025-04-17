@@ -367,14 +367,21 @@ export default function Home() {
                     onClick={() => window.open('/sample-couple-results.html', '_blank')}
                     className="text-purple-300 hover:text-purple-200"
                   >
-                    Couple Results
+                    Results
                   </Button>
                   <Button 
                     variant="link" 
                     onClick={() => window.open('/sample-couple-email.html', '_blank')}
                     className="text-purple-300 hover:text-purple-200"
                   >
-                    Couple Email
+                    Email
+                  </Button>
+                  <Button 
+                    variant="link" 
+                    onClick={() => window.open('/sample-couple-report.html', '_blank')}
+                    className="text-purple-300 hover:text-purple-200 border border-purple-500 border-opacity-30 rounded-sm px-1.5"
+                  >
+                    ✨ New Discussion Guide
                   </Button>
                 </div>
               </div>
