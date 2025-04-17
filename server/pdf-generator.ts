@@ -877,7 +877,7 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         .text(compatibilityText, { align: 'center' });
         
       // Add compatibility explanation with better formatting
-      // Use a narrower width with clear line breaks to avoid awkward wrapping
+      // Fix compatibility text to ensure perfect line breaks
       doc.moveDown(1)
         .fontSize(12)
         .font('Helvetica')
@@ -885,11 +885,11 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         .text(
           'This compatibility score represents how well aligned your\n' +
           'expectations are as a couple. A higher score means you have\n' +
-          'more similar views on marriage-related topics, which\n' +
-          'can lead to greater harmony and understanding in your\n' +
+          'more similar views on marriage-related topics, which can\n' +
+          'lead to greater harmony and understanding in your\n' +
           'relationship.', 
           {
-            width: 300, // Narrower width
+            width: 280, // Even narrower width to avoid awkward word breaks
             align: 'center'
           }
         );
@@ -954,11 +954,17 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       // Create two columns for partner scores
       const scoreColY = doc.y + 10;
       
-      // Left column: Primary Assessment
-      doc.fontSize(13)
+      // Left column: Primary Assessment - handle long profile names
+      const primaryProfileText = `${primaryName}'s Profile: ${primaryAssessment.profile.name}`;
+      const primaryProfileFontSize = primaryProfileText.length > 35 ? 11 : 13; // Use smaller font for longer text
+      
+      doc.fontSize(primaryProfileFontSize)
         .font('Helvetica-Bold')
         .fillColor('#2563eb') // blue
-        .text(`${primaryName}'s Profile: ${primaryAssessment.profile.name}`, 50, scoreColY);
+        .text(primaryProfileText, 50, scoreColY, {
+          width: (doc.page.width / 2) - 60, // Limit width to prevent wrapping
+          lineBreak: false
+        });
         
       doc.fontSize(11)
         .font('Helvetica')
@@ -972,11 +978,17 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           .text(`${primaryAssessment.demographics.gender === 'male' ? 'Male' : 'Female'}-Specific Profile: ${primaryAssessment.genderProfile.name}`, 60, scoreColY + 45);
       }
       
-      // Right column: Spouse Assessment
-      doc.fontSize(13)
+      // Right column: Spouse Assessment - handle long profile names
+      const spouseProfileText = `${spouseName}'s Profile: ${spouseAssessment.profile.name}`;
+      const spouseProfileFontSize = spouseProfileText.length > 35 ? 11 : 13; // Use smaller font for longer text
+      
+      doc.fontSize(spouseProfileFontSize)
         .font('Helvetica-Bold')
         .fillColor('#7e22ce') // purple
-        .text(`${spouseName}'s Profile: ${spouseAssessment.profile.name}`, doc.page.width / 2, scoreColY);
+        .text(spouseProfileText, doc.page.width / 2, scoreColY, {
+          width: (doc.page.width / 2) - 60, // Limit width to prevent wrapping
+          lineBreak: false
+        });
         
       doc.fontSize(11)
         .font('Helvetica')
@@ -1101,8 +1113,8 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         .fontSize(12)
         .font('Helvetica')
         .fillColor('#555')
-        .text('These questions highlight areas where you had significant differences in your responses. Discussing these topics can help you better understand each other\'s perspectives and expectations.', {
-          width: doc.page.width - 150,
+        .text('These questions highlight areas where you had significant differences in your responses. Discussing\nthese topics can help you better understand each other\'s perspectives and expectations.', {
+          width: doc.page.width - 200, // Even narrower width to avoid text cutoff
           align: 'center'
         });
         
