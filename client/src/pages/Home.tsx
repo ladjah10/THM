@@ -23,7 +23,7 @@ export default function Home() {
             The 100 Marriage Assessment – Series 1: Align Expectations, Build Your Future
           </h1>
           <p className="text-xl text-gray-700 mb-6">
-            Misaligned Expectations Can Derail Your Future—Align Yours for Only $49
+            Misaligned Expectations Can Derail Your Future—Align Yours Today
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl mx-auto">
             <div className="p-4 bg-blue-50 rounded-md border border-blue-100">
@@ -52,7 +52,7 @@ export default function Home() {
               <div className="bg-white rounded p-2 mb-4">
                 <p className="text-gray-700 text-sm mb-1"><strong>Price:</strong> $79</p>
                 <p className="text-gray-700 text-sm mb-1"><strong>What you get:</strong> Two assessments + compatibility analysis</p>
-                <p className="text-gray-700 text-sm"><strong>Best for:</strong> Understanding relationship dynamics together</p>
+                <p className="text-gray-700 text-sm"><strong>Best for:</strong> Mutual clarity + alignment on marriage expectations</p>
               </div>
               <Button 
                 onClick={handleStartCoupleAssessment}
