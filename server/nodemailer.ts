@@ -362,7 +362,7 @@ export async function sendCoupleInvitationEmails(
       from: `"The 100 Marriage Assessment" <${testAccount.user}>`,
       to: data.primaryEmail,
       cc: ccEmail,
-      subject: "Your Couple Assessment - The 100 Marriage Assessment",
+      subject: "Your Couple Assessment Has Been Started",
       html: primaryEmailHtml,
     });
     
@@ -370,21 +370,26 @@ export async function sendCoupleInvitationEmails(
     const spouseInfo = await transporter.sendMail({
       from: `"The 100 Marriage Assessment" <${testAccount.user}>`,
       to: data.spouseEmail,
-      subject: "You've Been Invited to Take a Couple Assessment - The 100 Marriage",
+      cc: ccEmail,
+      subject: "You've Been Invited to Take the 100 Marriage Assessment",
       html: spouseEmailHtml,
     });
     
-    // Get preview URLs for testing
+    console.log(`Primary invitation email sent: ${primaryInfo.messageId}`);
+    console.log(`Spouse invitation email sent: ${spouseInfo.messageId}`);
+    
     const primaryPreviewUrl = nodemailer.getTestMessageUrl(primaryInfo);
     const spousePreviewUrl = nodemailer.getTestMessageUrl(spouseInfo);
     
-    console.log(`Couple invitation emails sent. Primary: ${primaryInfo.messageId}, Spouse: ${spouseInfo.messageId}`);
-    console.log(`Primary Preview URL: ${primaryPreviewUrl}`);
-    console.log(`Spouse Preview URL: ${spousePreviewUrl}`);
+    console.log(`Primary preview URL: ${primaryPreviewUrl}`);
+    console.log(`Spouse preview URL: ${spousePreviewUrl}`);
     
     return { 
       success: true,
-      previewUrls: [primaryPreviewUrl, spousePreviewUrl].filter(Boolean) as string[]
+      previewUrls: [
+        primaryPreviewUrl ? primaryPreviewUrl : undefined, 
+        spousePreviewUrl ? spousePreviewUrl : undefined
+      ].filter(Boolean) as string[]
     };
   } catch (error) {
     console.error('Couple invitation email error:', error);
