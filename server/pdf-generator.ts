@@ -1253,7 +1253,21 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       
       // Top differences for discussion - always start on a fresh page for consistency
       doc.addPage(); // Force a new page for better spacing and layout
-      doc.fontSize(16)
+      
+      // Create a centered section title with decorative elements
+      const diffTitleWidth = 300;
+      const diffTitleX = (doc.page.width - diffTitleWidth) / 2;
+      
+      // Add purple line before title
+      doc.lineWidth(2)
+        .strokeColor('#7e22ce')
+        .moveTo(diffTitleX, doc.y + 10)
+        .lineTo(diffTitleX + diffTitleWidth, doc.y + 10)
+        .stroke();
+      
+      // Add section title with proper spacing
+      doc.moveDown(0.5)
+        .fontSize(16)
         .font('Helvetica-Bold')
         .fillColor('#7e22ce')
         .text('Top Differences to Discuss Together:', {
@@ -1261,7 +1275,14 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           width: doc.page.width - 100
         });
       
-      doc.moveDown(0.5); // Reduced space after heading
+      // Add purple line after title
+      doc.lineWidth(2)
+        .strokeColor('#7e22ce')
+        .moveTo(diffTitleX, doc.y + 10)
+        .lineTo(diffTitleX + diffTitleWidth, doc.y + 10)
+        .stroke();
+      
+      doc.moveDown(1); // More space after heading for visual separation
       
       // No need for border box around the entire differences section
       
@@ -1345,41 +1366,50 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       const bookTextX = bookImageX + bookImageWidth + 30;
       const bookTextWidth = doc.page.width - bookTextX - 70;
       
-      // Add real book cover image
-      try {
-        const bookCoverPath = './client/public/100-marriage-book-cover.jpg';
-        if (fs.existsSync(bookCoverPath)) {
-          doc.image(bookCoverPath, bookImageX, bookBoxY + 20, { 
-            width: bookImageWidth,
-            height: bookBoxHeight - 40
-          });
-        } else {
-          // Fallback if image doesn't exist
-          doc.rect(bookImageX, bookBoxY + 20, bookImageWidth, bookBoxHeight - 40)
-            .fillAndStroke('#7e22ce', '#6b21a8');
-          
-          // Add placeholder text
-          doc.fontSize(12)
-            .font('Helvetica-Bold')
-            .fillColor('#ffffff')
-            .text('THE 100\nMARRIAGE\nBOOK', bookImageX, bookBoxY + 35, {
-              align: 'center',
-              width: bookImageWidth
-            });
-        }
-      } catch (err) {
-        // Fallback for any image loading error
-        doc.rect(bookImageX, bookBoxY + 20, bookImageWidth, bookBoxHeight - 40)
-          .fillAndStroke('#7e22ce', '#6b21a8');
+      // Create stylized book cover since we can't reliably get the image
+      // Draw a purple background for the book cover
+      doc.rect(bookImageX, bookBoxY + 20, bookImageWidth, bookBoxHeight - 40)
+        .fillAndStroke('#7e22ce', '#6b21a8');
+      
+      // Add a decorative border to the cover
+      doc.lineWidth(2)
+        .strokeColor('#e9d5ff')
+        .rect(bookImageX + 3, bookBoxY + 23, bookImageWidth - 6, bookBoxHeight - 46)
+        .stroke();
         
-        doc.fontSize(12)
-          .font('Helvetica-Bold')
-          .fillColor('#ffffff')
-          .text('THE 100\nMARRIAGE\nBOOK', bookImageX, bookBoxY + 35, {
-            align: 'center',
-            width: bookImageWidth
-          });
-      }
+      // Add "THE 100 MARRIAGE BOOK" text with better styling
+      doc.fontSize(13)
+        .font('Helvetica-Bold')
+        .fillColor('#ffffff')
+        .text('THE 100', bookImageX, bookBoxY + 35, {
+          align: 'center',
+          width: bookImageWidth
+        });
+        
+      doc.fontSize(14)
+        .font('Helvetica-Bold')
+        .fillColor('#ffffff')
+        .text('MARRIAGE', bookImageX, bookBoxY + 52, {
+          align: 'center',
+          width: bookImageWidth
+        });
+        
+      doc.fontSize(13)
+        .font('Helvetica-Bold')
+        .fillColor('#ffffff')
+        .text('BOOK', bookImageX, bookBoxY + 72, {
+          align: 'center',
+          width: bookImageWidth
+        });
+        
+      // Add author with smaller font
+      doc.fontSize(8)
+        .font('Helvetica')
+        .fillColor('#f5f3ff')
+        .text('By Lawrence Adjah', bookImageX, bookBoxY + 90, {
+          align: 'center',
+          width: bookImageWidth
+        });
       
       // Add book promotion heading with better positioning - smaller font to fit better
       doc.fontSize(14)
@@ -1466,24 +1496,41 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       doc.rect(boxX, doc.y, boxWidth, boxHeight)
         .fillAndStroke('#fff6e9', '#fee4b6');
       
-      // Add real book cover image in the second location as well
-      try {
-        const bookCoverPath = './client/public/100-marriage-book-cover.jpg';
-        if (fs.existsSync(bookCoverPath)) {
-          doc.image(bookCoverPath, boxX + 15, doc.y + 15, { 
-            width: 50,
-            height: 50
-          });
-        } else {
-          // Fallback if image doesn't exist
-          doc.rect(boxX + 15, doc.y + 15, 50, 50)
-            .fillAndStroke('#f59e0b', '#d97706');
-        }
-      } catch (err) {
-        // Fallback for any image loading error
-        doc.rect(boxX + 15, doc.y + 15, 50, 50)
-          .fillAndStroke('#f59e0b', '#d97706');
-      }
+      // Create stylized book cover again for second instance
+      // Main rectangle for book cover
+      doc.rect(boxX + 15, doc.y + 15, 50, 50)
+        .fillAndStroke('#7e22ce', '#6b21a8');
+      
+      // Add a decorative border
+      doc.lineWidth(1.5)
+        .strokeColor('#e9d5ff')
+        .rect(boxX + 17, doc.y + 17, 46, 46)
+        .stroke();
+        
+      // Add simplified text for smaller size
+      doc.fontSize(8)
+        .font('Helvetica-Bold')
+        .fillColor('#ffffff')
+        .text('THE 100', boxX + 17, doc.y + 22, {
+          align: 'center',
+          width: 46
+        });
+        
+      doc.fontSize(9)
+        .font('Helvetica-Bold')
+        .fillColor('#ffffff')
+        .text('MARRIAGE', boxX + 17, doc.y + 32, {
+          align: 'center',
+          width: 46
+        });
+        
+      doc.fontSize(8)
+        .font('Helvetica-Bold')
+        .fillColor('#ffffff')
+        .text('BOOK', boxX + 17, doc.y + 42, {
+          align: 'center',
+          width: 46
+        });
       
       // Add text with better vertical alignment
       doc.fontSize(14)
