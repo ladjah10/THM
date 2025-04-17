@@ -1269,8 +1269,8 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       differenceAnalysis.majorDifferences.slice(0, 5).forEach((diff, idx) => {
         // Need to adjust box height based on content length
         let estimatedHeight = Math.max(
-          100, // Minimum height
-          40 + Math.ceil(diff.primaryResponse.length / 60) * 12 + Math.ceil(diff.spouseResponse.length / 60) * 12
+          120, // Increased minimum height 
+          60 + Math.ceil(diff.primaryResponse.length / 60) * 12 + Math.ceil(diff.spouseResponse.length / 60) * 12
         );
         
         // Add a new page if we're near the bottom of the page
@@ -1290,40 +1290,42 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           .rect(50, doc.y, doc.page.width - 100, estimatedHeight)
           .stroke();
           
-        // Question text
-        doc.moveUp()
-          .font('Helvetica-Bold')
+        // Question text - moved down slightly for better positioning
+        doc.font('Helvetica-Bold')
           .fontSize(12)
           .fillColor('#6b21a8')
-          .text(`Question ${diff.questionId}: ${diff.questionText}`, 60, doc.y + 10, {
+          .text(`Question ${diff.questionId}: ${diff.questionText}`, 60, doc.y + 15, {
             width: doc.page.width - 120
           });
           
-        // Responses in two columns - using better spacing with consistent margins
+        // Responses in two columns - using better alignment with fixed Y positions
         const colWidth = (doc.page.width - 160) / 2;
         
-        // Response headers - positioned with more space
-        doc.moveDown(1.5)
-          .fontSize(11)
-          .font('Helvetica-Bold')
-          .fillColor('#7e22ce')
-          .text(`${primaryName}'s Response:`, 60, undefined, { width: colWidth });
+        // Place responses at fixed position from the top of the box for consistent layout
+        const headerY = doc.y + 10;
         
-        const responseY = doc.y;
-        doc.text(`${spouseName}'s Response:`, 70 + colWidth, responseY - 14, { width: colWidth });
+        // Response headers - positioned side by side at exact same Y coordinate
+        doc.fontSize(11)
+          .font('Helvetica-Bold')
+          .fillColor('#7e22ce');
           
-        // Response content - ensuring it doesn't overflow
+        // Primary partner response header
+        doc.text(`${primaryName}'s Response:`, 60, headerY, { width: colWidth });
+        
+        // Spouse response header (same Y position)
+        doc.text(`${spouseName}'s Response:`, 70 + colWidth, headerY, { width: colWidth });
+          
+        // Response content at fixed position with identical top margin
+        const contentY = headerY + 20;
+        
+        // Primary response on left
         doc.fontSize(10)
           .font('Helvetica')
           .fillColor('#4b5563')
-          .text(diff.primaryResponse, 60, undefined, { width: colWidth - 10 });
+          .text(diff.primaryResponse, 60, contentY, { width: colWidth - 10 });
         
-        const continueY = doc.y;
-        doc.y = responseY;
-        doc.text(diff.spouseResponse, 70 + colWidth, undefined, { width: colWidth - 10 });
-        
-        // Move past this box correctly
-        doc.y = Math.max(doc.y, continueY) + 20;
+        // Spouse response on right (same Y coordinate)
+        doc.text(diff.spouseResponse, 70 + colWidth, contentY, { width: colWidth - 10 });
       });
       
       // Book promotion section - Completely redesigned for better layout
@@ -1343,18 +1345,41 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       const bookTextX = bookImageX + bookImageWidth + 30;
       const bookTextWidth = doc.page.width - bookTextX - 70;
       
-      // Add book cover
-      doc.rect(bookImageX, bookBoxY + 20, bookImageWidth, bookBoxHeight - 40)
-        .fillAndStroke('#7e22ce', '#6b21a8');
-      
-      // Add "THE 100 MARRIAGE BOOK" text with better vertical centering
-      doc.fontSize(12)
-        .font('Helvetica-Bold')
-        .fillColor('#ffffff')
-        .text('THE 100\nMARRIAGE\nBOOK', bookImageX, bookBoxY + 35, {
-          align: 'center',
-          width: bookImageWidth
-        });
+      // Add real book cover image
+      try {
+        const bookCoverPath = './client/public/100-marriage-book-cover.jpg';
+        if (fs.existsSync(bookCoverPath)) {
+          doc.image(bookCoverPath, bookImageX, bookBoxY + 20, { 
+            width: bookImageWidth,
+            height: bookBoxHeight - 40
+          });
+        } else {
+          // Fallback if image doesn't exist
+          doc.rect(bookImageX, bookBoxY + 20, bookImageWidth, bookBoxHeight - 40)
+            .fillAndStroke('#7e22ce', '#6b21a8');
+          
+          // Add placeholder text
+          doc.fontSize(12)
+            .font('Helvetica-Bold')
+            .fillColor('#ffffff')
+            .text('THE 100\nMARRIAGE\nBOOK', bookImageX, bookBoxY + 35, {
+              align: 'center',
+              width: bookImageWidth
+            });
+        }
+      } catch (err) {
+        // Fallback for any image loading error
+        doc.rect(bookImageX, bookBoxY + 20, bookImageWidth, bookBoxHeight - 40)
+          .fillAndStroke('#7e22ce', '#6b21a8');
+        
+        doc.fontSize(12)
+          .font('Helvetica-Bold')
+          .fillColor('#ffffff')
+          .text('THE 100\nMARRIAGE\nBOOK', bookImageX, bookBoxY + 35, {
+            align: 'center',
+            width: bookImageWidth
+          });
+      }
       
       // Add book promotion heading with better positioning - smaller font to fit better
       doc.fontSize(14)
@@ -1441,25 +1466,45 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       doc.rect(boxX, doc.y, boxWidth, boxHeight)
         .fillAndStroke('#fff6e9', '#fee4b6');
       
-      // Add book image placeholder - simplified
-      doc.rect(boxX + 15, doc.y + 15, 50, 50)
-        .fillAndStroke('#f59e0b', '#d97706');
+      // Add real book cover image in the second location as well
+      try {
+        const bookCoverPath = './client/public/100-marriage-book-cover.jpg';
+        if (fs.existsSync(bookCoverPath)) {
+          doc.image(bookCoverPath, boxX + 15, doc.y + 15, { 
+            width: 50,
+            height: 50
+          });
+        } else {
+          // Fallback if image doesn't exist
+          doc.rect(boxX + 15, doc.y + 15, 50, 50)
+            .fillAndStroke('#f59e0b', '#d97706');
+        }
+      } catch (err) {
+        // Fallback for any image loading error
+        doc.rect(boxX + 15, doc.y + 15, 50, 50)
+          .fillAndStroke('#f59e0b', '#d97706');
+      }
       
-      // Add text - improved layout
+      // Add text with better vertical alignment
       doc.fontSize(14)
         .font('Helvetica-Bold')
         .fillColor('#92400e')
-        .text('Don\'t have the book yet?', boxX + 80, doc.y + 20);
+        .text('Don\'t have the book yet?', boxX + 80, doc.y + 15);
         
+      // Improved alignment and spacing of link text
       doc.fontSize(12)
         .font('Helvetica')
-        .fillColor('#78350f')
-        .text('Get your copy at lawrenceadjah.com/the100marriagebook', boxX + 80, doc.y + 40, {
+        .fillColor('#78350f');
+      
+      // Link on its own line
+      doc.text('Get your copy at lawrenceadjah.com/the100marriagebook', boxX + 80, doc.y + 10, {
           width: boxWidth - 100,
           link: 'https://lawrenceadjah.com/the100marriagebook',
           underline: true
-        })
-        .text('to deepen your discussions and strengthen your relationship.', {
+        });
+        
+      // Description text with proper spacing  
+      doc.text('to deepen your discussions and strengthen your relationship.', boxX + 80, doc.y + 5, {
           width: boxWidth - 100
         });
       
