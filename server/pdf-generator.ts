@@ -897,16 +897,20 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           }
         );
           
-      // Strengths and Areas for Alignment
-      doc.moveDown(1.5)
-        .fontSize(14)
+      // Strengths and Areas for Alignment - position consistently
+      // Use fixed positioning for the first heading after compatibility score
+      doc.y = circleY + scoreRadius + 180; // Fixed position after compatibility description
+      doc.fontSize(16)
         .font('Helvetica-Bold')
         .fillColor('#2c3e50')
-        .text('Relationship Insights');
+        .text('Relationship Insights', { 
+          align: 'center',
+          width: doc.page.width - 100
+        });
       
       // Two columns for strengths and alignment areas
       const colWidth = (doc.page.width - 120) / 2;
-      const colY = doc.y + 10;
+      const colY = doc.y + 15; // Add more spacing
       
       // Left column: Strengths
       doc.fontSize(13)
@@ -947,15 +951,18 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       // Move to maximum Y position from both columns
       doc.y = Math.max(doc.y, vulnerabilityY, strengthY);
       
-      // Individual assessment scores section
-      doc.moveDown(1.5)
-        .fontSize(14)
+      // Individual assessment scores section - with centered heading
+      doc.moveDown(2.5) // Add more space after previous section
+        .fontSize(16)
         .font('Helvetica-Bold')
         .fillColor('#2c3e50')
-        .text('Individual Assessment Scores');
+        .text('Individual Assessment Scores', {
+          align: 'center',
+          width: doc.page.width - 100
+        });
       
       // Create two columns for partner scores
-      const scoreColY = doc.y + 10;
+      const scoreColY = doc.y + 15; // More space below heading
       
       // Left column: Primary Assessment - handle long profile names
       const primaryProfileText = `${primaryName}'s Profile: ${primaryAssessment.profile.name}`;
@@ -1028,8 +1035,8 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       // Draw table header
       doc.moveDown(1);
       const tableTop = doc.y;
-      // Adjusted column widths to allow more space for section names
-      const tableColWidths = [250, 70, 70, 70]; 
+      // Further increased column width for section names to handle long section titles like "Your Intimacy and Sex Life"
+      const tableColWidths = [270, 60, 60, 60]; 
       const rowHeight = 30; // Increased row height for better readability
       
       doc.rect(50, tableTop, doc.page.width - 100, rowHeight)
@@ -1075,15 +1082,26 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           diffIcon = '•'; // dot
         }
         
-        // Ensure section names are never truncated by using smaller fonts for long names
+        // Ensure section names are never truncated - special handling for exceptionally long names
         const sectionDisplay = section;
-        const fontSize = section.length > 25 ? 8 : 10; // Use smaller font for longer names
+        // More aggressive font size reduction for especially long names like "Your Intimacy and Sex Life"
+        let fontSize = 10; // Default size
+        if (section.length > 35) {
+          fontSize = 7.5; // Very small for very long names
+        } else if (section.length > 25) {
+          fontSize = 8.5; // Smaller for long names
+        }
+        
+        // Adjust vertical positioning based on font size for better alignment
+        const verticalAdjust = fontSize === 7.5 ? 13 : (fontSize === 8.5 ? 12 : 10);
+        
         doc.fontSize(fontSize)
           .font('Helvetica')
           .fillColor('#374151')
-          .text(sectionDisplay, 60, rowY + (fontSize === 8 ? 12 : 10), { 
+          .text(sectionDisplay, 60, rowY + verticalAdjust, { 
             width: tableColWidths[0] - 5,
-            lineBreak: false // Prevent line breaking
+            lineBreak: false, // Prevent line breaking
+            characterSpacing: -0.2 // Slightly reduce character spacing for better fit
           });
           
         // Primary score
