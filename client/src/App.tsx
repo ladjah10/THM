@@ -23,6 +23,10 @@ function Router() {
       <Route path="/couple-assessment/report/:coupleId" component={CoupleAssessmentReport} />
       <Route path="/test" component={AssessmentTest} />
       <Route path="/sample-pdf" component={ViewSamplePDF} />
+      <Route path="/real-pdf" component={() => {
+        window.location.href = "/realistic-couple-assessment.html";
+        return null;
+      }} />
       <Route component={NotFound} />
     </Switch>
   );

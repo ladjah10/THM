@@ -1059,12 +1059,12 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           diffIcon = '•'; // dot
         }
         
-        // Section name (truncate if too long)
+        // Section name (truncate if too long) - smaller font for better fit
         const sectionDisplay = section.length > 25 ? section.substring(0, 23) + '...' : section;
-        doc.fontSize(11)
+        doc.fontSize(10)
           .font('Helvetica')
           .fillColor('#374151')
-          .text(sectionDisplay, 60, rowY + 10, { width: tableColWidths[0] - 10 });
+          .text(sectionDisplay, 60, rowY + 10, { width: tableColWidths[0] - 15 });
           
         // Primary score
         doc.fillColor('#2563eb') // blue
