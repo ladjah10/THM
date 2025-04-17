@@ -11,10 +11,11 @@ const coupleInvitationData = {
 
 // Run the couple invitation test
 async function runCoupleInvitationTest() {
-  console.log("Testing couple invitation emails process...");
+  console.log("Testing couple invitation emails process (using test email server)...");
   console.log(`Primary: ${coupleInvitationData.primaryName} (${coupleInvitationData.primaryEmail})`);
   console.log(`Spouse: ${coupleInvitationData.spouseName} (${coupleInvitationData.spouseEmail})`);
   console.log(`Couple ID: ${coupleInvitationData.coupleId}`);
+  console.log("NOTE: This uses Ethereal test email service which generates preview links only.");
   
   try {
     const result = await sendCoupleInvitationEmails(coupleInvitationData);
