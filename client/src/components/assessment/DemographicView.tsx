@@ -31,14 +31,17 @@ interface DemographicViewProps {
   onChange: (field: keyof DemographicData, value: string | boolean) => void;
   onSubmit: (data: DemographicData) => void;
   onBack: () => void;
+  assessmentType?: 'individual' | 'couple';
 }
 
 export default function DemographicView({
   demographicData,
   onChange,
   onSubmit,
-  onBack
+  onBack,
+  assessmentType = 'individual'
 }: DemographicViewProps) {
+  const { toast } = useToast();
   const [selectedEthnicities, setSelectedEthnicities] = useState<string[]>(
     demographicData.ethnicity ? demographicData.ethnicity.split(',').filter(e => e) : []
   );
@@ -46,6 +49,12 @@ export default function DemographicView({
   const [isProcessingPayment, setIsProcessingPayment] = useState<boolean>(false);
   const [isVerifyingPromo, setIsVerifyingPromo] = useState<boolean>(false);
   const [showTHMPoolPayment, setShowTHMPoolPayment] = useState<boolean>(false);
+  
+  // Spouse invitation state for couple assessments
+  const [spouseEmail, setSpouseEmail] = useState<string>("");
+  const [isInviteSent, setIsInviteSent] = useState<boolean>(false);
+  const [isInviteLoading, setIsInviteLoading] = useState<boolean>(false);
+  const [inviteError, setInviteError] = useState<string | null>(null);
   
   // Valid promo codes (in a real app, these would be stored in a database or validated through an API)
   const validPromoCodes = ["FREE100", "LA2025", "MARRIAGE100"];
@@ -163,6 +172,64 @@ export default function DemographicView({
         variant: "default"
       });
     }, 1500);
+  };
+  
+  // Handle spouse invitation for couple assessments
+  const handleInvite = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Basic validation
+    if (!spouseEmail || !spouseEmail.includes('@')) {
+      setInviteError('Please enter a valid email address');
+      return;
+    }
+    
+    if (spouseEmail === demographicData.email) {
+      setInviteError('You cannot invite yourself. Please enter your significant other\'s email.');
+      return;
+    }
+    
+    if (!demographicData.email || !demographicData.email.includes('@')) {
+      setInviteError('Your email is not valid. Please ensure your email is correctly entered above.');
+      return;
+    }
+    
+    setIsInviteLoading(true);
+    setInviteError(null);
+    
+    try {
+      // Extract name from primary email for better personalization
+      const primaryName = demographicData.firstName 
+        ? `${demographicData.firstName} ${demographicData.lastName || ''}`.trim()
+        : demographicData.email.split('@')[0];
+      
+      // Register the couple assessment early
+      const { coupleId } = await registerEarlyCoupleAssessment(demographicData.email, spouseEmail);
+      
+      // Send invitations to both partners
+      const { success } = await sendCoupleInvitations(
+        coupleId, 
+        demographicData.email, 
+        spouseEmail,
+        primaryName
+      );
+      
+      if (success) {
+        setIsInviteSent(true);
+        toast({
+          title: "Invitation Sent!",
+          description: `An email has been sent to ${spouseEmail} with instructions to take their assessment.`,
+          variant: "default",
+        });
+      } else {
+        throw new Error("Failed to send invitation");
+      }
+    } catch (err) {
+      console.error("Error inviting spouse:", err);
+      setInviteError('Failed to send invitation. Please try again later.');
+    } finally {
+      setIsInviteLoading(false);
+    }
   };
 
   return (
