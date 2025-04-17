@@ -880,20 +880,17 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           width: 200 // Fixed width for better centering
         });
         
-      // Add compatibility explanation with proper positioning
+      // Add compatibility explanation with proper positioning and justified text
       doc.fontSize(12)
         .font('Helvetica')
         .fillColor('#555')
         .text(
-          'This compatibility score represents how well aligned your\n' +
-          'expectations are as a couple. A higher score means you have\n' +
-          'more similar views on marriage-related topics, which can\n' +
-          'lead to greater harmony and understanding in your\n' +
-          'relationship.', 
-          centerX - 140, circleY + scoreRadius + 60, // Position directly below compatibility text
+          'This compatibility score represents how well aligned your expectations are as a couple. A higher score means you have more similar views on marriage-related topics, which can lead to greater harmony and understanding in your relationship.', 
+          centerX - 160, circleY + scoreRadius + 60, // Position directly below compatibility text
           {
-            width: 280, // Controlled width for centered text
-            align: 'center'
+            width: 320, // Slightly wider for better text flow
+            align: 'justify',
+            lineGap: 2 // Add a bit more space between lines
           }
         );
           
@@ -1058,8 +1055,9 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         .font('Helvetica')
         .fillColor('#555')
         .text('This table shows how your scores compare in each assessment section. Larger differences may indicate areas where you have different perspectives that could benefit from discussion.', {
-          align: 'center',
-          width: doc.page.width - 100
+          align: 'justify',
+          width: doc.page.width - 150, // Slightly narrower for better-looking justified text
+          lineGap: 2 // Add a bit more space between lines
         });
         
       // Draw table header
