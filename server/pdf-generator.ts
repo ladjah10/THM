@@ -86,7 +86,6 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
         .text(`Gender: ${assessment.demographics.gender}`)
         .text(`Life Stage: ${assessment.demographics.lifeStage || 'Not specified'}`)
         .text(`Birthday: ${assessment.demographics.birthday || 'Not specified'}`)
-        .text(`Marriage Status: ${assessment.demographics.marriageStatus}`)
         .text(`THM Arranged Marriage Pool: ${assessment.demographics.interestedInArrangedMarriage ? 'Applied' : 'Not applied'}`)
         .text(`Date: ${new Date(assessment.timestamp).toLocaleDateString()}`);
 
