@@ -204,18 +204,54 @@ export function formatCoupleAssessmentEmail(report: CoupleAssessmentReport): str
           </div>
           
           <!-- Discussion Guide Section -->
-          <div style="margin-top: 30px; background-color: #f3f9fb; border: 1px solid #d1e9f0; border-radius: 8px; padding: 20px;">
-            <h2 style="margin-top: 0; font-size: 18px; color: #0e7490;">Guided Discussion with The 100 Marriage Book</h2>
+          <div style="margin-top: 30px; background-color: #f5f3ff; border: 1px solid #e9d5ff; border-radius: 8px; padding: 20px;">
+            <h2 style="margin-top: 0; font-size: 18px; color: #7e22ce;">Discussion Guide: Where Your Perspectives Differ</h2>
             <p style="margin-bottom: 15px; font-size: 14px; color: #374151;">
-              We recommend reviewing these key differences together using "The 100 Marriage" book as your guide. The book provides valuable context and discussion points that can help you navigate these areas more effectively.
+              These are the most significant areas where your answers differed. We recommend scheduling dedicated time to discuss these topics
+              together using "The 100 Marriage" book as your guide. The book provides valuable context and discussion points that will help you align your expectations more effectively.
             </p>
             
+            <!-- Top Different Questions -->
+            <div style="margin-bottom: 20px;">
+              ${differenceAnalysis.majorDifferences.slice(0, 5).map((diff, idx) => `
+                <div style="background-color: ${idx % 2 === 0 ? '#f5f3ff' : '#faf5ff'}; border: 1px solid #e9d5ff; border-radius: 6px; padding: 15px; margin-bottom: 10px;">
+                  <h3 style="margin-top: 0; font-size: 16px; color: #6b21a8; margin-bottom: 10px;">Question ${diff.questionId}: ${diff.questionText}</h3>
+                  <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                    <div style="flex: 1; min-width: 250px; background-color: white; padding: 12px; border-radius: 6px; border: 1px solid #ddd6fe;">
+                      <p style="margin-top: 0; margin-bottom: 5px; font-weight: 500; color: #7e22ce; font-size: 14px;">${primaryName}'s Response:</p>
+                      <p style="margin: 0; color: #4b5563; font-size: 14px;">${diff.primaryResponse}</p>
+                    </div>
+                    <div style="flex: 1; min-width: 250px; background-color: white; padding: 12px; border-radius: 6px; border: 1px solid #ddd6fe;">
+                      <p style="margin-top: 0; margin-bottom: 5px; font-weight: 500; color: #7e22ce; font-size: 14px;">${spouseName}'s Response:</p>
+                      <p style="margin: 0; color: #4b5563; font-size: 14px;">${diff.spouseResponse}</p>
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+            
+            <!-- Book and Discussion Guide -->
+            <div style="background-color: white; border: 1px solid #e9d5ff; border-radius: 6px; padding: 15px; margin-bottom: 20px; display: flex; gap: 15px; align-items: center;">
+              <div style="flex-shrink: 0; width: 100px; text-align: center;">
+                <img src="https://lawrenceadjah.com/wp-content/uploads/2023/12/The-100-Marriage-Lawrence-Adjah-Christian-Faith-Based-Books-Marriage-Books-on-Amazon-Relationship-Books-Best-Sellers.png" 
+                  alt="The 100 Marriage Book" style="width: 80px; height: auto; border-radius: 4px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+              </div>
+              <div>
+                <h3 style="margin-top: 0; font-size: 16px; color: #7e22ce; margin-bottom: 8px;">Use The 100 Marriage Book as Your Discussion Companion</h3>
+                <p style="margin-bottom: 10px; font-size: 14px; color: #4b5563;">
+                  This book provides the perfect framework to navigate important conversations about marriage expectations and alignment.
+                </p>
+                <a href="https://www.amazon.com/100-MARRIAGE-Lawrence-Adjah-ebook/dp/B09S3FBLN7" style="display: inline-block; background-color: #7e22ce; color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px; font-size: 14px; font-weight: 500;">Get the Book</a>
+              </div>
+            </div>
+            
+            <!-- Key Sections for Discussion -->
             <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 15px; margin-bottom: 20px;">
-              <h3 style="margin-top: 0; font-size: 16px; color: #0f172a;">Key Sections for Discussion:</h3>
+              <h3 style="margin-top: 0; font-size: 16px; color: #0f172a;">Key Sections for Additional Discussion:</h3>
               <ul style="list-style-type: none; padding-left: 0; margin-bottom: 0;">
                 ${differenceAnalysis.vulnerabilityAreas.map(area => `
                   <li style="padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
-                    <span style="color: #0e7490; font-weight: 500;">Section: ${area}</span><br>
+                    <span style="color: #7e22ce; font-weight: 500;">Section: ${area}</span><br>
                     <span style="font-size: 13px; color: #64748b;">Walk through the questions in this section together with the book as your companion.</span>
                   </li>
                 `).join('')}
