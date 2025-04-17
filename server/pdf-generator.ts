@@ -995,7 +995,10 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       doc.fontSize(16)
         .font('Helvetica-Bold')
         .fillColor('#2c3e50')
-        .text('Section Score Comparison', { align: 'center' });
+        .text('Section Score Comparison', { 
+          align: 'center',
+          width: doc.page.width - 100
+        });
         
       doc.moveDown(0.5)
         .fontSize(12)
@@ -1177,7 +1180,10 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           width: doc.page.width - 100
         });
       
-      // Top differences for discussion
+      // Top differences for discussion - add page break to ensure clean layout
+      if (doc.y > doc.page.height - 400) {
+        doc.addPage();
+      }
       doc.moveDown(1.5)
         .fontSize(16)
         .font('Helvetica-Bold')
