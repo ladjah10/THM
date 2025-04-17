@@ -1183,7 +1183,8 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         .font('Helvetica-Bold')
         .fillColor('#7e22ce')
         .text('Top Differences to Discuss Together:', {
-          align: 'left'
+          align: 'left',
+          width: doc.page.width - 120
         });
         
       // Draw a purple border box around the differences section
@@ -1280,21 +1281,22 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           width: imageWidth
         });
       
-      // Add book promotion heading with better positioning
-      doc.fontSize(16)
+      // Add book promotion heading with better positioning - smaller font to fit better
+      doc.fontSize(14)
         .font('Helvetica-Bold')
         .fillColor('#7e22ce')
         .text('Use The 100 Marriage Book as Your Discussion Companion', textX, bookBoxY + 20, {
-          width: bookTextWidth
+          width: bookTextWidth - 10,
+          lineBreak: false
         });
       
-      // Add description text with better formatting
+      // Add description text with better formatting - narrower width to prevent overflow
       doc.moveDown(0.5)
-        .fontSize(11)
+        .fontSize(10)
         .font('Helvetica')
         .fillColor('#4b5563')
         .text('This book provides the perfect framework to navigate important conversations about marriage expectations and alignment. Get your copy today to strengthen your relationship.', {
-          width: bookTextWidth
+          width: bookTextWidth - 20
         });
       
       // Add a better styled button

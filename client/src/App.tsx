@@ -10,6 +10,7 @@ import SamplesPage from "@/pages/SamplesPage";
 import CoupleAssessmentInvite from "@/pages/CoupleAssessmentInvite";
 import CoupleAssessmentReport from "@/pages/CoupleAssessmentReport";
 import AssessmentTest from "@/pages/AssessmentTest";
+import ViewSamplePDF from "@/pages/ViewSamplePDF";
 
 function Router() {
   return (
@@ -21,6 +22,7 @@ function Router() {
       <Route path="/couple-assessment/invite/:coupleId" component={CoupleAssessmentInvite} />
       <Route path="/couple-assessment/report/:coupleId" component={CoupleAssessmentReport} />
       <Route path="/test" component={AssessmentTest} />
+      <Route path="/sample-pdf" component={ViewSamplePDF} />
       <Route component={NotFound} />
     </Switch>
   );
