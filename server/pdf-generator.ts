@@ -886,9 +886,10 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           'This compatibility score represents how well aligned your\n' +
           'expectations are as a couple. A higher score means you have\n' +
           'more similar views on marriage-related topics, which\n' +
-          'can lead to greater harmony and understanding in your relationship.', 
+          'can lead to greater harmony and understanding in your\n' +
+          'relationship.', 
           {
-            width: 350,
+            width: 300, // Narrower width
             align: 'center'
           }
         );
@@ -1012,8 +1013,8 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       // Draw table header
       doc.moveDown(1);
       const tableTop = doc.y;
-      // Adjusted column widths for better spacing
-      const tableColWidths = [220, 80, 80, 80]; 
+      // Adjusted column widths to allow more space for section names
+      const tableColWidths = [250, 70, 70, 70]; 
       const rowHeight = 30; // Increased row height for better readability
       
       doc.rect(50, tableTop, doc.page.width - 100, rowHeight)
@@ -1059,12 +1060,12 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           diffIcon = '•'; // dot
         }
         
-        // Section name (truncate if too long) - smaller font for better fit
-        const sectionDisplay = section.length > 25 ? section.substring(0, 23) + '...' : section;
+        // Don't truncate section names anymore to prevent "Your Intimacy and Sex Life" from becoming "Your Intimacy and Sex L..."
+        const sectionDisplay = section;
         doc.fontSize(10)
           .font('Helvetica')
           .fillColor('#374151')
-          .text(sectionDisplay, 60, rowY + 10, { width: tableColWidths[0] - 15 });
+          .text(sectionDisplay, 60, rowY + 10, { width: tableColWidths[0] - 5 });
           
         // Primary score
         doc.fillColor('#2563eb') // blue
@@ -1083,19 +1084,22 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         rowY += rowHeight;
       });
       
-      // Major Differences Section
-      doc.moveDown(3)
-        .fontSize(14)
+      // Major Differences Section - use a new page for cleaner layout
+      doc.addPage()
+        .fontSize(16)
         .font('Helvetica-Bold')
         .fillColor('#d97706') // amber
-        .text('Key Differences to Discuss');
+        .text('Key Differences to Discuss', {
+          align: 'center'
+        });
         
       doc.moveDown(0.5)
-        .fontSize(11)
+        .fontSize(12)
         .font('Helvetica')
         .fillColor('#555')
         .text('These questions highlight areas where you had significant differences in your responses. Discussing these topics can help you better understand each other\'s perspectives and expectations.', {
-          width: doc.page.width - 100
+          width: doc.page.width - 150,
+          align: 'center'
         });
         
       // Show the top differences (up to 5)
@@ -1230,8 +1234,8 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
             width: doc.page.width - 120
           });
           
-        // Responses in two columns
-        const colWidth = (doc.page.width - 140) / 2;
+        // Responses in two columns - using better spacing with consistent margins
+        const colWidth = (doc.page.width - 160) / 2;
         
         // Response headers - positioned with more space
         doc.moveDown(1.5)
@@ -1241,17 +1245,17 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           .text(`${primaryName}'s Response:`, 60, undefined, { width: colWidth });
         
         const responseY = doc.y;
-        doc.text(`${spouseName}'s Response:`, 60 + colWidth + 20, responseY - 14, { width: colWidth });
+        doc.text(`${spouseName}'s Response:`, 70 + colWidth, responseY - 14, { width: colWidth });
           
         // Response content - ensuring it doesn't overflow
         doc.fontSize(10)
           .font('Helvetica')
           .fillColor('#4b5563')
-          .text(diff.primaryResponse, 60, undefined, { width: colWidth - 5 });
+          .text(diff.primaryResponse, 60, undefined, { width: colWidth - 10 });
         
         const continueY = doc.y;
         doc.y = responseY;
-        doc.text(diff.spouseResponse, 60 + colWidth + 20, undefined, { width: colWidth - 5 });
+        doc.text(diff.spouseResponse, 70 + colWidth, undefined, { width: colWidth - 10 });
         
         // Move past this box correctly
         doc.y = Math.max(doc.y, continueY) + 20;
