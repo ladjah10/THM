@@ -144,6 +144,63 @@ export const CoupleReport: React.FC<CoupleReportProps> = ({ report }) => {
               </AlertDescription>
             </Alert>
             
+            {/* Book Discussion Section - New Addition */}
+            <Card className="bg-purple-50 border-purple-200 mb-4">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Heart className="h-5 w-5 text-purple-600" />
+                  <span className="text-purple-800">Discussion Guide</span>
+                </CardTitle>
+                <CardDescription className="text-purple-700">
+                  Use "The 100 Marriage" book as your companion to address these key differences
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <p className="text-sm text-purple-700">
+                    These are the top {Math.min(5, differenceAnalysis.majorDifferences.length)} most significant areas where your answers differed. 
+                    We recommend scheduling a dedicated time to discuss these topics together using "The 100 Marriage" book as your guide.
+                  </p>
+                  
+                  <div className="space-y-3 mt-2">
+                    {differenceAnalysis.majorDifferences.slice(0, 5).map((diff, idx) => (
+                      <div key={idx} className={`p-3 rounded-lg ${idx % 2 === 0 ? 'bg-purple-100' : 'bg-purple-50'} border border-purple-200`}>
+                        <h4 className="font-medium text-purple-900 mb-1">Question {diff.questionId}: {diff.questionText}</h4>
+                        <div className="grid grid-cols-2 gap-3 mt-2 text-sm">
+                          <div>
+                            <span className="block text-purple-700 font-medium">{primaryName}'s Response:</span>
+                            <span className="text-purple-800">{diff.primaryResponse}</span>
+                          </div>
+                          <div>
+                            <span className="block text-purple-700 font-medium">{spouseName}'s Response:</span>
+                            <span className="text-purple-800">{diff.spouseResponse}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div className="mt-4 p-3 bg-white rounded-lg border border-purple-200 flex">
+                    <div className="mr-3 flex-shrink-0">
+                      <div className="w-16 h-20 bg-purple-200 rounded-md flex items-center justify-center">
+                        <span className="text-purple-800 font-bold">BOOK<br/>COVER</span>
+                      </div>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-purple-900">The 100 Marriage</h4>
+                      <p className="text-sm text-purple-700 mt-1">
+                        This book provides guidance for discussing these important topics. Use it as a framework to navigate your conversations.
+                      </p>
+                      <a href="https://www.amazon.com/100-MARRIAGE-Lawrence-Adjah-ebook/dp/B09S3FBLN7" target="_blank" rel="noopener noreferrer" 
+                        className="inline-block mt-2 text-xs font-medium px-2 py-1 rounded bg-purple-600 text-white hover:bg-purple-700">
+                        Get the Book
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
             {/* Vulnerability Areas */}
             <Alert className="bg-amber-50 border-amber-200">
               <AlertTriangle className="h-4 w-4 text-amber-600" />
