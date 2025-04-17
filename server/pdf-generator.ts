@@ -854,8 +854,8 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       else if (overallCompatibility >= 60) compatibilityText = 'Good Compatibility';
       else if (overallCompatibility >= 40) compatibilityText = 'Moderate Compatibility';
       
-      // Create a better-centered circle - proper spacing from top
-      const circleY = 330; // Fixed Y position for better positioning
+      // Create a better-centered circle - positioned higher on the page
+      const circleY = 250; // Higher position on page 1
       doc.circle(centerX, circleY, scoreRadius)
         .fillAndStroke(scoreColor, scoreColor);
         
@@ -899,7 +899,7 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           
       // Strengths and Areas for Alignment - position consistently
       // Use fixed positioning for the first heading after compatibility score
-      doc.y = circleY + scoreRadius + 180; // Fixed position after compatibility description
+      doc.y = circleY + scoreRadius + 150; // Reduced spacing for better page flow
       doc.fontSize(16)
         .font('Helvetica-Bold')
         .fillColor('#2c3e50')
@@ -952,7 +952,7 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       doc.y = Math.max(doc.y, vulnerabilityY, strengthY);
       
       // Individual assessment scores section - with centered heading
-      doc.moveDown(2.5) // Add more space after previous section
+      doc.moveDown(0.8) // Reduced spacing to keep sections on same page
         .fontSize(16)
         .font('Helvetica-Bold')
         .fillColor('#2c3e50')
