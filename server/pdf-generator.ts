@@ -1421,24 +1421,32 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           lineBreak: false
         });
       
-      // Add description text with better formatting - narrower width to prevent overflow
+      // Add description text with better formatting - narrower width to prevent overlap with button
       doc.moveDown(0.5)
         .fontSize(10)
         .font('Helvetica')
         .fillColor('#4b5563')
-        .text('This book provides the perfect framework to navigate important conversations about marriage expectations and alignment. Get your copy today to strengthen your relationship.', {
+        .text('This book provides the perfect framework to navigate important conversations about marriage expectations and alignment.', {
           width: bookTextWidth - 20
         });
       
-      // Add a better styled button
+      // Add a better styled button - positioned with proper spacing
       const buttonWidth = 130;
       const buttonHeight = 30;
       const buttonX = bookTextX;
-      const buttonY = bookBoxY + bookBoxHeight - 40;
+      const buttonY = bookBoxY + bookBoxHeight - 35; // Position slightly higher
       
+      // Add additional text that won't overlap with button
+      doc.fontSize(10)
+        .font('Helvetica')
+        .fillColor('#4b5563')
+        .text('Get your copy today to strengthen your relationship.', bookTextX, buttonY - 15, {
+          width: buttonWidth, // Keep width limited to button width
+        });
+        
+      // Draw button after positioning all text
       doc.rect(buttonX, buttonY, buttonWidth, buttonHeight)
-        .fillAndStroke('#7e22ce', '#6b21a8')
-        ;
+        .fillAndStroke('#7e22ce', '#6b21a8');
       
       // Center the button text
       doc.fontSize(12)
