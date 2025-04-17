@@ -900,12 +900,22 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       // Strengths and Areas for Alignment - position consistently 
       // Use fixed positioning for the first heading after compatibility score with more space
       doc.y = circleY + scoreRadius + 170; // Better position to avoid overlapping with explanation text
-      doc.fontSize(16)
+      // Add decorative line above heading for visual emphasis
+      const relInsightsLineWidth = 180;
+      const relInsightsLineStart = (doc.page.width - relInsightsLineWidth) / 2;
+      doc.moveTo(relInsightsLineStart, doc.y - 5)
+        .lineTo(relInsightsLineStart + relInsightsLineWidth, doc.y - 5)
+        .strokeColor('#2c3e50')
+        .lineWidth(1)
+        .stroke();
+      
+      doc.fontSize(18) // Larger font for more emphasis
         .font('Helvetica-Bold')
         .fillColor('#2c3e50')
         .text('Relationship Insights', { 
           align: 'center',
-          width: doc.page.width - 100
+          width: doc.page.width - 100,
+          underline: true
         });
       
       // Two columns for strengths and alignment areas
@@ -951,14 +961,25 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       // Move to maximum Y position from both columns
       doc.y = Math.max(doc.y, vulnerabilityY, strengthY);
       
-      // Individual assessment scores section - with centered heading
-      doc.moveDown(0.8) // Reduced spacing to keep sections on same page
-        .fontSize(16)
+      // Individual assessment scores section - with centered heading and matching styling
+      doc.moveDown(1.2) // More space before this important section
+      
+      // Add decorative line above heading for visual emphasis to match Relationship Insights
+      const indAssessLineWidth = 180;
+      const indAssessLineStart = (doc.page.width - indAssessLineWidth) / 2;
+      doc.moveTo(indAssessLineStart, doc.y - 5)
+        .lineTo(indAssessLineStart + indAssessLineWidth, doc.y - 5)
+        .strokeColor('#2c3e50')
+        .lineWidth(1)
+        .stroke();
+      
+      doc.fontSize(18) // Larger font for more emphasis
         .font('Helvetica-Bold')
         .fillColor('#2c3e50')
         .text('Individual Assessment Scores', {
           align: 'center',
-          width: doc.page.width - 100
+          width: doc.page.width - 100,
+          underline: true
         });
       
       // Create two columns for partner scores
