@@ -1353,36 +1353,36 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       // Book promotion section - Completely redesigned for better layout
       doc.moveDown(1.5);
       
-      // Start with a fresh position
+      // Start with a fresh position - expanded height
       const bookBoxY = doc.y;
-      const bookBoxHeight = 120;
+      const bookBoxHeight = 150; // Increased box height for better spacing
       
-      // Create a nice box with purple border
+      // Create a nice box with purple border - use full width of page for more space
       doc.rect(50, bookBoxY, doc.page.width - 100, bookBoxHeight)
         .fillAndStroke('#faf5ff', '#e9d5ff');
       
       // Better spacing for content
       const bookImageX = 70;
-      const bookImageWidth = 70;
+      const bookImageWidth = 80; // Slightly larger book cover
       const bookTextX = bookImageX + bookImageWidth + 30;
-      const bookTextWidth = doc.page.width - bookTextX - 70;
+      const bookTextWidth = doc.page.width - bookTextX - 80; // More space on right margin
       
       // Create stylized book cover since we can't reliably get the image
       // Draw a purple background for the book cover
-      doc.rect(bookImageX, bookBoxY + 20, bookImageWidth, bookBoxHeight - 40)
+      doc.rect(bookImageX, bookBoxY + 25, bookImageWidth, bookBoxHeight - 50)
         .fillAndStroke('#7e22ce', '#6b21a8');
       
       // Add a decorative border to the cover
       doc.lineWidth(2)
         .strokeColor('#e9d5ff')
-        .rect(bookImageX + 3, bookBoxY + 23, bookImageWidth - 6, bookBoxHeight - 46)
+        .rect(bookImageX + 3, bookBoxY + 28, bookImageWidth - 6, bookBoxHeight - 56)
         .stroke();
         
       // Add "THE 100 MARRIAGE BOOK" text with better styling
       doc.fontSize(13)
         .font('Helvetica-Bold')
         .fillColor('#ffffff')
-        .text('THE 100', bookImageX, bookBoxY + 35, {
+        .text('THE 100', bookImageX, bookBoxY + 40, {
           align: 'center',
           width: bookImageWidth
         });
@@ -1390,7 +1390,7 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       doc.fontSize(14)
         .font('Helvetica-Bold')
         .fillColor('#ffffff')
-        .text('MARRIAGE', bookImageX, bookBoxY + 52, {
+        .text('MARRIAGE', bookImageX, bookBoxY + 60, {
           align: 'center',
           width: bookImageWidth
         });
@@ -1398,7 +1398,7 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       doc.fontSize(13)
         .font('Helvetica-Bold')
         .fillColor('#ffffff')
-        .text('BOOK', bookImageX, bookBoxY + 72, {
+        .text('BOOK', bookImageX, bookBoxY + 85, {
           align: 'center',
           width: bookImageWidth
         });
@@ -1407,52 +1407,46 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       doc.fontSize(8)
         .font('Helvetica')
         .fillColor('#f5f3ff')
-        .text('By Lawrence Adjah', bookImageX, bookBoxY + 90, {
+        .text('By Lawrence Adjah', bookImageX, bookBoxY + 105, {
           align: 'center',
           width: bookImageWidth
         });
       
       // Add book promotion heading with better positioning - smaller font to fit better
-      doc.fontSize(14)
+      doc.fontSize(16) // Slightly larger
         .font('Helvetica-Bold')
         .fillColor('#7e22ce')
-        .text('Use The 100 Marriage Book as Your Discussion Companion', bookTextX, bookBoxY + 20, {
-          width: bookTextWidth - 10,
+        .text('Use The 100 Marriage Book as Your Discussion Companion', bookTextX, bookBoxY + 25, {
+          width: bookTextWidth,
           lineBreak: false
         });
       
-      // Add description text with better formatting - narrower width to prevent overlap with button
-      doc.moveDown(0.5)
-        .fontSize(10)
+      // Add description text with better formatting - wider width for comfortable reading
+      doc.moveDown(0.8)
+        .fontSize(11) // Slightly larger font
         .font('Helvetica')
         .fillColor('#4b5563')
-        .text('This book provides the perfect framework to navigate important conversations about marriage expectations and alignment.', {
-          width: bookTextWidth - 20
+        .text('This book provides the perfect framework to navigate important conversations about marriage expectations and alignment. Get your copy today to strengthen your relationship.', {
+          width: bookTextWidth,
+          align: 'left',
+          lineGap: 3 // Add more spacing between lines
         });
       
-      // Add a better styled button - positioned with proper spacing
-      const buttonWidth = 130;
-      const buttonHeight = 30;
-      const buttonX = bookTextX;
-      const buttonY = bookBoxY + bookBoxHeight - 35; // Position slightly higher
+      // Add a better styled button with more space
+      const buttonWidth = 150; // Wider button
+      const buttonHeight = 35; // Taller button
+      const buttonX = bookTextX + 50; // Move button to center of text area
+      const buttonY = bookBoxY + bookBoxHeight - 45; // More space at bottom
       
-      // Add additional text that won't overlap with button
-      doc.fontSize(10)
-        .font('Helvetica')
-        .fillColor('#4b5563')
-        .text('Get your copy today to strengthen your relationship.', bookTextX, buttonY - 15, {
-          width: buttonWidth, // Keep width limited to button width
-        });
-        
       // Draw button after positioning all text
       doc.rect(buttonX, buttonY, buttonWidth, buttonHeight)
         .fillAndStroke('#7e22ce', '#6b21a8');
       
       // Center the button text
-      doc.fontSize(12)
+      doc.fontSize(14) // Larger text
         .font('Helvetica-Bold')
         .fillColor('#ffffff')
-        .text('GET THE BOOK', buttonX + 15, buttonY + 9, {
+        .text('GET THE BOOK', buttonX + 25, buttonY + 10, {
           link: 'https://www.amazon.com/100-MARRIAGE-Lawrence-Adjah-ebook/dp/B09S3FBLN7'
         });
       
