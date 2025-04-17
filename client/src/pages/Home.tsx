@@ -66,7 +66,7 @@ export default function Home() {
               Align Expectations, Build Your Future
             </h2>
             <p className="text-xl text-gray-700 mb-8">
-              Based on the #1 best-selling expectation setting book for marriage, <a href="https://lawrenceadjah.com/the100marriagebook" target="_blank" rel="noopener noreferrer" className="text-blue-700 font-medium hover:underline">The 100 Marriage</a>, our assessment helps you uncover critical alignment areas and build a strong foundation for lasting love.
+              Inspired by the #1 bestselling book on marital expectations, <a href="https://lawrenceadjah.com/the100marriagebook" target="_blank" rel="noopener noreferrer" className="text-blue-700 font-medium hover:underline">The 100 Marriage</a>, our assessment reveals key alignment areas to forge a resilient foundation for lifelong love.
             </p>
             <div className="space-y-4 md:space-y-0 md:space-x-4 md:flex">
               <Button 
@@ -260,7 +260,7 @@ export default function Home() {
               Based on the #1 Best-Selling Book
             </h2>
             <p className="text-lg text-gray-700">
-              Inspired by the #1 best-selling expectation setting book for marriage, <em>The 100 Marriage</em> by Lawrence E. Adjah, this assessment brings the book's proven framework to life—helping you avoid misaligned expectations that can destroy your forever.
+              Inspired by the #1 bestselling book on marital expectations, <em>The 100 Marriage</em> by Lawrence E. Adjah, this assessment brings the book's proven framework to life—helping you avoid misaligned expectations that can destroy your forever.
             </p>
             <div className="pt-4">
               <Button 
