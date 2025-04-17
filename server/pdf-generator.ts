@@ -1060,12 +1060,16 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           diffIcon = '•'; // dot
         }
         
-        // Don't truncate section names anymore to prevent "Your Intimacy and Sex Life" from becoming "Your Intimacy and Sex L..."
+        // Ensure section names are never truncated by using smaller fonts for long names
         const sectionDisplay = section;
-        doc.fontSize(10)
+        const fontSize = section.length > 25 ? 8 : 10; // Use smaller font for longer names
+        doc.fontSize(fontSize)
           .font('Helvetica')
           .fillColor('#374151')
-          .text(sectionDisplay, 60, rowY + 10, { width: tableColWidths[0] - 5 });
+          .text(sectionDisplay, 60, rowY + (fontSize === 8 ? 12 : 10), { 
+            width: tableColWidths[0] - 5,
+            lineBreak: false // Prevent line breaking
+          });
           
         // Primary score
         doc.fillColor('#2563eb') // blue
