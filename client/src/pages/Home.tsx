@@ -1,4 +1,4 @@
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
@@ -15,15 +15,98 @@ export default function Home() {
   
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Header Section with Gradient Background */}
-      <header className="relative py-16 px-4 text-center overflow-hidden bg-gradient-to-b from-blue-100 to-white">
-        <div className="absolute inset-0 bg-cover bg-center" style={{ opacity: 0.2 }}></div>
+      {/* Navigation Bar */}
+      <nav className="bg-white border-b border-gray-200 py-4 px-6 sticky top-0 z-50 shadow-sm">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <div className="flex items-center">
+            <span className="text-xl font-bold text-blue-900">The 100 Marriage</span>
+          </div>
+          <div className="hidden md:flex items-center space-x-8">
+            <Link href="/">
+              <a className="text-gray-700 hover:text-blue-700 font-medium">Home</a>
+            </Link>
+            <Link href="/about">
+              <a className="text-gray-700 hover:text-blue-700 font-medium">About</a>
+            </Link>
+            <a 
+              href="#assessment" 
+              className="text-gray-700 hover:text-blue-700 font-medium"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById('assessment')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              Take Assessment
+            </a>
+            <a 
+              href="https://lawrenceadjah.com/the100marriagebook" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-gray-700 hover:text-blue-700 font-medium"
+            >
+              Book
+            </a>
+          </div>
+          <div className="md:hidden">
+            <button className="text-gray-700 hover:text-blue-700">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </nav>
+      
+      {/* Hero Section with Couple Photo */}
+      <div className="relative bg-gradient-to-b from-blue-100 to-white py-16 px-4">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 items-center">
+          <div className="text-left">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-blue-900 font-serif mb-4">
+              The 100 Marriage Assessment – Series 1
+            </h1>
+            <h2 className="text-2xl md:text-3xl text-indigo-800 mb-6 font-serif">
+              Align Expectations, Build Your Future
+            </h2>
+            <p className="text-xl text-gray-700 mb-8">
+              Misaligned expectations can derail your future. Our research-backed assessment helps you uncover critical alignment areas and build a strong foundation for lasting love.
+            </p>
+            <div className="space-y-4 md:space-y-0 md:space-x-4 md:flex">
+              <Button 
+                onClick={handleStartCoupleAssessment}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-md text-lg w-full md:w-auto"
+              >
+                Take the Assessment
+              </Button>
+              <Button 
+                onClick={() => window.open('https://lawrenceadjah.com/the100marriagebook', '_blank')}
+                className="bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-md text-lg w-full md:w-auto"
+              >
+                Get the Book
+              </Button>
+            </div>
+          </div>
+          <div className="relative rounded-lg overflow-hidden shadow-xl">
+            <img 
+              src="/assets/couple1.jpeg" 
+              alt="Happy couple embracing" 
+              className="w-full h-auto object-cover rounded-lg"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-blue-900/40 to-transparent"></div>
+            <div className="absolute bottom-0 left-0 right-0 p-4 text-white text-center">
+              <p className="text-lg font-medium">"This assessment transformed our understanding of each other."</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Header Section with Assessment Options */}
+      <header className="relative py-16 px-4 text-center overflow-hidden" id="assessment">
         <div className="relative z-10 max-w-4xl mx-auto">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-blue-900 font-serif mb-4">
-            The 100 Marriage Assessment – Series 1: Align Expectations, Build Your Future
-          </h1>
+          <h2 className="text-2xl md:text-3xl font-bold text-blue-900 font-serif mb-4">
+            Choose Your Assessment Path
+          </h2>
           <p className="text-xl text-gray-700 mb-6">
-            Misaligned Expectations Can Derail Your Future—Align Yours Today
+            Unlock personalized insights for your relationship journey
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl mx-auto">
             <div className="p-4 bg-blue-50 rounded-md border border-blue-100">
