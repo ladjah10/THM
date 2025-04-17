@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { toast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Select,
   SelectContent,
@@ -19,9 +19,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { CheckCircle2, Loader2, AlertCircle } from "lucide-react";
 import { DemographicData } from "@/types/assessment";
 import { demographicQuestions } from "@/data/demographicQuestions";
 import THMPoolPaymentForm from "@/components/payment/THMPoolPaymentForm";
+import { registerEarlyCoupleAssessment, sendCoupleInvitations } from "@/utils/coupleUtils";
 
 interface DemographicViewProps {
   demographicData: DemographicData;

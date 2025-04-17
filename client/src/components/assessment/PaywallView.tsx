@@ -14,8 +14,7 @@ import { DemographicData } from "@/types/assessment";
 import StripePaymentForm from "@/components/payment/StripePaymentForm";
 import PromoCodeForm from "@/components/payment/PromoCodeForm";
 import ReferralForm from "@/components/payment/ReferralForm";
-import { EarlySpouseInvite } from "@/components/couple/EarlySpouseInvite";
-import { registerEarlyCoupleAssessment, sendCoupleInvitations } from "@/utils/coupleUtils";
+
 import { useToast } from "@/hooks/use-toast";
 
 interface PaywallViewProps {
@@ -32,52 +31,9 @@ export default function PaywallView({
   assessmentType = 'individual'
 }: PaywallViewProps) {
   const { toast } = useToast();
-  const [spouseEmail, setSpouseEmail] = useState("");
-  const [coupleId, setCoupleId] = useState<string | null>(null);
-  const [isInviteSent, setIsInviteSent] = useState(false);
-  
   // Handle successful payment
   const handlePaymentSuccess = async () => {
     onChange("hasPaid", true);
-    
-    // If this is a couple assessment and we have spouse email, register early couple assessment
-    if (assessmentType === 'couple' && spouseEmail && !coupleId) {
-      try {
-        // Register the couple assessment early
-        const result = await registerEarlyCoupleAssessment(
-          demographicData.email || "",
-          spouseEmail
-        );
-        
-        // Store the coupleId
-        setCoupleId(result.coupleId);
-        
-        // Send invitations to both partners
-        if (result.coupleId) {
-          // Get primary partner's name from demographic data if available
-          const primaryName = demographicData.firstName 
-            ? `${demographicData.firstName} ${demographicData.lastName || ''}`.trim()
-            : undefined;
-          
-          await sendCoupleInvitations(
-            result.coupleId,
-            demographicData.email || "",
-            spouseEmail,
-            primaryName
-          );
-          
-          // Show success notification
-          toast({
-            title: "Invitations Sent!",
-            description: `You and ${spouseEmail} will receive emails with instructions to complete your assessments.`,
-            variant: "default",
-          });
-        }
-      } catch (error) {
-        console.error("Error setting up couple assessment:", error);
-        // We'll still proceed with the assessment even if couple setup fails
-      }
-    }
     
     onPaymentComplete();
   };
@@ -211,15 +167,17 @@ export default function PaywallView({
               Your Payment is Securely Processed by Stripe for Peace of Mind.
             </p>
             
-            {/* Early spouse invitation for couple assessments */}
+            {/* Explanation for couple assessment flow */}
             {assessmentType === 'couple' && (
-              <EarlySpouseInvite
-                primaryEmail={demographicData.email}
-                spouseEmail={spouseEmail}
-                onSpouseEmailChange={setSpouseEmail}
-                isInviteSent={isInviteSent}
-                setIsInviteSent={setIsInviteSent}
-              />
+              <div className="p-4 bg-purple-50 rounded-md border border-purple-100 mb-4">
+                <h4 className="font-medium text-purple-800 mb-2">Couple Assessment Information</h4>
+                <p className="text-sm text-purple-700 mb-2">
+                  You've selected the couple assessment option. You'll be able to invite your significant other in the next section, after entering your contact information.
+                </p>
+                <p className="text-xs text-purple-600">
+                  The invite will be sent via email, and you'll both be able to complete the assessment separately, at your own pace.
+                </p>
+              </div>
             )}
             
             <Tabs defaultValue="card" className="w-full mt-4">
