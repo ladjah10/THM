@@ -14,6 +14,9 @@ import { DemographicData } from "@/types/assessment";
 import StripePaymentForm from "@/components/payment/StripePaymentForm";
 import PromoCodeForm from "@/components/payment/PromoCodeForm";
 import ReferralForm from "@/components/payment/ReferralForm";
+import { EarlySpouseInvite } from "@/components/couple/EarlySpouseInvite";
+import { registerEarlyCoupleAssessment, sendCoupleInvitations } from "@/utils/coupleUtils";
+import { useToast } from "@/hooks/use-toast";
 
 interface PaywallViewProps {
   demographicData: DemographicData;
@@ -28,9 +31,48 @@ export default function PaywallView({
   onPaymentComplete,
   assessmentType = 'individual'
 }: PaywallViewProps) {
+  const { toast } = useToast();
+  const [spouseEmail, setSpouseEmail] = useState("");
+  const [coupleId, setCoupleId] = useState<string | null>(null);
+  const [isInviteSent, setIsInviteSent] = useState(false);
+  
   // Handle successful payment
-  const handlePaymentSuccess = () => {
+  const handlePaymentSuccess = async () => {
     onChange("hasPaid", true);
+    
+    // If this is a couple assessment and we have spouse email, register early couple assessment
+    if (assessmentType === 'couple' && spouseEmail && !coupleId) {
+      try {
+        // Register the couple assessment early
+        const result = await registerEarlyCoupleAssessment(
+          demographicData.email || "",
+          spouseEmail
+        );
+        
+        // Store the coupleId
+        setCoupleId(result.coupleId);
+        
+        // Send invitations to both partners
+        if (result.coupleId) {
+          await sendCoupleInvitations(
+            result.coupleId,
+            demographicData.email || "",
+            spouseEmail
+          );
+          
+          // Show success notification
+          toast({
+            title: "Invitations Sent!",
+            description: `You and ${spouseEmail} will receive emails with instructions to complete your assessments.`,
+            variant: "default",
+          });
+        }
+      } catch (error) {
+        console.error("Error setting up couple assessment:", error);
+        // We'll still proceed with the assessment even if couple setup fails
+      }
+    }
+    
     onPaymentComplete();
   };
   
@@ -163,7 +205,18 @@ export default function PaywallView({
               Your Payment is Securely Processed by Stripe for Peace of Mind.
             </p>
             
-            <Tabs defaultValue="card" className="w-full">
+            {/* Early spouse invitation for couple assessments */}
+            {assessmentType === 'couple' && (
+              <EarlySpouseInvite
+                primaryEmail={demographicData.email}
+                spouseEmail={spouseEmail}
+                onSpouseEmailChange={setSpouseEmail}
+                isInviteSent={isInviteSent}
+                setIsInviteSent={setIsInviteSent}
+              />
+            )}
+            
+            <Tabs defaultValue="card" className="w-full mt-4">
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="card">Pay with Card</TabsTrigger>
                 <TabsTrigger value="promo">Use Promo Code</TabsTrigger>
@@ -175,6 +228,19 @@ export default function PaywallView({
                   thmPoolApplied={demographicData.thmPoolApplied}
                   assessmentType={assessmentType}
                 />
+                
+                {assessmentType === 'couple' && (
+                  <div className="mt-4 px-3 py-2 bg-purple-50 rounded-md border border-purple-100">
+                    <h4 className="text-sm font-medium text-purple-800 mb-1">How the Couple Assessment Works:</h4>
+                    <ul className="text-xs text-purple-700 space-y-1 list-disc pl-4">
+                      <li>You can invite your significant other before or after your payment</li>
+                      <li>Both of you will receive email invitations to complete the assessment</li>
+                      <li>You can each take the assessment at your own pace from anywhere</li>
+                      <li>Once both assessments are complete, you'll receive a comprehensive compatibility report</li>
+                      <li>The report analyzes where you align and differ across all areas of the assessment</li>
+                    </ul>
+                  </div>
+                )}
               </TabsContent>
               <TabsContent value="promo" className="mt-4">
                 <PromoCodeForm 
