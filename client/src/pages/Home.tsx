@@ -19,15 +19,20 @@ export default function Home() {
       <nav className="bg-white border-b border-gray-200 py-4 px-6 sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center">
-            <span className="text-xl font-bold text-blue-900">The 100 Marriage</span>
+            <span className="text-xl font-bold text-blue-900">The 100 Marriage Assessment - Series 1 - For Singles & Couples</span>
           </div>
           <div className="hidden md:flex items-center space-x-8">
             <Link href="/">
               <span className="text-gray-700 hover:text-blue-700 font-medium cursor-pointer">Home</span>
             </Link>
-            <Link href="/about">
-              <span className="text-gray-700 hover:text-blue-700 font-medium cursor-pointer">About</span>
-            </Link>
+            <span 
+              className="text-gray-700 hover:text-blue-700 font-medium cursor-pointer"
+              onClick={() => {
+                document.getElementById('book-section')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              About
+            </span>
             <span 
               className="text-gray-700 hover:text-blue-700 font-medium cursor-pointer"
               onClick={() => {
@@ -42,7 +47,7 @@ export default function Home() {
               rel="noopener noreferrer"
               className="text-gray-700 hover:text-blue-700 font-medium"
             >
-              Book
+              Purchase Book
             </a>
           </div>
           <div className="md:hidden">
@@ -70,7 +75,9 @@ export default function Home() {
             </p>
             <div className="space-y-4 md:space-y-0 md:space-x-4 md:flex">
               <Button 
-                onClick={handleStartCoupleAssessment}
+                onClick={() => {
+                  document.getElementById('assessment')?.scrollIntoView({ behavior: 'smooth' });
+                }}
                 className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-md text-lg w-full md:w-auto"
               >
                 Take the Assessment
@@ -245,7 +252,7 @@ export default function Home() {
       </section>
 
       {/* Book Section */}
-      <section className="py-12 px-4 bg-gradient-to-b from-amber-50 to-white">
+      <section id="book-section" className="py-12 px-4 bg-gradient-to-b from-amber-50 to-white">
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8 items-center">
           <div className="flex justify-center">
             <img 
