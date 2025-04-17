@@ -38,13 +38,18 @@ export function formatCoupleAssessmentEmail(report: CoupleAssessmentReport): str
       if (difference > 20) differenceColor = '#dc2626'; // red
       else if (difference > 10) differenceColor = '#d97706'; // amber
       
+      // Round all percentages to whole numbers
+      const roundedPrimaryPercentage = Math.round(primaryPercentage);
+      const roundedSpousePercentage = Math.round(spousePercentage);
+      const roundedDifference = Math.round(difference);
+      
       sectionsHtml += `
         <tr>
           <td style="padding: 10px; border-bottom: 1px solid #e5e7eb;">${section}</td>
-          <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: center;">${primaryPercentage}%</td>
-          <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: center;">${spousePercentage}%</td>
+          <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: center;">${roundedPrimaryPercentage}%</td>
+          <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: center;">${roundedSpousePercentage}%</td>
           <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: center; color: ${differenceColor}; font-weight: ${difference > 10 ? 'bold' : 'normal'};">
-            ${difference}%
+            ${roundedDifference}%
           </td>
         </tr>
       `;
@@ -166,13 +171,13 @@ export function formatCoupleAssessmentEmail(report: CoupleAssessmentReport): str
               <div style="text-align: center;">
                 <div style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">${primaryName}'s Score</div>
                 <div style="width: 100px; height: 100px; border-radius: 50%; background-color: #eff6ff; border: 4px solid #3b82f6; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
-                  <div style="font-size: 24px; font-weight: 700; color: #2563eb;">${primaryAssessment.scores.overallPercentage}%</div>
+                  <div style="font-size: 24px; font-weight: 700; color: #2563eb;">${Math.round(primaryAssessment.scores.overallPercentage)}%</div>
                 </div>
               </div>
               <div style="text-align: center;">
                 <div style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">${spouseName}'s Score</div>
                 <div style="width: 100px; height: 100px; border-radius: 50%; background-color: #f5f3ff; border: 4px solid #8b5cf6; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
-                  <div style="font-size: 24px; font-weight: 700; color: #7c3aed;">${spouseAssessment.scores.overallPercentage}%</div>
+                  <div style="font-size: 24px; font-weight: 700; color: #7c3aed;">${Math.round(spouseAssessment.scores.overallPercentage)}%</div>
                 </div>
               </div>
             </div>

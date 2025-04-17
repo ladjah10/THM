@@ -454,7 +454,7 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
         // Calculate percentile for this section
         const sectionZScore = (sectionScore.percentage - sectionMean) / sectionStdDev;
         const sectionPercentile = Math.min(99, Math.max(1, Math.round(50 + (sectionZScore * 30))));
-        const scoreDiff = Math.abs(sectionScore.percentage - sectionMean).toFixed(1);
+        const scoreDiff = Math.round(Math.abs(sectionScore.percentage - sectionMean));
         const scoreComparison = sectionScore.percentage > sectionMean ? 'higher' : 'lower';
         
         // If we've done 2 sections in this row, move to new row
