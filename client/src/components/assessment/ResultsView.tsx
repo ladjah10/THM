@@ -135,7 +135,7 @@ export default function ResultsView({
                 <div className="flex justify-between items-center mb-3">
                   <p className="font-semibold text-lg text-purple-800">{genderProfile.name}</p>
                   <span className="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full">
-                    {demographics.gender === 'male' ? 'Male-Specific Profile' : 'Female-Specific Profile'}
+                    {demographics?.gender === 'male' ? 'Male-Specific Profile' : 'Female-Specific Profile'}
                   </span>
                 </div>
                 <p className="text-gray-700 leading-relaxed">{genderProfile.description}</p>

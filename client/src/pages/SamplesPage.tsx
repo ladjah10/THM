@@ -88,8 +88,8 @@ export default function SamplesPage() {
         <li>Higher percentages indicate more traditional marriage viewpoints</li>
         <li>Lower percentages suggest less traditional approaches</li>
         <li>Neither is inherently better—just different expectations</li>
-        <li>The most important consideration is how your assessment compares with your spouse/partner</li>
-        <li>Closer percentages indicate better alignment between partners</li>
+        <li>The most important consideration is how your assessment compares with your spouse</li>
+        <li>Closer percentages indicate better alignment between spouses</li>
       </ul>
     </div>
   );

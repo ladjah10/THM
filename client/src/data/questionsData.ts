@@ -1227,7 +1227,7 @@ export const questions: Question[] = [
     type: "D",
     text: "Your Marriage and Boundaries: Relational History - I believe maintaining contact with exes is inappropriate.",
     options: [
-      "We do believe maintaining contact with ex-partners is generally inappropriate",
+      "We do believe maintaining contact with ex-spouses is generally inappropriate",
       "We do not believe all contact with exes is inappropriate as long as boundaries are clear"
     ],
     weight: 5
