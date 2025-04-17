@@ -370,7 +370,7 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
       doc.fontSize(22)
         .font('Helvetica-Bold')
         .fillColor('#3182ce')
-        .text(`${overallScore.toFixed(1)}%`, 85, overallBoxY + 30);
+        .text(`${Math.round(overallScore)}%`, 85, overallBoxY + 30);
       
       // Average score info box
       doc.roundedRect(250, overallBoxY, 150, 60, 5).fillAndStroke('#f8fafc', '#e2e8f0');
@@ -382,7 +382,7 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
       doc.fontSize(22)
         .font('Helvetica-Bold')
         .fillColor('#718096')
-        .text(`${mean.toFixed(1)}%`, 265, overallBoxY + 30);
+        .text(`${Math.round(mean)}%`, 265, overallBoxY + 30);
       
       // Percentile visualization
       doc.roundedRect(70, overallBoxY + 70, 330, 40, 5).fillAndStroke('#f0f5fa', '#e2e8f0');

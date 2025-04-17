@@ -177,7 +177,7 @@ export async function sendAssessmentEmail(assessment: AssessmentResult, ccEmail:
     
     // Send mail with defined transport object
     const info = await transporter.sendMail({
-      from: `"The 100 Marriage Assessment" <${testAccount.user}>`,
+      from: `"The 100 Marriage Assessment" <hello@wgodw.com>`,
       to: assessment.email,
       cc: ccEmail, // Always CC the administrator by default
       subject: `${assessment.name} - The 100 Marriage Assessment - Series 1 Results`,
@@ -312,7 +312,7 @@ export async function sendReferralEmail(data: ReferralEmailData): Promise<{ succ
     
     // Send mail with defined transport object
     const info = await transporter.sendMail({
-      from: `"The 100 Marriage Assessment" <${testAccount.user}>`,
+      from: `"The 100 Marriage Assessment" <hello@wgodw.com>`,
       to: data.to,
       subject: `${data.referrerName} invited you to take The 100 Marriage Assessment`,
       html: emailHtml,
@@ -361,7 +361,7 @@ export async function sendCoupleInvitationEmails(
     
     // Send email to primary partner
     const primaryInfo = await transporter.sendMail({
-      from: `"The 100 Marriage Assessment" <${testAccount.user}>`,
+      from: `"The 100 Marriage Assessment" <hello@wgodw.com>`,
       to: data.primaryEmail,
       cc: ccEmail,
       subject: "Your Couple Assessment Has Been Started",
@@ -370,7 +370,7 @@ export async function sendCoupleInvitationEmails(
     
     // Send email to spouse
     const spouseInfo = await transporter.sendMail({
-      from: `"The 100 Marriage Assessment" <${testAccount.user}>`,
+      from: `"The 100 Marriage Assessment" <hello@wgodw.com>`,
       to: data.spouseEmail,
       cc: ccEmail,
       subject: "You've Been Invited to Take the 100 Marriage Assessment",
@@ -427,7 +427,7 @@ export async function sendCoupleAssessmentEmail(
     
     // Send mail with defined transport object to both partners
     const info = await transporter.sendMail({
-      from: `"The 100 Marriage Assessment" <${testAccount.user}>`,
+      from: `"The 100 Marriage Assessment" <hello@wgodw.com>`,
       to: [primaryEmail, spouseEmail].join(', '), // Send to both partners
       cc: ccEmail, // Always CC the administrator
       subject: `${primaryName} & ${spouseName} - Couple Assessment Report - The 100 Marriage`,

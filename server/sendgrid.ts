@@ -435,7 +435,7 @@ export async function sendAssessmentEmail(assessment: AssessmentResult, ccEmail:
     // Create the email message
     const message: EmailMessage = {
       to: assessment.email,
-      from: 'assessment@100marriage.com', // This should be a verified sender in SendGrid
+      from: 'hello@wgodw.com', // This should be a verified sender in SendGrid
       subject: `${assessment.name} - 100 Marriage Assessment Results`,
       html: emailHtml,
       cc: ccEmail, // Always CC the administrator by default
