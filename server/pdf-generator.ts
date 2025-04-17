@@ -1306,7 +1306,9 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       
       // Add book image
       try {
-        const bookImagePath = path.join(__dirname, '../client/public/assets/book-cover.jpg');
+        // Use import.meta.url instead of __dirname for ESM compatibility
+        const modulePath = path.dirname(new URL(import.meta.url).pathname);
+        const bookImagePath = path.join(modulePath, '../client/public/attached_assets/image_1744661653587.png');
         if (fs.existsSync(bookImagePath)) {
           doc.image(bookImagePath, 70, doc.y + 15, { 
             width: 50,

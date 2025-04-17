@@ -3,8 +3,8 @@ import { AssessmentResult, CoupleAssessmentReport, DifferenceAnalysis } from './
 
 // Create sample assessment data for primary spouse
 const primaryAssessment: AssessmentResult = {
-  email: "john@example.com",
-  name: "John Smith",
+  email: "la@lawrenceadjah.com", // Sending directly to Lawrence Adjah
+  name: "Lawrence Adjah",
   scores: {
     sections: {
       "Communication": { earned: 85, possible: 100, percentage: 85 },
@@ -84,8 +84,8 @@ const primaryAssessment: AssessmentResult = {
 
 // Create sample assessment data for spouse
 const spouseAssessment: AssessmentResult = {
-  email: "sarah@example.com",
-  name: "Sarah Johnson",
+  email: "la@lawrenceadjah.com", // Also sending to Lawrence Adjah for testing
+  name: "Test Spouse",
   scores: {
     sections: {
       "Communication": { earned: 82, possible: 100, percentage: 82 },
@@ -240,7 +240,7 @@ async function runCoupleAssessmentTest() {
   console.log(`Major differences: ${differenceAnalysis.majorDifferences.length}`);
   
   try {
-    const result = await sendCoupleAssessmentEmail(coupleReport, "admincc@example.com");
+    const result = await sendCoupleAssessmentEmail(coupleReport, "la@lawrenceadjah.com");
     
     if (result.success) {
       console.log("Couple assessment email sent successfully!");

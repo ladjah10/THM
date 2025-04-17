@@ -29,20 +29,35 @@ async function createTestAccount() {
 
 // Create reusable transporter
 async function createTransporter() {
-  const testAccount = await createTestAccount();
-  
-  // Create a SMTP transporter using Ethereal Email
-  const transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-      user: testAccount.user,
-      pass: testAccount.pass,
-    },
-  });
-  
-  return { transporter, testAccount };
+  if (process.env.SENDGRID_API_KEY) {
+    console.log("Using SendGrid for email delivery");
+    // Create a transporter using SendGrid
+    const transporter = nodemailer.createTransport({
+      service: 'SendGrid',
+      auth: {
+        user: 'apikey',
+        pass: process.env.SENDGRID_API_KEY,
+      },
+    });
+    
+    return { transporter, testAccount: null };
+  } else {
+    console.log("Using Ethereal Email for test email delivery");
+    const testAccount = await createTestAccount();
+    
+    // Create a SMTP transporter using Ethereal Email
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.ethereal.email',
+      port: 587,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: testAccount.user,
+        pass: testAccount.pass,
+      },
+    });
+    
+    return { transporter, testAccount };
+  }
 }
 
 // Format the email HTML

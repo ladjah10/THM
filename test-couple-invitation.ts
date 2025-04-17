@@ -2,10 +2,10 @@ import { sendCoupleInvitationEmails } from './server/nodemailer';
 
 // Test data for couple invitation
 const coupleInvitationData = {
-  primaryEmail: "primary@example.com",
-  primaryName: "John Smith",
-  spouseEmail: "spouse@example.com",
-  spouseName: "Sarah Smith",
+  primaryEmail: "la@lawrenceadjah.com", // Sending directly to Lawrence Adjah
+  primaryName: "Lawrence Adjah",
+  spouseEmail: "la@lawrenceadjah.com", // Also sending to the same email for testing
+  spouseName: "Test Spouse",
   coupleId: "test-couple-" + Date.now()
 };
 
@@ -21,9 +21,12 @@ async function runCoupleInvitationTest() {
     
     if (result.success) {
       console.log("Couple invitation emails sent successfully!");
-      if (result.previewUrl) {
-        console.log(`Preview URL: ${result.previewUrl}`);
-        console.log("Open this URL in your browser to view the test email");
+      if (result.previewUrls && result.previewUrls.length > 0) {
+        console.log(`Preview URLs:`);
+        result.previewUrls.forEach((url, index) => {
+          console.log(`${index === 0 ? 'Primary' : 'Spouse'}: ${url}`);
+        });
+        console.log("Open these URLs in your browser to view the test emails");
       }
     } else {
       console.error("Failed to send couple invitation emails");
