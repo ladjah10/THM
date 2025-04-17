@@ -854,11 +854,12 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       else if (overallCompatibility >= 60) compatibilityText = 'Good Compatibility';
       else if (overallCompatibility >= 40) compatibilityText = 'Moderate Compatibility';
       
-      doc.moveDown(0.5)
-        .circle(centerX, doc.y + scoreRadius, scoreRadius)
+      // Create a better-centered circle - proper spacing from top
+      const circleY = 330; // Fixed Y position for better positioning
+      doc.circle(centerX, circleY, scoreRadius)
         .fillAndStroke(scoreColor, scoreColor);
         
-      // Position text in the center of the circle
+      // Position text in the center of the circle - properly centered
       doc.fillColor('white')
         .font('Helvetica-Bold')
         .fontSize(24);
@@ -867,19 +868,20 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       const scoreTextWidth = doc.widthOfString(scoreText);
       const textHeight = doc.currentLineHeight();
       
-      doc.text(scoreText, centerX - scoreTextWidth / 2, doc.y + scoreRadius - textHeight / 2);
+      // Place text exactly in circle center
+      doc.text(scoreText, centerX - scoreTextWidth / 2, circleY - textHeight / 2);
       
-      // Draw compatibility level text below
-      doc.moveDown(5.5)
-        .fontSize(16)
+      // Draw compatibility level text below - with consistent spacing
+      doc.fontSize(16)
         .fillColor(scoreColor)
         .font('Helvetica-Bold')
-        .text(compatibilityText, { align: 'center' });
+        .text(compatibilityText, centerX - 100, circleY + scoreRadius + 20, { 
+          align: 'center',
+          width: 200 // Fixed width for better centering
+        });
         
-      // Add compatibility explanation with better formatting
-      // Fix compatibility text to ensure perfect line breaks
-      doc.moveDown(1)
-        .fontSize(12)
+      // Add compatibility explanation with proper positioning
+      doc.fontSize(12)
         .font('Helvetica')
         .fillColor('#555')
         .text(
@@ -888,8 +890,9 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           'more similar views on marriage-related topics, which can\n' +
           'lead to greater harmony and understanding in your\n' +
           'relationship.', 
+          centerX - 140, circleY + scoreRadius + 60, // Position directly below compatibility text
           {
-            width: 280, // Even narrower width to avoid awkward word breaks
+            width: 280, // Controlled width for centered text
             align: 'center'
           }
         );
