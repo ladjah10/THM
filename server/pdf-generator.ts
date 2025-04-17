@@ -1162,9 +1162,10 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         .fontSize(12)
         .font('Helvetica')
         .fillColor('#555')
-        .text('These questions highlight areas where you had significant differences in your responses. Discussing\nthese topics can help you better understand each other\'s perspectives and expectations.', {
-          width: doc.page.width - 200, // Even narrower width to avoid text cutoff
-          align: 'center'
+        .text('These questions highlight areas where you had significant differences in your responses. Discussing these topics can help you better understand each other\'s perspectives and expectations.', {
+          width: doc.page.width - 150, // Adjusted width for better justified text appearance
+          align: 'justify',
+          paragraphGap: 5
         });
         
       // Show the top differences (up to 5)
@@ -1233,10 +1234,10 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         
       // Add decorative line
       doc.moveDown(0.5);
-      const lineWidth = 180;
-      const lineStart = (doc.page.width - lineWidth) / 2;
-      doc.moveTo(lineStart, doc.y)
-        .lineTo(lineStart + lineWidth, doc.y)
+      const discussLineWidth = 180;
+      const discussLineStart = (doc.page.width - discussLineWidth) / 2;
+      doc.moveTo(discussLineStart, doc.y)
+        .lineTo(discussLineStart + discussLineWidth, doc.y)
         .strokeColor('#7e22ce')
         .stroke();
         
@@ -1252,32 +1253,34 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       // Top differences for discussion - always start on a fresh page for consistency
       doc.addPage(); // Force a new page for better spacing and layout
       
-      // Create a centered section title with decorative elements
-      const diffTitleWidth = 300;
-      const diffTitleX = (doc.page.width - diffTitleWidth) / 2;
+      // Create a better centered title with decorative elements
+      const titleText = 'Top Differences to Discuss Together:';
       
-      // Add purple line before title
-      doc.lineWidth(2)
-        .strokeColor('#7e22ce')
-        .moveTo(diffTitleX, doc.y + 10)
-        .lineTo(diffTitleX + diffTitleWidth, doc.y + 10)
+      // Calculate exact position for precise centering
+      doc.fontSize(16)
+        .font('Helvetica-Bold');
+      
+      const titleWidth = doc.widthOfString(titleText);
+      const titleDecorLineWidth = 350; // Make lines wider for title
+      const titleX = (doc.page.width - titleWidth) / 2;
+      const titleLineStartX = (doc.page.width - titleDecorLineWidth) / 2;
+      
+      // Draw top decorative line
+      doc.strokeColor('#7e22ce')
+        .lineWidth(1.5) // Slightly thinner line
+        .moveTo(titleLineStartX, doc.y + 10)
+        .lineTo(titleLineStartX + titleDecorLineWidth, doc.y + 10)
         .stroke();
       
-      // Add section title with proper spacing
-      doc.moveDown(0.5)
-        .fontSize(16)
-        .font('Helvetica-Bold')
-        .fillColor('#7e22ce')
-        .text('Top Differences to Discuss Together:', {
-          align: 'center', // Center this heading
-          width: doc.page.width - 100
-        });
+      // Add title exactly centered
+      doc.fillColor('#7e22ce')
+        .text(titleText, titleX, doc.y + 25); // Fixed position
       
-      // Add purple line after title
-      doc.lineWidth(2)
-        .strokeColor('#7e22ce')
-        .moveTo(diffTitleX, doc.y + 10)
-        .lineTo(diffTitleX + diffTitleWidth, doc.y + 10)
+      // Add bottom decorative line
+      doc.strokeColor('#7e22ce')
+        .lineWidth(1.5)
+        .moveTo(titleLineStartX, doc.y + 15)  
+        .lineTo(titleLineStartX + titleDecorLineWidth, doc.y + 15)
         .stroke();
       
       doc.moveDown(1); // More space after heading for visual separation
@@ -1476,81 +1479,89 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           });
       });
       
-      // Book recommendation box - improved layout and spacing
-      // Always start with proper spacing
-      const boxY = doc.y + 40; // More space before box
-      const boxHeight = 80;    // Slightly shorter
-      const boxWidth = 400;    // Fixed width, centered
+      // Book recommendation box - completely redesigned with fixed positioning for better control
+      // Calculate position to center the box
+      const boxWidth = 500;    // Wider box for better text layout
+      const boxHeight = 100;   // Taller box for better spacing
       const boxX = (doc.page.width - boxWidth) / 2; // Center the box
       
-      // Check if we need a new page
-      if (boxY + boxHeight > doc.page.height - 50) {
+      // Check if we need a new page - add more space
+      if (doc.y + 60 + boxHeight > doc.page.height - 50) {
         doc.addPage();
       } else {
-        doc.y = boxY;
+        doc.moveDown(2); // More space above box
       }
       
       // Draw centered box (no rounded corners in PDFKit)
-      doc.rect(boxX, doc.y, boxWidth, boxHeight)
-        .fillAndStroke('#fff6e9', '#fee4b6');
+      const boxY = doc.y;
+      doc.rect(boxX, boxY, boxWidth, boxHeight)
+        .fillAndStroke('#fff7ed', '#fed7aa'); // Better cream color
       
-      // Create stylized book cover again for second instance
+      // Create stylized book cover with exact positioning
+      const coverWidth = 60;
+      const coverHeight = 75;
+      const coverX = boxX + 20;
+      const coverY = boxY + (boxHeight - coverHeight) / 2; // Center vertically in box
+      
       // Main rectangle for book cover
-      doc.rect(boxX + 15, doc.y + 15, 50, 50)
+      doc.rect(coverX, coverY, coverWidth, coverHeight)
         .fillAndStroke('#7e22ce', '#6b21a8');
       
       // Add a decorative border
       doc.lineWidth(1.5)
         .strokeColor('#e9d5ff')
-        .rect(boxX + 17, doc.y + 17, 46, 46)
+        .rect(coverX + 2, coverY + 2, coverWidth - 4, coverHeight - 4)
         .stroke();
         
-      // Add simplified text for smaller size
-      doc.fontSize(8)
+      // Add text for book cover with better vertical spacing
+      doc.fontSize(11)
         .font('Helvetica-Bold')
         .fillColor('#ffffff')
-        .text('THE 100', boxX + 17, doc.y + 22, {
+        .text('THE 100', coverX, coverY + 10, {
           align: 'center',
-          width: 46
+          width: coverWidth
         });
         
-      doc.fontSize(9)
-        .font('Helvetica-Bold')
-        .fillColor('#ffffff')
-        .text('MARRIAGE', boxX + 17, doc.y + 32, {
-          align: 'center',
-          width: 46
-        });
-        
-      doc.fontSize(8)
-        .font('Helvetica-Bold')
-        .fillColor('#ffffff')
-        .text('BOOK', boxX + 17, doc.y + 42, {
-          align: 'center',
-          width: 46
-        });
-      
-      // Add text with better vertical alignment
-      doc.fontSize(14)
-        .font('Helvetica-Bold')
-        .fillColor('#92400e')
-        .text('Don\'t have the book yet?', boxX + 80, doc.y + 15);
-        
-      // Improved alignment and spacing of link text
       doc.fontSize(12)
-        .font('Helvetica')
-        .fillColor('#78350f');
+        .text('MARRIAGE', coverX, coverY + 25, {
+          align: 'center',
+          width: coverWidth
+        });
+        
+      doc.fontSize(11)
+        .text('BOOK', coverX, coverY + 45, {
+          align: 'center',
+          width: coverWidth
+        });
       
-      // Link on its own line
-      doc.text('Get your copy at lawrenceadjah.com/the100marriagebook', boxX + 80, doc.y + 10, {
-          width: boxWidth - 100,
+      // Add text content with precise positioning
+      const textX = coverX + coverWidth + 25;
+      const textWidth = boxWidth - textX - 20 + boxX;
+      
+      // Header text
+      doc.fontSize(16)
+        .font('Helvetica-Bold')
+        .fillColor('#9a3412') // Darker orange/brown
+        .text('Don\'t have the book yet?', textX, coverY + 5, {
+          width: textWidth
+        });
+      
+      // Link text with underlining and proper spacing
+      doc.fontSize(13)
+        .font('Helvetica-Bold')
+        .fillColor('#78350f')
+        .text('Get your copy at lawrenceadjah.com/the100marriagebook', textX, coverY + 30, {
+          width: textWidth,
           link: 'https://lawrenceadjah.com/the100marriagebook',
           underline: true
         });
-        
-      // Description text with proper spacing  
-      doc.text('to deepen your discussions and strengthen your relationship.', boxX + 80, doc.y + 5, {
-          width: boxWidth - 100
+      
+      // Description text with proper spacing
+      doc.fontSize(12)
+        .font('Helvetica')
+        .fillColor('#78350f')
+        .text('to deepen your discussions and strengthen your relationship.', textX, coverY + 50, {
+          width: textWidth
         });
       
       // Always start Next Steps on a new page for consistent layout
