@@ -876,16 +876,22 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         .font('Helvetica-Bold')
         .text(compatibilityText, { align: 'center' });
         
-      // Add compatibility explanation
+      // Add compatibility explanation with better formatting
+      // Use a narrower width with clear line breaks to avoid awkward wrapping
       doc.moveDown(1)
         .fontSize(12)
         .font('Helvetica')
         .fillColor('#555')
-        .text('This compatibility score represents how well aligned your marriage expectations are as a couple. A higher score means you have more similar views on marriage-related topics, which can lead to greater harmony and understanding in your relationship.', {
-          width: 300, // Fixed width to prevent awkward line breaks
-          align: 'center',
-          indent: 30 // Force indentation to center the text block
-        });
+        .text(
+          'This compatibility score represents how well aligned your\n' +
+          'expectations are as a couple. A higher score means you have\n' +
+          'more similar views on marriage-related topics, which\n' +
+          'can lead to greater harmony and understanding in your relationship.', 
+          {
+            width: 350,
+            align: 'center'
+          }
+        );
           
       // Strengths and Areas for Alignment
       doc.moveDown(1.5)
@@ -960,10 +966,9 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         
       // Gender-specific profile if available
       if (primaryAssessment.genderProfile) {
-        doc.moveDown(0.5)
-          .fontSize(11)
+        doc.fontSize(11)
           .fillColor('#7e22ce') // purple
-          .text(`${primaryAssessment.demographics.gender === 'male' ? 'Male' : 'Female'}-Specific Profile: ${primaryAssessment.genderProfile.name}`);
+          .text(`${primaryAssessment.demographics.gender === 'male' ? 'Male' : 'Female'}-Specific Profile: ${primaryAssessment.genderProfile.name}`, 60, scoreColY + 45);
       }
       
       // Right column: Spouse Assessment
@@ -979,10 +984,9 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         
       // Gender-specific profile if available
       if (spouseAssessment.genderProfile) {
-        doc.moveDown(0.5)
-          .fontSize(11)
+        doc.fontSize(11)
           .fillColor('#7e22ce') // purple
-          .text(`${spouseAssessment.demographics.gender === 'male' ? 'Male' : 'Female'}-Specific Profile: ${spouseAssessment.genderProfile.name}`);
+          .text(`${spouseAssessment.demographics.gender === 'male' ? 'Male' : 'Female'}-Specific Profile: ${spouseAssessment.genderProfile.name}`, doc.page.width / 2 + 10, scoreColY + 45);
       }
       
       // Section Comparison Table (start new page)
