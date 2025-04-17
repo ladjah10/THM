@@ -30,7 +30,7 @@ async function generateImprovedPDF(): Promise<Buffer> {
         resolve(pdfBuffer);
       });
 
-      // Sample assessment data 
+      // Sample assessment data with authentic section names
       const assessment = {
         name: 'John Smith',
         email: 'john.smith@example.com',
@@ -58,9 +58,9 @@ async function generateImprovedPDF(): Promise<Buffer> {
           genderSpecific: 'false',
           iconPath: 'attached_assets/BV 6.png',
           criteria: [
-            { section: 'Spiritual Beliefs', min: 70 },
-            { section: 'Family Planning', min: 65 },
-            { section: 'Role Expectations', min: 65 }
+            { section: 'Your Foundation', min: 70 },
+            { section: 'Your Parenting Life', min: 65 },
+            { section: 'Your Marriage Life', min: 65 }
           ]
         },
         genderProfile: {
@@ -70,28 +70,27 @@ async function generateImprovedPDF(): Promise<Buffer> {
           genderSpecific: 'male',
           iconPath: 'attached_assets/SL 12.png',
           criteria: [
-            { section: 'Role Expectations', min: 70 },
-            { section: 'Financial Values', min: 65 },
-            { section: 'Communication', min: 75 }
+            { section: 'Your Marriage Life', min: 70 },
+            { section: 'Your Finances', min: 65 },
+            { section: 'Your Family/Home Life', min: 75 }
           ]
         },
         scores: {
           sections: {
-            'Spiritual Beliefs': { earned: 92, possible: 100, percentage: 92 },
-            'Family Planning': { earned: 84, possible: 100, percentage: 84 },
-            'Role Expectations': { earned: 88, possible: 100, percentage: 88 },
-            'Physical Intimacy': { earned: 78, possible: 100, percentage: 78 },
-            'Conflict Resolution': { earned: 82, possible: 100, percentage: 82 },
-            'Financial Values': { earned: 76, possible: 100, percentage: 76 },
-            'Communication': { earned: 86, possible: 100, percentage: 86 },
-            'Support Networks': { earned: 72, possible: 100, percentage: 72 },
-            'Recreation & Leisure': { earned: 68, possible: 100, percentage: 68 }
+            'Your Foundation': { earned: 92, possible: 100, percentage: 92 },
+            'Your Faith Life': { earned: 84, possible: 100, percentage: 84 },
+            'Your Marriage Life': { earned: 88, possible: 100, percentage: 88 },
+            'Your Parenting Life': { earned: 78, possible: 100, percentage: 78 },
+            'Your Family/Home Life': { earned: 82, possible: 100, percentage: 82 },
+            'Your Finances': { earned: 76, possible: 100, percentage: 76 },
+            'Your Health and Wellness': { earned: 86, possible: 100, percentage: 86 },
+            'Your Marriage and Boundaries': { earned: 72, possible: 100, percentage: 72 }
           },
-          totalEarned: 726,
-          totalPossible: 900,
-          overallPercentage: 80.67,
-          strengths: ['Spiritual Beliefs', 'Role Expectations', 'Communication'],
-          improvementAreas: ['Recreation & Leisure', 'Support Networks', 'Financial Values']
+          totalEarned: 658,
+          totalPossible: 800,
+          overallPercentage: 82.25,
+          strengths: ['Your Foundation', 'Your Marriage Life', 'Your Health and Wellness'],
+          improvementAreas: ['Your Marriage and Boundaries', 'Your Finances']
         }
       };
 
@@ -368,18 +367,17 @@ async function generateImprovedPDF(): Promise<Buffer> {
         .fillColor('#2c3e50')
         .text('Section Comparisons (Men-specific)', 50, 290);
       
-      // Show all 9 section comparisons with 2-column layout
-      // Define section data with percentiles
+      // Show all 8 section comparisons with 2-column layout
+      // Define section data with percentiles - using the authentic section names
       const sectionData = [
-        { name: 'Spiritual Beliefs', percentile: 74, diff: 6, higher: true },
-        { name: 'Family Planning', percentile: 64, diff: 3, higher: true },
-        { name: 'Role Expectations', percentile: 72, diff: 5, higher: true },
-        { name: 'Physical Intimacy', percentile: 56, diff: 2, higher: true },
-        { name: 'Conflict Resolution', percentile: 68, diff: 4, higher: true },
-        { name: 'Financial Values', percentile: 54, diff: 2, higher: false },
-        { name: 'Communication', percentile: 67, diff: 4, higher: true },
-        { name: 'Support Networks', percentile: 52, diff: 3, higher: false },
-        { name: 'Recreation & Leisure', percentile: 45, diff: 5, higher: false }
+        { name: 'Your Foundation', percentile: 74, diff: 6, higher: true },
+        { name: 'Your Faith Life', percentile: 64, diff: 3, higher: true },
+        { name: 'Your Marriage Life', percentile: 72, diff: 5, higher: true },
+        { name: 'Your Parenting Life', percentile: 56, diff: 2, higher: true },
+        { name: 'Your Family/Home Life', percentile: 68, diff: 4, higher: true },
+        { name: 'Your Finances', percentile: 54, diff: 2, higher: false },
+        { name: 'Your Health and Wellness', percentile: 67, diff: 4, higher: true },
+        { name: 'Your Marriage and Boundaries', percentile: 52, diff: 3, higher: false }
       ];
       
       // Add new page for section comparisons to have enough space
