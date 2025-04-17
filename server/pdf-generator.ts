@@ -1039,29 +1039,37 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           .rect(50, rowY, doc.page.width - 100, rowHeight)
           .stroke();
         
-        // Set text color based on difference value
+        // Set text color and visual indicator based on difference value
         let diffColor = '#15803d'; // green
-        if (difference > 20) diffColor = '#dc2626'; // red
-        else if (difference > 10) diffColor = '#d97706'; // amber
+        let diffIcon = '✓'; // check mark
         
-        // Section name
+        if (difference > 20) {
+          diffColor = '#dc2626'; // red
+          diffIcon = '!'; // exclamation mark
+        } else if (difference > 10) {
+          diffColor = '#d97706'; // amber
+          diffIcon = '•'; // dot
+        }
+        
+        // Section name (truncate if too long)
+        const sectionDisplay = section.length > 25 ? section.substring(0, 23) + '...' : section;
         doc.fontSize(11)
           .font('Helvetica')
           .fillColor('#374151')
-          .text(section, 60, rowY + 7);
+          .text(sectionDisplay, 60, rowY + 10, { width: tableColWidths[0] - 10 });
           
         // Primary score
         doc.fillColor('#2563eb') // blue
-          .text(`${Math.round(primaryScore.percentage)}%`, 60 + tableColWidths[0], rowY + 7);
+          .text(`${Math.round(primaryScore.percentage)}%`, 60 + tableColWidths[0], rowY + 10);
           
         // Spouse score
         doc.fillColor('#7e22ce') // purple
-          .text(`${Math.round(spouseScore.percentage)}%`, 60 + tableColWidths[0] + tableColWidths[1], rowY + 7);
+          .text(`${Math.round(spouseScore.percentage)}%`, 60 + tableColWidths[0] + tableColWidths[1], rowY + 10);
           
-        // Difference with color coding
+        // Difference with color coding and icon
         doc.font('Helvetica-Bold')
           .fillColor(diffColor)
-          .text(`${Math.round(difference)}%`, 60 + tableColWidths[0] + tableColWidths[1] + tableColWidths[2], rowY + 7);
+          .text(`${diffIcon} ${Math.round(difference)}%`, 60 + tableColWidths[0] + tableColWidths[1] + tableColWidths[2], rowY + 10);
           
         // Move to next row
         rowY += rowHeight;
@@ -1087,18 +1095,27 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       const topDifferences = differenceAnalysis.majorDifferences.slice(0, 5);
       
       topDifferences.forEach((diff, idx) => {
+        // Calculate dynamic height based on content length
+        const estimatedTextLength = diff.questionText.length + diff.primaryResponse.length + diff.spouseResponse.length;
+        const dynamicHeight = Math.max(80, 50 + Math.ceil(estimatedTextLength / 100) * 15);
+        
+        // Check if we need a new page
+        if (doc.y + dynamicHeight > doc.page.height - 50) {
+          doc.addPage();
+        }
+        
         const bgColor = idx % 2 === 0 ? '#fff7ed' : '#ffffff';
         
-        // Draw background rectangle
-        doc.rect(50, doc.y, doc.page.width - 100, 70).fill(bgColor);
+        // Draw background rectangle with dynamic height
+        doc.rect(50, doc.y, doc.page.width - 100, dynamicHeight).fill(bgColor);
         
         // Draw border
         doc.strokeColor('#fed7aa')
           .lineWidth(0.5)
-          .rect(50, doc.y, doc.page.width - 100, 70)
+          .rect(50, doc.y, doc.page.width - 100, dynamicHeight)
           .stroke();
           
-        // Question text
+        // Question text with more width
         doc.fontSize(12)
           .font('Helvetica-Bold')
           .fillColor('#9a3412')
@@ -1106,24 +1123,26 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
             width: doc.page.width - 120
           });
           
-        // Primary response
-        doc.fontSize(11)
+        // Primary response 
+        doc.moveDown(0.5)
+          .fontSize(11)
           .font('Helvetica')
           .fillColor('#2563eb') // blue
-          .text(`${primaryName}: `, 60, doc.y + 8, { continued: true })
+          .text(`${primaryName}: `, 60, undefined, { continued: true })
           .font('Helvetica-Bold')
-          .text(diff.primaryResponse);
+          .text(diff.primaryResponse, { width: doc.page.width - 120 });
           
         // Spouse response
-        doc.fontSize(11)
+        doc.moveDown(0.5)
+          .fontSize(11)
           .font('Helvetica')
           .fillColor('#7e22ce') // purple
-          .text(`${spouseName}: `, 60, doc.y + 8, { continued: true })
+          .text(`${spouseName}: `, 60, undefined, { continued: true })
           .font('Helvetica-Bold')
-          .text(diff.spouseResponse);
+          .text(diff.spouseResponse, { width: doc.page.width - 120 });
           
-        // Move past this container
-        doc.y += 40;
+        // Move past this container to ensure proper spacing
+        doc.moveDown(0.8);
       });
       
       // Book-guided discussion section
@@ -1346,9 +1365,15 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           width: boxWidth - 110
         });
       
+      // Check if we need a new page for Next Steps section
+      if (doc.y > doc.page.height - 200) {
+        doc.addPage();
+      } else {
+        doc.moveDown(3);
+      }
+      
       // Next Steps section
-      doc.moveDown(3)
-        .fontSize(14)
+      doc.fontSize(14)
         .font('Helvetica-Bold')
         .fillColor('#2c3e50')
         .text('Next Steps for Your Relationship');
@@ -1358,52 +1383,71 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         .font('Helvetica')
         .fillColor('#555');
         
-      // Numbered list of recommended steps
+      // Numbered list of recommended steps - with narrower width for better readability
       doc.text('1. Review this report together and discuss the key areas of difference.', {
-        width: doc.page.width - 100,
-        bulletRadius: 2
+        width: doc.page.width - 150,
+        align: 'left'
       });
       
       doc.moveDown(0.5)
         .text('2. Focus on understanding each other\'s perspectives rather than trying to change them.', {
-          width: doc.page.width - 100,
-          bulletRadius: 2
+          width: doc.page.width - 150,
+          align: 'left'
         });
         
       doc.moveDown(0.5)
         .text('3. Use "The 100 Marriage" book to guide your discussions on areas needing alignment.', {
-          width: doc.page.width - 100,
-          bulletRadius: 2
+          width: doc.page.width - 150,
+          align: 'left'
         });
         
       doc.moveDown(0.5)
         .text('4. Consider scheduling a consultation with Lawrence E. Adjah for additional support.', {
-          width: doc.page.width - 100,
-          bulletRadius: 2
+          width: doc.page.width - 150,
+          align: 'left'
         });
         
       doc.moveDown(0.5)
         .text('5. Revisit the assessment after 6-12 months to track your alignment progress.', {
-          width: doc.page.width - 100,
-          bulletRadius: 2
+          width: doc.page.width - 150,
+          align: 'left'
         });
+      
+      // Check if we need a new page for consultation section
+      if (doc.y > doc.page.height - 100) {
+        doc.addPage();
+      } else {
+        doc.moveDown(2);
+      }
+      
+      // Create a highlighted consultation box
+      const consultY = doc.y;
+      doc.rect(50, consultY, doc.page.width - 100, 70)
+        .fillAndStroke('#e6f2ff', '#bfdbfe');
         
       // Consultation link
-      doc.moveDown(1.5)
+      doc.moveUp()
+        .fontSize(13)
         .font('Helvetica-Bold')
         .fillColor('#0369a1')
-        .text('To schedule a consultation:', {
-          width: doc.page.width - 100,
+        .text('To schedule a consultation:', 70, consultY + 15, {
+          width: doc.page.width - 140,
           align: 'center'
         });
         
-      doc.moveDown(0.3)
+      doc.moveDown(0.5)
+        .fontSize(12)
         .font('Helvetica')
-        .text('https://lawrence-adjah.clientsecure.me/request/service', {
-          width: doc.page.width - 100,
+        .fillColor('#0369a1')
+        .text('https://lawrence-adjah.clientsecure.me/request/service', 70, undefined, {
+          width: doc.page.width - 140,
           align: 'center',
+          link: 'https://lawrence-adjah.clientsecure.me/request/service',
           underline: true
         });
+        
+      // Add a bit of space before footer
+      doc.moveDown(3);
         
       // Add footer
       doc.fontSize(10)
