@@ -1,13 +1,13 @@
 /**
  * Formats a couple assessment invitation email
- * @param primaryPartnerName The name of the primary partner who initiated the assessment
+ * @param primaryPartnerName The name of the primary spouse who initiated the assessment
  * @param spouseName The name of the spouse being invited (if known)
  * @param coupleId The unique identifier for the couple's assessment
- * @param isForPrimary Whether this email is for the primary partner or the spouse
+ * @param isForPrimary Whether this email is for the primary spouse or the invited spouse
  * @returns HTML email content
  */
 export function formatCoupleInvitationEmail(
-  primaryPartnerName?: string, 
+  primaryName?: string, 
   spouseName?: string, 
   coupleId: string = '',
   isForPrimary: boolean = false
@@ -17,7 +17,7 @@ export function formatCoupleInvitationEmail(
   const invitationLink = `${baseUrl}/couple-assessment/invite/${coupleId}`;
   
   // Format names with defaults if not provided
-  const primaryName = primaryPartnerName || 'Your significant other';
+  const formattedPrimaryName = primaryName || 'Your significant other';
   const secondaryName = spouseName || 'your significant other';
   
   // Different content based on recipient
@@ -193,7 +193,7 @@ export function formatCoupleInvitationEmail(
             <h1>You've Been Invited to Take the 100 Marriage Assessment</h1>
           </div>
           <div class="content">
-            <p>${primaryName} has invited you to take the 100 Marriage Assessment - Series 1 as a couple.</p>
+            <p>${formattedPrimaryName} has invited you to take the 100 Marriage Assessment - Series 1 as a couple.</p>
             
             <div class="callout">
               <p><strong>What is this?</strong></p>
@@ -206,7 +206,7 @@ export function formatCoupleInvitationEmail(
               <li>The assessment takes about 15-20 minutes to complete</li>
               <li>Your answers will be private until both of you have completed it</li>
               <li>You'll receive insights into your relationship alignment</li>
-              <li>There's no cost to you - ${primaryName} has already covered the fee</li>
+              <li>There's no cost to you - ${formattedPrimaryName} has already covered the fee</li>
             </ul>
             
             <p>Click the button below to start your assessment:</p>

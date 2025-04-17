@@ -258,7 +258,7 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
           <p>Total Score: ${scores.totalEarned}/${scores.totalPossible}</p>
           <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin-top: 10px; font-size: 14px; color: #555;">
             <strong>Understanding Your Score:</strong> Your score reflects your perspectives on marriage, not a judgment of readiness.
-            Higher percentages indicate more traditional viewpoints on relationships, while lower percentages suggest more progressive approaches.
+            Higher percentages indicate more traditional viewpoints on relationships, while lower percentages suggest less traditional approaches.
             Neither is inherently better—these are simply different approaches to relationship, and your scores help identify your psychographic profile.
           </div>
         </div>

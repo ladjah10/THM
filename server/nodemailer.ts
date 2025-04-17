@@ -97,7 +97,7 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
           <p>Total Score: ${scores.totalEarned}/${scores.totalPossible}</p>
           <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin-top: 10px; font-size: 14px; color: #555;">
             <strong>Understanding Your Score:</strong> Your score reflects your perspectives on marriage, not a judgment of readiness.
-            Higher percentages indicate more traditional viewpoints on relationships, while lower percentages suggest more progressive approaches.
+            Higher percentages indicate more traditional viewpoints on relationships, while lower percentages suggest less traditional approaches.
             Neither is inherently better—these are simply different approaches to relationship, and your scores help identify your psychographic profile.
           </div>
         </div>
@@ -262,7 +262,7 @@ function formatReferralEmail(data: ReferralEmailData): string {
             <li>Discover your unique relationship approach and psychographic profile</li>
             <li>Identify potential areas of misalignment with your spouse or future spouse</li>
             <li>Gain clarity on what truly matters to you in a lifelong commitment</li>
-            <li>Learn if you have traditional or progressive views on marriage and relationships</li>
+            <li>Learn if you have traditional or less traditional views on marriage and relationships</li>
             <li>Receive a personalized analysis of your results via email</li>
           </ul>
           <p><strong>Note:</strong> This is currently an individual assessment. The couples assessment option will be available soon!</p>
