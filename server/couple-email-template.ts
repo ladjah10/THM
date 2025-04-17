@@ -203,13 +203,54 @@ export function formatCoupleAssessmentEmail(report: CoupleAssessmentReport): str
             ${getMajorDifferencesHtml()}
           </div>
           
+          <!-- Discussion Guide Section -->
+          <div style="margin-top: 30px; background-color: #f3f9fb; border: 1px solid #d1e9f0; border-radius: 8px; padding: 20px;">
+            <h2 style="margin-top: 0; font-size: 18px; color: #0e7490;">Guided Discussion with The 100 Marriage Book</h2>
+            <p style="margin-bottom: 15px; font-size: 14px; color: #374151;">
+              We recommend reviewing these key differences together using "The 100 Marriage" book as your guide. The book provides valuable context and discussion points that can help you navigate these areas more effectively.
+            </p>
+            
+            <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 15px; margin-bottom: 20px;">
+              <h3 style="margin-top: 0; font-size: 16px; color: #0f172a;">Key Sections for Discussion:</h3>
+              <ul style="list-style-type: none; padding-left: 0; margin-bottom: 0;">
+                ${differenceAnalysis.vulnerabilityAreas.map(area => `
+                  <li style="padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
+                    <span style="color: #0e7490; font-weight: 500;">Section: ${area}</span><br>
+                    <span style="font-size: 13px; color: #64748b;">Walk through the questions in this section together with the book as your companion.</span>
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 16px; background-color: #fff6e9; border: 1px solid #fee4b6; border-radius: 6px; padding: 12px;">
+              <div style="flex-shrink: 0;">
+                <img src="https://lawrenceadjah.com/wp-content/uploads/2023/12/The-100-Marriage-Lawrence-Adjah-Christian-Faith-Based-Books-Marriage-Books-on-Amazon-Relationship-Books-Best-Sellers.png" 
+                     alt="The 100 Marriage Book" 
+                     style="width: 60px; height: auto; border-radius: 3px; box-shadow: 0 1px 2px rgba(0,0,0,0.1);">
+              </div>
+              <div>
+                <p style="margin: 0 0 5px; font-size: 13px; color: #92400e; font-weight: 500;">
+                  Don't have the book yet?
+                </p>
+                <p style="margin: 0; font-size: 12px; color: #78350f;">
+                  <a href="https://lawrenceadjah.com/the100marriagebook" 
+                     style="color: #b45309; text-decoration: underline; font-weight: 500;">
+                    Get your copy here
+                  </a> 
+                  to deepen your discussions and strengthen your relationship.
+                </p>
+              </div>
+            </div>
+          </div>
+          
           <!-- Next Steps and Consultation -->
           <div style="margin-top: 30px; background-color: #f0f9ff; border: 1px solid #e0f2fe; border-radius: 8px; padding: 20px;">
             <h2 style="margin-top: 0; font-size: 18px; color: #0369a1;">Next Steps for Your Relationship</h2>
             <ol style="margin-bottom: 15px; padding-left: 25px; color: #374151;">
               <li style="margin-bottom: 8px;">Review this report together and discuss the key areas of difference.</li>
               <li style="margin-bottom: 8px;">Focus on understanding each other's perspectives rather than trying to change them.</li>
-              <li style="margin-bottom: 8px;">Consider scheduling a consultation with Lawrence E. Adjah to help navigate significant differences.</li>
+              <li style="margin-bottom: 8px;">Use "The 100 Marriage" book to guide your discussions on areas needing alignment.</li>
+              <li style="margin-bottom: 8px;">Consider scheduling a consultation with Lawrence E. Adjah for additional support.</li>
               <li style="margin-bottom: 8px;">Revisit the assessment after 6-12 months to track your alignment progress.</li>
             </ol>
             

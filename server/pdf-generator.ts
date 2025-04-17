@@ -1125,8 +1125,104 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         doc.y += 40;
       });
       
+      // Book-guided discussion section
+      doc.addPage();
+      doc.fontSize(18)
+        .font('Helvetica-Bold')
+        .fillColor('#0e7490')
+        .text('Guided Discussion with The 100 Marriage Book', {
+          align: 'center'
+        });
+        
+      // Add decorative line
+      doc.moveDown(0.5);
+      const lineWidth = 150;
+      const lineStart = (doc.page.width - lineWidth) / 2;
+      doc.moveTo(lineStart, doc.y)
+        .lineTo(lineStart + lineWidth, doc.y)
+        .strokeColor('#0e7490')
+        .stroke();
+        
+      doc.moveDown(1)
+        .fontSize(12)
+        .font('Helvetica')
+        .fillColor('#374151')
+        .text('We recommend reviewing these key differences together using "The 100 Marriage" book as your guide. The book provides valuable context and discussion points that can help you navigate these areas more effectively.', {
+          align: 'justify',
+          width: doc.page.width - 100
+        });
+      
+      // Section for discussion with book
+      doc.moveDown(1)
+        .fontSize(14)
+        .font('Helvetica-Bold')
+        .fillColor('#0f172a')
+        .text('Key Sections for Discussion:');
+      
+      doc.moveDown(0.5)
+        .fontSize(12)
+        .font('Helvetica')
+        .fillColor('#334155');
+      
+      // List the vulnerability areas
+      report.differenceAnalysis.vulnerabilityAreas.forEach((area, index) => {
+        doc.moveDown(0.5)
+          .font('Helvetica-Bold')
+          .fillColor('#0e7490')
+          .text(`Section: ${area}`, 60)
+          .font('Helvetica')
+          .fillColor('#64748b')
+          .fontSize(11)
+          .text('Walk through the questions in this section together with the book as your companion.', 60, doc.y, {
+            width: doc.page.width - 120
+          });
+      });
+      
+      // Book recommendation box
+      const boxY = doc.y + 20;
+      const boxHeight = 100;
+      const boxWidth = doc.page.width - 100;
+      
+      // Check if we need a new page
+      if (boxY + boxHeight > doc.page.height - 50) {
+        doc.addPage();
+      } else {
+        doc.y = boxY;
+      }
+      
+      // Draw box
+      doc.rect(50, doc.y, boxWidth, boxHeight)
+        .fillAndStroke('#fff6e9', '#fee4b6');
+      
+      // Add book image
+      try {
+        const bookImagePath = path.join(__dirname, '../client/public/assets/book-cover.jpg');
+        if (fs.existsSync(bookImagePath)) {
+          doc.image(bookImagePath, 70, doc.y + 15, { 
+            width: 50,
+            height: 70
+          });
+        }
+      } catch (error) {
+        console.log('Book cover image not available:', error);
+      }
+      
+      // Add text
+      doc.fontSize(14)
+        .font('Helvetica-Bold')
+        .fillColor('#92400e')
+        .text('Don\'t have the book yet?', 140, doc.y + 25);
+        
+      doc.moveDown(0.5)
+        .fontSize(12)
+        .font('Helvetica')
+        .fillColor('#78350f')
+        .text('Get your copy at lawrenceadjah.com/the100marriagebook to deepen your discussions and strengthen your relationship.', 140, doc.y, {
+          width: boxWidth - 110
+        });
+      
       // Next Steps section
-      doc.moveDown(1.5)
+      doc.moveDown(3)
         .fontSize(14)
         .font('Helvetica-Bold')
         .fillColor('#2c3e50')
@@ -1150,13 +1246,19 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         });
         
       doc.moveDown(0.5)
-        .text('3. Consider scheduling a consultation with Lawrence E. Adjah to help navigate significant differences.', {
+        .text('3. Use "The 100 Marriage" book to guide your discussions on areas needing alignment.', {
           width: doc.page.width - 100,
           bulletRadius: 2
         });
         
       doc.moveDown(0.5)
-        .text('4. Revisit the assessment after 6-12 months to track your alignment progress.', {
+        .text('4. Consider scheduling a consultation with Lawrence E. Adjah for additional support.', {
+          width: doc.page.width - 100,
+          bulletRadius: 2
+        });
+        
+      doc.moveDown(0.5)
+        .text('5. Revisit the assessment after 6-12 months to track your alignment progress.', {
           width: doc.page.width - 100,
           bulletRadius: 2
         });
