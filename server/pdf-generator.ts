@@ -1127,37 +1127,147 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       
       // Book-guided discussion section
       doc.addPage();
-      doc.fontSize(18)
+      doc.fontSize(20)
         .font('Helvetica-Bold')
-        .fillColor('#0e7490')
-        .text('Guided Discussion with The 100 Marriage Book', {
+        .fillColor('#7e22ce') // Updated to purple color
+        .text('Discussion Guide: Where Your Perspectives Differ', {
           align: 'center'
         });
         
       // Add decorative line
       doc.moveDown(0.5);
-      const lineWidth = 150;
+      const lineWidth = 180;
       const lineStart = (doc.page.width - lineWidth) / 2;
       doc.moveTo(lineStart, doc.y)
         .lineTo(lineStart + lineWidth, doc.y)
-        .strokeColor('#0e7490')
+        .strokeColor('#7e22ce')
         .stroke();
         
       doc.moveDown(1)
         .fontSize(12)
         .font('Helvetica')
         .fillColor('#374151')
-        .text('We recommend reviewing these key differences together using "The 100 Marriage" book as your guide. The book provides valuable context and discussion points that can help you navigate these areas more effectively.', {
+        .text('These are the most significant areas where your answers differed. We recommend scheduling dedicated time to discuss these topics together using "The 100 Marriage" book as your guide. The book provides valuable context and discussion points that will help you align your expectations more effectively.', {
           align: 'justify',
           width: doc.page.width - 100
         });
       
-      // Section for discussion with book
+      // Top differences for discussion
+      doc.moveDown(1.5)
+        .fontSize(16)
+        .font('Helvetica-Bold')
+        .fillColor('#7e22ce')
+        .text('Top Differences to Discuss Together:', {
+          align: 'left'
+        });
+        
+      // Draw a purple border box around the differences section
+      const startY = doc.y + 5;
+      
+      // Loop through top differences, showing more detail
+      differenceAnalysis.majorDifferences.slice(0, 5).forEach((diff, idx) => {
+        const bgColor = idx % 2 === 0 ? '#f5f3ff' : '#faf5ff';
+        const boxHeight = 85; // Estimated height per difference box
+        
+        // Background rectangle
+        doc.rect(50, doc.y, doc.page.width - 100, boxHeight)
+          .fill(bgColor);
+          
+        // Border
+        doc.strokeColor('#e9d5ff')
+          .lineWidth(1)
+          .rect(50, doc.y, doc.page.width - 100, boxHeight)
+          .stroke();
+          
+        // Question text
+        doc.moveUp()
+          .font('Helvetica-Bold')
+          .fontSize(12)
+          .fillColor('#6b21a8')
+          .text(`Question ${diff.questionId}: ${diff.questionText}`, 60, doc.y + 10, {
+            width: doc.page.width - 120
+          });
+          
+        // Responses in two columns
+        const colWidth = (doc.page.width - 140) / 2;
+        
+        // Response headers
+        doc.moveDown(0.8)
+          .fontSize(10)
+          .font('Helvetica-Bold')
+          .fillColor('#7e22ce')
+          .text(`${primaryName}'s Response:`, 60, null, { width: colWidth });
+          
+        doc.moveUp()
+          .text(`${spouseName}'s Response:`, 60 + colWidth + 20, doc.y, { width: colWidth });
+          
+        // Response content
+        doc.fontSize(10)
+          .font('Helvetica')
+          .fillColor('#4b5563')
+          .text(diff.primaryResponse, 60, null, { width: colWidth });
+          
+        doc.moveUp()
+          .text(diff.spouseResponse, 60 + colWidth + 20, doc.y, { width: colWidth });
+          
+        doc.moveDown(1);
+      });
+      
+      // Book promotion section
       doc.moveDown(1)
+        .rect(50, doc.y, doc.page.width - 100, 100)
+        .fill('#ffffff');
+        
+      doc.strokeColor('#e9d5ff')
+        .lineWidth(1)
+        .rect(50, doc.y - 100, doc.page.width - 100, 100)
+        .stroke();
+        
+      // Add book cover placeholder (this would be replaced with actual book cover image in production)
+      doc.rect(60, doc.y - 90, 60, 80)
+        .fillColor('#e9d5ff')
+        .fill();
+        
+      doc.fontSize(10)
+        .font('Helvetica-Bold')
+        .fillColor('#7e22ce')
+        .text('THE 100\nMARRIAGE\nBOOK', 70, doc.y - 65, {
+          align: 'center',
+          width: 40
+        });
+        
+      // Book promotion text
+      doc.fontSize(14)
+        .font('Helvetica-Bold')
+        .fillColor('#7e22ce')
+        .text('Use The 100 Marriage Book as Your Discussion Companion', 130, doc.y - 80, {
+          width: doc.page.width - 200
+        });
+        
+      doc.moveDown(0.5)
+        .fontSize(10)
+        .font('Helvetica')
+        .fillColor('#4b5563')
+        .text('This book provides the perfect framework to navigate important conversations about marriage expectations and alignment. Get your copy today to strengthen your relationship.', 130, null, {
+          width: doc.page.width - 200
+        });
+        
+      doc.rect(130, doc.y + 10, 120, 25)
+        .fill('#7e22ce');
+        
+      doc.fontSize(10)
+        .font('Helvetica-Bold')
+        .fillColor('#ffffff')
+        .text('GET THE BOOK', 140, doc.y - 15, {
+          link: 'https://www.amazon.com/100-MARRIAGE-Lawrence-Adjah-ebook/dp/B09S3FBLN7'
+        });
+      
+      // Key sections heading
+      doc.moveDown(3)
         .fontSize(14)
         .font('Helvetica-Bold')
         .fillColor('#0f172a')
-        .text('Key Sections for Discussion:');
+        .text('Additional Key Sections for Discussion:');
       
       doc.moveDown(0.5)
         .fontSize(12)

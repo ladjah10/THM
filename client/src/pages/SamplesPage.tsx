@@ -19,7 +19,17 @@ export default function SamplesPage() {
         </p>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+      <div className="bg-purple-50 p-4 rounded-lg border border-purple-100 mb-8">
+        <h3 className="text-purple-800 font-medium mb-2">✨ New: Couple Assessment with Discussion Guide</h3>
+        <p className="text-gray-700">
+          The couple assessment now includes a special discussion guide section highlighting areas where spouses have
+          different responses. This section is integrated with "The 100 Marriage" book promotion to facilitate more
+          meaningful discussions between couples.
+        </p>
+      </div>
+      
+      <h2 className="text-2xl font-semibold text-gray-800 mb-4">Individual Assessment Samples</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
         {/* Sample Results */}
         <div className="bg-white shadow-md rounded-lg p-6 border border-gray-200 hover:shadow-lg transition-all">
           <h2 className="text-xl font-semibold text-gray-800 mb-3">Results Page Sample</h2>
@@ -73,6 +83,30 @@ export default function SamplesPage() {
           />
           <a 
             href="/sample-pdf.html" 
+            target="_blank" 
+            className="inline-block px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors"
+          >
+            Open in New Tab
+          </a>
+        </div>
+      </div>
+      
+      <h2 className="text-2xl font-semibold text-gray-800 mb-4">Couple Assessment Sample</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        {/* Couple Assessment Report */}
+        <div className="md:col-span-2 bg-white shadow-md rounded-lg p-6 border border-gray-200 hover:shadow-lg transition-all">
+          <h2 className="text-xl font-semibold text-gray-800 mb-3">Couple Assessment Report Sample</h2>
+          <p className="text-gray-600 mb-4">
+            This shows how the couple assessment report appears, highlighting the compatibility between spouses and areas for discussion.
+            Note the new discussion guide section that helps couples use the book to address their differences.
+          </p>
+          <iframe 
+            src="/sample-couple-report.html" 
+            className="w-full h-[600px] border border-gray-200 rounded-md mb-4" 
+            title="Couple Assessment Report Sample"
+          />
+          <a 
+            href="/sample-couple-report.html" 
             target="_blank" 
             className="inline-block px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors"
           >
