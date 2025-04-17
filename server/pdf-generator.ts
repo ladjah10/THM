@@ -480,7 +480,7 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
           .font('Helvetica-Bold')
           .text(sectionName, currentX + 15, currentY + 15, { continued: true })
           .fillColor('#3182ce')
-          .text(` ${sectionScore.Math.round(percentage)}%`, { align: 'right', width: sectionWidth - 30 });
+          .text(` ${Math.round(sectionScore.percentage)}%`, { align: 'right', width: sectionWidth - 30 });
         
         // Add percentile info
         doc.fontSize(10)

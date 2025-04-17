@@ -441,12 +441,12 @@ async function generateRealisticCoupleAssessment() {
   console.log(`Couple ID: ${coupleReport.coupleId}`);
   console.log(`Timestamp: ${coupleReport.timestamp}`);
   console.log(`\nPrimary: ${primaryAssessment.name} (${primaryAssessment.demographics.gender})`);
-  console.log(`Overall Score: ${primaryAssessment.scores.Math.round(overallPercentage)}%`);
+  console.log(`Overall Score: ${Math.round(primaryAssessment.scores.overallPercentage)}%`);
   console.log(`General Profile: ${primaryAssessment.profile.name}`);
   console.log(`Gender Profile: ${primaryAssessment.genderProfile?.name || "None"}`);
   
   console.log(`\nSpouse: ${spouseAssessment.name} (${spouseAssessment.demographics.gender})`);
-  console.log(`Overall Score: ${spouseAssessment.scores.Math.round(overallPercentage)}%`);
+  console.log(`Overall Score: ${Math.round(spouseAssessment.scores.overallPercentage)}%`);
   console.log(`General Profile: ${spouseAssessment.profile.name}`);
   console.log(`Gender Profile: ${spouseAssessment.genderProfile?.name || "None"}`);
   

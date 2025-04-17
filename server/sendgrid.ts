@@ -125,7 +125,7 @@ function generateComparativeStatsHtml(scores: any, demographics: any): string {
             <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
               <span style="font-weight: bold; color: #2d3748; font-size: 15px;">${section.name}</span>
               <div>
-                <span style="color: #3182ce; font-weight: bold;">${section.Math.round(score)}%</span>
+                <span style="color: #3182ce; font-weight: bold;">${Math.round(section.score)}%</span>
                 <span style="color: #718096; font-size: 12px; margin-left: 4px;">(${section.percentile}th percentile)</span>
               </div>
             </div>
@@ -136,7 +136,7 @@ function generateComparativeStatsHtml(scores: any, demographics: any): string {
             
             <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 12px;">
               <span style="color: #718096;">0%</span>
-              <span style="color: #718096; font-weight: 500;">${genderText.charAt(0).toUpperCase() + genderText.slice(1)} average: ${section.Math.round(mean)}%</span>
+              <span style="color: #718096; font-weight: 500;">${genderText.charAt(0).toUpperCase() + genderText.slice(1)} average: ${Math.round(section.mean)}%</span>
               <span style="color: #718096;">100%</span>
             </div>
             
@@ -173,7 +173,7 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
       <tr>
         <td style="padding: 8px; border: 1px solid #ddd;">${section}</td>
         <td style="padding: 8px; border: 1px solid #ddd;">${score.earned}/${score.possible}</td>
-        <td style="padding: 8px; border: 1px solid #ddd;">${score.Math.round(percentage)}%</td>
+        <td style="padding: 8px; border: 1px solid #ddd;">${Math.round(score.percentage)}%</td>
       </tr>
     `).join('');
 
@@ -254,7 +254,7 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
         
         <div class="section">
           <h2>Your Overall Assessment Score</h2>
-          <p class="overall-score">${scores.Math.round(overallPercentage)}%</p>
+          <p class="overall-score">${Math.round(scores.overallPercentage)}%</p>
           <p>Total Score: ${scores.totalEarned}/${scores.totalPossible}</p>
           <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin-top: 10px; font-size: 14px; color: #555;">
             <strong>Understanding Your Score:</strong> Your score reflects your perspectives on marriage, not a judgment of readiness.
