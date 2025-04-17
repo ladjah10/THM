@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sample Couple Results - The 100 Marriage Assessment</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #333;
+      line-height: 1.6;
+    }
+    .profile-icon {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    .progress-bar {
+      height: 12px;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .section-chart {
+      height: 180px;
+    }
+    .compatibility-meter {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      margin: 0 auto;
+      position: relative;
+      background: conic-gradient(
+        #10B981 0% 72%,
+        #e5e7eb 72% 100%
+      );
+    }
+    .compatibility-inner {
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: white;
+      top: 20px;
+      left: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    .difference-box {
+      background-color: #f3f4f6;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <div class="container mx-auto px-4 py-8 max-w-4xl">
+    <header class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-purple-900 mb-2">The 100 Marriage Assessment - Series 1</h1>
+      <h2 class="text-2xl font-semibold text-purple-800">Couple Assessment Results</h2>
+      <p class="text-gray-600 mt-2">Sample Couple Report for Michael & Sarah</p>
+    </header>
+
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
+      <div class="bg-gradient-to-r from-purple-600 to-purple-800 p-6 text-white">
+        <h3 class="text-xl font-bold mb-2">Couple Compatibility Summary</h3>
+        <p>Based on your responses to the 100 Marriage Assessment, here's how you align with each other.</p>
+      </div>
+      
+      <div class="p-6">
+        <div class="grid md:grid-cols-2 gap-8">
+          <!-- Compatibility Meter -->
+          <div class="flex flex-col items-center">
+            <h4 class="text-lg font-semibold text-purple-800 mb-4">Overall Compatibility</h4>
+            <div class="compatibility-meter">
+              <div class="compatibility-inner">
+                <span class="text-3xl font-bold text-purple-800">72%</span>
+                <span class="text-sm text-gray-500">Compatible</span>
+              </div>
+            </div>
+            <p class="text-center text-sm text-gray-600 mt-4">
+              Your overall compatibility score is calculated based on alignment in key areas of your relationship expectations
+            </p>
+          </div>
+          
+          <!-- Strength & Growth Areas -->
+          <div>
+            <h4 class="text-lg font-semibold text-purple-800 mb-4">Your Relationship Insights</h4>
+            
+            <div class="mb-4">
+              <h5 class="font-medium text-green-700 mb-2">Strongest Alignment Areas</h5>
+              <ul class="space-y-1 pl-5 list-disc text-gray-700">
+                <li>Faith & Spirituality (98% aligned)</li>
+                <li>Commitment & Loyalty (92% aligned)</li>
+                <li>Conflict Resolution (89% aligned)</li>
+                <li>Family Planning (85% aligned)</li>
+              </ul>
+            </div>
+            
+            <div>
+              <h5 class="font-medium text-amber-700 mb-2">Areas for Growth Together</h5>
+              <ul class="space-y-1 pl-5 list-disc text-gray-700">
+                <li>Financial Management (54% aligned)</li>
+                <li>Career Balance (57% aligned)</li>
+                <li>Decision Making (61% aligned)</li>
+                <li>Extended Family (63% aligned)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Section Comparison -->
+        <div class="mt-10">
+          <h4 class="text-lg font-semibold text-purple-800 mb-4">Section-by-Section Comparison</h4>
+          
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="font-medium text-gray-700">Faith & Spirituality</span>
+                <span class="text-green-700 font-medium">98% Match</span>
+              </div>
+              <div class="progress-bar bg-gray-200">
+                <div class="bg-green-500 h-full" style="width: 98%"></div>
+              </div>
+            </div>
+            
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="font-medium text-gray-700">Conflict Resolution</span>
+                <span class="text-green-700 font-medium">89% Match</span>
+              </div>
+              <div class="progress-bar bg-gray-200">
+                <div class="bg-green-500 h-full" style="width: 89%"></div>
+              </div>
+            </div>
+            
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="font-medium text-gray-700">Intimacy & Communication</span>
+                <span class="text-yellow-600 font-medium">74% Match</span>
+              </div>
+              <div class="progress-bar bg-gray-200">
+                <div class="bg-yellow-500 h-full" style="width: 74%"></div>
+              </div>
+            </div>
+            
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="font-medium text-gray-700">Gender Roles</span>
+                <span class="text-yellow-600 font-medium">68% Match</span>
+              </div>
+              <div class="progress-bar bg-gray-200">
+                <div class="bg-yellow-500 h-full" style="width: 68%"></div>
+              </div>
+            </div>
+            
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="font-medium text-gray-700">Extended Family</span>
+                <span class="text-yellow-600 font-medium">63% Match</span>
+              </div>
+              <div class="progress-bar bg-gray-200">
+                <div class="bg-yellow-500 h-full" style="width: 63%"></div>
+              </div>
+            </div>
+            
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="font-medium text-gray-700">Decision Making</span>
+                <span class="text-yellow-600 font-medium">61% Match</span>
+              </div>
+              <div class="progress-bar bg-gray-200">
+                <div class="bg-yellow-500 h-full" style="width: 61%"></div>
+              </div>
+            </div>
+            
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="font-medium text-gray-700">Career Balance</span>
+                <span class="text-red-600 font-medium">57% Match</span>
+              </div>
+              <div class="progress-bar bg-gray-200">
+                <div class="bg-red-500 h-full" style="width: 57%"></div>
+              </div>
+            </div>
+            
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="font-medium text-gray-700">Financial Management</span>
+                <span class="text-red-600 font-medium">54% Match</span>
+              </div>
+              <div class="progress-bar bg-gray-200">
+                <div class="bg-red-500 h-full" style="width: 54%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Individual Profiles -->
+    <div class="grid md:grid-cols-2 gap-8 mb-8">
+      <!-- Michael's Profile -->
+      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-r from-blue-600 to-blue-800 p-6 text-white">
+          <h3 class="text-xl font-bold mb-2">Michael's Profile</h3>
+          <p>Individual Assessment Results</p>
+        </div>
+        
+        <div class="p-6">
+          <div class="flex items-center mb-6">
+            <img src="/attached_assets/SB 1.png" alt="Steadfast Believer" class="profile-icon mr-4">
+            <div>
+              <h4 class="text-lg font-semibold text-blue-800">Steadfast Believer</h4>
+              <p class="text-gray-600 text-sm">Primary Psychographic Profile</p>
+            </div>
+          </div>
+          
+          <p class="text-gray-700 mb-4">
+            Michael values tradition, faith, and strong moral principles in relationships. He believes in commitment and views marriage as a sacred covenant, not just a legal arrangement.
+          </p>
+          
+          <h5 class="font-medium text-blue-800 mb-2">Key Characteristics:</h5>
+          <ul class="space-y-1 pl-5 list-disc text-gray-700 mb-6">
+            <li>Strong emphasis on shared faith and spiritual growth</li>
+            <li>Values traditional gender roles in the home</li>
+            <li>Conservative approach to family planning</li>
+            <li>Highly committed to fidelity and loyalty</li>
+          </ul>
+          
+          <div class="border-t border-gray-200 pt-4 mt-4">
+            <h5 class="font-medium text-blue-800 mb-2">Overall Score:</h5>
+            <div class="flex items-center">
+              <div class="w-full bg-gray-200 rounded-full h-2.5 mr-2">
+                <div class="bg-blue-600 h-2.5 rounded-full" style="width: 78%"></div>
+              </div>
+              <span class="text-gray-700 font-medium">78%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Sarah's Profile -->
+      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-r from-purple-600 to-purple-800 p-6 text-white">
+          <h3 class="text-xl font-bold mb-2">Sarah's Profile</h3>
+          <p>Individual Assessment Results</p>
+        </div>
+        
+        <div class="p-6">
+          <div class="flex items-center mb-6">
+            <img src="/attached_assets/FF 3.png" alt="Flexible Faithful" class="profile-icon mr-4">
+            <div>
+              <h4 class="text-lg font-semibold text-purple-800">Flexible Faithful</h4>
+              <p class="text-gray-600 text-sm">Primary Psychographic Profile</p>
+            </div>
+          </div>
+          
+          <p class="text-gray-700 mb-4">
+            Sarah balances faith with modern relationship dynamics. She values spiritual connection while embracing evolving roles and responsibilities in marriage.
+          </p>
+          
+          <h5 class="font-medium text-purple-800 mb-2">Key Characteristics:</h5>
+          <ul class="space-y-1 pl-5 list-disc text-gray-700 mb-6">
+            <li>Strong spiritual foundation with progressive views</li>
+            <li>Adaptable approach to gender roles and duties</li>
+            <li>Collaborative financial management style</li>
+            <li>Values communication and compromise</li>
+          </ul>
+          
+          <div class="border-t border-gray-200 pt-4 mt-4">
+            <h5 class="font-medium text-purple-800 mb-2">Overall Score:</h5>
+            <div class="flex items-center">
+              <div class="w-full bg-gray-200 rounded-full h-2.5 mr-2">
+                <div class="bg-purple-600 h-2.5 rounded-full" style="width: 82%"></div>
+              </div>
+              <span class="text-gray-700 font-medium">82%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key Differences Analysis -->
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
+      <div class="bg-gradient-to-r from-amber-600 to-amber-800 p-6 text-white">
+        <h3 class="text-xl font-bold mb-2">Key Differences Analysis</h3>
+        <p>Understanding where your views differ can help strengthen your relationship</p>
+      </div>
+      
+      <div class="p-6 space-y-6">
+        <p class="text-gray-700">
+          We've identified the most significant differences in your expectations. Focus on these areas for meaningful conversations that can strengthen your relationship.
+        </p>
+        
+        <div class="difference-box">
+          <h4 class="font-semibold text-gray-800 mb-2">Financial Management</h4>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <p class="font-medium text-blue-700">Michael believes:</p>
+              <p class="text-gray-700">The husband should take the lead in major financial decisions, with regular input from his wife.</p>
+            </div>
+            <div>
+              <p class="font-medium text-purple-700">Sarah believes:</p>
+              <p class="text-gray-700">Financial decisions should be made equally, with both partners having equal say regardless of income.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="difference-box">
+          <h4 class="font-semibold text-gray-800 mb-2">Career Priorities</h4>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <p class="font-medium text-blue-700">Michael believes:</p>
+              <p class="text-gray-700">Family needs should take priority over career advancement, especially when children are involved.</p>
+            </div>
+            <div>
+              <p class="font-medium text-purple-700">Sarah believes:</p>
+              <p class="text-gray-700">Both partners should be able to pursue career goals while supporting family needs through compromise.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="difference-box">
+          <h4 class="font-semibold text-gray-800 mb-2">Decision Making</h4>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <p class="font-medium text-blue-700">Michael believes:</p>
+              <p class="text-gray-700">The husband has final responsibility for major family decisions, though should always seek his wife's counsel.</p>
+            </div>
+            <div>
+              <p class="font-medium text-purple-700">Sarah believes:</p>
+              <p class="text-gray-700">All major decisions should be made by consensus, with neither spouse having a consistently final say.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-6 bg-amber-50 p-4 rounded-lg border border-amber-200">
+          <h4 class="font-semibold text-amber-800 mb-2">Conversation Starters</h4>
+          <ul class="space-y-2 text-gray-700">
+            <li>
+              <span class="font-medium">Financial Planning:</span> "Let's discuss how we can create a financial system that makes us both feel valued and heard."
+            </li>
+            <li>
+              <span class="font-medium">Career Balance:</span> "What specific compromises might each of us be willing to make to support both our career goals?"
+            </li>
+            <li>
+              <span class="font-medium">Decision Making:</span> "Can we create a framework for different types of decisions that honors both our perspectives?"
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Growth Recommendations -->
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
+      <div class="bg-gradient-to-r from-green-600 to-green-800 p-6 text-white">
+        <h3 class="text-xl font-bold mb-2">Growth Recommendations</h3>
+        <p>Practical steps to strengthen your relationship</p>
+      </div>
+      
+      <div class="p-6 space-y-4">
+        <p class="text-gray-700">
+          Based on your assessment results, here are personalized recommendations to help build a stronger foundation for your future together.
+        </p>
+        
+        <div class="grid md:grid-cols-3 gap-6 mt-4">
+          <div class="p-4 bg-green-50 rounded-lg border border-green-200">
+            <h4 class="font-semibold text-green-800 mb-2">1. Regular Financial Meetings</h4>
+            <p class="text-gray-700 text-sm">
+              Schedule monthly financial discussions where you both review your goals, spending, and make decisions together. Consider working with a financial advisor who can help mediate your different approaches.
+            </p>
+          </div>
+          
+          <div class="p-4 bg-green-50 rounded-lg border border-green-200">
+            <h4 class="font-semibold text-green-800 mb-2">2. Decision-Making Framework</h4>
+            <p class="text-gray-700 text-sm">
+              Create a clear process for how different types of decisions will be made. Consider using a "zones of influence" approach where each of you has areas of autonomy while maintaining shared authority in key areas.
+            </p>
+          </div>
+          
+          <div class="p-4 bg-green-50 rounded-lg border border-green-200">
+            <h4 class="font-semibold text-green-800 mb-2">3. Spiritual Growth Together</h4>
+            <p class="text-gray-700 text-sm">
+              Continue building on your strong faith alignment. Consider joining a couples study group or starting a shared devotional practice that can help you navigate differences in other areas.
+            </p>
+          </div>
+        </div>
+        
+        <div class="mt-6 text-center">
+          <a href="https://lawrence-adjah.clientsecure.me/request/service" class="inline-block bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-md" target="_blank">
+            Book a Couple Consultation with Lawrence Adjah
+          </a>
+          <p class="text-sm text-gray-600 mt-2">
+            For personalized guidance on addressing your specific relationship dynamics
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <footer class="text-center text-gray-600 text-sm mt-8 pb-8">
+      <p>This is a sample report from The 100 Marriage Assessment - Series 1</p>
+      <p class="mt-1">© 2025 Lawrence E. Adjah. All rights reserved.</p>
+    </footer>
+  </div>
+</body>
+</html>

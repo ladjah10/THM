@@ -327,35 +327,57 @@ export default function Home() {
           </p>
           <div className="text-center mt-3 mb-3">
             <p className="text-white text-sm mb-2">✨ <span className="font-semibold">New:</span> Enhanced with visual psychographic profile icons! <span className="text-amber-300">View our samples:</span></p>
-            <div className="flex justify-center gap-4">
-              <Button 
-                variant="outline" 
-                onClick={() => window.open('/samples', '_blank')}
-                className="text-amber-400 hover:text-amber-300 border-amber-500 hover:bg-amber-950 hover:bg-opacity-30"
-              >
-                View All Samples
-              </Button>
-              <Button 
-                variant="link" 
-                onClick={() => window.open('/sample-results.html', '_blank')}
-                className="text-amber-400 hover:text-amber-300"
-              >
-                Results
-              </Button>
-              <Button 
-                variant="link" 
-                onClick={() => window.open('/sample-email.html', '_blank')}
-                className="text-amber-400 hover:text-amber-300"
-              >
-                Email
-              </Button>
-              <Button 
-                variant="link" 
-                onClick={() => window.open('/sample-pdf.html', '_blank')}
-                className="text-amber-400 hover:text-amber-300"
-              >
-                PDF
-              </Button>
+            <div className="flex flex-col items-center gap-4">
+              <div className="flex justify-center gap-4">
+                <Button 
+                  variant="outline" 
+                  onClick={() => window.open('/samples', '_blank')}
+                  className="text-amber-400 hover:text-amber-300 border-amber-500 hover:bg-amber-950 hover:bg-opacity-30"
+                >
+                  View All Samples
+                </Button>
+                <Button 
+                  variant="link" 
+                  onClick={() => window.open('/sample-results.html', '_blank')}
+                  className="text-amber-400 hover:text-amber-300"
+                >
+                  Results
+                </Button>
+                <Button 
+                  variant="link" 
+                  onClick={() => window.open('/sample-email.html', '_blank')}
+                  className="text-amber-400 hover:text-amber-300"
+                >
+                  Email
+                </Button>
+                <Button 
+                  variant="link" 
+                  onClick={() => window.open('/sample-pdf.html', '_blank')}
+                  className="text-amber-400 hover:text-amber-300"
+                >
+                  PDF
+                </Button>
+              </div>
+              
+              <div className="mt-2 pt-2 border-t border-amber-700 border-opacity-30 w-full max-w-md">
+                <p className="text-white text-sm mb-2"><span className="font-semibold text-purple-300">Couple Assessment:</span> <span className="text-amber-300">See how compatibility reports work</span></p>
+                <div className="flex justify-center gap-4">
+                  <Button 
+                    variant="link" 
+                    onClick={() => window.open('/sample-couple-results.html', '_blank')}
+                    className="text-purple-300 hover:text-purple-200"
+                  >
+                    Couple Results
+                  </Button>
+                  <Button 
+                    variant="link" 
+                    onClick={() => window.open('/sample-couple-email.html', '_blank')}
+                    className="text-purple-300 hover:text-purple-200"
+                  >
+                    Couple Email
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
           <Separator className="my-4 bg-gray-600" />
