@@ -112,10 +112,10 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
         .fontSize(20);
       
       // Calculate width of the score text to center it
-      const textWidth = doc.widthOfString(scoreText);
+      const scoreTextWidth = doc.widthOfString(scoreText);
       const textHeight = doc.currentLineHeight();
       
-      doc.text(scoreText, centerX - textWidth / 2, doc.y + scoreRadius - textHeight / 2);
+      doc.text(scoreText, centerX - scoreTextWidth / 2, doc.y + scoreRadius - textHeight / 2);
       
       // Move past the circle
       doc.moveDown(4);
@@ -864,10 +864,10 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         .fontSize(24);
       
       // Calculate width of the score text to center it
-      const textWidth = doc.widthOfString(scoreText);
+      const scoreTextWidth = doc.widthOfString(scoreText);
       const textHeight = doc.currentLineHeight();
       
-      doc.text(scoreText, centerX - textWidth / 2, doc.y + scoreRadius - textHeight / 2);
+      doc.text(scoreText, centerX - scoreTextWidth / 2, doc.y + scoreRadius - textHeight / 2);
       
       // Draw compatibility level text below
       doc.moveDown(5.5)
@@ -881,9 +881,10 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         .fontSize(12)
         .font('Helvetica')
         .fillColor('#555')
-        .text('This compatibility score represents how well aligned your marriage expectations are as a\ncouple. A higher score means you have more similar views on marriage-related topics, which\ncan lead to greater harmony and understanding in your relationship.', {
-          width: doc.page.width - 200, // Narrower width to prevent overflow
-          align: 'center'
+        .text('This compatibility score represents how well aligned your marriage expectations are as a couple. A higher score means you have more similar views on marriage-related topics, which can lead to greater harmony and understanding in your relationship.', {
+          width: 300, // Fixed width to prevent awkward line breaks
+          align: 'center',
+          indent: 30 // Force indentation to center the text block
         });
           
       // Strengths and Areas for Alignment
@@ -1245,52 +1246,68 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         doc.y = Math.max(doc.y, continueY) + 20;
       });
       
-      // Book promotion section
-      doc.moveDown(1)
-        .rect(50, doc.y, doc.page.width - 100, 100)
-        .fill('#ffffff');
-        
-      doc.strokeColor('#e9d5ff')
-        .lineWidth(1)
-        .rect(50, doc.y - 100, doc.page.width - 100, 100)
-        .stroke();
-        
-      // Add book cover placeholder (this would be replaced with actual book cover image in production)
-      doc.rect(60, doc.y - 90, 60, 80)
-        .fillColor('#e9d5ff')
-        .fill();
-        
-      doc.fontSize(10)
-        .font('Helvetica-Bold')
-        .fillColor('#7e22ce')
-        .text('THE 100\nMARRIAGE\nBOOK', 70, doc.y - 65, {
-          align: 'center',
-          width: 40
-        });
-        
-      // Book promotion text
-      doc.fontSize(14)
-        .font('Helvetica-Bold')
-        .fillColor('#7e22ce')
-        .text('Use The 100 Marriage Book as Your Discussion Companion', 130, doc.y - 80, {
-          width: doc.page.width - 200
-        });
-        
-      doc.moveDown(0.5)
-        .fontSize(10)
-        .font('Helvetica')
-        .fillColor('#4b5563')
-        .text('This book provides the perfect framework to navigate important conversations about marriage expectations and alignment. Get your copy today to strengthen your relationship.', 130, undefined, {
-          width: doc.page.width - 200
-        });
-        
-      doc.rect(130, doc.y + 10, 120, 25)
-        .fill('#7e22ce');
-        
-      doc.fontSize(10)
+      // Book promotion section - Completely redesigned for better layout
+      doc.moveDown(1.5);
+      
+      // Start with a fresh position
+      const bookBoxY = doc.y;
+      const bookBoxHeight = 120;
+      
+      // Create a nice box with purple border
+      doc.rect(50, bookBoxY, doc.page.width - 100, bookBoxHeight)
+        .fillAndStroke('#faf5ff', '#e9d5ff');
+      
+      // Better spacing for content
+      const imageX = 70;
+      const imageWidth = 70;
+      const textX = imageX + imageWidth + 30;
+      const bookTextWidth = doc.page.width - textX - 70;
+      
+      // Add book cover
+      doc.rect(imageX, bookBoxY + 20, imageWidth, bookBoxHeight - 40)
+        .fillAndStroke('#7e22ce', '#6b21a8');
+      
+      // Add "THE 100 MARRIAGE BOOK" text with better vertical centering
+      doc.fontSize(12)
         .font('Helvetica-Bold')
         .fillColor('#ffffff')
-        .text('GET THE BOOK', 140, doc.y - 15, {
+        .text('THE 100\nMARRIAGE\nBOOK', imageX, bookBoxY + 35, {
+          align: 'center',
+          width: imageWidth
+        });
+      
+      // Add book promotion heading with better positioning
+      doc.fontSize(16)
+        .font('Helvetica-Bold')
+        .fillColor('#7e22ce')
+        .text('Use The 100 Marriage Book as Your Discussion Companion', textX, bookBoxY + 20, {
+          width: bookTextWidth
+        });
+      
+      // Add description text with better formatting
+      doc.moveDown(0.5)
+        .fontSize(11)
+        .font('Helvetica')
+        .fillColor('#4b5563')
+        .text('This book provides the perfect framework to navigate important conversations about marriage expectations and alignment. Get your copy today to strengthen your relationship.', {
+          width: bookTextWidth
+        });
+      
+      // Add a better styled button
+      const buttonWidth = 130;
+      const buttonHeight = 30;
+      const buttonX = textX;
+      const buttonY = bookBoxY + bookBoxHeight - 40;
+      
+      doc.rect(buttonX, buttonY, buttonWidth, buttonHeight)
+        .fillAndStroke('#7e22ce', '#6b21a8')
+        ;
+      
+      // Center the button text
+      doc.fontSize(12)
+        .font('Helvetica-Bold')
+        .fillColor('#ffffff')
+        .text('GET THE BOOK', buttonX + 15, buttonY + 9, {
           link: 'https://www.amazon.com/100-MARRIAGE-Lawrence-Adjah-ebook/dp/B09S3FBLN7'
         });
       
@@ -1320,10 +1337,11 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           });
       });
       
-      // Book recommendation box
-      const boxY = doc.y + 20;
-      const boxHeight = 100;
-      const boxWidth = doc.page.width - 100;
+      // Book recommendation box - improved layout and spacing
+      const boxY = doc.y + 30; // More space before box
+      const boxHeight = 80;    // Slightly shorter
+      const boxWidth = 400;    // Fixed width, centered
+      const boxX = (doc.page.width - boxWidth) / 2; // Center the box
       
       // Check if we need a new page
       if (boxY + boxHeight > doc.page.height - 50) {
@@ -1332,37 +1350,30 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         doc.y = boxY;
       }
       
-      // Draw box
-      doc.rect(50, doc.y, boxWidth, boxHeight)
+      // Draw centered box (no rounded corners in PDFKit)
+      doc.rect(boxX, doc.y, boxWidth, boxHeight)
         .fillAndStroke('#fff6e9', '#fee4b6');
       
-      // Add book image
-      try {
-        // Use import.meta.url instead of __dirname for ESM compatibility
-        const modulePath = path.dirname(new URL(import.meta.url).pathname);
-        const bookImagePath = path.join(modulePath, '../client/public/attached_assets/image_1744661653587.png');
-        if (fs.existsSync(bookImagePath)) {
-          doc.image(bookImagePath, 70, doc.y + 15, { 
-            width: 50,
-            height: 70
-          });
-        }
-      } catch (error) {
-        console.log('Book cover image not available:', error);
-      }
+      // Add book image placeholder - simplified
+      doc.rect(boxX + 15, doc.y + 15, 50, 50)
+        .fillAndStroke('#f59e0b', '#d97706');
       
-      // Add text
+      // Add text - improved layout
       doc.fontSize(14)
         .font('Helvetica-Bold')
         .fillColor('#92400e')
-        .text('Don\'t have the book yet?', 140, doc.y + 25);
+        .text('Don\'t have the book yet?', boxX + 80, doc.y + 20);
         
-      doc.moveDown(0.5)
-        .fontSize(12)
+      doc.fontSize(12)
         .font('Helvetica')
         .fillColor('#78350f')
-        .text('Get your copy at lawrenceadjah.com/the100marriagebook to deepen your discussions and strengthen your relationship.', 140, doc.y, {
-          width: boxWidth - 110
+        .text('Get your copy at lawrenceadjah.com/the100marriagebook', boxX + 80, doc.y + 40, {
+          width: boxWidth - 100,
+          link: 'https://lawrenceadjah.com/the100marriagebook',
+          underline: true
+        })
+        .text('to deepen your discussions and strengthen your relationship.', {
+          width: boxWidth - 100
         });
       
       // Check if we need a new page for Next Steps section
