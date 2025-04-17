@@ -881,9 +881,9 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         .fontSize(12)
         .font('Helvetica')
         .fillColor('#555')
-        .text('This compatibility score represents how well aligned your marriage expectations are as a couple. A higher score means you have more similar views on marriage-related topics, which can lead to greater harmony and understanding in your relationship.', {
-          width: doc.page.width - 100,
-          align: 'justify'
+        .text('This compatibility score represents how well aligned your marriage expectations are as a\ncouple. A higher score means you have more similar views on marriage-related topics, which\ncan lead to greater harmony and understanding in your relationship.', {
+          width: doc.page.width - 200, // Narrower width to prevent overflow
+          align: 'center'
         });
           
       // Strengths and Areas for Alignment
@@ -1004,8 +1004,9 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       // Draw table header
       doc.moveDown(1);
       const tableTop = doc.y;
-      const tableColWidths = [250, 100, 100, 80];
-      const rowHeight = 25;
+      // Adjusted column widths for better spacing
+      const tableColWidths = [220, 80, 80, 80]; 
+      const rowHeight = 30; // Increased row height for better readability
       
       doc.rect(50, tableTop, doc.page.width - 100, rowHeight)
         .fill('#3498db');
@@ -1166,17 +1167,27 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       
       // Loop through top differences, showing more detail
       differenceAnalysis.majorDifferences.slice(0, 5).forEach((diff, idx) => {
-        const bgColor = idx % 2 === 0 ? '#f5f3ff' : '#faf5ff';
-        const boxHeight = 85; // Estimated height per difference box
+        // Need to adjust box height based on content length
+        let estimatedHeight = Math.max(
+          100, // Minimum height
+          40 + Math.ceil(diff.primaryResponse.length / 60) * 12 + Math.ceil(diff.spouseResponse.length / 60) * 12
+        );
         
-        // Background rectangle
-        doc.rect(50, doc.y, doc.page.width - 100, boxHeight)
+        // Add a new page if we're near the bottom of the page
+        if (doc.y + estimatedHeight > doc.page.height - 60) {
+          doc.addPage();
+        }
+        
+        const bgColor = idx % 2 === 0 ? '#f5f3ff' : '#faf5ff';
+        
+        // Background rectangle - using dynamic height
+        doc.rect(50, doc.y, doc.page.width - 100, estimatedHeight)
           .fill(bgColor);
           
         // Border
         doc.strokeColor('#e9d5ff')
           .lineWidth(1)
-          .rect(50, doc.y, doc.page.width - 100, boxHeight)
+          .rect(50, doc.y, doc.page.width - 100, estimatedHeight)
           .stroke();
           
         // Question text
@@ -1191,26 +1202,28 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         // Responses in two columns
         const colWidth = (doc.page.width - 140) / 2;
         
-        // Response headers
-        doc.moveDown(0.8)
-          .fontSize(10)
+        // Response headers - positioned with more space
+        doc.moveDown(1.5)
+          .fontSize(11)
           .font('Helvetica-Bold')
           .fillColor('#7e22ce')
           .text(`${primaryName}'s Response:`, 60, undefined, { width: colWidth });
+        
+        const responseY = doc.y;
+        doc.text(`${spouseName}'s Response:`, 60 + colWidth + 20, responseY - 14, { width: colWidth });
           
-        doc.moveUp()
-          .text(`${spouseName}'s Response:`, 60 + colWidth + 20, doc.y, { width: colWidth });
-          
-        // Response content
+        // Response content - ensuring it doesn't overflow
         doc.fontSize(10)
           .font('Helvetica')
           .fillColor('#4b5563')
-          .text(diff.primaryResponse, 60, undefined, { width: colWidth });
-          
-        doc.moveUp()
-          .text(diff.spouseResponse, 60 + colWidth + 20, doc.y, { width: colWidth });
-          
-        doc.moveDown(1);
+          .text(diff.primaryResponse, 60, undefined, { width: colWidth - 5 });
+        
+        const continueY = doc.y;
+        doc.y = responseY;
+        doc.text(diff.spouseResponse, 60 + colWidth + 20, undefined, { width: colWidth - 5 });
+        
+        // Move past this box correctly
+        doc.y = Math.max(doc.y, continueY) + 20;
       });
       
       // Book promotion section
