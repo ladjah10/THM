@@ -424,7 +424,7 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
       doc.fontSize(11)
         .font('Helvetica')
         .fillColor('#4a5568')
-        .text(`Your overall score of ${overallScore.toFixed(1)}% is ${percentile > 60 ? 'significantly higher than' : percentile > 50 ? 'higher than' : percentile > 40 ? 'close to' : percentile > 25 ? 'lower than' : 'significantly lower than'} the average of ${mean.toFixed(1)}% for ${genderText}. This places you in the ${percentile}th percentile.`, 
+        .text(`Your overall score of ${Math.round(overallScore)}% is ${percentile > 60 ? 'significantly higher than' : percentile > 50 ? 'higher than' : percentile > 40 ? 'close to' : percentile > 25 ? 'lower than' : 'significantly lower than'} the average of ${Math.round(mean)}% for ${genderText}. This places you in the ${percentile}th percentile.`, 
           70, overallBoxY + 120, { width: 330 });
       
       // Section comparisons - start at new position
@@ -480,7 +480,7 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
           .font('Helvetica-Bold')
           .text(sectionName, currentX + 15, currentY + 15, { continued: true })
           .fillColor('#3182ce')
-          .text(` ${sectionScore.percentage.toFixed(1)}%`, { align: 'right', width: sectionWidth - 30 });
+          .text(` ${sectionScore.Math.round(percentage)}%`, { align: 'right', width: sectionWidth - 30 });
         
         // Add percentile info
         doc.fontSize(10)
