@@ -397,27 +397,27 @@ export default function ResultsView({
           )}
           {primaryProfile.name === "Harmonious Planners" && (
             <p className="text-gray-700 text-sm">
-              You value structure and faith, so you'll connect best with partners who share your planning mindset. 
+              You value structure and faith, so you'll connect best with spouses who share your planning mindset. 
               Harmonious Planners are your ideal match, while Steadfast Believers and Balanced Visionaries offer 
               similar alignment with slight variations in emphasis.
             </p>
           )}
           {primaryProfile.name === "Flexible Faithful" && (
             <p className="text-gray-700 text-sm">
-              Your balance of faith and adaptability makes you a versatile partner. Flexible Faithful matches align best, 
+              Your balance of faith and adaptability makes you a versatile spouse. Flexible Faithful matches align best, 
               but Balanced Visionaries and Pragmatic Partners can complement your communication focus with mutual respect.
             </p>
           )}
           {primaryProfile.name === "Pragmatic Partners" && (
             <p className="text-gray-700 text-sm">
-              You prioritize practicality and communication, so you'll thrive with partners who value fairness. 
+              You prioritize practicality and communication, so you'll thrive with spouses who value fairness. 
               Pragmatic Partners are ideal, while Flexible Faithful and Individualist Seekers can align on 
               practicality with less faith intensity.
             </p>
           )}
           {primaryProfile.name === "Individualist Seekers" && (
             <p className="text-gray-700 text-sm">
-              Your focus on independence means you'll connect with partners who respect autonomy. 
+              Your focus on independence means you'll connect with spouses who respect autonomy. 
               Individualist Seekers are your best match, while Pragmatic Partners and Flexible Faithful 
               can offer complementary practicality and adaptability.
             </p>
@@ -431,33 +431,33 @@ export default function ResultsView({
           )}
           {genderProfile && demographics.gender === 'female' && genderProfile.name === "Relational Nurturers" && (
             <p className="text-gray-700 text-sm mt-2">
-              <span className="text-purple-800 font-medium">As a Relational Nurturer:</span> Your nurturing nature thrives with a partner 
+              <span className="text-purple-800 font-medium">As a Relational Nurturer:</span> Your nurturing nature thrives with a spouse 
               who values family and faith. A Faithful Protector's leadership aligns best, while Balanced Providers and 
               Structured Leaders offer stability and structure to support your family focus.
             </p>
           )}
           {genderProfile && demographics.gender === 'female' && genderProfile.name === "Adaptive Communicators" && (
             <p className="text-gray-700 text-sm mt-2">
-              <span className="text-purple-800 font-medium">As an Adaptive Communicator:</span> Your communication skills pair well with a partner 
+              <span className="text-purple-800 font-medium">As an Adaptive Communicator:</span> Your communication skills pair well with a spouse 
               who values clarity. Structured Leaders are ideal, while Faithful Protectors and Balanced Providers 
               complement your faith and balance.
             </p>
           )}
           {genderProfile && demographics.gender === 'female' && genderProfile.name === "Independent Traditionalists" && (
             <p className="text-gray-700 text-sm mt-2">
-              <span className="text-purple-800 font-medium">As an Independent Traditionalist:</span> Your blend of tradition and independence matches with a stable partner. 
+              <span className="text-purple-800 font-medium">As an Independent Traditionalist:</span> Your blend of tradition and independence matches with a stable spouse. 
               Balanced Providers align best, while Faithful Protectors and Structured Leaders share your traditional values.
             </p>
           )}
           {genderProfile && demographics.gender === 'female' && genderProfile.name === "Faith-Centered Homemakers" && (
             <p className="text-gray-700 text-sm mt-2">
-              <span className="text-purple-800 font-medium">As a Faith-Centered Homemaker:</span> Your spiritual home focus thrives with a faith-driven partner. 
+              <span className="text-purple-800 font-medium">As a Faith-Centered Homemaker:</span> Your spiritual home focus thrives with a faith-driven spouse. 
               Faithful Protectors are ideal, while Balanced Providers and Structured Leaders support your family values.
             </p>
           )}
           {genderProfile && demographics.gender === 'male' && genderProfile.name === "Faithful Protectors" && (
             <p className="text-gray-700 text-sm mt-2">
-              <span className="text-purple-800 font-medium">As a Faithful Protector:</span> Your leadership and faith pair well with a spiritually focused partner. 
+              <span className="text-purple-800 font-medium">As a Faithful Protector:</span> Your leadership and faith pair well with a spiritually focused spouse. 
               Faith-Centered Homemakers align best, while Relational Nurturers and Independent Traditionalists 
               share your family and traditional values.
             </p>
