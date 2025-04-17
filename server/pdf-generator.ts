@@ -300,14 +300,26 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
       
       // Draw scores for each section
       Object.entries(assessment.scores.sections).forEach(([sectionName, score]) => {
-        // Draw section name
+        // Draw section name and score with improved alignment
         doc.fontSize(12)
           .font('Helvetica')
-          .fillColor('#555')
-          .text(`${sectionName}:`, { continued: true })
-          .fillColor('#3498db')
-          .text(` ${Math.round(score.percentage)}%`, { align: 'right' });
+          .fillColor('#555');
           
+        // First draw the section name aligned left
+        const textX = 50;
+        const textWidth = 200;
+        doc.text(`${sectionName}:`, textX, doc.y, { 
+          width: textWidth, 
+          align: 'left',
+          continued: false
+        });
+        
+        // Then draw the score right-aligned
+        doc.fillColor('#3498db')
+          .text(`${Math.round(score.percentage)}%`, textX + textWidth + 20, doc.y - doc.currentLineHeight(), {
+            align: 'left'
+          });
+        
         // Calculate the bar width based on the percentage
         const barWidth = (score.percentage / 100) * maxBarWidth;
         
@@ -757,12 +769,13 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
         .text('Next Steps');
         
       doc.moveDown(0.5)
-        .fontSize(12)
+        .fontSize(11)
         .font('Helvetica')
         .fillColor('#555')
         .text('If you would like to discuss your results further, you can schedule a 1-on-1 consultation session.', {
-          width: doc.page.width - 100,
-          align: 'justify'
+          width: doc.page.width - 120,
+          align: 'left',
+          columns: 1
         });
         
       doc.moveDown(0.5)
@@ -773,7 +786,7 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
         });
 
       // End the document
-      doc.moveDown(2)
+      doc.moveDown(3)
         .fontSize(10)
         .fillColor('#999')
         .text('(c) 2025 Lawrence E. Adjah - The 100 Marriage Assessment - Series 1', { align: 'center' });
