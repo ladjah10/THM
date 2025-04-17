@@ -364,33 +364,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const sendInvitationsSchema = z.object({
         coupleId: z.string(),
         primaryEmail: z.string().email(),
-        spouseEmail: z.string().email()
+        spouseEmail: z.string().email(),
+        primaryName: z.string().optional(),
+        spouseName: z.string().optional()
       });
       
       const validatedData = sendInvitationsSchema.parse(req.body);
       
-      // Import the sendReferralEmail function from nodemailer.ts to send invitations
-      // In a full implementation, we would have a dedicated invitation email template
-      
-      // Send invitation to primary partner
-      await sendReferralEmail({
-        to: validatedData.primaryEmail,
-        referrerName: "The 100 Marriage Assessment",
-        referrerEmail: "assessment@100marriage.com",
-        recipientName: "Primary Partner"
+      // Send specialized couple assessment invitations to both partners
+      const emailResult = await sendCoupleInvitationEmails({
+        primaryEmail: validatedData.primaryEmail,
+        primaryName: validatedData.primaryName,
+        spouseEmail: validatedData.spouseEmail,
+        spouseName: validatedData.spouseName,
+        coupleId: validatedData.coupleId
       });
       
-      // Send invitation to spouse
-      await sendReferralEmail({
-        to: validatedData.spouseEmail,
-        referrerName: "The 100 Marriage Assessment",
-        referrerEmail: "assessment@100marriage.com",
-        recipientName: "Spouse"
-      });
+      if (!emailResult.success) {
+        throw new Error("Failed to send invitation emails");
+      }
+      
+      // For testing purposes, log the email preview URLs
+      if (emailResult.previewUrls && emailResult.previewUrls.length > 0) {
+        console.log('📧 Email Preview URLs (for testing):');
+        emailResult.previewUrls.forEach((url, index) => {
+          console.log(`${index === 0 ? 'Primary' : 'Spouse'} Email: ${url}`);
+        });
+      }
       
       return res.status(200).json({ 
         success: true,
-        message: "Invitations sent successfully"
+        message: "Invitations sent successfully to both partners",
+        previewUrls: emailResult.previewUrls
       });
     } catch (error) {
       console.error("Error sending couple invitations:", error);

@@ -54,10 +54,16 @@ export default function PaywallView({
         
         // Send invitations to both partners
         if (result.coupleId) {
+          // Get primary partner's name from demographic data if available
+          const primaryName = demographicData.firstName 
+            ? `${demographicData.firstName} ${demographicData.lastName || ''}`.trim()
+            : undefined;
+          
           await sendCoupleInvitations(
             result.coupleId,
             demographicData.email || "",
-            spouseEmail
+            spouseEmail,
+            primaryName
           );
           
           // Show success notification

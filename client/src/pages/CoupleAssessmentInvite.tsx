@@ -1,393 +1,184 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useLocation } from 'wouter';
-import { apiRequest } from '@/lib/queryClient';
-import { useToast } from '@/hooks/use-toast';
-import { AssessmentResult } from '@shared/schema';
-import { DemographicData } from '@/types/assessment';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle 
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle, Check, XCircle } from 'lucide-react';
-import DemographicView from '@/components/assessment/DemographicView';
-import QuestionnaireWrapper from '@/components/assessment/QuestionnaireWrapper';
-import ResultsView from '@/components/assessment/ResultsView';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Loader2, AlertTriangle, CheckCircle } from 'lucide-react';
+import { apiRequest } from '@/lib/queryClient';
+import { AssessmentResult } from '@/types/assessment';
 
-const VIEWS = ['intro', 'demographics', 'questionnaire', 'results', 'complete'] as const;
-type ViewType = typeof VIEWS[number];
-
+/**
+ * This page is accessed when a spouse clicks on their invitation link
+ * The URL format is: /couple-assessment/:coupleId
+ * 
+ * It validates the coupleId and allows the spouse to begin their assessment
+ */
 export default function CoupleAssessmentInvite() {
-  const { coupleId } = useParams();
   const [, setLocation] = useLocation();
-  const { toast } = useToast();
+  const params = useParams<{ coupleId: string }>();
+  const coupleId = params?.coupleId;
   
-  const [currentView, setCurrentView] = useState<ViewType>('intro');
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [validInvite, setValidInvite] = useState(false);
-  const [primaryAssessment, setPrimaryAssessment] = useState<AssessmentResult | null>(null);
+  const [primaryPartner, setPrimaryPartner] = useState<{
+    name?: string;
+    email?: string;
+    completed: boolean;
+  }>({ completed: false });
   
-  // Form state
-  const [demographicData, setDemographicData] = useState<DemographicData>({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    gender: '',
-    marriageStatus: '',
-    desireChildren: '',
-    ethnicity: '',
-    hasPurchasedBook: '',
-    purchaseDate: '',
-    promoCode: '',
-    hasPaid: true, // This is a spouse invite, so payment is not needed
-    lifeStage: '',
-    birthday: '',
-    interestedInArrangedMarriage: false,
-    thmPoolApplied: false,
-    city: '',
-    state: '',
-    zipCode: ''
-  });
-  
-  const [userResponses, setUserResponses] = useState<Record<number, { option: string, value: number }>>({});
-  const [scores, setScores] = useState<any>(null);
-  const [primaryProfile, setPrimaryProfile] = useState<any>(null);
-  const [genderProfile, setGenderProfile] = useState<any>(null);
-  
-  // Check if the couple ID is valid and fetch primary assessment details
+  // Fetch the status of this couple assessment
   useEffect(() => {
     if (!coupleId) {
-      setError('Invalid invitation link');
-      setLoading(false);
+      setError('Invalid invitation link. Please contact your significant other for a new invitation.');
+      setIsLoading(false);
       return;
     }
     
-    const fetchPrimaryAssessment = async () => {
+    const checkCoupleStatus = async () => {
       try {
         const response = await apiRequest('GET', `/api/couple-assessment/${coupleId}`);
+        
+        if (!response.ok) {
+          // If 404, the primary assessment hasn't been completed yet
+          if (response.status === 404) {
+            setError('Your significant other has not completed their assessment yet. Please wait for them to finish, or contact them for a new invitation.');
+            setIsLoading(false);
+            return;
+          }
+          
+          throw new Error('Failed to validate couple assessment');
+        }
+        
         const data = await response.json();
         
-        if (response.ok) {
-          if (data.coupleReport) {
-            // Spouse has already completed the assessment
-            setError('This couple assessment has already been completed');
-          } else {
-            // We should receive the primary assessment data
-            if (data.primaryAssessment) {
-              setPrimaryAssessment(data.primaryAssessment);
-              setValidInvite(true);
-            } else {
-              setError('Invalid couple assessment invitation');
-            }
-          }
-        } else {
-          if (data.message === "Couple assessment not found or incomplete") {
-            // This is expected - it means the spouse hasn't completed their assessment yet
-            setValidInvite(true);
-          } else {
-            setError(data.message || 'Failed to validate invitation');
-          }
+        if (data.coupleReport) {
+          // Both partners have already completed the assessment
+          setPrimaryPartner({
+            name: data.coupleReport.primaryAssessment.demographics.firstName,
+            email: data.coupleReport.primaryAssessment.email,
+            completed: true
+          });
+          
+          setError('Both assessments have already been completed. You can view your compatibility report below.');
+        } else if (data.primaryAssessment) {
+          // Only primary partner has completed their assessment
+          setPrimaryPartner({
+            name: data.primaryAssessment.demographics.firstName,
+            email: data.primaryAssessment.email,
+            completed: true
+          });
         }
-      } catch (error) {
-        console.error('Error validating couple assessment invitation:', error);
-        setError('Failed to validate invitation. Please try again.');
-      } finally {
-        setLoading(false);
+        
+        setIsLoading(false);
+      } catch (err) {
+        console.error("Error validating couple assessment:", err);
+        setError('Failed to validate your invitation. Please try again later or contact your significant other for a new invitation.');
+        setIsLoading(false);
       }
     };
     
-    fetchPrimaryAssessment();
+    checkCoupleStatus();
   }, [coupleId]);
   
-  // Handle completing demographics
-  const handleCompleteDemographics = (data: DemographicData) => {
-    setDemographicData(data);
-    setCurrentView('questionnaire');
+  const startSpouseAssessment = () => {
+    // Redirect to the assessment page with the coupleId parameter
+    setLocation(`/assessment?coupleId=${coupleId}&role=spouse`);
   };
   
-  // Handle questionnaire completion
-  const handleCompleteQuestionnaire = (
-    responses: Record<number, { option: string, value: number }>,
-    calculatedScores: any,
-    mainProfile: any,
-    genderSpecificProfile: any
-  ) => {
-    setUserResponses(responses);
-    setScores(calculatedScores);
-    setPrimaryProfile(mainProfile);
-    setGenderProfile(genderSpecificProfile);
-    setCurrentView('results');
+  const viewCoupleReport = () => {
+    // Redirect to the couple report page
+    setLocation(`/couple-report/${coupleId}`);
   };
   
-  // Handle submitting spouse assessment
-  const handleSubmitSpouseAssessment = async () => {
-    setLoading(true);
-    
-    try {
-      // Prepare spouse assessment data
-      const spouseAssessment: Partial<AssessmentResult> = {
-        email: demographicData.email,
-        name: `${demographicData.firstName} ${demographicData.lastName}`,
-        scores: scores,
-        profile: primaryProfile,
-        genderProfile: genderProfile,
-        responses: userResponses,
-        demographics: demographicData,
-        timestamp: new Date().toISOString()
-      };
-      
-      // Submit spouse assessment
-      const response = await apiRequest('POST', '/api/couple-assessment/submit-spouse', {
-        coupleId,
-        spouseAssessment
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to submit spouse assessment');
-      }
-      
-      // Success - show completion message
-      setCurrentView('complete');
-      
-      toast({
-        title: "Assessment Submitted",
-        description: "Your assessment has been successfully submitted and the couple report is now available.",
-      });
-    } catch (error) {
-      console.error('Error submitting spouse assessment:', error);
-      toast({
-        title: "Submission Error",
-        description: "There was a problem submitting your assessment. Please try again.",
-        variant: "destructive"
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-  
-  // Render loading state
-  if (loading) {
-    return (
-      <div className="container max-w-4xl mx-auto py-8 px-4">
-        <Card>
-          <CardHeader>
-            <Skeleton className="h-8 w-3/4 mb-2" />
-            <Skeleton className="h-4 w-1/2" />
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-3/4" />
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-b from-purple-50 to-white">
+      <Card className="w-full max-w-lg shadow-lg border-purple-200">
+        <CardHeader className="text-center bg-gradient-to-r from-purple-100 to-purple-50">
+          <CardTitle className="text-2xl text-purple-900">The 100 Marriage Assessment - Series 1</CardTitle>
+          <CardDescription className="text-purple-700 text-lg font-medium">
+            Couple Assessment Invitation
+          </CardDescription>
+        </CardHeader>
+        
+        <CardContent className="pt-6 space-y-6">
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center py-8">
+              <Loader2 className="h-12 w-12 text-purple-600 animate-spin mb-4" />
+              <p className="text-purple-800">Validating your invitation...</p>
             </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-  
-  // Render error state
-  if (error) {
-    return (
-      <div className="container max-w-4xl mx-auto py-8 px-4">
-        <Card className="border-red-200">
-          <CardHeader className="bg-red-50">
-            <div className="flex items-center gap-2">
-              <XCircle className="h-5 w-5 text-red-500" />
-              <CardTitle>Invalid Invitation</CardTitle>
-            </div>
-            <CardDescription>
-              There was a problem with this couple assessment invitation
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>{error}</AlertDescription>
+          ) : error ? (
+            <Alert variant="destructive" className="bg-amber-50 border-amber-200 text-amber-800">
+              <AlertTriangle className="h-5 w-5 text-amber-600" />
+              <AlertDescription className="ml-2">{error}</AlertDescription>
+              
+              {primaryPartner.completed && (
+                <div className="mt-4">
+                  <Button 
+                    onClick={viewCoupleReport} 
+                    className="bg-purple-600 hover:bg-purple-700 mt-2"
+                  >
+                    View Compatibility Report
+                  </Button>
+                </div>
+              )}
             </Alert>
-            
-            <div className="mt-6 text-center">
-              <Button onClick={() => setLocation('/')}>
-                Return to Home
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-  
-  // Render intro view
-  if (currentView === 'intro' && validInvite) {
-    const partnerName = primaryAssessment ? 
-      `${primaryAssessment.demographics.firstName} ${primaryAssessment.demographics.lastName}` : 
-      'Your partner';
-    
-    return (
-      <div className="container max-w-4xl mx-auto py-8 px-4">
-        <Card className="border-blue-200">
-          <CardHeader className="bg-blue-50">
-            <CardTitle>The 100 Marriage Couple Assessment</CardTitle>
-            <CardDescription>
-              Complete your assessment to generate your couple compatibility report
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <div className="space-y-6">
-              <Alert className="bg-blue-50 border-blue-200">
-                <AlertTitle className="text-blue-800">Couple Assessment Invitation</AlertTitle>
-                <AlertDescription className="text-blue-700">
-                  {partnerName} has invited you to take the 100 Marriage Assessment.
-                  Once you complete your assessment, you'll both receive a detailed couple compatibility report.
-                </AlertDescription>
-              </Alert>
-              
-              <h3 className="text-lg font-medium">What to expect:</h3>
-              <ol className="list-decimal list-inside space-y-3 text-gray-700">
-                <li>You'll provide some basic demographic information</li>
-                <li>You'll answer 99 questions about your views on marriage</li>
-                <li>Upon completion, a couple assessment report will be generated showing:
-                  <ul className="list-disc list-inside ml-6 mt-2 space-y-1 text-gray-600">
-                    <li>Your compatibility level with your partner</li>
-                    <li>Areas where you have strong alignment</li>
-                    <li>Key differences in your perspectives</li>
-                    <li>Recommended areas for discussion</li>
-                  </ul>
-                </li>
-              </ol>
-              
-              <div className="bg-gray-50 p-4 rounded-md mt-4">
-                <p className="text-sm text-gray-600">
-                  The assessment will take approximately 15-20 minutes to complete.
-                  Your honest responses will provide the most valuable insights for your relationship.
+          ) : (
+            <>
+              <div className="text-center">
+                <CheckCircle className="h-12 w-12 text-green-600 mx-auto mb-4" />
+                <h3 className="text-xl font-medium text-green-800 mb-2">Your Invitation is Valid!</h3>
+                <p className="text-gray-600">
+                  {primaryPartner.name 
+                    ? `${primaryPartner.name} has invited you to take the 100 Marriage Assessment.` 
+                    : 'Your significant other has invited you to take the 100 Marriage Assessment.'}
                 </p>
               </div>
               
-              <div className="flex justify-center pt-4">
-                <Button size="lg" onClick={() => setCurrentView('demographics')}>
-                  Begin Assessment
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-  
-  // Render demographics view
-  if (currentView === 'demographics') {
-    return (
-      <div className="container max-w-5xl mx-auto py-8 px-4">
-        <div className="demographic-wrapper">
-          <h2 className="text-2xl font-bold mb-4">Tell Us About Yourself</h2>
-          <p className="mb-6">As the spouse in this assessment, we need to gather some information about you.</p>
-          <DemographicView 
-            demographicData={demographicData}
-            onChange={(field, value) => setDemographicData({...demographicData, [field]: value})}
-            onSubmit={handleCompleteDemographics}
-            onBack={() => setCurrentView('intro')}
-          />
-        </div>
-      </div>
-    );
-  }
-  
-  // Render questionnaire view
-  if (currentView === 'questionnaire') {
-    return (
-      <div className="container max-w-5xl mx-auto py-8 px-4">
-        <QuestionnaireWrapper 
-          onComplete={handleCompleteQuestionnaire}
-          demographics={demographicData}
-        />
-      </div>
-    );
-  }
-  
-  // Render results view
-  if (currentView === 'results') {
-    return (
-      <div className="container max-w-5xl mx-auto py-8 px-4">
-        <ResultsView 
-          scores={scores}
-          primaryProfile={primaryProfile}
-          genderProfile={genderProfile}
-          userEmail={demographicData.email}
-          emailSending={false}
-          onSendEmail={() => {}} // Disable email sending for spouse view
-          hideRetakeButton={true}
-          additionalActions={
-            <Button 
-              size="lg" 
-              onClick={handleSubmitSpouseAssessment}
-              className="w-full sm:w-auto mt-4 bg-green-600 hover:bg-green-700"
-            >
-              Complete Couple Assessment
-            </Button>
-          }
-        />
-      </div>
-    );
-  }
-  
-  // Render completion view
-  if (currentView === 'complete') {
-    return (
-      <div className="container max-w-4xl mx-auto py-8 px-4">
-        <Card className="border-green-200">
-          <CardHeader className="bg-green-50">
-            <div className="flex items-center gap-2">
-              <Check className="h-5 w-5 text-green-600" />
-              <CardTitle>Assessment Completed!</CardTitle>
-            </div>
-            <CardDescription>
-              Your couple assessment report is now available
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <div className="space-y-6">
-              <p className="text-gray-700">
-                Thank you for completing your assessment. Your results have been submitted and 
-                a comprehensive couple compatibility report has been generated.
-              </p>
-              
-              <Alert className="bg-green-50 border-green-200">
-                <Check className="h-4 w-4 text-green-600" />
-                <AlertTitle className="text-green-800">Success</AlertTitle>
-                <AlertDescription className="text-green-700">
-                  Both you and your partner can now view your couple assessment report.
-                </AlertDescription>
-              </Alert>
-              
-              <div className="bg-gray-50 p-4 rounded-md">
-                <h4 className="font-medium mb-2">What happens next?</h4>
-                <ul className="list-disc list-inside space-y-2 text-sm text-gray-600">
-                  <li>Review your couple report to understand your compatibility</li>
-                  <li>Focus on discussing areas where you have significant differences</li>
-                  <li>Consider scheduling a consultation with Lawrence E. Adjah for personalized guidance</li>
+              <div className="bg-purple-50 p-4 rounded-md border border-purple-100">
+                <h4 className="font-medium text-purple-800 mb-2">What to Expect:</h4>
+                <ul className="space-y-2 text-sm text-purple-700">
+                  <li className="flex items-start">
+                    <svg className="h-5 w-5 mr-2 text-purple-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>You'll complete a ~100 question assessment (takes about 15-20 minutes)</span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg className="h-5 w-5 mr-2 text-purple-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>Once completed, you'll both receive a comprehensive compatibility report</span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg className="h-5 w-5 mr-2 text-purple-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>Your answers will be private until both of you have completed the assessment</span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg className="h-5 w-5 mr-2 text-purple-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>You'll get insights into your relationship alignment and potential growth areas</span>
+                  </li>
                 </ul>
               </div>
-              
-              <div className="flex justify-center pt-4">
-                <Button onClick={() => setLocation(`/couple-assessment/report/${coupleId}`)}>
-                  View Couple Report
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-  
-  return null;
+            </>
+          )}
+        </CardContent>
+        
+        <CardFooter className="flex justify-center pb-6">
+          {!isLoading && !error && (
+            <Button 
+              onClick={startSpouseAssessment} 
+              size="lg"
+              className="bg-purple-600 hover:bg-purple-700 mt-4"
+            >
+              Start My Assessment
+            </Button>
+          )}
+        </CardFooter>
+      </Card>
+    </div>
+  );
 }

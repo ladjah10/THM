@@ -32,19 +32,25 @@ export async function registerEarlyCoupleAssessment(
  * Sends invitation emails to both partners for a couple assessment
  * @param coupleId The unique identifier linking both partner's assessments
  * @param primaryEmail Email of the primary partner who initiated the assessment
+ * @param primaryName Name of the primary partner (optional)
  * @param spouseEmail Email of the spouse who was invited
+ * @param spouseName Name of the spouse (optional)
  * @returns Success status and any additional information
  */
 export async function sendCoupleInvitations(
   coupleId: string,
   primaryEmail: string,
-  spouseEmail: string
+  spouseEmail: string,
+  primaryName?: string,
+  spouseName?: string
 ): Promise<{ success: boolean }> {
   try {
     const response = await apiRequest('POST', '/api/couple-assessment/send-invitations', {
       coupleId,
       primaryEmail,
-      spouseEmail
+      spouseEmail,
+      primaryName,
+      spouseName
     });
     
     if (!response.ok) {

@@ -49,11 +49,23 @@ export const EarlySpouseInvite: React.FC<EarlySpouseInviteProps> = ({
     setError(null);
     
     try {
+      // Extract first name from primary email for better personalization
+      // Format: If email is john.doe@example.com, use "John" as the name
+      const primaryNameGuess = primaryEmail.split('@')[0].split('.')[0];
+      const primaryNameFormatted = primaryNameGuess ? 
+        primaryNameGuess.charAt(0).toUpperCase() + primaryNameGuess.slice(1) : 
+        "Your significant other";
+      
       // Register the couple assessment early
       const { coupleId } = await registerEarlyCoupleAssessment(primaryEmail, spouseEmail);
       
-      // Send invitations to both partners
-      const { success } = await sendCoupleInvitations(coupleId, primaryEmail, spouseEmail);
+      // Send invitations to both partners - include the guessed name for better personalization
+      const { success } = await sendCoupleInvitations(
+        coupleId, 
+        primaryEmail, 
+        spouseEmail,
+        primaryNameFormatted
+      );
       
       if (success) {
         setIsInviteSent(true);

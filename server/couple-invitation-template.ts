@@ -7,119 +7,225 @@
  * @returns HTML email content
  */
 export function formatCoupleInvitationEmail(
-  primaryPartnerName: string = "Your significant other",
-  spouseName: string = "Your significant other",
-  coupleId: string,
+  primaryPartnerName?: string, 
+  spouseName?: string, 
+  coupleId: string = '',
   isForPrimary: boolean = false
 ): string {
-  const appUrl = process.env.APP_URL || 'https://100-marriage-assessment.replit.app';
-  const assessmentUrl = `${appUrl}/couple-assessment/${coupleId}`;
+  // Generate a link that the spouse can use to start their assessment
+  const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
+  const invitationLink = `${baseUrl}/couple-assessment/invite/${coupleId}`;
   
-  return `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="utf-8">
-      <title>${isForPrimary ? 'Your' : 'You\'ve Been Invited to a'} Couple Assessment</title>
-      <style>
-        body {
-          font-family: Arial, sans-serif;
-          line-height: 1.6;
-          color: #333;
-          max-width: 600px;
-          margin: 0 auto;
-          padding: 20px;
-        }
-        .header {
-          background-color: #6b46c1;
-          color: white;
-          padding: 20px;
-          text-align: center;
-          border-radius: 5px 5px 0 0;
-        }
-        .content {
-          background-color: #f9f7ff;
-          border: 1px solid #e6e1f9;
-          border-top: none;
-          padding: 20px;
-          border-radius: 0 0 5px 5px;
-        }
-        .button {
-          display: inline-block;
-          background-color: #6b46c1;
-          color: white;
-          text-decoration: none;
-          padding: 12px 25px;
-          border-radius: 4px;
-          margin: 20px 0;
-          font-weight: bold;
-        }
-        .footer {
-          text-align: center;
-          color: #666;
-          font-size: 12px;
-          margin-top: 20px;
-        }
-        .highlight {
-          background-color: #f0ebff;
-          padding: 15px;
-          border-radius: 4px;
-          margin: 15px 0;
-          border-left: 4px solid #6b46c1;
-        }
-        h2 {
-          color: #6b46c1;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="header">
-        <h1>The 100 Marriage Assessment - Series 1</h1>
-        <p>${isForPrimary ? 'Your Couple Assessment' : 'Couple Assessment Invitation'}</p>
-      </div>
-      <div class="content">
-        <p>Hello${isForPrimary ? '' : ` ${spouseName}`},</p>
-        
-        ${isForPrimary ? 
-          `<p>You've successfully started a couple assessment! As the primary partner, you can now begin your portion of the assessment.</p>
-           <p>We've also sent an invitation to <strong>${spouseName}</strong> to complete their portion of the assessment.</p>` 
-          : 
-          `<p><strong>${primaryPartnerName}</strong> has invited you to take the 100 Marriage Assessment together as a couple.</p>
-           <p>This assessment will help both of you understand your expectations and compatibility for marriage or a long-term relationship.</p>`
-        }
-        
-        <div class="highlight">
-          <h2>How the Couple Assessment Works:</h2>
-          <ol>
-            <li>Each partner completes their own ~100 question assessment</li>
-            <li>You can take the assessment at your own pace, from anywhere</li>
-            <li>Once both assessments are complete, you'll receive a comprehensive compatibility report</li>
-            <li>The report analyzes where you align and differ across all areas of the assessment</li>
-          </ol>
+  // Format names with defaults if not provided
+  const primaryName = primaryPartnerName || 'Your significant other';
+  const secondaryName = spouseName || 'your significant other';
+  
+  // Different content based on recipient
+  if (isForPrimary) {
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Your Couple Assessment Has Been Started</title>
+        <style>
+          body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+          }
+          .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          }
+          .header {
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(135deg, #6B46C1 0%, #9F7AEA 100%);
+            border-radius: 8px 8px 0 0;
+            margin: -20px -20px 20px;
+          }
+          .header h1 {
+            color: white;
+            margin: 0;
+            padding: 0;
+            font-size: 24px;
+          }
+          .content {
+            padding: 0 20px;
+          }
+          .footer {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+            font-size: 12px;
+          }
+          .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #6B46C1;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-top: 20px;
+          }
+          .callout {
+            background-color: #FAF5FF;
+            border-left: 4px solid #9F7AEA;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>Your Couple Assessment Has Been Started</h1>
+          </div>
+          <div class="content">
+            <p>You have successfully initiated a couple assessment for you and ${secondaryName}.</p>
+            
+            <div class="callout">
+              <p><strong>What happens next:</strong></p>
+              <p>- Your significant other will receive an email with a link to complete their assessment</p>
+              <p>- Once both of you have completed the assessment, you'll receive a comprehensive compatibility report</p>
+              <p>- The report will show areas where you align and differ, with insights for relationship growth</p>
+            </div>
+            
+            <p>If you haven't completed your assessment yet, click the button below to start or continue:</p>
+            
+            <div style="text-align: center;">
+              <a href="${baseUrl}/assessment?coupleId=${coupleId}&role=primary" class="button">Continue My Assessment</a>
+            </div>
+            
+            <p style="margin-top: 30px;">Thank you for using The 100 Marriage Assessment - Series 1 to strengthen your relationship!</p>
+            
+            <p>Sincerely,<br>The 100 Marriage Team</p>
+          </div>
+          <div class="footer">
+            <p>© ${new Date().getFullYear()} The 100 Marriage. All rights reserved.</p>
+            <p>This email was sent to you as part of the couple assessment process.</p>
+          </div>
         </div>
-        
-        <p>Ready to discover your compatibility?</p>
-        
-        <a href="${assessmentUrl}" class="button">Start Your Assessment</a>
-        
-        <p>If the button doesn't work, copy and paste this link into your browser:</p>
-        <p><a href="${assessmentUrl}">${assessmentUrl}</a></p>
-        
-        ${isForPrimary ? 
-          `<p>Once both you and your significant other have completed the assessment, you'll receive your compatibility report!</p>` 
-          : 
-          `<p>Your participation will provide valuable insights for both you and your significant other.</p>`
-        }
-        
-        <p>Wishing you clarity in your relationship journey,</p>
-        <p>Lawrence Adjah<br>
-        Author, The 100 Marriage</p>
-      </div>
-      <div class="footer">
-        <p>© ${new Date().getFullYear()} The 100 Marriage. All rights reserved.</p>
-        <p>If you did not request this assessment, please disregard this email.</p>
-      </div>
-    </body>
-    </html>
-  `;
+      </body>
+      </html>
+    `;
+  } else {
+    // Email for spouse
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>You've Been Invited to Take the 100 Marriage Assessment</title>
+        <style>
+          body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+          }
+          .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          }
+          .header {
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(135deg, #6B46C1 0%, #9F7AEA 100%);
+            border-radius: 8px 8px 0 0;
+            margin: -20px -20px 20px;
+          }
+          .header h1 {
+            color: white;
+            margin: 0;
+            padding: 0;
+            font-size: 24px;
+          }
+          .content {
+            padding: 0 20px;
+          }
+          .footer {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+            font-size: 12px;
+          }
+          .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #6B46C1;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-top: 20px;
+          }
+          .callout {
+            background-color: #FAF5FF;
+            border-left: 4px solid #9F7AEA;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>You've Been Invited to Take the 100 Marriage Assessment</h1>
+          </div>
+          <div class="content">
+            <p>${primaryName} has invited you to take the 100 Marriage Assessment - Series 1 as a couple.</p>
+            
+            <div class="callout">
+              <p><strong>What is this?</strong></p>
+              <p>The 100 Marriage Assessment is a comprehensive questionnaire that helps couples understand their expectations, values, and potential areas for growth in their relationship.</p>
+              <p>Both of you will take the assessment separately, and then receive a detailed compatibility report that can help strengthen your relationship.</p>
+            </div>
+            
+            <p><strong>What to expect:</strong></p>
+            <ul>
+              <li>The assessment takes about 15-20 minutes to complete</li>
+              <li>Your answers will be private until both of you have completed it</li>
+              <li>You'll receive insights into your relationship alignment</li>
+              <li>There's no cost to you - ${primaryName} has already covered the fee</li>
+            </ul>
+            
+            <p>Click the button below to start your assessment:</p>
+            
+            <div style="text-align: center;">
+              <a href="${invitationLink}" class="button">Start My Assessment</a>
+            </div>
+            
+            <p style="margin-top: 30px;">Thank you for taking this important step to strengthen your relationship!</p>
+            
+            <p>Sincerely,<br>The 100 Marriage Team</p>
+          </div>
+          <div class="footer">
+            <p>© ${new Date().getFullYear()} The 100 Marriage. All rights reserved.</p>
+            <p>This email was sent to you because ${primaryName} invited you to take the couple assessment.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
 }
