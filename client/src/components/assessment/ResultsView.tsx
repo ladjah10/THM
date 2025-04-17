@@ -429,49 +429,49 @@ export default function ResultsView({
               your values with slight variations.
             </p>
           )}
-          {genderProfile && demographics.gender === 'female' && genderProfile.name === "Relational Nurturers" && (
+          {genderProfile && demographics && demographics.gender === 'female' && genderProfile.name === "Relational Nurturers" && (
             <p className="text-gray-700 text-sm mt-2">
               <span className="text-purple-800 font-medium">As a Relational Nurturer:</span> Your nurturing nature thrives with a spouse 
               who values family and faith. A Faithful Protector's leadership aligns best, while Balanced Providers and 
               Structured Leaders offer stability and structure to support your family focus.
             </p>
           )}
-          {genderProfile && demographics.gender === 'female' && genderProfile.name === "Adaptive Communicators" && (
+          {genderProfile && demographics && demographics.gender === 'female' && genderProfile.name === "Adaptive Communicators" && (
             <p className="text-gray-700 text-sm mt-2">
               <span className="text-purple-800 font-medium">As an Adaptive Communicator:</span> Your communication skills pair well with a spouse 
               who values clarity. Structured Leaders are ideal, while Faithful Protectors and Balanced Providers 
               complement your faith and balance.
             </p>
           )}
-          {genderProfile && demographics.gender === 'female' && genderProfile.name === "Independent Traditionalists" && (
+          {genderProfile && demographics && demographics.gender === 'female' && genderProfile.name === "Independent Traditionalists" && (
             <p className="text-gray-700 text-sm mt-2">
               <span className="text-purple-800 font-medium">As an Independent Traditionalist:</span> Your blend of tradition and independence matches with a stable spouse. 
               Balanced Providers align best, while Faithful Protectors and Structured Leaders share your traditional values.
             </p>
           )}
-          {genderProfile && demographics.gender === 'female' && genderProfile.name === "Faith-Centered Homemakers" && (
+          {genderProfile && demographics && demographics.gender === 'female' && genderProfile.name === "Faith-Centered Homemakers" && (
             <p className="text-gray-700 text-sm mt-2">
               <span className="text-purple-800 font-medium">As a Faith-Centered Homemaker:</span> Your spiritual home focus thrives with a faith-driven spouse. 
               Faithful Protectors are ideal, while Balanced Providers and Structured Leaders support your family values.
             </p>
           )}
-          {genderProfile && demographics.gender === 'male' && genderProfile.name === "Faithful Protectors" && (
+          {genderProfile && demographics && demographics.gender === 'male' && genderProfile.name === "Faithful Protectors" && (
             <p className="text-gray-700 text-sm mt-2">
               <span className="text-purple-800 font-medium">As a Faithful Protector:</span> Your leadership and faith pair well with a spiritually focused spouse. 
               Faith-Centered Homemakers align best, while Relational Nurturers and Independent Traditionalists 
               share your family and traditional values.
             </p>
           )}
-          {genderProfile && demographics.gender === 'male' && genderProfile.name === "Structured Leaders" && (
+          {genderProfile && demographics && demographics.gender === 'male' && genderProfile.name === "Structured Leaders" && (
             <p className="text-gray-700 text-sm mt-2">
-              <span className="text-purple-800 font-medium">As a Structured Leader:</span> Your clarity and structure match with a communicative partner. 
+              <span className="text-purple-800 font-medium">As a Structured Leader:</span> Your clarity and structure match with a communicative spouse. 
               Adaptive Communicators are ideal, while Relational Nurturers and Faith-Centered Homemakers 
               complement your family focus.
             </p>
           )}
-          {genderProfile && demographics.gender === 'male' && genderProfile.name === "Balanced Providers" && (
+          {genderProfile && demographics && demographics.gender === 'male' && genderProfile.name === "Balanced Providers" && (
             <p className="text-gray-700 text-sm mt-2">
-              <span className="text-purple-800 font-medium">As a Balanced Provider:</span> Your stability and balance pair well with an independent partner. 
+              <span className="text-purple-800 font-medium">As a Balanced Provider:</span> Your stability and balance pair well with an independent spouse. 
               Independent Traditionalists align best, while Faith-Centered Homemakers and Relational Nurturers 
               support your faith and family priorities.
             </p>
@@ -481,7 +481,7 @@ export default function ResultsView({
       
       {/* Comparative Statistics Section */}
       <div className="mb-10">
-        <ComparativeStats scores={scores} demographics={demographics} />
+        {demographics && <ComparativeStats scores={scores} demographics={demographics} />}
       </div>
 
       {/* Book Reference */}
@@ -524,21 +524,25 @@ export default function ResultsView({
         <h4 className="text-xl font-medium text-blue-900 mb-4">Share Your Results</h4>
         
         {/* Shareable Image Component */}
-        <ShareableImage 
-          profile={primaryProfile} 
-          genderProfile={genderProfile} 
-          scores={scores} 
-          name={demographics.firstName} 
-        />
+        {demographics && (
+          <ShareableImage 
+            profile={primaryProfile} 
+            genderProfile={genderProfile} 
+            scores={scores} 
+            name={demographics.firstName} 
+          />
+        )}
         
         {/* Social Share Buttons */}
-        <SocialShareButtons 
-          profile={primaryProfile} 
-          genderProfile={genderProfile} 
-          scores={scores} 
-          name={demographics.firstName} 
-          gender={demographics.gender} 
-        />
+        {demographics && (
+          <SocialShareButtons 
+            profile={primaryProfile} 
+            genderProfile={genderProfile} 
+            scores={scores} 
+            name={demographics.firstName} 
+            gender={demographics.gender} 
+          />
+        )}
       </div>
 
       {/* Action Buttons */}
