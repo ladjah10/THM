@@ -53,7 +53,7 @@ export default function DemographicView({
   // We don't need these state variables anymore since we're using the SpouseInvite component
   
   // Valid promo codes (in a real app, these would be stored in a database or validated through an API)
-  const validPromoCodes = ["FREE100", "LA2025", "MARRIAGE100"];
+  const validPromoCodes = ["FREE100", "LA2025", "MARRIAGE100"]; // Keep for functionality, not displayed to users
 
   // Handle book purchase change
   useEffect(() => {
@@ -588,7 +588,7 @@ export default function DemographicView({
                     </Button>
                   </div>
                   <p className="text-xs text-gray-500 mt-1">
-                    Valid promo codes: FREE100, LA2025, MARRIAGE100
+                    Enter your promo code if you were provided one
                   </p>
                 </div>
                 
