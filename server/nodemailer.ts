@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 import { AssessmentResult, CoupleAssessmentReport } from '../shared/schema';
-import { generateAssessmentPDF, generateCoupleAssessmentPDF } from './pdf-generator';
+import { generateIndividualAssessmentPDF } from './updated-individual-pdf';
+import { generateCoupleAssessmentPDF } from './updated-couple-pdf';
 import { formatCoupleAssessmentEmail } from './couple-email-template';
 import { formatCoupleInvitationEmail } from './couple-invitation-template';
 
@@ -167,7 +168,7 @@ export async function sendAssessmentEmail(assessment: AssessmentResult, ccEmail:
   try {
     // Generate PDF report
     console.log('Generating PDF report...');
-    const pdfBuffer = await generateAssessmentPDF(assessment);
+    const pdfBuffer = await generateIndividualAssessmentPDF(assessment);
     
     // Create transporter
     const { transporter, testAccount } = await createTransporter();

@@ -5,7 +5,7 @@
 
 import { AssessmentResult, CoupleAssessmentReport } from '../shared/schema';
 import { generateIndividualAssessmentPDF } from './updated-individual-pdf';
-import { generateCoupleAssessmentPDF } from './updated-couple-pdf';
+import { generateCoupleAssessmentPDF as generateCouplePDF } from './updated-couple-pdf';
 
 // These are the same function signatures as in the original pdf-generator.ts
 export async function generateAssessmentPDF(assessment: AssessmentResult): Promise<Buffer> {
@@ -13,5 +13,5 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
 }
 
 export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport): Promise<Buffer> {
-  return generateCoupleAssessmentPDF(report);
+  return generateCouplePDF(report);
 }
