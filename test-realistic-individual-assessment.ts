@@ -140,9 +140,9 @@ async function generateRealisticIndividualAssessment() {
       description: 'You have a thoughtful, balanced approach to marriage. You value both tradition and modern perspectives, seeking harmony between stability and flexibility. Your responses show a well-rounded understanding of marriage dynamics with a natural ability to adapt while maintaining core values.',
       genderSpecific: 'false', // String as required by schema
       criteria: [
-        { section: 'Spiritual Beliefs', min: 70 },
-        { section: 'Family Planning', min: 65 },
-        { section: 'Role Expectations', min: 65 }
+        { section: 'Your Foundation', min: 70 },
+        { section: 'Your Parenting Life', min: 65 },
+        { section: 'Your Marriage Life', min: 65 }
       ]
     },
     genderProfile: {
