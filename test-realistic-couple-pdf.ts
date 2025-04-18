@@ -3,7 +3,7 @@ import { sendCoupleAssessmentEmail } from './server/nodemailer';
 import { AssessmentResult, CoupleAssessmentReport, DifferenceAnalysis, UserProfile } from './shared/schema';
 import { questions, sections } from './client/src/data/questionsData';
 import { psychographicProfiles } from './client/src/data/psychographicProfiles';
-import { generateCoupleAssessmentPDF } from './server/pdf-generator';
+import { generateCoupleAssessmentPDF } from './server/updated-couple-pdf';
 
 // Helper function to calculate section scores
 function calculateSectionScores(responses: Record<string, { option: string, value: number }>) {

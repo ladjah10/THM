@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { CoupleAssessmentReport, DifferenceAnalysis, AssessmentResult } from './shared/schema';
-import { generateCoupleAssessmentPDF } from './server/pdf-generator';
+import { generateCoupleAssessmentPDF } from './server/updated-couple-pdf';
 
 // Create realistic test data
 const primaryAssessment: AssessmentResult = {

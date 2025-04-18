@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { AssessmentResult, CoupleAssessmentReport, DifferenceAnalysis } from './shared/schema';
-import { generateCoupleAssessmentPDF } from './server/pdf-generator';
+import { generateCoupleAssessmentPDF } from './server/updated-couple-pdf';
 
 /**
  * This script generates a realistic couple assessment PDF report with actual data

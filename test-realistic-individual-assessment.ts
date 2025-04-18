@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { AssessmentResult } from './shared/schema';
-import { generateAssessmentPDF } from './server/pdf-generator';
+import { generateIndividualAssessmentPDF } from './server/updated-individual-pdf';
 // Import the formatAssessmentEmail function
 function formatAssessmentEmail(assessment: AssessmentResult): string {
   const { name, scores, profile, demographics } = assessment;
@@ -280,7 +280,7 @@ async function generateRealisticIndividualAssessment() {
 
   try {
     // Generate PDF
-    const pdfBuffer = await generateAssessmentPDF(realisticAssessment);
+    const pdfBuffer = await generateIndividualAssessmentPDF(realisticAssessment);
     
     // Create directory if it doesn't exist
     const publicDir = path.join(process.cwd(), 'client', 'public');
