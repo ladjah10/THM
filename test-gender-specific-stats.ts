@@ -60,8 +60,8 @@ const maleTestAssessment: AssessmentResult = {
     overallPercentage: 84.0,
     totalEarned: 252,
     totalPossible: 300,
-    strengths: ['Your Faith Life', 'Your Parenting Life', 'Your Finances'],
-    improvementAreas: ['Your Marriage and Boundaries', 'Your Family/Home Life']
+    strengths: ['Faith-centered approach to relationship', 'Aligned parenting perspectives', 'Shared financial values and planning'],
+    improvementAreas: ['Relationship boundaries', 'Home and family dynamics']
   },
   responses: {
     '1': { option: 'Strongly Agree', value: 36 },
@@ -137,8 +137,8 @@ const femaleTestAssessment: AssessmentResult = {
     overallPercentage: 84.0,
     totalEarned: 252,
     totalPossible: 300,
-    strengths: ['Your Faith Life', 'Your Family/Home Life', 'Your Parenting Life'],
-    improvementAreas: ['Your Health and Wellness', 'Your Finances']
+    strengths: ['Faith-centered approach to relationship', 'Harmonious approach to home and family dynamics', 'Aligned parenting perspectives'],
+    improvementAreas: ['Commitment to mutual health and wellbeing', 'Financial planning and money management']
   },
   responses: {
     '1': { option: 'Strongly Agree', value: 36 },

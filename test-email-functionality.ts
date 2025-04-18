@@ -15,7 +15,12 @@ const testAssessment: AssessmentResult = {
     marriageStatus: 'Single',
     desireChildren: 'Yes',
     ethnicity: 'African, African American',
-    hasPaid: true
+    hasPaid: true,
+    lifeStage: 'Established Adult',
+    birthday: '1985-06-15',
+    city: 'New York',
+    state: 'NY',
+    zipCode: '10001'
   },
   profile: {
     id: 1,
@@ -23,24 +28,24 @@ const testAssessment: AssessmentResult = {
     description: 'You demonstrate exceptional preparation for marriage. Your responses indicate a profound understanding of the commitment, communication, and compromise required in a successful marriage. Your perspectives on key areas like finances, conflict resolution, and family planning are well-developed, suggesting you would likely thrive in a marriage relationship.',
     genderSpecific: null,
     criteria: [
-      { section: 'Communication', min: 80 },
-      { section: 'Conflict Resolution', min: 75 },
-      { section: 'Compatibility', min: 80 }
+      { section: 'Your Marriage and Boundaries', min: 80 },
+      { section: 'Your Foundation', min: 75 },
+      { section: 'Your Marriage Life', min: 80 }
     ]
   },
   scores: {
     sections: {
-      'Communication': { earned: 45, possible: 50, percentage: 90 },
-      'Conflict Resolution': { earned: 40, possible: 50, percentage: 80 },
-      'Compatibility': { earned: 42, possible: 50, percentage: 84 },
-      'Finances': { earned: 38, possible: 50, percentage: 76 },
-      'Family Planning': { earned: 44, possible: 50, percentage: 88 }
+      'Your Marriage and Boundaries': { earned: 45, possible: 50, percentage: 90 },
+      'Your Foundation': { earned: 40, possible: 50, percentage: 80 },
+      'Your Marriage Life': { earned: 42, possible: 50, percentage: 84 },
+      'Your Finances': { earned: 38, possible: 50, percentage: 76 },
+      'Your Parenting Life': { earned: 44, possible: 50, percentage: 88 }
     },
     overallPercentage: 83.6,
     totalEarned: 209,
     totalPossible: 250,
-    strengths: ['Communication', 'Family Planning', 'Compatibility'],
-    improvementAreas: ['Finances', 'Conflict Resolution']
+    strengths: ['Healthy relational boundaries', 'Aligned parenting perspectives', 'Clear communication and conflict resolution skills'],
+    improvementAreas: ['Financial planning and money management', 'Strong foundational values and expectations']
   },
   responses: {
     '1': { option: 'Strongly Agree', value: 36 },

@@ -16,15 +16,13 @@ const testAssessment: AssessmentResult = {
     },
     overallPercentage: 83,
     strengths: [
-      "Strong communication skills and openness",
-      "Aligned on family planning goals",
-      "Shared vision for the future",
-      "Faith-based foundation for marriage"
+      "Healthy relational boundaries",
+      "Clear communication and conflict resolution skills",
+      "Aligned parenting perspectives"
     ],
     improvementAreas: [
-      "Financial management and planning",
-      "Work-life balance expectations",
-      "Conflict resolution strategies"
+      "Financial planning and money management",
+      "Faith alignment in relationship"
     ],
     totalEarned: 498,
     totalPossible: 600
