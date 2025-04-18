@@ -29,6 +29,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.sendFile('sample-pdf.html', { root: '.' });
   });
   
+  // Serve couple assessment sample templates
+  app.get('/sample-couple-results.html', (req, res) => {
+    res.sendFile('sample-couple-results-mockup.html', { root: '.' });
+  });
+  
+  app.get('/sample-couple-email.html', (req, res) => {
+    res.sendFile('sample-couple-email-visualization.html', { root: '.' });
+  });
+  
+  app.get('/sample-couple-report.html', (req, res) => {
+    res.sendFile('sample-couple-report.html', { root: '.' });
+  });
+  
   // Share image generation endpoint for social media sharing
   app.get('/api/share-image', generateShareImage);
   // Email sending endpoint

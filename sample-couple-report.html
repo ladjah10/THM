@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The 100 Marriage Assessment - Couple Report PDF</title>
+  <style>
+    body {
+      font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f7f9fc;
+      padding: 0;
+      margin: 0;
+    }
+    
+    h1, h2, h3, h4 {
+      color: #2c3e50;
+      margin-top: 0;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eaeaea;
+    }
+    
+    .header h1 {
+      font-size: 24px;
+      color: #1a365d;
+      margin-bottom: 10px;
+    }
+    
+    .header p {
+      color: #718096;
+      font-size: 16px;
+    }
+    
+    .pdf-preview {
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 40px;
+      border-radius: 5px;
+      margin-bottom: 30px;
+      position: relative;
+    }
+    
+    .pdf-page {
+      border: 1px solid #e2e8f0;
+      padding: 20px;
+      margin-bottom: 20px;
+      background-color: white;
+    }
+    
+    .pdf-heading {
+      text-align: center;
+      border-bottom: 2px solid #3182ce;
+      padding-bottom: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .pdf-heading h2 {
+      font-size: 22px;
+      color: #2c5282;
+      margin: 0;
+    }
+    
+    .pdf-heading p {
+      font-size: 16px;
+      color: #4a5568;
+      margin: 5px 0 0;
+    }
+    
+    .compatibility-circle {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      border: 5px solid #3182ce;
+      margin: 0 auto 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .compatibility-score {
+      font-size: 40px;
+      font-weight: bold;
+      color: #3182ce;
+    }
+    
+    .compatibility-label {
+      font-size: 14px;
+      color: #4a5568;
+    }
+    
+    .section {
+      margin-bottom: 25px;
+    }
+    
+    .section-title {
+      font-size: 18px;
+      color: #2c5282;
+      margin-bottom: 15px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    
+    .comparison-table th,
+    .comparison-table td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .comparison-table th {
+      background-color: #f7fafc;
+      font-weight: 600;
+      color: #4a5568;
+    }
+    
+    .comparison-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .difference-item {
+      background-color: #fff9db;
+      border-radius: 5px;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-left: 4px solid #f9a825;
+    }
+    
+    .difference-question {
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #2d3748;
+    }
+    
+    .response-row {
+      margin-bottom: 10px;
+    }
+    
+    .response-name {
+      font-weight: 600;
+      display: inline-block;
+      min-width: 70px;
+    }
+    
+    .primary-name {
+      color: #2c5282;
+    }
+    
+    .spouse-name {
+      color: #553c9a;
+    }
+    
+    .discussion-guide {
+      background-color: #ebf8ff;
+      border-radius: 5px;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-left: 4px solid #3182ce;
+    }
+    
+    .profile-box {
+      background-color: #f8fafc;
+      border-radius: 5px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+    
+    .profile-name {
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: #2d3748;
+    }
+    
+    .profile-description {
+      font-size: 14px;
+      color: #4a5568;
+    }
+    
+    .compatibility-areas {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .strength-area {
+      background-color: #f0fff4;
+      border-radius: 5px;
+      padding: 15px;
+      border-left: 4px solid #38a169;
+    }
+    
+    .vulnerability-area {
+      background-color: #fff5f5;
+      border-radius: 5px;
+      padding: 15px;
+      border-left: 4px solid #e53e3e;
+    }
+    
+    .area-title {
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #2d3748;
+    }
+    
+    .area-list {
+      margin: 0;
+      padding-left: 20px;
+    }
+    
+    .book-promotion {
+      display: flex;
+      align-items: center;
+      background-color: #f8f9fa;
+      border-radius: 5px;
+      padding: 15px;
+      margin-bottom: 20px;
+      border: 1px solid #e2e8f0;
+    }
+    
+    .book-image {
+      width: 80px;
+      height: 120px;
+      background-color: #3182ce;
+      margin-right: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      border-radius: 3px;
+    }
+    
+    .book-content h3 {
+      margin-top: 0;
+      color: #2c5282;
+    }
+    
+    .summary-box {
+      background-color: #f7fafc;
+      border-radius: 5px;
+      padding: 15px;
+      margin-bottom: 20px;
+      border: 1px solid #e2e8f0;
+    }
+    
+    .summary-title {
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #2d3748;
+    }
+    
+    .watermark {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 80px;
+      color: rgba(200, 200, 200, 0.15);
+      transform: rotate(-45deg);
+      pointer-events: none;
+    }
+    
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #eaeaea;
+      color: #718096;
+      font-size: 14px;
+    }
+    
+    @media (max-width: 600px) {
+      .pdf-preview {
+        padding: 20px;
+      }
+      
+      .compatibility-areas {
+        grid-template-columns: 1fr;
+      }
+      
+      .book-promotion {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .book-image {
+        margin-right: 0;
+        margin-bottom: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>The 100 Marriage Assessment - Series 1</h1>
+      <p>Couple Discussion Guide Preview</p>
+    </div>
+    
+    <div class="pdf-preview">
+      <div class="watermark">SAMPLE</div>
+      
+      <!-- Page 1 -->
+      <div class="pdf-page">
+        <div class="pdf-heading">
+          <h2>The 100 Marriage Assessment - Series 1</h2>
+          <p>Couple Discussion Guide</p>
+        </div>
+        
+        <div class="compatibility-circle">
+          <div class="compatibility-score">78%</div>
+          <div class="compatibility-label">Compatibility</div>
+        </div>
+        
+        <div class="section">
+          <p style="text-align: center; font-size: 16px; font-weight: bold; color: #2c5282;">
+            John Smith &amp; Sarah Johnson
+          </p>
+          <p style="text-align: center; color: #4a5568; margin-bottom: 30px;">
+            Completed on April 16, 2025
+          </p>
+          
+          <p>
+            Thank you for completing The 100 Marriage Assessment - Series 1 as a couple. This discussion guide provides insights into your perspectives on marriage and highlights areas where further conversation may strengthen your relationship.
+          </p>
+          
+          <p>
+            <strong>Understanding Your Compatibility Score:</strong> Your compatibility score reflects the alignment of your perspectives across all assessment sections. A higher score indicates greater similarity in your views on key marriage dimensions, while a lower score highlights areas where your expectations differ. This is not a judgment of relationship quality, but rather a tool to identify areas for meaningful discussion.
+          </p>
+        </div>
+      </div>
+      
+      <!-- Page 2 -->
+      <div class="pdf-page">
+        <div class="section">
+          <h3 class="section-title">Score Comparison</h3>
+          
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Section</th>
+                <th>John's Score</th>
+                <th>Sarah's Score</th>
+                <th>Difference</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Your Marriage and Boundaries</td>
+                <td>85%</td>
+                <td>82%</td>
+                <td>3%</td>
+              </tr>
+              <tr>
+                <td>Your Marriage Life</td>
+                <td>90%</td>
+                <td>88%</td>
+                <td>2%</td>
+              </tr>
+              <tr>
+                <td>Your Faith Life</td>
+                <td>78%</td>
+                <td>75%</td>
+                <td>3%</td>
+              </tr>
+              <tr>
+                <td>Your Foundation</td>
+                <td>88%</td>
+                <td>85%</td>
+                <td>3%</td>
+              </tr>
+              <tr>
+                <td>Your Finances</td>
+                <td>65%</td>
+                <td>72%</td>
+                <td>7%</td>
+              </tr>
+              <tr>
+                <td>Your Parenting Life</td>
+                <td>92%</td>
+                <td>90%</td>
+                <td>2%</td>
+              </tr>
+              <tr>
+                <td>Your Family/Home Life</td>
+                <td>80%</td>
+                <td>76%</td>
+                <td>4%</td>
+              </tr>
+              <tr>
+                <td>Your Health and Wellness</td>
+                <td>87%</td>
+                <td>82%</td>
+                <td>5%</td>
+              </tr>
+              <tr>
+                <td><strong>Overall</strong></td>
+                <td><strong>83%</strong></td>
+                <td><strong>81%</strong></td>
+                <td><strong>2%</strong></td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <div class="compatibility-areas">
+            <div class="strength-area">
+              <div class="area-title">Areas of Strong Alignment</div>
+              <ul class="area-list">
+                <li>Your Faith Life</li>
+                <li>Your Parenting Life</li>
+                <li>Your Finances</li>
+              </ul>
+            </div>
+            
+            <div class="vulnerability-area">
+              <div class="area-title">Areas for Additional Conversation</div>
+              <ul class="area-list">
+                <li>Your Family/Home Life</li>
+                <li>Your Marriage and Boundaries</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Page 3 -->
+      <div class="pdf-page">
+        <div class="section">
+          <h3 class="section-title">Key Differences to Discuss</h3>
+          <p>These are questions where your responses showed notable differences. Using these as conversation starters can help strengthen your understanding of each other's perspectives.</p>
+          
+          <div class="difference-item">
+            <div class="difference-question">
+              <strong>How important is it to plan finances together?</strong> (Your Finances)
+            </div>
+            <div class="response-row">
+              <span class="response-name primary-name">John:</span>
+              <span>Very important, all financial decisions should be made together</span>
+            </div>
+            <div class="response-row">
+              <span class="response-name spouse-name">Sarah:</span>
+              <span>Somewhat important, but we should maintain some financial independence</span>
+            </div>
+            
+            <div class="discussion-guide">
+              <p><strong>Discussion Guide:</strong></p>
+              <ul>
+                <li>What specific financial decisions do you believe should always be made together?</li>
+                <li>What does financial independence mean to each of you?</li>
+                <li>How might you create a system that respects both perspectives?</li>
+              </ul>
+              <p><strong>Reference:</strong> Chapter 6 of "The 100 Marriage" addresses financial alignment in depth.</p>
+            </div>
+          </div>
+          
+          <div class="difference-item">
+            <div class="difference-question">
+              <strong>What role should in-laws play in your marriage?</strong> (Your Family/Home Life)
+            </div>
+            <div class="response-row">
+              <span class="response-name primary-name">John:</span>
+              <span>Limited involvement, with clear boundaries</span>
+            </div>
+            <div class="response-row">
+              <span class="response-name spouse-name">Sarah:</span>
+              <span>Regular involvement and guidance from both families</span>
+            </div>
+            
+            <div class="discussion-guide">
+              <p><strong>Discussion Guide:</strong></p>
+              <ul>
+                <li>What specific boundaries would make you feel comfortable with in-law involvement?</li>
+                <li>What types of guidance do you find valuable from extended family?</li>
+                <li>How have your experiences with extended family shaped your perspective?</li>
+              </ul>
+              <p><strong>Reference:</strong> Chapter 9 of "The 100 Marriage" provides strategies for healthy extended family dynamics.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Page 4 -->
+      <div class="pdf-page">
+        <div class="section">
+          <h3 class="section-title">Additional Discussion Area</h3>
+          
+          <div class="difference-item">
+            <div class="difference-question">
+              <strong>How do you prefer to resolve conflicts?</strong> (Your Marriage and Boundaries)
+            </div>
+            <div class="response-row">
+              <span class="response-name primary-name">John:</span>
+              <span>Address issues immediately and directly</span>
+            </div>
+            <div class="response-row">
+              <span class="response-name spouse-name">Sarah:</span>
+              <span>Take time to cool off before discussing sensitive topics</span>
+            </div>
+            
+            <div class="discussion-guide">
+              <p><strong>Discussion Guide:</strong></p>
+              <ul>
+                <li>What are the benefits you see in your approach to conflict resolution?</li>
+                <li>How might you create a conflict resolution process that honors both approaches?</li>
+                <li>When has the opposite approach been effective for you in the past?</li>
+              </ul>
+              <p><strong>Reference:</strong> Chapter 4 of "The 100 Marriage" explores effective conflict resolution strategies.</p>
+            </div>
+          </div>
+          
+          <div class="summary-box">
+            <div class="summary-title">Your Psychographic Profiles</div>
+            <p><strong>John:</strong> Balanced Visionaries (General), Steadfast Protectors (Male-Specific)</p>
+            <p><strong>Sarah:</strong> Balanced Partnership (General), Adaptive Nurturers (Female-Specific)</p>
+            <p>Your complementary profiles suggest a relationship with a strong foundation of mutual respect and shared vision, enhanced by your gender-specific approaches to relationship building.</p>
+          </div>
+          
+          <div class="book-promotion">
+            <div class="book-image">
+              BOOK<br>COVER
+            </div>
+            <div class="book-content">
+              <h3>Continue Your Journey with "The 100 Marriage"</h3>
+              <p>Lawrence Adjah's bestselling book provides a comprehensive framework for addressing each of the areas highlighted in this assessment. Use it alongside this discussion guide to deepen your conversations and strengthen your relationship foundation.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px;">
+          <p>For a personal consultation to discuss your results:</p>
+          <p><strong>https://lawrence-adjah.clientsecure.me/request/service</strong></p>
+        </div>
+      </div>
+      
+    </div>
+    
+    <div style="text-align: center;">
+      <p>This is a sample PDF preview. Your actual couple discussion guide will be sent to your email.</p>
+    </div>
+    
+    <div class="footer">
+      © 2025 Lawrence E. Adjah - The 100 Marriage Assessment - Series 1
+    </div>
+  </div>
+</body>
+</html>
