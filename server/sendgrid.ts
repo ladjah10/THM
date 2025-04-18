@@ -49,10 +49,23 @@ function generateComparativeStatsHtml(scores: any, demographics: any): string {
   
   // Calculate section percentiles
   const sectionPercentiles = Object.entries(scores.sections).map(([sectionName, sectionScore]: [string, any]) => {
-    // Map section names to baseline statistic keys
-    const statsKey = sectionName.replace(/\s+/g, '').toLowerCase();
-    const sectionStats = baselineStatistics.sections[statsKey as keyof typeof baselineStatistics.sections];
+    // Map section names to baseline statistic keys using the proper mapping
+    const sectionToStatsKeyMap: Record<string, string> = {
+      'Your Foundation': 'faith',
+      'Your Faith Life': 'faith',
+      'Your Marriage Life': 'compatibility',
+      'Your Parenting Life': 'family',
+      'Your Family/Home Life': 'family',
+      'Your Finances': 'finances',
+      'Your Health and Wellness': 'romance',
+      'Your Marriage and Boundaries': 'communication'
+    };
     
+    // Get the corresponding stats key for this section
+    const statsKey = sectionToStatsKeyMap[sectionName];
+    if (!statsKey) return null;
+    
+    const sectionStats = baselineStatistics.sections[statsKey as keyof typeof baselineStatistics.sections];
     if (!sectionStats) return null;
     
     const sectionMean = sectionStats.byGender[genderKey].mean;
