@@ -214,8 +214,8 @@ export default function PaywallView({
                   assessmentType={assessmentType}
                 />
                 <div className="mt-4 text-xs text-gray-500">
-                  <p>Valid promo codes: FREE100, LA2025, MARRIAGE100</p>
-                  <p className="mt-1">* For demonstration purposes only.</p>
+                  <p>Enter a promo code if you were provided one</p>
+                  <p className="mt-1">* Contact us if you need assistance with promo codes.</p>
                 </div>
               </TabsContent>
               <TabsContent value="referral" className="mt-4">
