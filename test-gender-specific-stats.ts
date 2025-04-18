@@ -42,26 +42,26 @@ const maleTestAssessment: AssessmentResult = {
     description: 'As a male with traditional values, you see yourself as the spiritual leader and provider for your family. You believe in clearly defined gender roles and feel a strong responsibility to protect and provide for your spouse and children. Your faith deeply informs how you approach relationships.',
     genderSpecific: 'male',
     criteria: [
-      { section: 'Faith', min: 85 },
-      { section: 'Family', min: 80 },
-      { section: 'Gender Roles', min: 85 }
+      { section: 'Your Faith Life', min: 85 },
+      { section: 'Your Family/Home Life', min: 80 },
+      { section: 'Your Parenting Life', min: 85 }
     ],
     iconPath: '/assets/profiles/FP.png'
   },
   scores: {
     sections: {
-      'Faith': { earned: 45, possible: 50, percentage: 90 },
-      'Family': { earned: 40, possible: 50, percentage: 80 },
-      'Romance': { earned: 42, possible: 50, percentage: 84 },
-      'Gender Roles': { earned: 43, possible: 50, percentage: 86 },
-      'Communication': { earned: 38, possible: 50, percentage: 76 },
-      'Finances': { earned: 44, possible: 50, percentage: 88 }
+      'Your Faith Life': { earned: 45, possible: 50, percentage: 90 },
+      'Your Family/Home Life': { earned: 40, possible: 50, percentage: 80 },
+      'Your Health and Wellness': { earned: 42, possible: 50, percentage: 84 },
+      'Your Parenting Life': { earned: 43, possible: 50, percentage: 86 },
+      'Your Marriage and Boundaries': { earned: 38, possible: 50, percentage: 76 },
+      'Your Finances': { earned: 44, possible: 50, percentage: 88 }
     },
     overallPercentage: 84.0,
     totalEarned: 252,
     totalPossible: 300,
-    strengths: ['Faith', 'Gender Roles', 'Finances'],
-    improvementAreas: ['Communication', 'Family']
+    strengths: ['Your Faith Life', 'Your Parenting Life', 'Your Finances'],
+    improvementAreas: ['Your Marriage and Boundaries', 'Your Family/Home Life']
   },
   responses: {
     '1': { option: 'Strongly Agree', value: 36 },
@@ -107,9 +107,9 @@ const femaleTestAssessment: AssessmentResult = {
     description: 'You value structure, planning, and clear communication in relationships. You likely approach marriage methodically, with thoughtful consideration of practical matters like finances and family planning. You seek a stable, organized partnership with clear expectations.',
     genderSpecific: null,
     criteria: [
-      { section: 'Communication', min: 80 },
-      { section: 'Finances', min: 75 },
-      { section: 'Family', min: 70 }
+      { section: 'Your Marriage and Boundaries', min: 80 },
+      { section: 'Your Finances', min: 75 },
+      { section: 'Your Family/Home Life', min: 70 }
     ],
     iconPath: '/assets/profiles/HP.png'
   },
@@ -119,26 +119,26 @@ const femaleTestAssessment: AssessmentResult = {
     description: 'As a female with deeply traditional values, faith is the cornerstone of your approach to relationships. You see your primary role within marriage as nurturing the home and family, and you value a spouse who provides spiritual leadership and financial stability.',
     genderSpecific: 'female',
     criteria: [
-      { section: 'Faith', min: 85 },
-      { section: 'Family', min: 85 },
-      { section: 'Gender Roles', min: 85 }
+      { section: 'Your Faith Life', min: 85 },
+      { section: 'Your Family/Home Life', min: 85 },
+      { section: 'Your Parenting Life', min: 85 }
     ],
     iconPath: '/assets/profiles/FCH.png'
   },
   scores: {
     sections: {
-      'Faith': { earned: 45, possible: 50, percentage: 90 },
-      'Family': { earned: 46, possible: 50, percentage: 92 },
-      'Romance': { earned: 38, possible: 50, percentage: 76 },
-      'Gender Roles': { earned: 43, possible: 50, percentage: 86 },
-      'Communication': { earned: 41, possible: 50, percentage: 82 },
-      'Finances': { earned: 39, possible: 50, percentage: 78 }
+      'Your Faith Life': { earned: 45, possible: 50, percentage: 90 },
+      'Your Family/Home Life': { earned: 46, possible: 50, percentage: 92 },
+      'Your Health and Wellness': { earned: 38, possible: 50, percentage: 76 },
+      'Your Parenting Life': { earned: 43, possible: 50, percentage: 86 },
+      'Your Marriage and Boundaries': { earned: 41, possible: 50, percentage: 82 },
+      'Your Finances': { earned: 39, possible: 50, percentage: 78 }
     },
     overallPercentage: 84.0,
     totalEarned: 252,
     totalPossible: 300,
-    strengths: ['Faith', 'Family', 'Gender Roles'],
-    improvementAreas: ['Romance', 'Finances']
+    strengths: ['Your Faith Life', 'Your Family/Home Life', 'Your Parenting Life'],
+    improvementAreas: ['Your Health and Wellness', 'Your Finances']
   },
   responses: {
     '1': { option: 'Strongly Agree', value: 36 },
