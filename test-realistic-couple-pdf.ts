@@ -127,8 +127,8 @@ function determineProfile(sectionScores: Record<string, { earned: number, possib
   }
   
   return {
-    profile: selectedProfile,
-    genderProfile: selectedGenderProfile
+    profile: selectedProfile as UserProfile, // Cast to ensure non-null
+    genderProfile: selectedGenderProfile as UserProfile // Cast to ensure non-null
   };
 }
 
@@ -205,8 +205,8 @@ function generateWifeResponses() {
         option = 'Disagree';
       }
     } 
-    // Higher scores for health, family, and partnership
-    else if (question.section === 'Your Health and Wellness' || question.section === 'Your Family/Home Life' || question.section === 'Your Partnership') {
+    // Higher scores for health, family, and marriage boundaries
+    else if (question.section === 'Your Health and Wellness' || question.section === 'Your Family/Home Life' || question.section === 'Your Marriage and Boundaries') {
       value = Math.random() > 0.3 ? 4 : 3; // Strongly agree or agree most of the time
       option = value === 4 ? 'Strongly Agree' : 'Agree';
     } 
@@ -236,8 +236,23 @@ function generateWifeResponses() {
 
 function generateDifferenceAnalysis(primaryResponses: Record<string, { option: string, value: number }>, 
                                    spouseResponses: Record<string, { option: string, value: number }>): DifferenceAnalysis {
-  const differentResponses = [];
-  const majorDifferences = [];
+  const differentResponses: {
+    questionId: string;
+    questionText: string;
+    questionWeight: number;
+    section: string;
+    primaryResponse: string;
+    spouseResponse: string;
+  }[] = [];
+  
+  const majorDifferences: {
+    questionId: string;
+    questionText: string;
+    questionWeight: number;
+    section: string;
+    primaryResponse: string;
+    spouseResponse: string;
+  }[] = [];
   
   // Compare responses and find differences
   questions.forEach(question => {
