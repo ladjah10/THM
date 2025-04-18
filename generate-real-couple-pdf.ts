@@ -34,16 +34,13 @@ async function generateRealCoupleAssessmentPDF() {
         "Your Health and Wellness": { earned: 70, possible: 100, percentage: 70 },
         "Your Foundation": { earned: 92, possible: 100, percentage: 92 },
         "Your Finances": { earned: 65, possible: 100, percentage: 65 },
-        "Your Partnership": { earned: 78, possible: 100, percentage: 78 },
+        "Your Marriage Life": { earned: 78, possible: 100, percentage: 78 },
         "Your Family/Home Life": { earned: 88, possible: 100, percentage: 88 },
-        "Your Intimacy and Sex Life": { earned: 72, possible: 100, percentage: 72 },
-        "Your Communication": { earned: 80, possible: 100, percentage: 80 },
-        "Your Social Life": { earned: 74, possible: 100, percentage: 74 },
-        "Your Professional Life": { earned: 90, possible: 100, percentage: 90 },
+        "Your Marriage and Boundaries": { earned: 72, possible: 100, percentage: 72 },
         "Your Parenting Life": { earned: 84, possible: 100, percentage: 84 }
       },
       overallPercentage: 80.8,
-      strengths: ["Your Foundation", "Your Professional Life", "Your Faith Life"],
+      strengths: ["Your Foundation", "Your Faith Life", "Your Marriage Life"],
       improvementAreas: ["Your Finances", "Your Health and Wellness"],
       totalEarned: 878,
       totalPossible: 1100
@@ -115,16 +112,13 @@ async function generateRealCoupleAssessmentPDF() {
         "Your Health and Wellness": { earned: 85, possible: 100, percentage: 85 },
         "Your Foundation": { earned: 75, possible: 100, percentage: 75 },
         "Your Finances": { earned: 88, possible: 100, percentage: 88 },
-        "Your Partnership": { earned: 90, possible: 100, percentage: 90 },
+        "Your Marriage Life": { earned: 90, possible: 100, percentage: 90 },
         "Your Family/Home Life": { earned: 92, possible: 100, percentage: 92 },
-        "Your Intimacy and Sex Life": { earned: 78, possible: 100, percentage: 78 },
-        "Your Communication": { earned: 82, possible: 100, percentage: 82 },
-        "Your Social Life": { earned: 84, possible: 100, percentage: 84 },
-        "Your Professional Life": { earned: 76, possible: 100, percentage: 76 },
+        "Your Marriage and Boundaries": { earned: 82, possible: 100, percentage: 82 },
         "Your Parenting Life": { earned: 80, possible: 100, percentage: 80 }
       },
       overallPercentage: 81.4,
-      strengths: ["Your Family/Home Life", "Your Partnership", "Your Finances"],
+      strengths: ["Your Family/Home Life", "Your Marriage Life", "Your Finances"],
       improvementAreas: ["Your Faith Life", "Your Foundation"],
       totalEarned: 895,
       totalPossible: 1100
@@ -147,7 +141,7 @@ async function generateRealCoupleAssessmentPDF() {
       genderSpecific: "female",
       criteria: [
         { section: "Your Family/Home Life", min: 80 },
-        { section: "Your Partnership", min: 75 }
+        { section: "Your Marriage Life", min: 75 }
       ],
       iconPath: "/icons/relational-nurturers.svg"
     },
@@ -217,7 +211,7 @@ async function generateRealCoupleAssessmentPDF() {
         questionId: "30",
         questionText: "I expect my spouse to be my closest confidant and best friend.",
         questionWeight: 5,
-        section: "Your Partnership",
+        section: "Your Marriage Life",
         primaryResponse: "Strongly Agree",
         spouseResponse: "Disagree"
       },
@@ -233,7 +227,7 @@ async function generateRealCoupleAssessmentPDF() {
         questionId: "50",
         questionText: "I believe a healthy sex life is critical to a successful marriage.",
         questionWeight: 4,
-        section: "Your Intimacy and Sex Life",
+        section: "Your Marriage and Boundaries",
         primaryResponse: "Agree",
         spouseResponse: "Disagree"
       },
@@ -241,7 +235,7 @@ async function generateRealCoupleAssessmentPDF() {
         questionId: "63",
         questionText: "I prefer direct communication, even when it's uncomfortable.",
         questionWeight: 3,
-        section: "Your Communication",
+        section: "Your Marriage and Boundaries",
         primaryResponse: "Strongly Agree",
         spouseResponse: "Agree"
       },
@@ -249,7 +243,7 @@ async function generateRealCoupleAssessmentPDF() {
         questionId: "78",
         questionText: "I believe maintaining separate friendships outside our marriage is important.",
         questionWeight: 3,
-        section: "Your Social Life",
+        section: "Your Marriage and Boundaries",
         primaryResponse: "Disagree",
         spouseResponse: "Strongly Agree"
       },
@@ -257,7 +251,7 @@ async function generateRealCoupleAssessmentPDF() {
         questionId: "85",
         questionText: "I expect career decisions to prioritize family needs over individual advancement.",
         questionWeight: 4,
-        section: "Your Professional Life",
+        section: "Your Family/Home Life",
         primaryResponse: "Agree",
         spouseResponse: "Neutral"
       }
@@ -291,7 +285,7 @@ async function generateRealCoupleAssessmentPDF() {
         questionId: "30",
         questionText: "I expect my spouse to be my closest confidant and best friend.",
         questionWeight: 5,
-        section: "Your Partnership",
+        section: "Your Marriage Life",
         primaryResponse: "Strongly Agree",
         spouseResponse: "Disagree"
       },
@@ -307,7 +301,7 @@ async function generateRealCoupleAssessmentPDF() {
         questionId: "50",
         questionText: "I believe a healthy sex life is critical to a successful marriage.",
         questionWeight: 4,
-        section: "Your Intimacy and Sex Life",
+        section: "Your Marriage and Boundaries",
         primaryResponse: "Agree",
         spouseResponse: "Disagree"
       },
@@ -315,13 +309,13 @@ async function generateRealCoupleAssessmentPDF() {
         questionId: "78",
         questionText: "I believe maintaining separate friendships outside our marriage is important.",
         questionWeight: 3,
-        section: "Your Social Life",
+        section: "Your Marriage and Boundaries",
         primaryResponse: "Disagree",
         spouseResponse: "Strongly Agree"
       }
     ],
-    strengthAreas: ["Your Professional Life", "Your Communication", "Your Parenting Life"],
-    vulnerabilityAreas: ["Your Faith Life", "Your Partnership", "Your Foundation"]
+    strengthAreas: ["Your Parenting Life", "Your Marriage and Boundaries", "Your Family/Home Life"],
+    vulnerabilityAreas: ["Your Faith Life", "Your Marriage Life", "Your Foundation"]
   };
 
   // Create the couple assessment report with the data
