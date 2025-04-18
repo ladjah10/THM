@@ -17,16 +17,16 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Serve sample templates directly
-  app.get('/view-sample-results', (req, res) => {
-    res.sendFile('public/sample-results.html', { root: './client' });
+  app.get('/sample-results.html', (req, res) => {
+    res.sendFile('sample-results-mockup.html', { root: '.' });
   });
   
-  app.get('/view-sample-email', (req, res) => {
-    res.sendFile('public/sample-email.html', { root: './client' });
+  app.get('/sample-email.html', (req, res) => {
+    res.sendFile('sample-email-visualization.html', { root: '.' });
   });
   
-  app.get('/view-sample-pdf', (req, res) => {
-    res.sendFile('public/sample-pdf.html', { root: './client' });
+  app.get('/sample-pdf.html', (req, res) => {
+    res.sendFile('sample-pdf.html', { root: '.' });
   });
   
   // Share image generation endpoint for social media sharing

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The 100 Marriage Assessment - PDF Preview</title>
+  <style>
+    body {
+      font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f7f9fc;
+      padding: 0;
+      margin: 0;
+    }
+    
+    h1, h2, h3, h4 {
+      color: #2c3e50;
+      margin-top: 0;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eaeaea;
+    }
+    
+    .header h1 {
+      font-size: 24px;
+      color: #1a365d;
+      margin-bottom: 10px;
+    }
+    
+    .header p {
+      color: #718096;
+      font-size: 16px;
+    }
+    
+    .pdf-preview {
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 40px;
+      border-radius: 5px;
+      margin-bottom: 30px;
+      position: relative;
+    }
+    
+    .pdf-page {
+      border: 1px solid #e2e8f0;
+      padding: 20px;
+      margin-bottom: 20px;
+      background-color: white;
+    }
+    
+    .pdf-heading {
+      text-align: center;
+      border-bottom: 2px solid #3182ce;
+      padding-bottom: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .pdf-heading h2 {
+      font-size: 22px;
+      color: #2c5282;
+      margin: 0;
+    }
+    
+    .pdf-heading p {
+      font-size: 16px;
+      color: #4a5568;
+      margin: 5px 0 0;
+    }
+    
+    .score-circle {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      border: 5px solid #3182ce;
+      margin: 0 auto 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .score-value {
+      font-size: 40px;
+      font-weight: bold;
+      color: #3182ce;
+    }
+    
+    .score-label {
+      font-size: 14px;
+      color: #4a5568;
+    }
+    
+    .section {
+      margin-bottom: 25px;
+    }
+    
+    .section-title {
+      font-size: 18px;
+      color: #2c5282;
+      margin-bottom: 15px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .score-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      align-items: center;
+    }
+    
+    .score-name {
+      flex: 1;
+      font-size: 14px;
+    }
+    
+    .score-bar-container {
+      flex: 2;
+      height: 10px;
+      background-color: #e2e8f0;
+      border-radius: 5px;
+      overflow: hidden;
+      margin: 0 15px;
+    }
+    
+    .score-bar {
+      height: 100%;
+      background-color: #3182ce;
+      border-radius: 5px;
+    }
+    
+    .score-percentage {
+      width: 45px;
+      text-align: right;
+      font-weight: bold;
+      color: #3182ce;
+      font-size: 14px;
+    }
+    
+    .profile-box {
+      background-color: #ebf8ff;
+      border-left: 4px solid #3182ce;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 0 5px 5px 0;
+    }
+    
+    .profile-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #2c5282;
+      margin-bottom: 10px;
+    }
+    
+    .profile-description {
+      font-size: 14px;
+      color: #4a5568;
+      line-height: 1.5;
+    }
+    
+    .gender-profile-box {
+      background-color: #f5f0ff;
+      border-left: 4px solid #805ad5;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 0 5px 5px 0;
+    }
+    
+    .gender-profile-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #553c9a;
+      margin-bottom: 10px;
+    }
+    
+    .section-comparison {
+      margin-top: 20px;
+    }
+    
+    .comparison-title {
+      font-size: 16px;
+      color: #2c5282;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #eaeaea;
+      color: #718096;
+      font-size: 14px;
+    }
+    
+    .watermark {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 80px;
+      color: rgba(200, 200, 200, 0.15);
+      transform: rotate(-45deg);
+      pointer-events: none;
+    }
+    
+    @media (max-width: 600px) {
+      .pdf-preview {
+        padding: 20px;
+      }
+      
+      .score-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .score-bar-container {
+        width: 100%;
+        margin: 5px 0;
+      }
+      
+      .score-percentage {
+        width: 100%;
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>The 100 Marriage Assessment - Series 1</h1>
+      <p>PDF Report Preview</p>
+    </div>
+    
+    <div class="pdf-preview">
+      <div class="watermark">SAMPLE</div>
+      
+      <!-- Page 1 -->
+      <div class="pdf-page">
+        <div class="pdf-heading">
+          <h2>The 100 Marriage Assessment - Series 1</h2>
+          <p>Individual Assessment Report</p>
+        </div>
+        
+        <div class="score-circle">
+          <div class="score-value">83%</div>
+          <div class="score-label">Overall Score</div>
+        </div>
+        
+        <div class="section">
+          <p style="text-align: center; font-size: 16px; font-weight: bold; color: #2c5282;">
+            John Smith's Assessment Results
+          </p>
+          <p style="text-align: center; color: #4a5568; margin-bottom: 30px;">
+            Completed on April 16, 2025
+          </p>
+          
+          <p>
+            Thank you for completing The 100 Marriage Assessment - Series 1. This report provides insights into your perspectives on marriage and relationships based on your responses to our comprehensive questionnaire.
+          </p>
+          
+          <p>
+            <strong>Understanding Your Score:</strong> Your assessment score reflects your perspectives on marriage, not a judgment of readiness. Higher percentages indicate alignment with more traditional views, while lower percentages suggest less traditional approaches. Neither is inherently better—these simply reflect different expectations.
+          </p>
+        </div>
+      </div>
+      
+      <!-- Page 2 -->
+      <div class="pdf-page">
+        <div class="section">
+          <h3 class="section-title">Section Scores</h3>
+          
+          <div class="score-row">
+            <div class="score-name">Your Marriage and Boundaries</div>
+            <div class="score-bar-container">
+              <div class="score-bar" style="width: 85%"></div>
+            </div>
+            <div class="score-percentage">85%</div>
+          </div>
+          
+          <div class="score-row">
+            <div class="score-name">Your Marriage Life</div>
+            <div class="score-bar-container">
+              <div class="score-bar" style="width: 90%"></div>
+            </div>
+            <div class="score-percentage">90%</div>
+          </div>
+          
+          <div class="score-row">
+            <div class="score-name">Your Faith Life</div>
+            <div class="score-bar-container">
+              <div class="score-bar" style="width: 78%"></div>
+            </div>
+            <div class="score-percentage">78%</div>
+          </div>
+          
+          <div class="score-row">
+            <div class="score-name">Your Finances</div>
+            <div class="score-bar-container">
+              <div class="score-bar" style="width: 65%"></div>
+            </div>
+            <div class="score-percentage">65%</div>
+          </div>
+          
+          <div class="score-row">
+            <div class="score-name">Your Parenting Life</div>
+            <div class="score-bar-container">
+              <div class="score-bar" style="width: 92%"></div>
+            </div>
+            <div class="score-percentage">92%</div>
+          </div>
+          
+          <div class="score-row">
+            <div class="score-name">Your Foundation</div>
+            <div class="score-bar-container">
+              <div class="score-bar" style="width: 88%"></div>
+            </div>
+            <div class="score-percentage">88%</div>
+          </div>
+          
+          <div class="score-row">
+            <div class="score-name">Your Family/Home Life</div>
+            <div class="score-bar-container">
+              <div class="score-bar" style="width: 80%"></div>
+            </div>
+            <div class="score-percentage">80%</div>
+          </div>
+          
+          <div class="score-row">
+            <div class="score-name">Your Health and Wellness</div>
+            <div class="score-bar-container">
+              <div class="score-bar" style="width: 87%"></div>
+            </div>
+            <div class="score-percentage">87%</div>
+          </div>
+        </div>
+        
+        <div class="section">
+          <h3 class="section-title">Key Strengths</h3>
+          <ul>
+            <li>Healthy relational boundaries</li>
+            <li>Clear communication and conflict resolution skills</li>
+            <li>Aligned parenting perspectives</li>
+          </ul>
+        </div>
+        
+        <div class="section">
+          <h3 class="section-title">Areas for Growth</h3>
+          <ul>
+            <li>Financial planning and money management</li>
+            <li>Faith alignment in relationship</li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- Page 3 -->
+      <div class="pdf-page">
+        <div class="section">
+          <h3 class="section-title">Your Psychographic Profiles</h3>
+          
+          <div class="profile-box">
+            <div class="profile-title">General Profile: Balanced Visionaries</div>
+            <div class="profile-description">
+              Balanced Visionaries approach marriage with a well-rounded perspective, demonstrating high scores across communication, family planning, and life vision areas. They exhibit a thoughtful approach to relationship challenges and possess the ability to maintain calm during conflict. Their relationships are characterized by mutual respect, clear communication, and a shared path forward that honors both partners' dreams.
+            </div>
+          </div>
+          
+          <div class="gender-profile-box">
+            <div class="gender-profile-title">Male-Specific Profile: Steadfast Protectors</div>
+            <div class="profile-description">
+              Steadfast Protectors place a high value on family security and maintaining strong protective boundaries. As male partners, they demonstrate a particular devotion to ensuring their loved ones feel safe and provided for. They excel at conflict resolution and typically approach challenges with a pragmatic mindset. Their strong scores in faith and vision areas reveal a commitment to spiritual leadership within their relationship.
+            </div>
+          </div>
+        </div>
+        
+        <div class="section">
+          <h3 class="section-title">Statistical Comparison</h3>
+          <p>Your overall score of 83% places you in the 74th percentile among all assessment takers.</p>
+          <p>Compared to other men in your age group:</p>
+          <ul>
+            <li>Your Marriage and Boundaries: 85% (Above average)</li>
+            <li>Your Faith Life: 78% (Average)</li>
+            <li>Your Finances: 65% (Below average)</li>
+          </ul>
+        </div>
+        
+        <div class="section">
+          <h3 class="section-title">Next Steps</h3>
+          <p>We recommend discussing these results with your significant other or potential spouse to better understand how your perspectives align. The 100 Marriage book can serve as an excellent companion to this assessment.</p>
+          <p>For a more in-depth discussion of your results, you can schedule a consultation at: <a href="https://lawrence-adjah.clientsecure.me/request/service">https://lawrence-adjah.clientsecure.me/request/service</a></p>
+        </div>
+      </div>
+      
+    </div>
+    
+    <div style="text-align: center;">
+      <p>This is a sample PDF preview. Your actual PDF report will be sent to your email.</p>
+    </div>
+    
+    <div class="footer">
+      © 2025 Lawrence E. Adjah - The 100 Marriage Assessment - Series 1
+    </div>
+  </div>
+</body>
+</html>
