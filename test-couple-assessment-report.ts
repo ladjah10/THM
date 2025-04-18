@@ -7,12 +7,12 @@ const primaryAssessment: AssessmentResult = {
   name: "Lawrence Adjah",
   scores: {
     sections: {
-      "Communication": { earned: 85, possible: 100, percentage: 85 },
-      "Compatibility": { earned: 90, possible: 100, percentage: 90 },
-      "Faith": { earned: 78, possible: 100, percentage: 78 },
-      "Financial Management": { earned: 65, possible: 100, percentage: 65 },
-      "Family Planning": { earned: 92, possible: 100, percentage: 92 },
-      "Life Vision": { earned: 88, possible: 100, percentage: 88 }
+      "Your Marriage and Boundaries": { earned: 85, possible: 100, percentage: 85 },
+      "Your Marriage Life": { earned: 90, possible: 100, percentage: 90 },
+      "Your Faith Life": { earned: 78, possible: 100, percentage: 78 },
+      "Your Finances": { earned: 65, possible: 100, percentage: 65 },
+      "Your Parenting Life": { earned: 92, possible: 100, percentage: 92 },
+      "Your Foundation": { earned: 88, possible: 100, percentage: 88 }
     },
     overallPercentage: 83,
     strengths: [
@@ -35,9 +35,9 @@ const primaryAssessment: AssessmentResult = {
     description: "Balanced Visionaries approach marriage with a well-rounded perspective, demonstrating high scores across communication, family planning, and life vision areas. They exhibit a thoughtful approach to relationship challenges and possess the ability to maintain calm during conflict. Their relationships are characterized by mutual respect, clear communication, and a shared path forward that honors both partners' dreams.",
     genderSpecific: null,
     criteria: [
-      { section: "Communication", min: 80 },
-      { section: "Life Vision", min: 85 },
-      { section: "Family Planning", min: 85 }
+      { section: "Your Marriage and Boundaries", min: 80 },
+      { section: "Your Foundation", min: 85 },
+      { section: "Your Parenting Life", min: 85 }
     ],
     iconPath: "/assets/BV_6.png"
   },
@@ -47,9 +47,9 @@ const primaryAssessment: AssessmentResult = {
     description: "Steadfast Protectors place a high value on family security and maintaining strong protective boundaries. As male partners, they demonstrate a particular devotion to ensuring their loved ones feel safe and provided for. They excel at conflict resolution and typically approach challenges with a pragmatic mindset. Their strong scores in faith and vision areas reveal a commitment to spiritual leadership within their relationship.",
     genderSpecific: "male",
     criteria: [
-      { section: "Faith", min: 75 },
-      { section: "Life Vision", min: 80 },
-      { section: "Communication", min: 70 }
+      { section: "Your Faith Life", min: 75 },
+      { section: "Your Foundation", min: 80 },
+      { section: "Your Marriage and Boundaries", min: 70 }
     ],
     iconPath: "/assets/SL_12.png"
   },
@@ -88,12 +88,12 @@ const spouseAssessment: AssessmentResult = {
   name: "Test Spouse",
   scores: {
     sections: {
-      "Communication": { earned: 82, possible: 100, percentage: 82 },
-      "Compatibility": { earned: 88, possible: 100, percentage: 88 },
-      "Faith": { earned: 75, possible: 100, percentage: 75 },
-      "Financial Management": { earned: 72, possible: 100, percentage: 72 },
-      "Family Planning": { earned: 90, possible: 100, percentage: 90 },
-      "Life Vision": { earned: 85, possible: 100, percentage: 85 }
+      "Your Marriage and Boundaries": { earned: 82, possible: 100, percentage: 82 },
+      "Your Marriage Life": { earned: 88, possible: 100, percentage: 88 },
+      "Your Faith Life": { earned: 75, possible: 100, percentage: 75 },
+      "Your Finances": { earned: 72, possible: 100, percentage: 72 },
+      "Your Parenting Life": { earned: 90, possible: 100, percentage: 90 },
+      "Your Foundation": { earned: 85, possible: 100, percentage: 85 }
     },
     overallPercentage: 81,
     strengths: [
@@ -116,9 +116,9 @@ const spouseAssessment: AssessmentResult = {
     description: "Balanced Partnership seekers value equality and mutual respect in relationships. Their high scores in compatibility and communication demonstrate their desire for a relationship where both partners have equal say and shared responsibility. They typically approach conflict with level-headedness and seek fair resolutions.",
     genderSpecific: null,
     criteria: [
-      { section: "Compatibility", min: 85 },
-      { section: "Communication", min: 80 },
-      { section: "Life Vision", min: 80 }
+      { section: "Your Marriage Life", min: 85 },
+      { section: "Your Marriage and Boundaries", min: 80 },
+      { section: "Your Foundation", min: 80 }
     ],
     iconPath: "/assets/BP_13.png"
   },
@@ -128,9 +128,9 @@ const spouseAssessment: AssessmentResult = {
     description: "Adaptive Nurturers bring an exceptional emotional intelligence to relationships. As female partners, they demonstrate a particular gift for understanding others' needs and creating harmonious environments. They value both tradition and progressive approaches, adapting as needed to support their relationship goals.",
     genderSpecific: "female",
     criteria: [
-      { section: "Compatibility", min: 80 },
-      { section: "Communication", min: 75 },
-      { section: "Family Planning", min: 85 }
+      { section: "Your Marriage Life", min: 80 },
+      { section: "Your Marriage and Boundaries", min: 75 },
+      { section: "Your Parenting Life", min: 85 }
     ],
     iconPath: "/assets/IT_9.png"
   },
@@ -169,7 +169,7 @@ const differenceAnalysis: DifferenceAnalysis = {
       questionId: "12",
       questionText: "How important is it to plan finances together?",
       questionWeight: 4,
-      section: "Financial Management",
+      section: "Your Finances",
       primaryResponse: "Very important, all financial decisions should be made together",
       spouseResponse: "Somewhat important, but we should maintain some financial independence"
     },
@@ -177,7 +177,7 @@ const differenceAnalysis: DifferenceAnalysis = {
       questionId: "27",
       questionText: "How do you prefer to resolve conflicts?",
       questionWeight: 3,
-      section: "Communication",
+      section: "Your Marriage and Boundaries",
       primaryResponse: "Address issues immediately and directly",
       spouseResponse: "Take time to cool off before discussing sensitive topics"
     },
@@ -185,7 +185,7 @@ const differenceAnalysis: DifferenceAnalysis = {
       questionId: "35",
       questionText: "What role should in-laws play in your marriage?",
       questionWeight: 3,
-      section: "Extended Family",
+      section: "Your Family/Home Life",
       primaryResponse: "Limited involvement, with clear boundaries",
       spouseResponse: "Regular involvement and guidance from both families"
     }
@@ -195,7 +195,7 @@ const differenceAnalysis: DifferenceAnalysis = {
       questionId: "12",
       questionText: "How important is it to plan finances together?",
       questionWeight: 4,
-      section: "Financial Management",
+      section: "Your Finances",
       primaryResponse: "Very important, all financial decisions should be made together",
       spouseResponse: "Somewhat important, but we should maintain some financial independence"
     },
@@ -203,19 +203,19 @@ const differenceAnalysis: DifferenceAnalysis = {
       questionId: "35",
       questionText: "What role should in-laws play in your marriage?",
       questionWeight: 3,
-      section: "Extended Family",
+      section: "Your Family/Home Life",
       primaryResponse: "Limited involvement, with clear boundaries",
       spouseResponse: "Regular involvement and guidance from both families"
     }
   ],
   strengthAreas: [
-    "Faith & Spirituality",
-    "Family Planning",
-    "Financial Priorities"
+    "Your Faith Life",
+    "Your Parenting Life",
+    "Your Finances"
   ],
   vulnerabilityAreas: [
-    "Extended Family",
-    "Household Responsibilities"
+    "Your Family/Home Life",
+    "Your Marriage and Boundaries"
   ]
 };
 
