@@ -96,7 +96,7 @@ export const baselineStatistics = {
   
   // Section scores
   sections: {
-    communication: {
+    "Your Marriage and Boundaries": {
       mean: 85,
       median: 87,
       standardDeviation: 8,
@@ -105,7 +105,7 @@ export const baselineStatistics = {
         female: { mean: 87, median: 88, standardDeviation: 8 }
       }
     },
-    compatibility: {
+    "Your Marriage Life": {
       mean: 82,
       median: 84,
       standardDeviation: 9,
@@ -114,7 +114,7 @@ export const baselineStatistics = {
         female: { mean: 83, median: 85, standardDeviation: 9 }
       }
     },
-    faith: {
+    "Your Faith Life": {
       mean: 87,
       median: 89,
       standardDeviation: 8,
@@ -123,7 +123,7 @@ export const baselineStatistics = {
         female: { mean: 89, median: 91, standardDeviation: 7 }
       }
     },
-    family: {
+    "Your Family/Home Life": {
       mean: 83,
       median: 85,
       standardDeviation: 9,
@@ -132,7 +132,7 @@ export const baselineStatistics = {
         female: { mean: 85, median: 87, standardDeviation: 8 }
       }
     },
-    finances: {
+    "Your Finances": {
       mean: 78,
       median: 80,
       standardDeviation: 12,
@@ -141,7 +141,7 @@ export const baselineStatistics = {
         female: { mean: 76, median: 78, standardDeviation: 13 }
       }
     },
-    romance: {
+    "Your Health and Wellness": {
       mean: 80,
       median: 82,
       standardDeviation: 10,
@@ -150,13 +150,22 @@ export const baselineStatistics = {
         female: { mean: 78, median: 81, standardDeviation: 11 }
       }
     },
-    "gender roles": {
+    "Your Parenting Life": {
       mean: 84,
       median: 86,
       standardDeviation: 11,
       byGender: {
         male: { mean: 87, median: 89, standardDeviation: 9 },
         female: { mean: 81, median: 83, standardDeviation: 12 }
+      }
+    },
+    "Your Foundation": {
+      mean: 86,
+      median: 88,
+      standardDeviation: 8,
+      byGender: {
+        male: { mean: 85, median: 87, standardDeviation: 9 },
+        female: { mean: 87, median: 89, standardDeviation: 8 }
       }
     },
   },
@@ -211,13 +220,27 @@ export function getPercentileInterpretation(sectionName: string): string {
     "while lower percentages suggest less traditional approaches.";
     
   // Section-specific interpretations could be added here
-  switch(sectionName.toLowerCase()) {
-    case 'overall':
+  const sectionNameLower = sectionName.toLowerCase();
+  
+  switch(true) {
+    case sectionNameLower === 'overall':
       return "Your overall score reflects your perspectives on relationship. " + defaultInterpretation;
-    case 'communication':
-      return "Your Communication score reflects how you view communication in relationships. " + defaultInterpretation;
-    case 'faith':
-      return "Your Faith score reflects the centrality of spiritual matters in your relationship approach. " + defaultInterpretation;
+    case sectionNameLower.includes('marriage and boundaries'):
+      return "Your Marriage and Boundaries score reflects how you view communication in relationships. " + defaultInterpretation;
+    case sectionNameLower.includes('faith life'):
+      return "Your Faith Life score reflects the centrality of spiritual matters in your relationship approach. " + defaultInterpretation;
+    case sectionNameLower.includes('foundation'):
+      return "Your Foundation score reflects your core values that form the basis of your relationship expectations. " + defaultInterpretation;
+    case sectionNameLower.includes('marriage life'):
+      return "Your Marriage Life score indicates your expectations for day-to-day married life. " + defaultInterpretation;
+    case sectionNameLower.includes('parenting'):
+      return "Your Parenting Life score shows how you view raising children and family planning. " + defaultInterpretation;
+    case sectionNameLower.includes('family'):
+      return "Your Family/Home Life score indicates your expectations about family dynamics and home management. " + defaultInterpretation;
+    case sectionNameLower.includes('finances'):
+      return "Your Finances score reflects your approach to money management and financial decisions in relationships. " + defaultInterpretation;
+    case sectionNameLower.includes('health'):
+      return "Your Health and Wellness score shows your perspectives on physical and mental wellbeing in relationships. " + defaultInterpretation;
     default:
       return defaultInterpretation;
   }

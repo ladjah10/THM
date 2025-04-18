@@ -30,9 +30,9 @@ const maleTestAssessment: AssessmentResult = {
     description: 'You hold traditional values and religious convictions central to your life and relationship expectations. You likely place high value on conventional gender roles and family structures. Faith-based principles guide your approach to marriage, and you seek a spouse who shares your spiritual commitment.',
     genderSpecific: null,
     criteria: [
-      { section: 'Faith', min: 80 },
-      { section: 'Family', min: 75 },
-      { section: 'Gender Roles', min: 80 }
+      { section: 'Your Faith Life', min: 80 },
+      { section: 'Your Family/Home Life', min: 75 },
+      { section: 'Your Parenting Life', min: 80 }
     ],
     iconPath: '/assets/profiles/SB.png'
   },
