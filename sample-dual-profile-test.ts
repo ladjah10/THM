@@ -7,12 +7,12 @@ const testAssessment: AssessmentResult = {
   name: "John Smith",
   scores: {
     sections: {
-      "Communication": { earned: 85, possible: 100, percentage: 85 },
-      "Compatibility": { earned: 90, possible: 100, percentage: 90 },
-      "Faith": { earned: 78, possible: 100, percentage: 78 },
-      "Financial Management": { earned: 65, possible: 100, percentage: 65 },
-      "Family Planning": { earned: 92, possible: 100, percentage: 92 },
-      "Life Vision": { earned: 88, possible: 100, percentage: 88 }
+      "Your Marriage and Boundaries": { earned: 85, possible: 100, percentage: 85 },
+      "Your Marriage Life": { earned: 90, possible: 100, percentage: 90 },
+      "Your Faith Life": { earned: 78, possible: 100, percentage: 78 },
+      "Your Finances": { earned: 65, possible: 100, percentage: 65 },
+      "Your Parenting Life": { earned: 92, possible: 100, percentage: 92 },
+      "Your Foundation": { earned: 88, possible: 100, percentage: 88 }
     },
     overallPercentage: 83,
     strengths: [
@@ -35,9 +35,9 @@ const testAssessment: AssessmentResult = {
     description: "Balanced Visionaries approach marriage with a well-rounded perspective, demonstrating high scores across communication, family planning, and life vision areas. They exhibit a thoughtful approach to relationship challenges and possess the ability to maintain calm during conflict. Their relationships are characterized by mutual respect, clear communication, and a shared path forward that honors both partners' dreams.",
     genderSpecific: null,
     criteria: [
-      { section: "Communication", min: 80 },
-      { section: "Life Vision", min: 85 },
-      { section: "Family Planning", min: 85 }
+      { section: "Your Marriage and Boundaries", min: 80 },
+      { section: "Your Foundation", min: 85 },
+      { section: "Your Parenting Life", min: 85 }
     ]
   },
   genderProfile: {
@@ -46,9 +46,9 @@ const testAssessment: AssessmentResult = {
     description: "Steadfast Protectors place a high value on family security and maintaining strong protective boundaries. As male partners, they demonstrate a particular devotion to ensuring their loved ones feel safe and provided for. They excel at conflict resolution and typically approach challenges with a pragmatic mindset. Their strong scores in faith and vision areas reveal a commitment to spiritual leadership within their relationship.",
     genderSpecific: "male",
     criteria: [
-      { section: "Faith", min: 75 },
-      { section: "Life Vision", min: 80 },
-      { section: "Communication", min: 70 }
+      { section: "Your Faith Life", min: 75 },
+      { section: "Your Foundation", min: 80 },
+      { section: "Your Marriage and Boundaries", min: 70 }
     ]
   },
   responses: {
@@ -68,7 +68,12 @@ const testAssessment: AssessmentResult = {
     hasPurchasedBook: "Yes",
     purchaseDate: "2025-03-15",
     promoCode: "",
-    hasPaid: true
+    hasPaid: true,
+    lifeStage: "Dating",
+    birthday: "1990-06-15",
+    city: "New York",
+    state: "NY",
+    zipCode: "10001"
   },
   timestamp: new Date().toISOString()
 };
