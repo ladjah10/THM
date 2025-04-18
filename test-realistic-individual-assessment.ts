@@ -152,9 +152,9 @@ async function generateRealisticIndividualAssessment() {
       genderSpecific: 'male',
       iconPath: 'attached_assets/SL 12.png',
       criteria: [
-        { section: 'Role Expectations', min: 70 },
-        { section: 'Financial Values', min: 65 },
-        { section: 'Communication', min: 75 }
+        { section: 'Your Marriage Life', min: 70 },
+        { section: 'Your Finances', min: 65 },
+        { section: 'Your Marriage and Boundaries', min: 75 }
       ]
     },
     responses: {
@@ -261,21 +261,20 @@ async function generateRealisticIndividualAssessment() {
     },
     scores: {
       sections: {
-        'Spiritual Beliefs': { earned: 92, possible: 100, percentage: 92 },
-        'Family Planning': { earned: 84, possible: 100, percentage: 84 },
-        'Role Expectations': { earned: 88, possible: 100, percentage: 88 },
-        'Physical Intimacy': { earned: 78, possible: 100, percentage: 78 },
-        'Conflict Resolution': { earned: 82, possible: 100, percentage: 82 },
-        'Financial Values': { earned: 76, possible: 100, percentage: 76 },
-        'Communication': { earned: 86, possible: 100, percentage: 86 },
-        'Support Networks': { earned: 72, possible: 100, percentage: 72 },
-        'Recreation & Leisure': { earned: 68, possible: 100, percentage: 68 }
+        'Your Foundation': { earned: 92, possible: 100, percentage: 92 },
+        'Your Faith Life': { earned: 84, possible: 100, percentage: 84 },
+        'Your Marriage Life': { earned: 88, possible: 100, percentage: 88 },
+        'Your Parenting Life': { earned: 78, possible: 100, percentage: 78 },
+        'Your Family/Home Life': { earned: 82, possible: 100, percentage: 82 },
+        'Your Finances': { earned: 76, possible: 100, percentage: 76 },
+        'Your Health and Wellness': { earned: 86, possible: 100, percentage: 86 },
+        'Your Marriage and Boundaries': { earned: 72, possible: 100, percentage: 72 }
       },
       totalEarned: 726,
       totalPossible: 900,
       overallPercentage: 80.67,
-      strengths: ['Spiritual Beliefs', 'Role Expectations', 'Communication'],
-      improvementAreas: ['Recreation & Leisure', 'Support Networks', 'Financial Values']
+      strengths: ['Your Foundation', 'Your Faith Life', 'Your Marriage Life'],
+      improvementAreas: ['Your Finances', 'Your Marriage and Boundaries', 'Your Health and Wellness']
     }
   };
 

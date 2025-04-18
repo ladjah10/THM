@@ -28,10 +28,23 @@ export function ComparativeStats({ scores, demographics }: ComparativeStatsProps
   // Calculate "percentiles" for each section
   const sectionPercentiles: Record<string, number> = {};
   Object.entries(scores.sections).forEach(([sectionName, sectionScore]) => {
-    // Map section names to our baseline statistic keys
-    const statsKey = sectionName.replace(/\s+/g, '').toLowerCase();
-    const sectionStats = baselineStatistics.sections[statsKey as keyof typeof baselineStatistics.sections];
+    // Map section names to baseline statistic keys using the proper mapping
+    const sectionToStatsKeyMap: Record<string, string> = {
+      'Your Foundation': 'faith',
+      'Your Faith Life': 'faith',
+      'Your Marriage Life': 'compatibility',
+      'Your Parenting Life': 'family',
+      'Your Family/Home Life': 'family',
+      'Your Finances': 'finances', 
+      'Your Health and Wellness': 'romance',
+      'Your Marriage and Boundaries': 'communication'
+    };
     
+    // Get the corresponding stats key for this section
+    const statsKey = sectionToStatsKeyMap[sectionName];
+    if (!statsKey) return;
+    
+    const sectionStats = baselineStatistics.sections[statsKey as keyof typeof baselineStatistics.sections];
     if (!sectionStats) return;
     
     const sectionMean = sectionStats.byGender[genderKey].mean;
@@ -127,9 +140,23 @@ export function ComparativeStats({ scores, demographics }: ComparativeStatsProps
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {Object.entries(scores.sections).map(([sectionName, sectionScore]) => {
             const sectionPercentile = sectionPercentiles[sectionName] || 50;
-            const statsKey = sectionName.replace(/\s+/g, '').toLowerCase();
-            const sectionStats = baselineStatistics.sections[statsKey as keyof typeof baselineStatistics.sections];
             
+            // Use the same section mapping as above
+            const sectionToStatsKeyMap: Record<string, string> = {
+              'Your Foundation': 'faith',
+              'Your Faith Life': 'faith',
+              'Your Marriage Life': 'compatibility',
+              'Your Parenting Life': 'family',
+              'Your Family/Home Life': 'family',
+              'Your Finances': 'finances', 
+              'Your Health and Wellness': 'romance',
+              'Your Marriage and Boundaries': 'communication'
+            };
+            
+            const statsKey = sectionToStatsKeyMap[sectionName];
+            if (!statsKey) return null;
+            
+            const sectionStats = baselineStatistics.sections[statsKey as keyof typeof baselineStatistics.sections];
             if (!sectionStats) return null;
             
             const sectionMean = sectionStats.byGender[genderKey].mean;
