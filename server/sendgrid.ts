@@ -1,6 +1,6 @@
 import { MailService } from '@sendgrid/mail';
 import { AssessmentResult } from '../shared/schema';
-import { generateAssessmentPDF } from './pdf-generator';
+import { generateIndividualAssessmentPDF } from './updated-individual-pdf';
 import { 
   baselineStatistics, 
   getPercentileDescription 
@@ -443,7 +443,7 @@ export async function sendAssessmentEmail(assessment: AssessmentResult, ccEmail:
     
     // Generate PDF report
     console.log('Generating PDF report...');
-    const pdfBuffer = await generateAssessmentPDF(assessment);
+    const pdfBuffer = await generateIndividualAssessmentPDF(assessment);
     
     // Create the email message
     const message: EmailMessage = {
