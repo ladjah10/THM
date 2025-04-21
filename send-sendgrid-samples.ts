@@ -19,7 +19,7 @@ mailService.setApiKey(process.env.SENDGRID_API_KEY);
  */
 async function sendSampleReports() {
   try {
-    console.log('Preparing to send sample reports to la@lawrenceadjah.com via SendGrid...');
+    console.log('Preparing to send sample reports to lawrence@lawrenceadjah.com via SendGrid...');
     
     // 1. First, send a sample individual assessment report
     const individualAssessment: AssessmentResult = {

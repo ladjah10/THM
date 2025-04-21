@@ -23,7 +23,6 @@ export async function sendEmailReport(data: EmailReportData): Promise<void> {
   try {
     const response = await apiRequest('POST', '/api/email/send', {
       to: data.to,
-      cc: 'la@lawrenceadjah.com',
       subject: `${data.name}'s 100 Marriage Assessment Results`,
       data: {
         name: data.name,
