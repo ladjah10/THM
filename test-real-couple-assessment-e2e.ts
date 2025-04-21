@@ -112,7 +112,7 @@ async function runRealCoupleAssessmentE2ETest() {
     primaryAssessment: husbandAssessment,
     spouseAssessment: wifeAssessment,
     differenceAnalysis: differenceAnalysis,
-    compatibilityScore: compatibilityScore,
+    overallCompatibility: compatibilityScore,
     timestamp: new Date().toISOString()
   };
 

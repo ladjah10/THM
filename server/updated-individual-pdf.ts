@@ -6,6 +6,7 @@ import {
   baselineStatistics, 
   getPercentileDescription 
 } from '../client/src/utils/statisticsUtils';
+import { addProfilesReferenceSection } from './psychographic-profiles-reference';
 
 // Function to get the absolute path of profile icons
 function getProfileIconPath(relativePath: string | undefined): string | null {
@@ -419,6 +420,9 @@ export async function generateIndividualAssessmentPDF(assessment: AssessmentResu
       doc.fontSize(12)
         .fillColor('#3182ce')
         .text('https://lawrence-adjah.clientsecure.me/request/service', 50, doc.y + 5, { link: 'https://lawrence-adjah.clientsecure.me/request/service' });
+      
+      // Add the psychographic profiles reference section
+      addProfilesReferenceSection(doc);
       
       // Finish the PDF
       doc.end();

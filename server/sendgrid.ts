@@ -482,7 +482,7 @@ export async function sendAssessmentEmail(assessment: AssessmentResult): Promise
  * Format couple assessment into HTML email
  */
 function formatCoupleAssessmentEmail(report: CoupleAssessmentReport): string {
-  const { primaryAssessment, spouseAssessment, differenceAnalysis, compatibilityScore } = report;
+  const { primaryAssessment, spouseAssessment, differenceAnalysis, overallCompatibility } = report;
   
   // Format the sections scores for both partners
   const primarySectionsHtml = Object.entries(primaryAssessment.scores.sections)
@@ -559,12 +559,12 @@ function formatCoupleAssessmentEmail(report: CoupleAssessmentReport): string {
           <h2>Your Compatibility Score</h2>
           <div class="compatibility-box">
             <p>Based on your individual responses and key areas of alignment</p>
-            <p class="compatibility-score">${compatibilityScore}%</p>
+            <p class="compatibility-score">${overallCompatibility}%</p>
             <p style="font-style: italic; color: #555;">
-              ${compatibilityScore >= 85 ? 'Exceptional Alignment' : 
-                compatibilityScore >= 75 ? 'Strong Alignment' : 
-                compatibilityScore >= 65 ? 'Good Alignment' : 
-                compatibilityScore >= 50 ? 'Moderate Alignment' : 'Areas For Growth'}
+              ${overallCompatibility >= 85 ? 'Exceptional Alignment' : 
+                overallCompatibility >= 75 ? 'Strong Alignment' : 
+                overallCompatibility >= 65 ? 'Good Alignment' : 
+                overallCompatibility >= 50 ? 'Moderate Alignment' : 'Areas For Growth'}
             </p>
           </div>
           <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin-top: 10px; font-size: 14px; color: #555;">
