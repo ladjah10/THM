@@ -1,6 +1,5 @@
-import { AssessmentResult, CoupleAssessmentReport } from './shared/schema';
-import { sendAssessmentEmail } from './server/sendgrid';
-import { sendCoupleAssessmentEmail } from './server/nodemailer';
+import { AssessmentResult, CoupleAssessmentReport, DifferenceAnalysis } from './shared/schema';
+import { sendAssessmentEmail, sendCoupleAssessmentEmail } from './server/nodemailer';
 
 /**
  * This script generates sample individual and couple assessment reports
@@ -239,64 +238,61 @@ async function sendSampleReports() {
       }
     };
 
-    // Define differences for couple assessment
-    const differenceAnalysis = {
-      biggestDifferences: [
-        { 
-          section: 'Your Foundation', 
-          primaryScore: 96, 
-          spouseScore: 84, 
-          difference: 12,
-          description: 'Michael places a higher emphasis on foundational values and traditional relationship frameworks than Sarah does.'
+    // Define differences for couple assessment - matching the DifferenceAnalysis interface
+    const differenceAnalysis: DifferenceAnalysis = {
+      differentResponses: [
+        {
+          questionId: '15',
+          questionText: 'A spouse\'s faith should align with their partner\'s.',
+          questionWeight: 4,
+          section: 'Your Faith Life',
+          primaryResponse: 'StronglyAgree',
+          spouseResponse: 'Neutral'
         },
-        { 
-          section: 'Your Faith Life', 
-          primaryScore: 92, 
-          spouseScore: 78, 
-          difference: 14,
-          description: 'There is a notable difference in how faith is integrated into relationship expectations, with Michael showing stronger preference for faith-centered relationship practices.'
+        {
+          questionId: '27',
+          questionText: 'Traditional gender roles are important in a marriage.',
+          questionWeight: 3,
+          section: 'Your Foundation',
+          primaryResponse: 'Agree',
+          spouseResponse: 'Disagree'
         },
-        { 
-          section: 'Your Family/Home Life', 
-          primaryScore: 82, 
-          spouseScore: 90, 
-          difference: 8,
-          description: 'Sarah places more emphasis on family dynamics and home environment aspects of the relationship.'
+        {
+          questionId: '42',
+          questionText: 'Family decisions should be made together.',
+          questionWeight: 4,
+          section: 'Your Family/Home Life',
+          primaryResponse: 'Agree',
+          spouseResponse: 'StronglyAgree'
         }
       ],
-      smallestDifferences: [
-        { 
-          section: 'Your Marriage Life', 
-          primaryScore: 84, 
-          spouseScore: 88, 
-          difference: 4,
-          description: 'Both partners share similar values about core marriage dynamics and expectations.'
+      majorDifferences: [
+        {
+          questionId: '12',
+          questionText: 'Regular religious practices are vital to a successful marriage.',
+          questionWeight: 5,
+          section: 'Your Faith Life',
+          primaryResponse: 'StronglyAgree',
+          spouseResponse: 'Neutral'
         },
-        { 
-          section: 'Your Finances', 
-          primaryScore: 74, 
-          spouseScore: 76, 
-          difference: 2,
-          description: 'There is strong alignment on financial expectations and approaches.'
+        {
+          questionId: '28',
+          questionText: 'Maintaining individual independence is as important as building togetherness.',
+          questionWeight: 4,
+          section: 'Your Foundation',
+          primaryResponse: 'Disagree',
+          spouseResponse: 'Agree'
         },
-        { 
-          section: 'Your Health and Wellness', 
-          primaryScore: 79, 
-          spouseScore: 86, 
-          difference: 7,
-          description: 'Both partners value physical and emotional well-being, with Sarah placing somewhat higher emphasis on this area.'
-        }
       ],
-      overallCompatibility: 84,
       strengthAreas: [
         'You have strong alignment on financial approaches and expectations.',
         'You share similar core values regarding marriage dynamics.',
         'Both of you value physical and emotional well-being in your relationship.'
       ],
-      growthOpportunities: [
-        'Consider discussing how faith will be integrated into your relationship practices.',
-        'Explore how traditional vs. modern approaches to family foundations can be balanced.',
-        'Discuss expectations around family and home environment to find common ground.'
+      vulnerabilityAreas: [
+        'Differences in how faith will be integrated into your relationship practices.',
+        'Different perspectives on traditional vs. modern approaches to family foundations.',
+        'Varying expectations around family dynamics and home environment decision-making.'
       ]
     };
 
@@ -304,10 +300,10 @@ async function sendSampleReports() {
     const coupleReport: CoupleAssessmentReport = {
       coupleId: 'SAMPLE-COUPLE-2025',
       timestamp: new Date().toISOString(),
-      primaryPartner: primaryAssessment,
-      spouse: spouseAssessment,
+      primaryAssessment: primaryAssessment,
+      spouseAssessment: spouseAssessment,
       differenceAnalysis: differenceAnalysis,
-      compatibilityScore: 84
+      overallCompatibility: 84
     };
 
     // Send the individual assessment email
