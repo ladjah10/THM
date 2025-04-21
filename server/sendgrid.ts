@@ -1,6 +1,7 @@
 import { MailService } from '@sendgrid/mail';
-import { AssessmentResult } from '../shared/schema';
+import { AssessmentResult, CoupleAssessmentReport } from '../shared/schema';
 import { generateIndividualAssessmentPDF } from './updated-individual-pdf';
+import { generateCoupleAssessmentPDF } from './pdf-generator-integration';
 import { 
   baselineStatistics, 
   getPercentileDescription 
@@ -466,6 +467,214 @@ export async function sendAssessmentEmail(assessment: AssessmentResult): Promise
     
     // Log success message
     console.log(`Email with PDF attachment sent to ${assessment.email}`);
+    
+    return true;
+  } catch (error: any) {
+    console.error('SendGrid email error:', error);
+    if (error.response && error.response.body) {
+      console.error('SendGrid error details:', error.response.body);
+    }
+    return false;
+  }
+}
+
+/**
+ * Format couple assessment into HTML email
+ */
+function formatCoupleAssessmentEmail(report: CoupleAssessmentReport): string {
+  const { primaryAssessment, spouseAssessment, differenceAnalysis, compatibilityScore } = report;
+  
+  // Format the sections scores for both partners
+  const primarySectionsHtml = Object.entries(primaryAssessment.scores.sections)
+    .map(([section, score]) => `
+      <tr>
+        <td style="padding: 8px; border: 1px solid #ddd;">${section}</td>
+        <td style="padding: 8px; border: 1px solid #ddd;">${Math.round(score.percentage)}%</td>
+        <td style="padding: 8px; border: 1px solid #ddd;">${Math.round(spouseAssessment.scores.sections[section]?.percentage || 0)}%</td>
+      </tr>
+    `).join('');
+  
+  // Format differences
+  const differenceListHtml = differenceAnalysis.majorDifferences
+    .slice(0, 5) // Only show top 5 major differences
+    .map(diff => `
+      <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #eee;">
+        <p style="font-weight: 500; margin-bottom: 5px; color: #2c3e50;">${diff.questionText}</p>
+        <div style="display: flex; justify-content: space-between;">
+          <div style="width: 48%; padding: 8px; background-color: #edf2f7; border-radius: 5px;">
+            <span style="font-size: 13px; color: #555;">${primaryAssessment.demographics.firstName}'s response:</span>
+            <p style="margin: 5px 0 0; font-weight: 500;">${diff.primaryResponse}</p>
+          </div>
+          <div style="width: 48%; padding: 8px; background-color: #edf2f7; border-radius: 5px;">
+            <span style="font-size: 13px; color: #555;">${spouseAssessment.demographics.firstName}'s response:</span>
+            <p style="margin: 5px 0 0; font-weight: 500;">${diff.spouseResponse}</p>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  
+  // Get strength and vulnerability areas
+  const strengthAreasHtml = differenceAnalysis.strengthAreas
+    .map(area => `<li style="margin-bottom: 8px;">${area}</li>`)
+    .join('');
+    
+  const vulnerabilityAreasHtml = differenceAnalysis.vulnerabilityAreas
+    .map(area => `<li style="margin-bottom: 8px;">${area}</li>`)
+    .join('');
+  
+  // Create the HTML email
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <title>100 Marriage Couple Assessment Results</title>
+      <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .section { margin-bottom: 25px; }
+        h1 { color: #2c3e50; }
+        h2 { color: #3498db; margin-top: 20px; }
+        .compatibility-box { background-color: #f8f9fa; border-left: 4px solid #3498db; padding: 15px; margin: 15px 0; text-align: center; }
+        .scores-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        .scores-table th { background-color: #3498db; color: white; text-align: left; padding: 10px; }
+        .scores-table td, .scores-table th { border: 1px solid #ddd; padding: 8px; }
+        .compatibility-score { font-size: 36px; font-weight: bold; color: #2c3e50; }
+        .footer { margin-top: 30px; text-align: center; font-size: 12px; color: #7f8c8d; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>100 Marriage Couple Assessment Results</h1>
+        </div>
+        
+        <div class="section">
+          <p>Dear ${primaryAssessment.demographics.firstName} and ${spouseAssessment.demographics.firstName},</p>
+          <p>Thank you for completing the 100 Marriage Couple Assessment. Below are your comparative results. We've also attached a beautifully designed PDF report that you can download, print, or share.</p>
+        </div>
+        
+        <div class="section">
+          <h2>Your Compatibility Score</h2>
+          <div class="compatibility-box">
+            <p>Based on your individual responses and key areas of alignment</p>
+            <p class="compatibility-score">${compatibilityScore}%</p>
+            <p style="font-style: italic; color: #555;">
+              ${compatibilityScore >= 85 ? 'Exceptional Alignment' : 
+                compatibilityScore >= 75 ? 'Strong Alignment' : 
+                compatibilityScore >= 65 ? 'Good Alignment' : 
+                compatibilityScore >= 50 ? 'Moderate Alignment' : 'Areas For Growth'}
+            </p>
+          </div>
+          <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin-top: 10px; font-size: 14px; color: #555;">
+            <strong>Understanding Your Score:</strong> Your compatibility score reflects how closely your relationship expectations align.
+            Higher percentages indicate more alignment in your perspectives on marriage and family.
+            Differences aren't necessarily negative - they can offer opportunities for growth and complementary strengths.
+          </div>
+        </div>
+        
+        <div class="section">
+          <h2>Your Comparative Section Scores</h2>
+          <p style="margin-bottom: 15px; color: #555;">
+            These scores show how you both responded to questions in each area. Sections with similar scores 
+            suggest areas of natural alignment, while larger differences highlight opportunities for conversation.
+          </p>
+          <table class="scores-table">
+            <thead>
+              <tr>
+                <th>Section</th>
+                <th>${primaryAssessment.demographics.firstName}</th>
+                <th>${spouseAssessment.demographics.firstName}</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${primarySectionsHtml}
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="section">
+          <h2>Areas of Strength</h2>
+          <p>These are the areas where you have the strongest alignment in your perspectives:</p>
+          <ul style="padding-left: 20px;">
+            ${strengthAreasHtml}
+          </ul>
+        </div>
+        
+        <div class="section">
+          <h2>Areas for Conversation</h2>
+          <p>These are the areas where your perspectives differ most - excellent topics for deeper discussion:</p>
+          <ul style="padding-left: 20px;">
+            ${vulnerabilityAreasHtml}
+          </ul>
+        </div>
+        
+        <div class="section">
+          <h2>Key Differences to Discuss</h2>
+          <p style="margin-bottom: 15px; color: #555;">
+            The following questions revealed significant differences in your perspectives.
+            These represent valuable opportunities for meaningful conversation:
+          </p>
+          ${differenceListHtml}
+        </div>
+        
+        <div class="section" style="background-color: #edf7ff; padding: 20px; border-radius: 5px; border-left: 4px solid #3498db; margin-top: 25px;">
+          <h2 style="margin-top: 0; color: #2980b9;">Get Personalized Guidance</h2>
+          <p>Would you like expert help interpreting your results? Schedule a one-on-one consultation with Lawrence E. Adjah to discuss your assessment in detail and get personalized insights about your relationship expectations.</p>
+          <div style="text-align: center; margin-top: 15px;">
+            <a href="https://lawrence-adjah.clientsecure.me/request/service" style="display: inline-block; background-color: #3498db; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">Book Your Consultation Now</a>
+          </div>
+        </div>
+        
+        <div class="footer">
+          <p>(c) 2025 Lawrence E. Adjah - The 100 Marriage Assessment - Series 1</p>
+          <p>This assessment is designed to help you understand your readiness for marriage and identify areas for growth.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+}
+
+/**
+ * Sends a couple assessment report email with PDF attachment
+ */
+export async function sendCoupleAssessmentEmail(report: CoupleAssessmentReport): Promise<boolean> {
+  try {
+    if (!process.env.SENDGRID_API_KEY) {
+      console.error('Missing SendGrid API key');
+      return false;
+    }
+
+    // Format the email HTML content
+    const emailHtml = formatCoupleAssessmentEmail(report);
+    
+    // Generate PDF report
+    console.log('Generating couple assessment PDF report...');
+    const pdfBuffer = await generateCoupleAssessmentPDF(report);
+    
+    // Create the email message - send to both partners
+    const message: EmailMessage = {
+      to: report.primaryAssessment.email, // Primary recipient (could be same email for testing)
+      from: 'hello@wgodw.com', // This should be a verified sender in SendGrid
+      subject: `${report.primaryAssessment.demographics.firstName} & ${report.spouseAssessment.demographics.firstName} - 100 Marriage Couple Assessment Results`,
+      html: emailHtml,
+      attachments: [
+        {
+          content: pdfBuffer.toString('base64'),
+          filename: `100Marriage-Couple-Assessment-Report.pdf`,
+          type: 'application/pdf',
+          disposition: 'attachment'
+        }
+      ]
+    };
+    
+    // Send the email with attachment
+    await mailService.send(message);
+    
+    // Log success message
+    console.log(`Couple assessment email with PDF attachment sent to ${report.primaryAssessment.email}`);
     
     return true;
   } catch (error: any) {
