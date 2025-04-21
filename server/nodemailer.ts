@@ -164,7 +164,7 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
 /**
  * Sends an assessment report email with PDF attachment using Nodemailer
  */
-export async function sendAssessmentEmail(assessment: AssessmentResult, ccEmail: string = "la@lawrenceadjah.com"): Promise<{ success: boolean, previewUrl?: string }> {
+export async function sendAssessmentEmail(assessment: AssessmentResult): Promise<{ success: boolean, previewUrl?: string }> {
   try {
     // Generate PDF report
     console.log('Generating PDF report...');
@@ -180,7 +180,6 @@ export async function sendAssessmentEmail(assessment: AssessmentResult, ccEmail:
     const info = await transporter.sendMail({
       from: `"The 100 Marriage Assessment" <hello@wgodw.com>`,
       to: assessment.email,
-      cc: ccEmail, // Always CC the administrator by default
       subject: `${assessment.name} - The 100 Marriage Assessment - Series 1 Results`,
       html: emailHtml,
       attachments: [
@@ -337,8 +336,7 @@ export async function sendReferralEmail(data: ReferralEmailData): Promise<{ succ
  * Sends invitation emails to both partners for a couple assessment
  */
 export async function sendCoupleInvitationEmails(
-  data: CoupleInvitationData,
-  ccEmail: string = "la@lawrenceadjah.com"
+  data: CoupleInvitationData
 ): Promise<{ success: boolean, previewUrls?: string[] }> {
   try {
     // Create transporter
@@ -404,8 +402,7 @@ export async function sendCoupleInvitationEmails(
  * Sends a couple assessment report email with PDF attachment
  */
 export async function sendCoupleAssessmentEmail(
-  report: CoupleAssessmentReport, 
-  ccEmail: string = "la@lawrenceadjah.com"
+  report: CoupleAssessmentReport
 ): Promise<{ success: boolean, previewUrl?: string }> {
   try {
     // Generate PDF report
@@ -430,7 +427,6 @@ export async function sendCoupleAssessmentEmail(
     const info = await transporter.sendMail({
       from: `"The 100 Marriage Assessment" <hello@wgodw.com>`,
       to: [primaryEmail, spouseEmail].join(', '), // Send to both partners
-      cc: ccEmail, // Always CC the administrator
       subject: `${primaryName} & ${spouseName} - Couple Assessment Report - The 100 Marriage`,
       html: emailHtml,
       attachments: [
