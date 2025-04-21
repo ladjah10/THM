@@ -23,13 +23,13 @@ async function sendSampleReports() {
     
     // 1. First, send a sample individual assessment report
     const individualAssessment: AssessmentResult = {
-      email: 'la@lawrenceadjah.com',
+      email: 'lawrence@lawrenceadjah.com',
       name: 'Matthew Johnson',
       timestamp: new Date().toISOString(),
       demographics: {
         firstName: 'Matthew',
         lastName: 'Johnson',
-        email: 'la@lawrenceadjah.com',
+        email: 'lawrence@lawrenceadjah.com',
         phone: '212-555-1234',
         gender: 'male',
         ethnicity: 'Black, African, Caribbean',
@@ -96,13 +96,13 @@ async function sendSampleReports() {
 
     // 2. Create sample couple assessment data
     const primaryAssessment: AssessmentResult = {
-      email: 'la@lawrenceadjah.com',
+      email: 'lawrence@lawrenceadjah.com',
       name: 'Michael Thomas',
       timestamp: new Date().toISOString(),
       demographics: {
         firstName: 'Michael',
         lastName: 'Thomas',
-        email: 'la@lawrenceadjah.com',
+        email: 'lawrence@lawrenceadjah.com',
         phone: '212-555-2345',
         gender: 'male',
         ethnicity: 'Black, African, Caribbean',
@@ -165,13 +165,13 @@ async function sendSampleReports() {
     };
 
     const spouseAssessment: AssessmentResult = {
-      email: 'la@lawrenceadjah.com',
+      email: 'lawrence@lawrenceadjah.com',
       name: 'Sarah Williams',
       timestamp: new Date().toISOString(),
       demographics: {
         firstName: 'Sarah',
         lastName: 'Williams',
-        email: 'la@lawrenceadjah.com',
+        email: 'lawrence@lawrenceadjah.com',
         phone: '212-555-3456',
         gender: 'female',
         ethnicity: 'Black, African, Caribbean',
@@ -288,7 +288,7 @@ async function sendSampleReports() {
     // Send couple assessment
     await sendCoupleAssessment(coupleReport);
 
-    console.log('Sample reports sent successfully via SendGrid. Check la@lawrenceadjah.com for the reports.');
+    console.log('Sample reports sent successfully via SendGrid. Check lawrence@lawrenceadjah.com for the reports.');
 
   } catch (error) {
     console.error('Error in send-sendgrid-samples.ts:', error);
@@ -313,11 +313,11 @@ async function sendIndividualAssessment(assessment: AssessmentResult): Promise<v
     
     // Create the email message
     const message = {
-      to: 'la@lawrenceadjah.com',
+      to: 'lawrence@lawrenceadjah.com', 
       from: 'hello@wgodw.com', // This should be a verified sender in SendGrid
       subject: `${assessment.demographics.firstName} ${assessment.demographics.lastName} - The 100 Marriage Assessment Results`,
       html: emailHtml,
-      cc: 'la@lawrenceadjah.com', // Always CC Lawrence
+      // No CC since it's the same as "to" address
       attachments: [
         {
           content: pdfBuffer.toString('base64'),
@@ -361,11 +361,11 @@ async function sendCoupleAssessment(report: CoupleAssessmentReport): Promise<voi
     
     // Create the email message
     const message = {
-      to: 'la@lawrenceadjah.com',
+      to: 'lawrence@lawrenceadjah.com',
       from: 'hello@wgodw.com', // This should be a verified sender in SendGrid
       subject: `${report.primaryAssessment.demographics.firstName} & ${report.spouseAssessment.demographics.firstName} - The 100 Marriage Couple Assessment Results`,
       html: emailHtml,
-      cc: 'la@lawrenceadjah.com', // Always CC Lawrence
+      // No CC since it's the same as "to" address
       attachments: [
         {
           content: pdfBuffer.toString('base64'),
