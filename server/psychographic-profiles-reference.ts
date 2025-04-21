@@ -268,7 +268,7 @@ export function addProfilesReferenceSection(doc: PDFKit.PDFDocument): void {
   
   // Add a final note
   doc.moveDown(1);
-  doc.font('Helvetica-Italic')
+  doc.font('Helvetica')
      .fontSize(9)
      .fillColor('#555')
      .text('Note: This profiles reference is provided to help you understand the different personality types identified by the 100 Marriage Assessment. Compatibility is based on similar values and complementary traits, but remember that awareness and communication are most important for relationship success.', { align: 'center' });
@@ -293,28 +293,19 @@ function addProfileToDocument(doc: PDFKit.PDFDocument, profile: ProfileReference
   }
   
   try {
-    // Try to add the icon if it exists
-    const iconPath = profile.iconPath.startsWith('/') 
-      ? path.join(process.cwd(), profile.iconPath.replace(/^\/attached_assets/, 'attached_assets'))
-      : path.join(process.cwd(), profile.iconPath);
-      
-    if (fs.existsSync(iconPath)) {
-      doc.image(iconPath, iconX, doc.y, { width: iconSize, height: iconSize });
-    } else {
-      // Draw a circle with the profile initials if icon doesn't exist
-      const initials = profile.name.split(' ').map(word => word[0]).join('');
-      
-      doc.circle(iconX + iconSize/2, doc.y + iconSize/2, iconSize/2)
-         .fillAndStroke('#e3f2fd', '#3498db');
-         
-      doc.font('Helvetica-Bold')
-         .fontSize(16)
-         .fillColor('#2980b9')
-         .text(initials, iconX, doc.y + iconSize/3, { 
-           width: iconSize, 
-           align: 'center' 
-         });
-    }
+    // Always draw a circle with the profile initials since the icons are causing issues
+    const initials = profile.name.split(' ').map(word => word[0]).join('');
+    
+    doc.circle(iconX + iconSize/2, doc.y + iconSize/2, iconSize/2)
+       .fillAndStroke('#e3f2fd', '#3498db');
+       
+    doc.font('Helvetica-Bold')
+       .fontSize(16)
+       .fillColor('#2980b9')
+       .text(initials, iconX, doc.y + iconSize/3, { 
+         width: iconSize, 
+         align: 'center' 
+       });
   } catch (error) {
     console.error(`Error adding icon for ${profile.name}:`, error);
     // Fallback: draw a circle with the profile initials
@@ -365,7 +356,7 @@ function addProfileToDocument(doc: PDFKit.PDFDocument, profile: ProfileReference
   const yAfterDescription = doc.y;
   
   if (profile.implications) {
-    doc.font('Helvetica-Italic')
+    doc.font('Helvetica')
        .fontSize(9)
        .fillColor('#555')
        .text('Compatibility: ' + profile.implications, textX, doc.y, { 

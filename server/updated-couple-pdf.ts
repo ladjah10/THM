@@ -2,6 +2,7 @@ import PDFDocument from 'pdfkit';
 import { CoupleAssessmentReport } from '../shared/schema';
 import fs from 'fs';
 import path from 'path';
+import { addProfilesReferenceSection } from './psychographic-profiles-reference';
 
 // Function to get the absolute path of profile icons
 function getProfileIconPath(relativePath: string | undefined): string | null {
@@ -470,6 +471,9 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       doc.fontSize(12)
         .fillColor('#3182ce')
         .text('https://lawrence-adjah.clientsecure.me/request/service', { align: 'center', link: 'https://lawrence-adjah.clientsecure.me/request/service' });
+      
+      // Add the psychographic profiles reference section
+      addProfilesReferenceSection(doc);
       
       // Finish the PDF
       doc.end();
