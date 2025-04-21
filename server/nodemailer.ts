@@ -362,7 +362,6 @@ export async function sendCoupleInvitationEmails(
     const primaryInfo = await transporter.sendMail({
       from: `"The 100 Marriage Assessment" <hello@wgodw.com>`,
       to: data.primaryEmail,
-      cc: ccEmail,
       subject: "Your Couple Assessment Has Been Started",
       html: primaryEmailHtml,
     });
@@ -371,7 +370,6 @@ export async function sendCoupleInvitationEmails(
     const spouseInfo = await transporter.sendMail({
       from: `"The 100 Marriage Assessment" <hello@wgodw.com>`,
       to: data.spouseEmail,
-      cc: ccEmail,
       subject: "You've Been Invited to Take the 100 Marriage Assessment",
       html: spouseEmailHtml,
     });

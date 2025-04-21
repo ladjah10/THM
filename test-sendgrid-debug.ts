@@ -40,31 +40,26 @@ async function testSendGridEmail() {
   }
 }
 
-// Test with both same recipient/cc
-async function testDuplicateEmailAddressHandling() {
+// Test with simple email sending
+async function testSimpleEmailSending() {
   try {
-    console.log('\nTesting with duplicate email handling...');
+    console.log('\nTesting simple email sending...');
     
-    const recipient = 'la@lawrenceadjah.com';
+    const recipient = 'lawrence@lawrenceadjah.com';
     
     const message = {
       to: recipient,
       from: 'hello@wgodw.com',
-      subject: 'Test SendGrid Email with CC',
-      html: '<p>This is a test email with CC handling.</p>'
+      subject: 'Test SendGrid Email (No CC)',
+      html: '<p>This is a test email without CC handling.</p>'
     };
     
-    // Only add CC if it's different from recipient
-    if (recipient.toLowerCase() !== 'la@lawrenceadjah.com') {
-      message.cc = 'la@lawrenceadjah.com';
-    }
-    
-    console.log('Full message with CC handling:', JSON.stringify(message, null, 2));
+    console.log('Message for simple test:', JSON.stringify(message, null, 2));
     
     // Send the email
     const result = await mailService.send(message);
-    console.log('SendGrid response (CC test):', result);
-    console.log('Email with CC handling sent successfully!');
+    console.log('SendGrid response (simple test):', result);
+    console.log('Email sent successfully!');
     
     return true;
   } catch (error) {

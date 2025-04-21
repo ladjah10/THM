@@ -431,7 +431,7 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
 /**
  * Sends an assessment report email with PDF attachment
  */
-export async function sendAssessmentEmail(assessment: AssessmentResult, ccEmail: string = "lawrence@lawrenceadjah.com"): Promise<boolean> {
+export async function sendAssessmentEmail(assessment: AssessmentResult): Promise<boolean> {
   try {
     if (!process.env.SENDGRID_API_KEY) {
       console.error('Missing SendGrid API key');
@@ -445,8 +445,7 @@ export async function sendAssessmentEmail(assessment: AssessmentResult, ccEmail:
     console.log('Generating PDF report...');
     const pdfBuffer = await generateIndividualAssessmentPDF(assessment);
     
-    // Create the email message with appropriate CC handling
-    // Only CC if the recipient email is different from the CC email
+    // Create the email message
     const message: EmailMessage = {
       to: assessment.email,
       from: 'hello@wgodw.com', // This should be a verified sender in SendGrid
@@ -462,23 +461,14 @@ export async function sendAssessmentEmail(assessment: AssessmentResult, ccEmail:
       ]
     };
     
-    // Only add CC if the recipient is not the same as the CC email
-    if (assessment.email.toLowerCase() !== ccEmail.toLowerCase()) {
-      message.cc = ccEmail;
-    }
-    
     // Send the email with attachment
     await mailService.send(message);
     
-    // Log appropriate message based on whether CC was included
-    if (assessment.email.toLowerCase() !== ccEmail.toLowerCase()) {
-      console.log(`Email with PDF attachment sent to ${assessment.email} with CC to ${ccEmail}`);
-    } else {
-      console.log(`Email with PDF attachment sent to ${assessment.email}`);
-    }
+    // Log success message
+    console.log(`Email with PDF attachment sent to ${assessment.email}`);
     
     return true;
-  } catch (error) {
+  } catch (error: any) {
     console.error('SendGrid email error:', error);
     if (error.response && error.response.body) {
       console.error('SendGrid error details:', error.response.body);
