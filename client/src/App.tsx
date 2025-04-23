@@ -11,6 +11,7 @@ import CoupleAssessmentInvite from "@/pages/CoupleAssessmentInvite";
 import CoupleAssessmentReport from "@/pages/CoupleAssessmentReport";
 import AssessmentTest from "@/pages/AssessmentTest";
 import ViewSamplePDF from "@/pages/ViewSamplePDF";
+import SampleCoupleAssessment from "@/pages/SampleCoupleAssessment";
 
 function Router() {
   return (
@@ -23,6 +24,7 @@ function Router() {
       <Route path="/couple-assessment/report/:coupleId" component={CoupleAssessmentReport} />
       <Route path="/test" component={AssessmentTest} />
       <Route path="/sample-pdf" component={ViewSamplePDF} />
+      <Route path="/sample-couple-assessment" component={SampleCoupleAssessment} />
       <Route path="/real-pdf" component={() => {
         window.location.href = "/realistic-couple-assessment.html";
         return null;
