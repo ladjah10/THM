@@ -219,7 +219,7 @@ export function addProfilesReferenceSection(doc: PDFKit.PDFDocument): void {
      .fontSize(10)
      .fillColor('#555')
      .text('This guide provides information about all psychographic profiles in the 100 Marriage Assessment system. Use it to better understand your own profile and potential compatibility with others.', { align: 'center' })
-     .moveDown(1.5);
+     .moveDown(1);
 
   // Create a section for Unisex Profiles
   doc.font('Helvetica-Bold')
@@ -228,15 +228,19 @@ export function addProfilesReferenceSection(doc: PDFKit.PDFDocument): void {
      .text('Unisex Profiles', { align: 'left' })
      .moveDown(0.5);
      
-  // Add each unisex profile
+  // Add each unisex profile with more compact formatting
   const unisexProfiles = psychographicProfiles.filter(p => p.genderSpecific === null);
   
   unisexProfiles.forEach(profile => {
     addProfileToDocument(doc, profile);
   });
   
-  // Add a page break before the gender-specific profiles
-  doc.addPage();
+  // Add a page break before the gender-specific profiles, making sure we have enough space
+  if (doc.y > doc.page.height - 200) {
+    doc.addPage();
+  } else {
+    doc.moveDown(1.5);
+  }
   
   // Create a section for Female-Specific Profiles
   doc.font('Helvetica-Bold')
@@ -252,6 +256,13 @@ export function addProfilesReferenceSection(doc: PDFKit.PDFDocument): void {
     addProfileToDocument(doc, profile);
   });
   
+  // Add spacing before male profiles, with page break if needed
+  if (doc.y > doc.page.height - 200) {
+    doc.addPage();
+  } else {
+    doc.moveDown(1.5);
+  }
+  
   // Create a section for Male-Specific Profiles
   doc.font('Helvetica-Bold')
      .fontSize(14)
@@ -266,8 +277,13 @@ export function addProfilesReferenceSection(doc: PDFKit.PDFDocument): void {
     addProfileToDocument(doc, profile);
   });
   
-  // Add a final note
-  doc.moveDown(1);
+  // Add a final note, making sure it won't be cut off at the bottom of the page
+  if (doc.y > doc.page.height - 70) {
+    doc.addPage();
+  } else {
+    doc.moveDown(1);
+  }
+  
   doc.font('Helvetica')
      .fontSize(9)
      .fillColor('#555')
@@ -280,52 +296,34 @@ export function addProfilesReferenceSection(doc: PDFKit.PDFDocument): void {
  * @param profile The profile to add
  */
 function addProfileToDocument(doc: PDFKit.PDFDocument, profile: ProfileReference): void {
-  const startY = doc.y;
   const pageWidth = doc.page.width - doc.page.margins.left - doc.page.margins.right;
-  const iconSize = 40;
+  const iconSize = 35; // Smaller icon size
   const iconX = doc.x;
   const textX = iconX + iconSize + 10;
   const textWidth = pageWidth - iconSize - 10;
   
-  // Calculate if we need a page break
-  if (doc.y > doc.page.height - 150) {
+  // Calculate if we need a page break, with less space required
+  if (doc.y > doc.page.height - 130) {
     doc.addPage();
   }
   
-  try {
-    // Always draw a circle with the profile initials since the icons are causing issues
-    const initials = profile.name.split(' ').map(word => word[0]).join('');
-    
-    doc.circle(iconX + iconSize/2, doc.y + iconSize/2, iconSize/2)
-       .fillAndStroke('#e3f2fd', '#3498db');
-       
-    doc.font('Helvetica-Bold')
-       .fontSize(16)
-       .fillColor('#2980b9')
-       .text(initials, iconX, doc.y + iconSize/3, { 
-         width: iconSize, 
-         align: 'center' 
-       });
-  } catch (error) {
-    console.error(`Error adding icon for ${profile.name}:`, error);
-    // Fallback: draw a circle with the profile initials
-    const initials = profile.name.split(' ').map(word => word[0]).join('');
-    
-    doc.circle(iconX + iconSize/2, doc.y + iconSize/2, iconSize/2)
-       .fillAndStroke('#e3f2fd', '#3498db');
-       
-    doc.font('Helvetica-Bold')
-       .fontSize(16)
-       .fillColor('#2980b9')
-       .text(initials, iconX, doc.y + iconSize/3, { 
-         width: iconSize, 
-         align: 'center' 
-       });
-  }
+  // Draw a circle with the profile initials
+  const initials = profile.name.split(' ').map(word => word[0]).join('');
+  
+  doc.circle(iconX + iconSize/2, doc.y + iconSize/2, iconSize/2)
+     .fillAndStroke('#e3f2fd', '#3498db');
+     
+  doc.font('Helvetica-Bold')
+     .fontSize(14) // Smaller font
+     .fillColor('#2980b9')
+     .text(initials, iconX, doc.y + iconSize/3, { 
+       width: iconSize, 
+       align: 'center' 
+     });
   
   // Add profile name
   doc.font('Helvetica-Bold')
-     .fontSize(12)
+     .fontSize(11) // Smaller font
      .fillColor('#2c3e50')
      .text(profile.name, textX, doc.y - iconSize, { 
        width: textWidth,
@@ -336,40 +334,38 @@ function addProfileToDocument(doc: PDFKit.PDFDocument, profile: ProfileReference
   if (profile.genderSpecific) {
     const genderText = profile.genderSpecific === 'male' ? ' (Male)' : ' (Female)';
     doc.font('Helvetica')
-       .fontSize(10)
+       .fontSize(9) // Smaller font
        .fillColor('#7f8c8d')
        .text(genderText);
   } else {
     doc.text(''); // End the line if no gender specification
   }
   
-  // Add profile description
+  // Add profile description - more compact
   doc.font('Helvetica')
-     .fontSize(10)
+     .fontSize(9) // Smaller font
      .fillColor('#555')
      .text(profile.description, textX, doc.y, { 
        width: textWidth 
      })
-     .moveDown(0.5);
+     .moveDown(0.3); // Less space
   
-  // Add compatibility information if available
-  const yAfterDescription = doc.y;
-  
+  // Add compatibility information if available - more compact
   if (profile.implications) {
     doc.font('Helvetica')
-       .fontSize(9)
+       .fontSize(8) // Smaller font
        .fillColor('#555')
        .text('Compatibility: ' + profile.implications, textX, doc.y, { 
          width: textWidth 
        });
   }
   
-  // Add a dividing line
-  doc.moveDown(1);
+  // Add a dividing line with less space
+  doc.moveDown(0.5); // Less space
   doc.moveTo(doc.page.margins.left, doc.y)
      .lineTo(doc.page.width - doc.page.margins.right, doc.y)
      .stroke('#e0e0e0')
-     .moveDown(0.5);
+     .moveDown(0.3); // Less space
 }
 
 /**
