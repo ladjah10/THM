@@ -2,7 +2,7 @@ import PDFDocument from 'pdfkit';
 import { CoupleAssessmentReport } from '../shared/schema';
 import fs from 'fs';
 import path from 'path';
-import { addProfilesReferenceSection } from './psychographic-profiles-reference';
+import { addImprovedProfilesReferenceSection } from './improved-psychographic-profiles';
 
 // Function to get the absolute path of profile icons
 function getProfileIconPath(relativePath: string | undefined): string | null {
@@ -107,13 +107,14 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       
       doc.moveDown(1.5);
       
-      // Introduction
+      // Introduction - closer to left margin
       doc.fontSize(12)
         .fillColor('#4a5568')
         .font('Helvetica')
         .text('Thank you for completing The 100 Marriage Assessment - Series 1 as a couple. This discussion guide provides insights into your perspectives on marriage and highlights areas where further conversation may strengthen your relationship.', {
-          width: doc.page.width - 120, // Narrower width for better readability
-          align: 'left'
+          width: doc.page.width - 100, // Wider width to get closer to left margin
+          align: 'left',
+          continued: false
         });
       
       doc.moveDown(1.5); // Increased spacing
@@ -122,8 +123,9 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         .fillColor('#2d3748') // Darker color for better visibility
         .font('Helvetica-Bold')
         .text('Understanding Your Compatibility Score:', {
-          width: doc.page.width - 120,
-          align: 'left'
+          width: doc.page.width - 100, // Wider width to get closer to left margin
+          align: 'left',
+          continued: false
         });
       
       doc.moveDown(0.5)
@@ -131,8 +133,9 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         .fillColor('#4a5568')
         .font('Helvetica')
         .text('Your compatibility score reflects the alignment of your perspectives across all assessment sections. A higher score indicates greater similarity in your views on key marriage dimensions, while a lower score highlights areas where your expectations differ. This is not a judgment of relationship quality, but rather a tool to identify areas for meaningful discussion.', {
-          width: doc.page.width - 120,
-          align: 'left'
+          width: doc.page.width - 100, // Wider width to get closer to left margin
+          align: 'left',
+          continued: false
         });
       
       // ---------- PAGE 2 (Score Comparison) ----------
@@ -482,7 +485,7 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         .text('https://lawrence-adjah.clientsecure.me/request/service', { align: 'center', link: 'https://lawrence-adjah.clientsecure.me/request/service' });
       
       // Add the psychographic profiles reference section
-      addProfilesReferenceSection(doc);
+      addImprovedProfilesReferenceSection(doc);
       
       // Finish the PDF
       doc.end();
