@@ -301,25 +301,7 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
           .text(`• ${area}`);
       });
 
-      // Recommendations
-      doc.moveDown(1.5)
-        .fontSize(16)
-        .font('Helvetica-Bold')
-        .text('Recommendations');
-
-      doc.moveDown(0.5)
-        .fontSize(12)
-        .font('Helvetica')
-        .text('Based on your assessment results, we recommend:');
-
-      doc.moveDown(0.5)
-        .text('• Continue strengthening your faith foundation as this is a core area of strength')
-        .moveDown(0.3)
-        .text('• Focus on improving work-life balance through intentional scheduling')
-        .moveDown(0.3)
-        .text('• Consider how your leadership style can be adapted to better meet relationship needs')
-        .moveDown(0.3)
-        .text('• Explore the "The 100 Marriage" book to deepen your understanding of these principles');
+      // Recommendations section removed to avoid duplication with PDF content
 
       // Continue Your Journey section
       doc.moveDown(1.5)
@@ -430,11 +412,13 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
         .fillColor('#3366cc')
         .text('Harmonious Planner', 120, doc.y);
         
+      const plannerDesc = 'The Harmonious Planner approaches relationships with a focus on peace, harmony, and careful preparation. They value emotional security and invest in creating a stable home environment. They approach decisions methodically, weighing all sides before committing, and excel at creating a life of balance and intentional living.';
+      
       doc.moveDown(0.3)
         .fontSize(11)
         .font('Helvetica')
         .fillColor('black')
-        .text('The Harmonious Planner approaches relationships with a focus on peace, harmony, and careful preparation. They value emotional security and invest in creating a stable home environment. They approach decisions methodically, weighing all sides before committing, and excel at creating a life of balance and intentional living.', 120, doc.y, { width: 400 });
+        .text(plannerDesc, 120, doc.y, { width: 400 });
       
       doc.moveDown(2);
       
@@ -443,11 +427,13 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
         .fillColor('#3366cc')
         .text('Relationship Navigator', 120, doc.y);
         
+      const navigatorDesc = 'The Relationship Navigator has exceptional skills in guidance, direction, and emotional intelligence. They can sense relational dynamics and negotiate complex interpersonal situations with wisdom. They prioritize emotional connections and can adapt their approach to meet relationship needs effectively.';
+        
       doc.moveDown(0.3)
         .fontSize(11)
         .font('Helvetica')
         .fillColor('black')
-        .text('The Relationship Navigator has exceptional skills in guidance, direction, and emotional intelligence. They can sense relational dynamics and negotiate complex interpersonal situations with wisdom. They prioritize emotional connections and can adapt their approach to meet their partner's needs. Their intuitive understanding of people makes them effective communicators and problem-solvers.', 120, doc.y, { width: 400 });
+        .text(navigatorDesc, 120, doc.y, { width: 400 });
       
       // Footer with contact information
       doc.fontSize(10)
