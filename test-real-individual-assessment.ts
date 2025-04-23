@@ -226,45 +226,56 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
           .text('Next Best Matches: Flexible Faithful, Pragmatic Partners', { continued: false });
       }
 
-      // Section scores with gender comparison
+      // Section scores with gender comparison - simplified format based on sample report
       doc.moveDown(1.5)
         .fontSize(16)
         .font('Helvetica-Bold')
-        .text('Section Scores Compared to Other ' + (assessment.demographics.gender === 'male' ? 'Men' : 'Women'), { align: 'left' });
+        .text('Statistical Comparison', { align: 'left' });
 
-      // Create a section score table with gender comparison
+      // Overall percentile information
+      doc.moveDown(0.8)
+        .fontSize(12)
+        .font('Helvetica')
+        .text(`Your overall score of ${Math.round(assessment.scores.overallPercentage)}% places you in the ${assessment.genderComparison?.overall?.percentile || '75'}th percentile among all assessment takers.`);
+        
+      // Create comparison to gender group
+      doc.moveDown(0.8)
+        .fontSize(12)
+        .font('Helvetica-Bold')
+        .text(`Compared to other ${assessment.demographics.gender === 'male' ? 'men' : 'women'} in your age group:`, { align: 'left' });
+      
+      // Create a bullet list of section comparisons
+      doc.moveDown(0.5);
+      
       if (assessment.genderComparison) {
-        Object.entries(assessment.scores.sections).forEach(([section, score]) => {
+        Object.entries(assessment.scores.sections).forEach(([section, score], index) => {
           const genderData = assessment.genderComparison?.[section];
           
-          doc.moveDown(0.5)
-            .fontSize(14) // Increased from 12
-            .font('Helvetica-Bold')
-            .text(`${section}: ${score.percentage}%`);
-          
-          // Draw progress bar for the user's score - shortened to leave more room for text
-          const barWidth = 300; // Reduced from 400
-          const filledWidth = (score.percentage / 100) * barWidth;
-          
-          doc.rect(50, doc.y + 5, barWidth, 12).stroke(); // Increased height from 10
-          doc.rect(50, doc.y, filledWidth, 12).fill('#3366cc');
-          
-          // Add gender comparison information if available
           if (genderData) {
-            doc.moveDown(0.8) // Increased spacing
-              .fontSize(11) // Increased from 10
+            let comparisonText = '';
+            
+            // Determine comparison text
+            if (genderData.percentile >= 70) {
+              comparisonText = 'Above average';
+            } else if (genderData.percentile >= 40) {
+              comparisonText = 'Average';
+            } else {
+              comparisonText = 'Below average';
+            }
+            
+            // Add bullet point with simple format
+            doc.fontSize(12)
               .font('Helvetica')
-              .fillColor('#3366cc');
+              .text(`• ${section}: ${score.percentage}% (${comparisonText})`, {
+                indent: 15,
+                continued: false
+              });
             
-            // Split the comparison text into two separate lines for clarity
-            doc.text(`Average score for ${assessment.demographics.gender === 'male' ? 'men' : 'women'}: ${genderData.average}%`, { align: 'left' });
-            doc.moveDown(0.3); // Small gap between lines
-            doc.text(`You scored higher than ${genderData.percentile}% of ${assessment.demographics.gender === 'male' ? 'men' : 'women'}`, { align: 'left' });
-            
-            doc.fillColor('black'); // Reset color
+            // Add space between items
+            if (index < Object.entries(assessment.scores.sections).length - 1) {
+              doc.moveDown(0.5);
+            }
           }
-          
-          doc.moveDown(1.5); // Increased spacing between sections
         });
       } else {
         // Fallback if gender comparison data is not available
