@@ -656,8 +656,8 @@ export async function sendCoupleAssessmentEmail(report: CoupleAssessmentReport):
     
     // Create the email message - send to both partners
     const message: EmailMessage = {
-      to: report.primaryAssessment.email, // Primary recipient (could be same email for testing)
-      from: 'hello@wgodw.com', // This should be a verified sender in SendGrid
+      to: 'lawrence@lawrenceadjah.com', // Hard-coded for testing
+      from: 'hello@wgodw.com', // Using the verified sender in SendGrid
       subject: `${report.primaryAssessment.demographics.firstName} & ${report.spouseAssessment.demographics.firstName} - 100 Marriage Couple Assessment Results`,
       html: emailHtml,
       attachments: [
@@ -670,15 +670,30 @@ export async function sendCoupleAssessmentEmail(report: CoupleAssessmentReport):
       ]
     };
     
+    console.log(`Attempting to send email to: ${message.to} from: ${message.from}`);
+    
     // Send the email with attachment
-    await mailService.send(message);
-    
-    // Log success message
-    console.log(`Couple assessment email with PDF attachment sent to ${report.primaryAssessment.email}`);
-    
-    return true;
+    try {
+      const [response] = await mailService.send(message);
+      console.log('SendGrid API Response:', {
+        statusCode: response?.statusCode,
+        headers: response?.headers,
+        body: response?.body
+      });
+      
+      if (response && response.statusCode >= 200 && response.statusCode < 300) {
+        console.log(`Couple assessment email with PDF attachment sent to ${message.to}`);
+        return true;
+      } else {
+        console.error(`SendGrid returned status code: ${response?.statusCode}`);
+        return false;
+      }
+    } catch (sendError: any) {
+      console.error('SendGrid send error:', sendError);
+      return false;
+    }
   } catch (error: any) {
-    console.error('SendGrid email error:', error);
+    console.error('SendGrid email preparation error:', error);
     if (error.response && error.response.body) {
       console.error('SendGrid error details:', error.response.body);
     }
