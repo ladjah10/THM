@@ -54,7 +54,7 @@ async function generateRealisticIndividualAssessment() {
         { section: 'Your Foundation', min: 75 },
         { section: 'Your Faith Life', min: 80 }
       ],
-      iconPath: './attached_assets/BV\\ 6.png'
+      iconPath: './attached_assets/BV 6.png'
     },
     genderProfile: {
       id: 5, 
@@ -363,7 +363,10 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
       // Add profile 1 with icon
       if (assessment.profile.iconPath) {
         try {
-          doc.image(assessment.profile.iconPath, 50, doc.y, { width: 50 });
+          // Use path.resolve to get the absolute path
+          const absolutePath = path.resolve(assessment.profile.iconPath);
+          console.log('Attempting to load profile icon from:', absolutePath);
+          doc.image(absolutePath, 50, doc.y, { width: 50 });
         } catch (err) {
           console.error('Error loading profile icon:', err);
         }
@@ -386,7 +389,10 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
         
         if (assessment.genderProfile.iconPath) {
           try {
-            doc.image(assessment.genderProfile.iconPath, 50, doc.y, { width: 50 });
+            // Use path.resolve to get the absolute path
+            const absolutePath = path.resolve(assessment.genderProfile.iconPath);
+            console.log('Attempting to load gender profile icon from:', absolutePath);
+            doc.image(absolutePath, 50, doc.y, { width: 50 });
           } catch (err) {
             console.error('Error loading gender profile icon:', err);
           }
