@@ -238,29 +238,33 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
           const genderData = assessment.genderComparison?.[section];
           
           doc.moveDown(0.5)
-            .fontSize(12)
+            .fontSize(14) // Increased from 12
             .font('Helvetica-Bold')
             .text(`${section}: ${score.percentage}%`);
           
-          // Draw progress bar for the user's score
-          const barWidth = 400;
+          // Draw progress bar for the user's score - shortened to leave more room for text
+          const barWidth = 300; // Reduced from 400
           const filledWidth = (score.percentage / 100) * barWidth;
           
-          doc.rect(50, doc.y + 5, barWidth, 10).stroke();
-          doc.rect(50, doc.y, filledWidth, 10).fill('#3366cc');
+          doc.rect(50, doc.y + 5, barWidth, 12).stroke(); // Increased height from 10
+          doc.rect(50, doc.y, filledWidth, 12).fill('#3366cc');
           
           // Add gender comparison information if available
           if (genderData) {
-            doc.moveDown(0.5)
-              .fontSize(10)
+            doc.moveDown(0.8) // Increased spacing
+              .fontSize(11) // Increased from 10
               .font('Helvetica')
-              .fillColor('#3366cc')
-              .text(`Average score for ${assessment.demographics.gender === 'male' ? 'men' : 'women'}: ${genderData.average}%`, { continued: true })
-              .text(`    |    You scored higher than ${genderData.percentile}% of ${assessment.demographics.gender === 'male' ? 'men' : 'women'}`, { align: 'left' });
+              .fillColor('#3366cc');
+            
+            // Split the comparison text into two separate lines for clarity
+            doc.text(`Average score for ${assessment.demographics.gender === 'male' ? 'men' : 'women'}: ${genderData.average}%`, { align: 'left' });
+            doc.moveDown(0.3); // Small gap between lines
+            doc.text(`You scored higher than ${genderData.percentile}% of ${assessment.demographics.gender === 'male' ? 'men' : 'women'}`, { align: 'left' });
+            
             doc.fillColor('black'); // Reset color
           }
           
-          doc.moveDown(1);
+          doc.moveDown(1.5); // Increased spacing between sections
         });
       } else {
         // Fallback if gender comparison data is not available

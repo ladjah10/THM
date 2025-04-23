@@ -9,6 +9,15 @@ function getProfileIconPath(relativePath: string | undefined): string | null {
   if (!relativePath) return null;
   
   try {
+    // First check if this is one of the new PNG format icons in attached_assets folder
+    if (relativePath.includes('attached_assets')) {
+      const absPath = path.resolve(relativePath);
+      if (fs.existsSync(absPath)) {
+        return absPath;
+      }
+    }
+    
+    // Fall back to the old method for other icon paths
     // Remove leading slash if present
     const cleanPath = relativePath.startsWith('/') ? relativePath.substring(1) : relativePath;
     // Create absolute path to the public directory

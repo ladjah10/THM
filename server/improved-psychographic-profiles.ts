@@ -212,11 +212,11 @@ export function addImprovedProfilesReferenceSection(doc: PDFKit.PDFDocument): vo
 function addProfileWithBetterFormatting(doc: PDFKit.PDFDocument, profile: UserProfile): void {
   // Calculate available width
   const pageWidth = doc.page.width - 100; // Use consistent margins
-  const iconSize = 30; // Slightly smaller icon
+  const iconSize = 40; // Increased for PNG icons
   const startX = 50; // Start at left margin
   const iconX = startX;
-  const textX = iconX + iconSize + 10;
-  const textWidth = pageWidth - iconSize - 10;
+  const textX = iconX + iconSize + 15;
+  const textWidth = pageWidth - iconSize - 15;
   
   // Add page break if needed - ensure enough space for each profile
   if (doc.y > doc.page.height - 120) {
@@ -225,19 +225,55 @@ function addProfileWithBetterFormatting(doc: PDFKit.PDFDocument, profile: UserPr
   
   const startY = doc.y; // Remember starting position
   
-  // Draw profile icon circle
-  const initials = profile.name.split(' ').map(word => word[0]).join('');
+  // Try to find and use the PNG icon from attached_assets
+  let iconPath = '';
+  let foundIcon = false;
   
-  doc.circle(iconX + iconSize/2, doc.y + iconSize/2, iconSize/2)
-     .fillAndStroke('#e3f2fd', '#3498db');
-     
-  doc.font('Helvetica-Bold')
-     .fontSize(12)
-     .fillColor('#2980b9')
-     .text(initials, iconX, doc.y + iconSize/3, { 
-       width: iconSize, 
-       align: 'center' 
-     });
+  // Map profile names to icon filenames
+  const iconMapping: Record<string, string> = {
+    'Steadfast Believers': './attached_assets/SB 1.png',
+    'Harmonious Planners': './attached_assets/HP.png',
+    'Flexible Faithful': './attached_assets/FF 3.png',
+    'Pragmatic Partners': './attached_assets/PP 4.png',
+    'Individualist Seekers': './attached_assets/IS 5.png',
+    'Balanced Visionaries': './attached_assets/BV 6.png',
+    'Relational Nurturers': './attached_assets/RN 7.png',
+    'Adaptive Communicators': './attached_assets/AC 8.png',
+    'Independent Traditionalists': './attached_assets/IT 9.png',
+    'Faith-Centered Homemakers': './attached_assets/FCH 10.png',
+    'Faithful Protectors': './attached_assets/FP 11.png',
+    'Steadfast Leaders': './attached_assets/SL 12.png',
+    'Balanced Providers': './attached_assets/BP 13.png'
+  };
+  
+  if (iconMapping[profile.name]) {
+    iconPath = iconMapping[profile.name];
+    try {
+      const resolvedPath = path.resolve(iconPath);
+      if (fs.existsSync(resolvedPath)) {
+        doc.image(resolvedPath, iconX, doc.y, { width: iconSize });
+        foundIcon = true;
+      }
+    } catch (err) {
+      console.error(`Error loading icon for ${profile.name}:`, err);
+    }
+  }
+  
+  // Fallback to circle with initials if PNG icon not found
+  if (!foundIcon) {
+    const initials = profile.name.split(' ').map(word => word[0]).join('');
+    
+    doc.circle(iconX + iconSize/2, doc.y + iconSize/2, iconSize/2)
+       .fillAndStroke('#e3f2fd', '#3498db');
+       
+    doc.font('Helvetica-Bold')
+       .fontSize(12)
+       .fillColor('#2980b9')
+       .text(initials, iconX, doc.y + iconSize/3, { 
+         width: iconSize, 
+         align: 'center' 
+       });
+  }
   
   // Profile name and gender in a single line
   let nameText = profile.name;
