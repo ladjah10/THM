@@ -14,6 +14,9 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Disable image loading for this test to avoid format issues
+const INCLUDE_IMAGES = false;
+
 // Initialize SendGrid API
 if (!process.env.SENDGRID_API_KEY) {
   throw new Error('SENDGRID_API_KEY environment variable is required');
@@ -130,8 +133,11 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
       doc.pipe(stream);
 
       // Add PDF header
-      doc.image('public/100-marriage-book-cover.jpg', 50, 50, { width: 100 })
-        .fontSize(24)
+      if (INCLUDE_IMAGES) {
+        doc.image('public/100-marriage-book-cover.jpg', 50, 50, { width: 100 });
+      }
+      
+      doc.fontSize(24)
         .font('Helvetica-Bold')
         .text('THE 100 MARRIAGE', 170, 70)
         .fontSize(16)
@@ -276,7 +282,7 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
         .text('• Explore the "The 100 Marriage" book to deepen your understanding of these principles');
 
       // Continue Your Journey section
-      doc.addPage()
+      doc.moveDown(1.5)
         .fontSize(18)
         .font('Helvetica-Bold')
         .text('Continue Your Journey with The 100 Marriage', { align: 'center' });
@@ -286,13 +292,12 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
         .font('Helvetica')
         .text('Thank you for completing The 100 Marriage Assessment. Your journey towards a fulfilling relationship is just beginning. Here are some ways to continue:');
 
-      // Book information with image
+      // Book information
       doc.moveDown(1);
-      doc.image('public/100-marriage-book-cover.jpg', 50, doc.y, { width: 100 });
       
       doc.fontSize(14)
         .font('Helvetica-Bold')
-        .text('The 100 Marriage Book', 170, doc.y - 80)
+        .text('The 100 Marriage Book')
         .moveDown(0.3)
         .fontSize(12)
         .font('Helvetica')
@@ -313,7 +318,6 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
         .text('Book at: https://lawrence-adjah.clientsecure.me');
 
       // Footer with contact information
-      // PDFKit doesn't have a pages array so we can only add footer to current page
       doc.fontSize(10)
         .font('Helvetica')
         .text(
@@ -323,24 +327,7 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
           { align: 'center' }
         )
         .text(
-          'Page 1',
-          50,
-          doc.page.height - 35,
-          { align: 'center' }
-        );
-        
-      // Add footer to second page
-      doc.switchToPage(1);
-      doc.fontSize(10)
-        .font('Helvetica')
-        .text(
-          'The 100 Marriage | hello@wgodw.com | https://lawrenceadjah.com',
-          50,
-          doc.page.height - 50,
-          { align: 'center' }
-        )
-        .text(
-          'Page 2 of 2',
+          'Page 1 of 1',
           50,
           doc.page.height - 35,
           { align: 'center' }
