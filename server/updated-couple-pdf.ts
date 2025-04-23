@@ -441,43 +441,54 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       
       doc.moveDown(0.5);
       
-      // Create profile summary box
+      // Create profile summary box with decorative border (similar to marked up example)
       const summaryBoxY = doc.y + 10;
-      doc.rect(50, summaryBoxY, doc.page.width - 100, 90)
-        .fillAndStroke('#f8fafc', '#e2e8f0');
+      
+      // Draw decorative border (light pink/red shade as shown in markup)
+      doc.lineWidth(2)
+        .strokeColor('#f8a3b3') // Light pink/red shade for border
+        .roundedRect(50, summaryBoxY, doc.page.width - 100, 120, 5)
+        .stroke();
+        
+      // Fill with very light background
+      doc.fillColor('#feeff1')
+        .roundedRect(50, summaryBoxY, doc.page.width - 100, 120, 5)
+        .fill();
       
       // Primary partner profile
       doc.fontSize(12)
         .font('Helvetica-Bold')
-        .fillColor('#3182ce')
+        .fillColor('#3182ce') // Blue for primary partner
         .text(`${primary.name.split(' ')[0]}: ${primary.profile.name} (General), ${primary.genderProfile?.name || 'No gender profile'} (${primary.demographics.gender === 'male' ? 'Male' : 'Female'}-Specific)`, 
-          70, summaryBoxY + 15, {
+          70, summaryBoxY + 20, {
             width: doc.page.width - 140
           });
       
       // Spouse profile  
-      doc.fontSize(12)
+      doc.moveDown(1)
+        .fontSize(12)
         .font('Helvetica-Bold')
-        .fillColor('#805ad5')
+        .fillColor('#805ad5') // Purple for spouse
         .text(`${spouse.name.split(' ')[0]}: ${spouse.profile.name} (General), ${spouse.genderProfile?.name || 'No gender profile'} (${spouse.demographics.gender === 'male' ? 'Male' : 'Female'}-Specific)`, 
-          70, summaryBoxY + 40, {
+          70, doc.y, {
             width: doc.page.width - 140
           });
       
-      // Profile compatibility explanation
-      doc.fontSize(12)
+      // Profile compatibility explanation (improved phrasing as shown in markup)
+      doc.moveDown(1)
+        .fontSize(12)
         .font('Helvetica')
         .fillColor('#4a5568')
         .text('Your complementary profiles suggest a relationship with unique strengths and growth areas. Refer to your individual assessment reports for detailed explanations of each profile.', 
-          70, summaryBoxY + 65, {
+          70, doc.y, {
             width: doc.page.width - 140
           });
       
-      doc.y = summaryBoxY + 110;
+      doc.y = summaryBoxY + 140; // Position further down after the larger profile box
       
       // Book promotion box - expanded with no book cover placeholder
       const bookBoxY = doc.y;
-      doc.rect(50, bookBoxY, doc.page.width - 100, 140) // Increase height to prevent text overrun
+      doc.rect(50, bookBoxY, doc.page.width - 100, 150) // Increase height further to prevent text overrun
         .fillAndStroke('#f9f7ff', '#e9d8fd');
       
       // Book promo text - starts at left margin with more space
