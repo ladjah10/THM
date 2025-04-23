@@ -112,17 +112,17 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         .fillColor('#4a5568')
         .font('Helvetica')
         .text('Thank you for completing The 100 Marriage Assessment - Series 1 as a couple. This discussion guide provides insights into your perspectives on marriage and highlights areas where further conversation may strengthen your relationship.', {
-          width: doc.page.width - 100,
+          width: doc.page.width - 120, // Narrower width for better readability
           align: 'left'
         });
       
-      doc.moveDown(1);
+      doc.moveDown(1.5); // Increased spacing
       
-      doc.fontSize(12)
-        .fillColor('#4a5568')
+      doc.fontSize(13) // Slightly larger font
+        .fillColor('#2d3748') // Darker color for better visibility
         .font('Helvetica-Bold')
         .text('Understanding Your Compatibility Score:', {
-          width: doc.page.width - 100,
+          width: doc.page.width - 120,
           align: 'left'
         });
       
@@ -131,7 +131,7 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         .fillColor('#4a5568')
         .font('Helvetica')
         .text('Your compatibility score reflects the alignment of your perspectives across all assessment sections. A higher score indicates greater similarity in your views on key marriage dimensions, while a lower score highlights areas where your expectations differ. This is not a judgment of relationship quality, but rather a tool to identify areas for meaningful discussion.', {
-          width: doc.page.width - 100,
+          width: doc.page.width - 120,
           align: 'left'
         });
       
@@ -144,7 +144,16 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         .fillColor('#2d3748')
         .text('Score Comparison');
       
-      doc.moveDown(0.5);
+      doc.moveDown(0.5)
+        .fontSize(12)
+        .font('Helvetica')
+        .fillColor('#4a5568')
+        .text('The scores below show how each of you responded to the assessment. Your individual percentages represent how closely your responses align with certain expectations of marriage. The "Difference" column shows the gap between your scores—smaller differences mean you\'re more aligned in that area, while larger differences indicate topics you may want to discuss more deeply.', {
+          width: doc.page.width - 100,
+          align: 'left'
+        });
+        
+      doc.moveDown(1);
       
       // Create the comparison table
       const tableTop = doc.y + 10;
