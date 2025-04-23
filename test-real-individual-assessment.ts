@@ -16,6 +16,8 @@ const __dirname = path.dirname(__filename);
 
 // Disable image loading for this test to avoid format issues
 const INCLUDE_IMAGES = false;
+// Skip profile icons since they're in WebP format which PDFKit doesn't support
+const INCLUDE_PROFILE_ICONS = false;
 
 // Initialize SendGrid API
 if (!process.env.SENDGRID_API_KEY) {
@@ -141,17 +143,17 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
       const stream = fs.createWriteStream(outputPath);
       doc.pipe(stream);
 
-      // Add PDF header
+      // Add PDF header (centered)
       if (INCLUDE_IMAGES) {
         doc.image('public/100-marriage-book-cover.jpg', 50, 50, { width: 100 });
       }
       
       doc.fontSize(24)
         .font('Helvetica-Bold')
-        .text('THE 100 MARRIAGE', 170, 70)
+        .text('THE 100 MARRIAGE', { align: 'center' })
         .fontSize(16)
         .font('Helvetica')
-        .text('Individual Assessment Report', 170, 100);
+        .text('Individual Assessment Report', { align: 'center' });
 
       // Add recipient information
       doc.moveDown(2)
@@ -252,8 +254,10 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
             doc.moveDown(0.5)
               .fontSize(10)
               .font('Helvetica')
+              .fillColor('#3366cc')
               .text(`Average score for ${assessment.demographics.gender === 'male' ? 'men' : 'women'}: ${genderData.average}%`, { continued: true })
               .text(`    |    You scored higher than ${genderData.percentile}% of ${assessment.demographics.gender === 'male' ? 'men' : 'women'}`, { align: 'left' });
+            doc.fillColor('black'); // Reset color
           }
           
           doc.moveDown(1);
@@ -361,7 +365,7 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
       doc.y = boxTop + 15;
       
       // Add profile 1 with icon
-      if (assessment.profile.iconPath) {
+      if (INCLUDE_PROFILE_ICONS && assessment.profile.iconPath) {
         try {
           // Use path.resolve to get the absolute path
           const absolutePath = path.resolve(assessment.profile.iconPath);
@@ -370,6 +374,29 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
         } catch (err) {
           console.error('Error loading profile icon:', err);
         }
+      }
+      
+      // Circle placeholder for profile icon
+      if (!INCLUDE_PROFILE_ICONS) {
+        const circleX = 75; // Center X of the circle
+        const circleY = doc.y + 25; // Center Y of the circle
+        const radius = 25;
+        
+        // Draw a colored circle as profile icon placeholder
+        doc.circle(circleX, circleY, radius)
+          .fillAndStroke('#3366cc', '#000000');
+        
+        // Add profile initial in the circle
+        doc.fillColor('white')
+          .fontSize(16)
+          .font('Helvetica-Bold')
+          .text(assessment.profile.name.charAt(0), 
+                circleX - 5, 
+                circleY - 8, 
+                { align: 'center' });
+          
+        // Reset position
+        doc.fillColor('black');
       }
       
       doc.fontSize(14)
@@ -387,7 +414,7 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
       if (assessment.genderProfile) {
         doc.moveDown(2);
         
-        if (assessment.genderProfile.iconPath) {
+        if (INCLUDE_PROFILE_ICONS && assessment.genderProfile.iconPath) {
           try {
             // Use path.resolve to get the absolute path
             const absolutePath = path.resolve(assessment.genderProfile.iconPath);
@@ -396,6 +423,29 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
           } catch (err) {
             console.error('Error loading gender profile icon:', err);
           }
+        }
+        
+        // Circle placeholder for gender profile icon
+        if (!INCLUDE_PROFILE_ICONS) {
+          const circleX = 75; // Center X of the circle
+          const circleY = doc.y + 25; // Center Y of the circle
+          const radius = 25;
+          
+          // Draw a colored circle as profile icon placeholder
+          doc.circle(circleX, circleY, radius)
+            .fillAndStroke('#993399', '#000000');
+          
+          // Add profile initial in the circle
+          doc.fillColor('white')
+            .fontSize(16)
+            .font('Helvetica-Bold')
+            .text(assessment.genderProfile.name.charAt(0), 
+                  circleX - 5, 
+                  circleY - 8, 
+                  { align: 'center' });
+            
+          // Reset position
+          doc.fillColor('black');
         }
         
         doc.fontSize(14)
@@ -413,6 +463,26 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
       // Add a few more sample profiles
       doc.moveDown(2);
       
+      // Circle placeholder for Harmonious Planner
+      if (!INCLUDE_PROFILE_ICONS) {
+        const circleX = 75; // Center X of the circle
+        const circleY = doc.y + 25; // Center Y of the circle
+        const radius = 25;
+        
+        // Draw a colored circle as profile icon placeholder
+        doc.circle(circleX, circleY, radius)
+          .fillAndStroke('#3366cc', '#000000');
+        
+        // Add profile initial
+        doc.fillColor('white')
+          .fontSize(16)
+          .font('Helvetica-Bold')
+          .text('HP', circleX - 10, circleY - 8, { align: 'center' });
+          
+        // Reset position
+        doc.fillColor('black');
+      }
+      
       doc.fontSize(14)
         .font('Helvetica-Bold')
         .fillColor('#3366cc')
@@ -427,6 +497,26 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
         .text(plannerDesc, 120, doc.y, { width: 400 });
       
       doc.moveDown(2);
+      
+      // Circle placeholder for Relationship Navigator
+      if (!INCLUDE_PROFILE_ICONS) {
+        const circleX = 75; // Center X of the circle
+        const circleY = doc.y + 25; // Center Y of the circle
+        const radius = 25;
+        
+        // Draw a colored circle as profile icon placeholder
+        doc.circle(circleX, circleY, radius)
+          .fillAndStroke('#3366cc', '#000000');
+        
+        // Add profile initial
+        doc.fillColor('white')
+          .fontSize(16)
+          .font('Helvetica-Bold')
+          .text('RN', circleX - 10, circleY - 8, { align: 'center' });
+          
+        // Reset position
+        doc.fillColor('black');
+      }
       
       doc.fontSize(14)
         .font('Helvetica-Bold')
