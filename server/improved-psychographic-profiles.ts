@@ -7,23 +7,9 @@ import PDFDocument from 'pdfkit';
 import path from 'path';
 import fs from 'fs';
 
-// Define the psychographic profiles data structure
-interface ProfileReference {
-  id: number;
-  name: string;
-  description: string;
-  genderSpecific: string | null;
-  iconPath: string | undefined;
-  idealMatch?: string;
-  nextBestMatches?: string[];
-  idealGenderMatch?: string;
-  nextBestGenderMatches?: string[];
-  implications?: string;
-  criteria?: string[];
-}
-
-// List of all psychographic profiles (importing from the same place as original)
+// Import UserProfile type to work directly with it
 import { psychographicProfiles } from '../client/src/data/psychographicProfiles';
+import type { UserProfile } from '../shared/schema';
 
 /**
  * Adds a comprehensive psychographic profiles reference section to the PDF
@@ -109,7 +95,7 @@ export function addImprovedProfilesReferenceSection(doc: PDFKit.PDFDocument): vo
 /**
  * Add a profile to the document with improved formatting to prevent overrun
  */
-function addProfileWithBetterFormatting(doc: PDFKit.PDFDocument, profile: ProfileReference): void {
+function addProfileWithBetterFormatting(doc: PDFKit.PDFDocument, profile: UserProfile): void {
   // Calculate available width
   const pageWidth = doc.page.width - 100; // Use consistent margins
   const iconSize = 30; // Slightly smaller icon
@@ -163,12 +149,12 @@ function addProfileWithBetterFormatting(doc: PDFKit.PDFDocument, profile: Profil
        align: 'left'
      });
   
-  // Add compatibility info if available
-  if (profile.implications) {
+  // Add compatibility info based on criteria
+  if (profile.criteria && profile.criteria.length > 0) {
     doc.moveDown(0.3)
        .fontSize(9)
        .fillColor('#555')
-       .text(`Compatibility: ${profile.implications}`, {
+       .text(`Compatible with profiles that emphasize: ${profile.criteria.map(c => c.section).join(', ')}`, {
          width: textWidth,
          align: 'left'
        });
