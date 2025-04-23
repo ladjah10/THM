@@ -53,7 +53,8 @@ async function generateRealisticIndividualAssessment() {
       criteria: [
         { section: 'Your Foundation', min: 75 },
         { section: 'Your Faith Life', min: 80 }
-      ]
+      ],
+      iconPath: '/attached_assets/BV 6.png'
     },
     genderProfile: {
       id: 5, 
@@ -64,7 +65,7 @@ async function generateRealisticIndividualAssessment() {
         { section: 'Your Faith Life', min: 85 },
         { section: 'Your Family Life', min: 80 }
       ],
-      iconPath: 'public/icons/steadfast-leader.png'
+      iconPath: '/attached_assets/SL 12.png'
     },
     scores: {
       overallPercentage: 87,
@@ -89,6 +90,14 @@ async function generateRealisticIndividualAssessment() {
         'Your Finances': { earned: 80, possible: 100, percentage: 80 },
         'Your Future': { earned: 85, possible: 100, percentage: 85 }
       }
+    },
+    // Gender comparison data for male respondents
+    genderComparison: {
+      'Your Foundation': { value: 90, average: 75, percentile: 92 },
+      'Your Faith Life': { value: 95, average: 82, percentile: 97 },
+      'Your Family Life': { value: 85, average: 79, percentile: 84 },
+      'Your Finances': { value: 80, average: 72, percentile: 78 },
+      'Your Future': { value: 85, average: 74, percentile: 86 }
     },
     responses: {
       // Sample responses to key questions
@@ -215,26 +224,57 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
           .text('Next Best Matches: Flexible Faithful, Pragmatic Partners', { continued: false });
       }
 
-      // Section scores
+      // Section scores with gender comparison
       doc.moveDown(1.5)
         .fontSize(16)
         .font('Helvetica-Bold')
-        .text('Section Scores');
+        .text('Section Scores Compared to Other ' + (assessment.demographics.gender === 'male' ? 'Men' : 'Women'));
 
-      Object.entries(assessment.scores.sections).forEach(([section, score]) => {
-        doc.moveDown(0.5)
-          .fontSize(12)
-          .font('Helvetica-Bold')
-          .text(`${section}: ${score.percentage}%`);
-        
-        // Draw progress bar
-        const barWidth = 400;
-        const filledWidth = (score.percentage / 100) * barWidth;
-        
-        doc.rect(50, doc.y + 5, barWidth, 10).stroke();
-        doc.rect(50, doc.y, filledWidth, 10).fill('#3366cc');
-        doc.moveDown(1);
-      });
+      // Create a section score table with gender comparison
+      if (assessment.genderComparison) {
+        Object.entries(assessment.scores.sections).forEach(([section, score]) => {
+          const genderData = assessment.genderComparison?.[section];
+          
+          doc.moveDown(0.5)
+            .fontSize(12)
+            .font('Helvetica-Bold')
+            .text(`${section}: ${score.percentage}%`);
+          
+          // Draw progress bar for the user's score
+          const barWidth = 400;
+          const filledWidth = (score.percentage / 100) * barWidth;
+          
+          doc.rect(50, doc.y + 5, barWidth, 10).stroke();
+          doc.rect(50, doc.y, filledWidth, 10).fill('#3366cc');
+          
+          // Add gender comparison information if available
+          if (genderData) {
+            doc.moveDown(0.5)
+              .fontSize(10)
+              .font('Helvetica')
+              .text(`Average score for ${assessment.demographics.gender === 'male' ? 'men' : 'women'}: ${genderData.average}%`, { continued: true })
+              .text(`    |    You scored higher than ${genderData.percentile}% of ${assessment.demographics.gender === 'male' ? 'men' : 'women'}`, { align: 'left' });
+          }
+          
+          doc.moveDown(1);
+        });
+      } else {
+        // Fallback if gender comparison data is not available
+        Object.entries(assessment.scores.sections).forEach(([section, score]) => {
+          doc.moveDown(0.5)
+            .fontSize(12)
+            .font('Helvetica-Bold')
+            .text(`${section}: ${score.percentage}%`);
+          
+          // Draw progress bar
+          const barWidth = 400;
+          const filledWidth = (score.percentage / 100) * barWidth;
+          
+          doc.rect(50, doc.y + 5, barWidth, 10).stroke();
+          doc.rect(50, doc.y, filledWidth, 10).fill('#3366cc');
+          doc.moveDown(1);
+        });
+      }
 
       // Strengths and areas for improvement
       doc.moveDown(1.5)
@@ -317,6 +357,98 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
         .moveDown(0.3)
         .text('Book at: https://lawrence-adjah.clientsecure.me');
 
+      // Add psychographic profiles reference section
+      doc.addPage();
+      
+      doc.fontSize(16)
+        .font('Helvetica-Bold')
+        .text('Psychographic Profiles Reference', { align: 'center' });
+      
+      doc.moveDown(1)
+        .fontSize(12)
+        .font('Helvetica')
+        .text('The 100 Marriage psychographic profiles represent different relationship styles and tendencies. Below are brief descriptions of each profile for your reference.', { align: 'left', width: 500 });
+      
+      // Border for the profiles box
+      const boxTop = doc.y + 20;
+      doc.lineWidth(2)
+        .strokeColor('#e83e8c') // Pink/red border
+        .rect(30, boxTop, doc.page.width - 60, 400)
+        .stroke();
+        
+      doc.y = boxTop + 15;
+      
+      // Add profile 1 with icon
+      if (assessment.profile.iconPath) {
+        try {
+          doc.image(assessment.profile.iconPath, 50, doc.y, { width: 50 });
+        } catch (err) {
+          console.error('Error loading profile icon:', err);
+        }
+      }
+      
+      doc.fontSize(14)
+        .font('Helvetica-Bold')
+        .fillColor('#3366cc')
+        .text(assessment.profile.name, 120, doc.y);
+        
+      doc.moveDown(0.3)
+        .fontSize(11)
+        .font('Helvetica')
+        .fillColor('black')
+        .text(assessment.profile.description, 120, doc.y, { width: 400 });
+      
+      // Add gender-specific profile with icon if available
+      if (assessment.genderProfile) {
+        doc.moveDown(2);
+        
+        if (assessment.genderProfile.iconPath) {
+          try {
+            doc.image(assessment.genderProfile.iconPath, 50, doc.y, { width: 50 });
+          } catch (err) {
+            console.error('Error loading gender profile icon:', err);
+          }
+        }
+        
+        doc.fontSize(14)
+          .font('Helvetica-Bold')
+          .fillColor('#993399')
+          .text(assessment.genderProfile.name, 120, doc.y);
+          
+        doc.moveDown(0.3)
+          .fontSize(11)
+          .font('Helvetica')
+          .fillColor('black')
+          .text(assessment.genderProfile.description, 120, doc.y, { width: 400 });
+      }
+      
+      // Add a few more sample profiles
+      doc.moveDown(2);
+      
+      doc.fontSize(14)
+        .font('Helvetica-Bold')
+        .fillColor('#3366cc')
+        .text('Harmonious Planner', 120, doc.y);
+        
+      doc.moveDown(0.3)
+        .fontSize(11)
+        .font('Helvetica')
+        .fillColor('black')
+        .text('The Harmonious Planner approaches relationships with a focus on peace, harmony, and careful preparation. They value emotional security and invest in creating a stable home environment. They approach decisions methodically, weighing all sides before committing, and excel at creating a life of balance and intentional living.', 120, doc.y, { width: 400 });
+      
+      doc.moveDown(2);
+      
+      doc.fontSize(14)
+        .font('Helvetica-Bold')
+        .fillColor('#3366cc')
+        .text('Relationship Navigator', 120, doc.y);
+        
+      doc.moveDown(0.3)
+        .fontSize(11)
+        .font('Helvetica')
+        .fillColor('black')
+        .text('The Relationship Navigator has exceptional skills in guidance, direction, and emotional intelligence. They can sense relational dynamics and negotiate complex interpersonal situations with wisdom. They prioritize emotional connections and can adapt their approach to meet their partner's needs. Their intuitive understanding of people makes them effective communicators and problem-solvers.', 120, doc.y, { width: 400 });
+      
       // Footer with contact information
       doc.fontSize(10)
         .font('Helvetica')
@@ -327,7 +459,7 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
           { align: 'center' }
         )
         .text(
-          'Page 1 of 1',
+          'Page 2 of 2',
           50,
           doc.page.height - 35,
           { align: 'center' }

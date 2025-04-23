@@ -74,6 +74,12 @@ export interface DemographicData {
   zipCode: string;
 }
 
+export interface GenderComparisonData {
+  value: number;
+  average: number;
+  percentile: number;
+}
+
 export interface AssessmentResult {
   email: string;
   name: string;
@@ -85,6 +91,7 @@ export interface AssessmentResult {
   timestamp: string;
   coupleId?: string; // Links two assessments in a couple
   coupleRole?: 'primary' | 'spouse'; // Role in the couple assessment
+  genderComparison?: Record<string, GenderComparisonData>; // Gender-specific comparison data
 }
 
 // Interface for comparing assessment responses between partners
