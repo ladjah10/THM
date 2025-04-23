@@ -287,6 +287,17 @@ export const CoupleAssessmentView: React.FC<CoupleAssessmentViewProps> = ({
                 <div className="p-4 border border-blue-200 rounded-md bg-blue-50 mb-4">
                   <h4 className="font-medium text-blue-800">{primaryAssessment.profile.name} (General Profile)</h4>
                   <p className="text-sm text-gray-700 mt-1">{primaryAssessment.profile.description}</p>
+                  
+                  {/* Added ideal match information */}
+                  <div className="mt-3 bg-blue-100 rounded p-2">
+                    <h5 className="text-sm font-medium text-blue-800">Compatibility Information</h5>
+                    <p className="text-xs text-blue-700 mt-1">
+                      <span className="font-medium">Ideal Match:</span> {primaryAssessment.profile.name}
+                    </p>
+                    <p className="text-xs text-blue-700 mt-1">
+                      <span className="font-medium">Next Best Matches:</span> Harmonious Planners, Balanced Visionaries
+                    </p>
+                  </div>
                 </div>
                 
                 {primaryAssessment.genderProfile && (
@@ -344,6 +355,17 @@ export const CoupleAssessmentView: React.FC<CoupleAssessmentViewProps> = ({
                 <div className="p-4 border border-purple-200 rounded-md bg-purple-50 mb-4">
                   <h4 className="font-medium text-purple-800">{spouseAssessment.profile.name} (General Profile)</h4>
                   <p className="text-sm text-gray-700 mt-1">{spouseAssessment.profile.description}</p>
+                  
+                  {/* Added ideal match information */}
+                  <div className="mt-3 bg-purple-100 rounded p-2">
+                    <h5 className="text-sm font-medium text-purple-800">Compatibility Information</h5>
+                    <p className="text-xs text-purple-700 mt-1">
+                      <span className="font-medium">Ideal Match:</span> {spouseAssessment.profile.name}
+                    </p>
+                    <p className="text-xs text-purple-700 mt-1">
+                      <span className="font-medium">Next Best Matches:</span> Flexible Faithful, Pragmatic Partners
+                    </p>
+                  </div>
                 </div>
                 
                 {spouseAssessment.genderProfile && (
