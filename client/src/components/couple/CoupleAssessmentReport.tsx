@@ -182,9 +182,11 @@ export const CoupleReport: React.FC<CoupleReportProps> = ({ report }) => {
                   
                   <div className="mt-4 p-3 bg-white rounded-lg border border-purple-200 flex">
                     <div className="mr-3 flex-shrink-0">
-                      <div className="w-16 h-20 bg-purple-200 rounded-md flex items-center justify-center">
-                        <span className="text-purple-800 font-bold">BOOK<br/>COVER</span>
-                      </div>
+                      <img 
+                        src="https://lawrenceadjah.com/wp-content/uploads/2023/12/The-100-Marriage-Lawrence-Adjah-Christian-Faith-Based-Books-Marriage-Books-on-Amazon-Relationship-Books-Best-Sellers.png"
+                        alt="The 100 Marriage Book Cover"
+                        className="w-16 h-auto rounded-md shadow-sm"
+                      />
                     </div>
                     <div>
                       <h4 className="font-medium text-purple-900">The 100 Marriage</h4>
@@ -263,6 +265,12 @@ export const CoupleReport: React.FC<CoupleReportProps> = ({ report }) => {
                   </Badge>
                 </div>
                 <p className="text-sm text-gray-600">{primaryAssessment.profile.description.substring(0, 120)}...</p>
+                
+                {/* Added ideal match information */}
+                <div className="mt-2 bg-blue-50 rounded p-2 text-xs">
+                  <p className="text-blue-800 font-medium">Ideal Match: {primaryAssessment.profile.name}</p>
+                  <p className="text-blue-700 mt-1">Next Best Matches: Harmonious Planners, Balanced Visionaries</p>
+                </div>
               </div>
               
               {/* Gender-specific profile if available */}
@@ -299,6 +307,12 @@ export const CoupleReport: React.FC<CoupleReportProps> = ({ report }) => {
                   </Badge>
                 </div>
                 <p className="text-sm text-gray-600">{spouseAssessment.profile.description.substring(0, 120)}...</p>
+                
+                {/* Added ideal match information */}
+                <div className="mt-2 bg-purple-50 rounded p-2 text-xs">
+                  <p className="text-purple-800 font-medium">Ideal Match: {spouseAssessment.profile.name}</p>
+                  <p className="text-purple-700 mt-1">Next Best Matches: Flexible Faithful, Pragmatic Partners</p>
+                </div>
               </div>
               
               {/* Gender-specific profile if available */}
