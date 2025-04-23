@@ -492,8 +492,16 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       doc.fontSize(12)
         .font('Helvetica')
         .fillColor('#4a5568')
-        .text("Lawrence Adjah's bestselling book provides a comprehensive framework for addressing each of the areas highlighted in this assessment. Use it alongside this discussion guide to deepen your conversations and strengthen your relationship foundation.", 
+        .text("If you do not already own the book, purchase your copy of the bestselling book, The 100 Marriage, so you and your significant other have the opportunity to go back through each question together at your own pace.", 
           160, bookBoxY + 45, { width: doc.page.width - 230 });
+          
+      doc.moveDown(0.8);
+      
+      doc.fontSize(12)
+        .font('Helvetica')
+        .fillColor('#4a5568')
+        .text("Alternatively, you can follow the path of many couples who complete The 100 Marriage and decide they would like to walk through their points of misaligned with counsel.", 
+          160, doc.y, { width: doc.page.width - 230 });
       
       // Consultation link
       doc.moveDown(2)
