@@ -16,8 +16,8 @@ const __dirname = path.dirname(__filename);
 
 // Disable image loading for this test to avoid format issues
 const INCLUDE_IMAGES = false;
-// Skip profile icons since they're in WebP format which PDFKit doesn't support
-const INCLUDE_PROFILE_ICONS = false;
+// Include profile icons in PNG format
+const INCLUDE_PROFILE_ICONS = true;
 
 // Initialize SendGrid API
 if (!process.env.SENDGRID_API_KEY) {
@@ -175,7 +175,7 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
       doc.moveDown(1.5)
         .fontSize(16)
         .font('Helvetica-Bold')
-        .text('Your Psychographic Profile');
+        .text('Your Psychographic Profile', { align: 'left' });
 
       doc.moveDown(0.5)
         .fontSize(14)
@@ -206,7 +206,7 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
           .fontSize(14)
           .font('Helvetica-Bold')
           .fillColor('#993399')
-          .text(`${assessment.demographics.gender === 'male' ? 'Male' : 'Female'}-Specific Profile: ${assessment.genderProfile.name}`);
+          .text(`${assessment.demographics.gender === 'male' ? 'Male' : 'Female'}-Specific Profile: ${assessment.genderProfile.name}`, { align: 'left' });
         
         doc.moveDown(0.5)
           .fontSize(12)
@@ -230,7 +230,7 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
       doc.moveDown(1.5)
         .fontSize(16)
         .font('Helvetica-Bold')
-        .text('Section Scores Compared to Other ' + (assessment.demographics.gender === 'male' ? 'Men' : 'Women'));
+        .text('Section Scores Compared to Other ' + (assessment.demographics.gender === 'male' ? 'Men' : 'Women'), { align: 'left' });
 
       // Create a section score table with gender comparison
       if (assessment.genderComparison) {
@@ -284,7 +284,7 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
       doc.moveDown(1.5)
         .fontSize(16)
         .font('Helvetica-Bold')
-        .text('Your Strengths');
+        .text('Your Strengths', { align: 'left' });
 
       assessment.scores.strengths.forEach(strength => {
         doc.moveDown(0.5)
@@ -296,7 +296,7 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
       doc.moveDown(1.5)
         .fontSize(16)
         .font('Helvetica-Bold')
-        .text('Areas for Growth');
+        .text('Areas for Growth', { align: 'left' });
 
       assessment.scores.improvementAreas.forEach(area => {
         doc.moveDown(0.5)
@@ -355,11 +355,11 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
         .font('Helvetica')
         .text('The 100 Marriage psychographic profiles represent different relationship styles and tendencies. Below are brief descriptions of each profile for your reference.', { align: 'left', width: 500 });
       
-      // Border for the profiles box
+      // Border for the profiles box - increased height to 600 to fit all profiles
       const boxTop = doc.y + 20;
       doc.lineWidth(2)
         .strokeColor('#e83e8c') // Pink/red border
-        .rect(30, boxTop, doc.page.width - 60, 400)
+        .rect(30, boxTop, doc.page.width - 60, 600)
         .stroke();
         
       doc.y = boxTop + 15;
@@ -463,8 +463,16 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
       // Add a few more sample profiles
       doc.moveDown(2);
       
-      // Circle placeholder for Harmonious Planner
-      if (!INCLUDE_PROFILE_ICONS) {
+      // Add Harmonious Planner icon
+      if (INCLUDE_PROFILE_ICONS) {
+        try {
+          const hpIconPath = path.resolve('./attached_assets/HP.png');
+          console.log('Attempting to load HP icon from:', hpIconPath);
+          doc.image(hpIconPath, 50, doc.y, { width: 50 });
+        } catch (err) {
+          console.error('Error loading HP icon:', err);
+        }
+      } else {
         const circleX = 75; // Center X of the circle
         const circleY = doc.y + 25; // Center Y of the circle
         const radius = 25;
@@ -498,8 +506,16 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
       
       doc.moveDown(2);
       
-      // Circle placeholder for Relationship Navigator
-      if (!INCLUDE_PROFILE_ICONS) {
+      // Add Relationship Navigator icon
+      if (INCLUDE_PROFILE_ICONS) {
+        try {
+          const rnIconPath = path.resolve('./attached_assets/RN 7.png');
+          console.log('Attempting to load RN icon from:', rnIconPath);
+          doc.image(rnIconPath, 50, doc.y, { width: 50 });
+        } catch (err) {
+          console.error('Error loading RN icon:', err);
+        }
+      } else {
         const circleX = 75; // Center X of the circle
         const circleY = doc.y + 25; // Center Y of the circle
         const radius = 25;
@@ -530,6 +546,58 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
         .font('Helvetica')
         .fillColor('black')
         .text(navigatorDesc, 120, doc.y, { width: 400 });
+      
+      // Add Flexible Faithful profile
+      doc.moveDown(2);
+      
+      if (INCLUDE_PROFILE_ICONS) {
+        try {
+          const ffIconPath = path.resolve('./attached_assets/FF 3.png');
+          console.log('Attempting to load FF icon from:', ffIconPath);
+          doc.image(ffIconPath, 50, doc.y, { width: 50 });
+        } catch (err) {
+          console.error('Error loading FF icon:', err);
+        }
+      }
+      
+      doc.fontSize(14)
+        .font('Helvetica-Bold')
+        .fillColor('#3366cc')
+        .text('Flexible Faithful', 120, doc.y);
+        
+      const ffDesc = 'Flexible Faithful individuals balance unwavering core values with adaptability in changing circumstances. They maintain strong principles while being open to growth and new perspectives. This blend of stability and flexibility creates a foundation of trust while allowing space for partners to evolve together.';
+      
+      doc.moveDown(0.3)
+        .fontSize(11)
+        .font('Helvetica')
+        .fillColor('black')
+        .text(ffDesc, 120, doc.y, { width: 400 });
+      
+      // Add Spiritual Builder profile
+      doc.moveDown(2);
+      
+      if (INCLUDE_PROFILE_ICONS) {
+        try {
+          const sbIconPath = path.resolve('./attached_assets/SB 1.png');
+          console.log('Attempting to load SB icon from:', sbIconPath);
+          doc.image(sbIconPath, 50, doc.y, { width: 50 });
+        } catch (err) {
+          console.error('Error loading SB icon:', err);
+        }
+      }
+      
+      doc.fontSize(14)
+        .font('Helvetica-Bold')
+        .fillColor('#3366cc')
+        .text('Spiritual Builder', 120, doc.y);
+        
+      const sbDesc = 'Spiritual Builders approach relationships with deep faith and purpose. They view marriage as a spiritual journey and prioritize shared values and growth. They excel at building meaningful connections grounded in spiritual principles and seek to create relationships that honor their faith commitments.';
+      
+      doc.moveDown(0.3)
+        .fontSize(11)
+        .font('Helvetica')
+        .fillColor('black')
+        .text(sbDesc, 120, doc.y, { width: 400 });
       
       // Footer with contact information
       doc.fontSize(10)
