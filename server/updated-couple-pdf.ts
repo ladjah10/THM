@@ -92,11 +92,15 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       // Move past the circle
       doc.y = circleY + scoreRadius + 30;
       
-      // Couple names
+      // Couple names - properly centered
       doc.fontSize(16)
         .fillColor('#2d3748')
-        .font('Helvetica-Bold')
-        .text(`${primary.name} & ${spouse.name}`, { align: 'center' });
+        .font('Helvetica-Bold');
+      
+      // Calculate exact position for true centering
+      const coupleNames = `${primary.name} & ${spouse.name}`;
+      const coupleNamesWidth = doc.widthOfString(coupleNames);
+      doc.text(coupleNames, (doc.page.width / 2) - (coupleNamesWidth / 2), doc.y);
       
       // Completion date
       doc.moveDown(0.5)
@@ -471,29 +475,22 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       
       doc.y = summaryBoxY + 110;
       
-      // Book promotion box with image
+      // Book promotion box - expanded with no book cover placeholder
       const bookBoxY = doc.y;
-      doc.rect(50, bookBoxY, doc.page.width - 100, 120)
+      doc.rect(50, bookBoxY, doc.page.width - 100, 140) // Increase height to prevent text overrun
         .fillAndStroke('#f9f7ff', '#e9d8fd');
       
-      // Book cover placeholder
-      doc.rect(70, bookBoxY + 10, 70, 100)
-        .fillAndStroke('#3182ce', '#2b6cb0');
-      doc.fontSize(12)
-        .fillColor('white')
-        .text('BOOK\nCOVER', 70 + 15, bookBoxY + 45, { align: 'center', width: 40 });
-      
-      // Book promo text
+      // Book promo text - starts at left margin with more space
       doc.fontSize(14)
         .font('Helvetica-Bold')
         .fillColor('#553c9a')
-        .text("Continue Your Journey with \"The 100 Marriage\"", 160, bookBoxY + 20);
+        .text("Continue Your Journey with \"The 100 Marriage\"", 70, bookBoxY + 20);
         
       doc.fontSize(12)
         .font('Helvetica')
         .fillColor('#4a5568')
         .text("If you do not already own the book, purchase your copy of the bestselling book, The 100 Marriage, so you and your significant other have the opportunity to go back through each question together at your own pace.", 
-          160, bookBoxY + 45, { width: doc.page.width - 230 });
+          70, bookBoxY + 45, { width: doc.page.width - 140 }); // Full width without book cover
           
       doc.moveDown(0.8);
       
@@ -501,7 +498,7 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         .font('Helvetica')
         .fillColor('#4a5568')
         .text("Alternatively, you can follow the path of many couples who complete The 100 Marriage and decide they would like to walk through their points of misaligned with counsel.", 
-          160, doc.y, { width: doc.page.width - 230 });
+          70, doc.y, { width: doc.page.width - 140 }); // Full width without book cover
       
       // Consultation link
       doc.moveDown(2)
