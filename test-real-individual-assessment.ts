@@ -54,7 +54,7 @@ async function generateRealisticIndividualAssessment() {
         { section: 'Your Foundation', min: 75 },
         { section: 'Your Faith Life', min: 80 }
       ],
-      iconPath: '/attached_assets/BV 6.png'
+      iconPath: './attached_assets/BV\\ 6.png'
     },
     genderProfile: {
       id: 5, 
@@ -65,7 +65,7 @@ async function generateRealisticIndividualAssessment() {
         { section: 'Your Faith Life', min: 85 },
         { section: 'Your Family Life', min: 80 }
       ],
-      iconPath: '/attached_assets/SL 12.png'
+      iconPath: './attached_assets/SL 12.png'
     },
     scores: {
       overallPercentage: 87,
