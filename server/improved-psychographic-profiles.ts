@@ -11,6 +11,120 @@ import fs from 'fs';
 import { psychographicProfiles } from '../client/src/data/psychographicProfiles';
 import type { UserProfile } from '../shared/schema';
 
+// Define the structure for profile matching information
+interface ProfileMatching {
+  name: string;
+  idealMatch?: string;
+  nextBestMatches?: string[];
+  idealGenderMatch?: string;
+  nextBestGenderMatches?: string[];
+}
+
+// Comprehensive profile matching data
+const psychographicProfileMatches: ProfileMatching[] = [
+  // Unisex profiles
+  {
+    name: "Steadfast Believers",
+    idealMatch: "Steadfast Believers",
+    nextBestMatches: ["Harmonious Planners", "Balanced Visionaries"],
+    idealGenderMatch: "Men: Faithful Protectors, Women: Faith-Centered Homemakers",
+    nextBestGenderMatches: ["Men: Balanced Providers, Women: Relational Nurturers"]
+  },
+  {
+    name: "Harmonious Planners",
+    idealMatch: "Harmonious Planners",
+    nextBestMatches: ["Steadfast Believers", "Balanced Visionaries"],
+    idealGenderMatch: "Men: Structured Leaders, Women: Faith-Centered Homemakers",
+    nextBestGenderMatches: ["Men: Faithful Protectors, Women: Independent Traditionalists"]
+  },
+  {
+    name: "Flexible Faithful",
+    idealMatch: "Flexible Faithful",
+    nextBestMatches: ["Balanced Visionaries", "Pragmatic Partners"],
+    idealGenderMatch: "Men: Balanced Providers, Women: Adaptive Communicators",
+    nextBestGenderMatches: ["Men: Structured Leaders, Women: Relational Nurturers"]
+  },
+  {
+    name: "Pragmatic Partners",
+    idealMatch: "Pragmatic Partners",
+    nextBestMatches: ["Flexible Faithful", "Individualist Seekers"],
+    idealGenderMatch: "Men: Balanced Providers, Women: Adaptive Communicators",
+    nextBestGenderMatches: ["Men: Structured Leaders, Women: Relational Nurturers"]
+  },
+  {
+    name: "Individualist Seekers",
+    idealMatch: "Individualist Seekers",
+    nextBestMatches: ["Pragmatic Partners", "Balanced Visionaries"],
+    idealGenderMatch: "Men: Balanced Providers, Women: Adaptive Communicators",
+    nextBestGenderMatches: ["Men: Structured Leaders, Women: Independent Traditionalists"]
+  },
+  {
+    name: "Balanced Visionaries",
+    idealMatch: "Balanced Visionaries",
+    nextBestMatches: ["Flexible Faithful", "Harmonious Planners"],
+    idealGenderMatch: "Men: Balanced Providers, Women: Adaptive Communicators",
+    nextBestGenderMatches: ["Men: Faithful Protectors, Women: Relational Nurturers"]
+  },
+  // Female-specific profiles
+  {
+    name: "Relational Nurturers",
+    idealMatch: "Faithful Protectors",
+    nextBestMatches: ["Balanced Providers", "Structured Leaders"],
+    idealGenderMatch: "Women: Faithful Protectors (Male)",
+    nextBestGenderMatches: ["Women: Balanced Providers (Male)"]
+  },
+  {
+    name: "Adaptive Communicators",
+    idealMatch: "Balanced Providers",
+    nextBestMatches: ["Structured Leaders", "Faithful Protectors"],
+    idealGenderMatch: "Women: Balanced Providers (Male)",
+    nextBestGenderMatches: ["Women: Structured Leaders (Male)"]
+  },
+  {
+    name: "Independent Traditionalists",
+    idealMatch: "Structured Leaders",
+    nextBestMatches: ["Faithful Protectors", "Balanced Providers"],
+    idealGenderMatch: "Women: Structured Leaders (Male)",
+    nextBestGenderMatches: ["Women: Faithful Protectors (Male)"]
+  },
+  {
+    name: "Faith-Centered Homemakers",
+    idealMatch: "Faithful Protectors",
+    nextBestMatches: ["Structured Leaders", "Balanced Providers"],
+    idealGenderMatch: "Women: Faithful Protectors (Male)",
+    nextBestGenderMatches: ["Women: Structured Leaders (Male)"]
+  },
+  // Male-specific profiles
+  {
+    name: "Faithful Protectors",
+    idealMatch: "Faith-Centered Homemakers",
+    nextBestMatches: ["Relational Nurturers", "Independent Traditionalists"],
+    idealGenderMatch: "Men: Faith-Centered Homemakers (Female)",
+    nextBestGenderMatches: ["Men: Relational Nurturers (Female)"]
+  },
+  {
+    name: "Structured Leaders",
+    idealMatch: "Independent Traditionalists",
+    nextBestMatches: ["Faith-Centered Homemakers", "Relational Nurturers"],
+    idealGenderMatch: "Men: Independent Traditionalists (Female)",
+    nextBestGenderMatches: ["Men: Faith-Centered Homemakers (Female)"]
+  },
+  {
+    name: "Balanced Providers",
+    idealMatch: "Adaptive Communicators",
+    nextBestMatches: ["Relational Nurturers", "Independent Traditionalists"],
+    idealGenderMatch: "Men: Adaptive Communicators (Female)",
+    nextBestGenderMatches: ["Men: Relational Nurturers (Female)"]
+  }
+];
+
+/**
+ * Helper function to get matching information for a specific profile
+ */
+function getMatchingInfoForProfile(profileName: string): ProfileMatching | undefined {
+  return psychographicProfileMatches.find(p => p.name === profileName);
+}
+
 /**
  * Adds a comprehensive psychographic profiles reference section to the PDF
  * with better formatting to prevent text overrun
@@ -158,6 +272,32 @@ function addProfileWithBetterFormatting(doc: PDFKit.PDFDocument, profile: UserPr
          width: textWidth,
          align: 'left'
        });
+  }
+  
+  // Add top ideal matches information
+  doc.moveDown(0.3)
+     .fontSize(9)
+     .fillColor('#3182ce')
+     .font('Helvetica-Oblique');
+     
+  // Get profile match info from psychographicProfileMatches based on profile name
+  const matchingInfo = getMatchingInfoForProfile(profile.name);
+  
+  if (matchingInfo) {
+    // Add ideal match
+    doc.text(`Ideal match: ${matchingInfo.idealMatch || profile.name}`, textX, doc.y, {
+      width: textWidth,
+      align: 'left'
+    });
+    
+    // Add next best matches if available
+    if (matchingInfo.nextBestMatches && matchingInfo.nextBestMatches.length > 0) {
+      doc.moveDown(0.2)
+         .text(`Next best matches: ${matchingInfo.nextBestMatches.slice(0, 2).join(', ')}`, textX, doc.y, {
+           width: textWidth,
+           align: 'left'
+         });
+    }
   }
   
   // Add adequate spacing between profiles
