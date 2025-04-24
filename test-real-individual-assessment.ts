@@ -342,9 +342,9 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
         .moveDown(0.3)
         .fontSize(12)
         .font('Helvetica')
-        .text('Deepen your understanding with the bestselling book by Lawrence Adjah, available on Amazon and other retailers.', { width: 350 })
+        .text('If you do not already own the book, purchase your copy of the bestselling book, The 100 Marriage, so you (and a potential significant other) have the opportunity to go back through each question at your own pace.', { width: 450 })
         .moveDown(0.3)
-        .text('Purchase at: https://lawrenceadjah.com/the100marriagebook', { width: 350 });
+        .text('Purchase at: https://lawrenceadjah.com/the100marriagebook', { width: 450 });
 
       // Counseling information
       doc.moveDown(1.5)
@@ -370,7 +370,7 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
         .font('Helvetica')
         .text('The 100 Marriage psychographic profiles represent different relationship styles and tendencies. Below are brief descriptions of each profile for your reference.', { align: 'left', width: 500 });
       
-      // Border for the profiles box - increased height to 600 to fit all profiles
+      // Border for the profiles box with plenty of height
       const boxTop = doc.y + 20;
       doc.lineWidth(2)
         .strokeColor('#e83e8c') // Pink/red border
@@ -379,240 +379,151 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
         
       doc.y = boxTop + 15;
       
-      // Add profile 1 with icon
-      if (INCLUDE_PROFILE_ICONS && assessment.profile.iconPath) {
-        try {
-          // Use path.resolve to get the absolute path
-          const absolutePath = path.resolve(assessment.profile.iconPath);
-          console.log('Attempting to load profile icon from:', absolutePath);
-          doc.image(absolutePath, 50, doc.y, { width: 50 });
-        } catch (err) {
-          console.error('Error loading profile icon:', err);
+      // Define profiles and icon paths
+      const allProfiles = [
+        {
+          name: 'Steadfast Believers',
+          iconPath: './attached_assets/SB 1.png',
+          description: 'Steadfast Believers approach relationships with unwavering faith and commitment to traditional values. They prioritize spiritual connection and shared beliefs as the foundation for marriage. Their relationships are marked by loyalty, consistency, and dedication to shared faith principles.',
+          idealMatch: 'Steadfast Believers',
+          nextBestMatches: ['Harmonious Planners', 'Balanced Visionaries']
+        },
+        {
+          name: 'Harmonious Planners',
+          iconPath: './attached_assets/HP.png',
+          description: 'The Harmonious Planner approaches relationships with a focus on peace, harmony, and careful preparation. They value emotional security and invest in creating a stable home environment. They approach decisions methodically, weighing all sides before committing, and excel at creating a life of balance and intentional living.',
+          idealMatch: 'Harmonious Planners',
+          nextBestMatches: ['Steadfast Believers', 'Balanced Visionaries']
+        },
+        {
+          name: 'Flexible Faithful',
+          iconPath: './attached_assets/FF 3.png',
+          description: 'Flexible Faithful individuals balance unwavering core values with adaptability in changing circumstances. They maintain strong principles while being open to growth and new perspectives. This blend of stability and flexibility creates a foundation of trust while allowing space for partners to evolve together.',
+          idealMatch: 'Flexible Faithful',
+          nextBestMatches: ['Balanced Visionaries', 'Pragmatic Partners']
+        },
+        {
+          name: 'Relationship Navigator',
+          iconPath: './attached_assets/RN 7.png',
+          description: 'The Relationship Navigator has exceptional skills in guidance, direction, and emotional intelligence. They can sense relational dynamics and negotiate complex interpersonal situations with wisdom. They prioritize emotional connections and can adapt their approach to meet relationship needs effectively.',
+          idealMatch: 'Relationship Navigator',
+          nextBestMatches: ['Balanced Visionaries', 'Flexible Faithful']
         }
+      ];
+      
+      // Add the main profiles (user's and gender-specific) first
+      if (assessment.profile) {
+        addProfileToDoc(doc, assessment.profile, assessment.profile.iconPath);
       }
       
-      // Circle placeholder for profile icon
-      if (!INCLUDE_PROFILE_ICONS) {
-        const circleX = 75; // Center X of the circle
-        const circleY = doc.y + 25; // Center Y of the circle
-        const radius = 25;
-        
-        // Draw a colored circle as profile icon placeholder
-        doc.circle(circleX, circleY, radius)
-          .fillAndStroke('#3366cc', '#000000');
-        
-        // Add profile initial in the circle
-        doc.fillColor('white')
-          .fontSize(16)
-          .font('Helvetica-Bold')
-          .text(assessment.profile.name.charAt(0), 
-                circleX - 5, 
-                circleY - 8, 
-                { align: 'center' });
-          
-        // Reset position
-        doc.fillColor('black');
-      }
-      
-      doc.fontSize(14)
-        .font('Helvetica-Bold')
-        .fillColor('#3366cc')
-        .text(assessment.profile.name, 120, doc.y);
-        
-      doc.moveDown(0.3)
-        .fontSize(11)
-        .font('Helvetica')
-        .fillColor('black')
-        .text(assessment.profile.description, 120, doc.y, { width: 400 });
-      
-      // Add gender-specific profile with icon if available
       if (assessment.genderProfile) {
         doc.moveDown(2);
+        addProfileToDoc(doc, assessment.genderProfile, assessment.genderProfile.iconPath, true);
+      }
+      
+      // Add other profiles
+      for (const profile of allProfiles) {
+        // Skip if already added as main profile
+        if (assessment.profile?.name === profile.name || assessment.genderProfile?.name === profile.name) {
+          continue;
+        }
         
-        if (INCLUDE_PROFILE_ICONS && assessment.genderProfile.iconPath) {
-          try {
-            // Use path.resolve to get the absolute path
-            const absolutePath = path.resolve(assessment.genderProfile.iconPath);
-            console.log('Attempting to load gender profile icon from:', absolutePath);
-            doc.image(absolutePath, 50, doc.y, { width: 50 });
-          } catch (err) {
-            console.error('Error loading gender profile icon:', err);
+        doc.moveDown(2);
+        
+        // Add icon
+        try {
+          const iconPath = path.resolve(profile.iconPath);
+          if (fs.existsSync(iconPath)) {
+            doc.image(iconPath, 50, doc.y, { width: 40 });
           }
+        } catch (err) {
+          console.error(`Error loading ${profile.name} icon:`, err);
         }
         
-        // Circle placeholder for gender profile icon
-        if (!INCLUDE_PROFILE_ICONS) {
-          const circleX = 75; // Center X of the circle
-          const circleY = doc.y + 25; // Center Y of the circle
-          const radius = 25;
-          
-          // Draw a colored circle as profile icon placeholder
-          doc.circle(circleX, circleY, radius)
-            .fillAndStroke('#993399', '#000000');
-          
-          // Add profile initial in the circle
-          doc.fillColor('white')
-            .fontSize(16)
-            .font('Helvetica-Bold')
-            .text(assessment.genderProfile.name.charAt(0), 
-                  circleX - 5, 
-                  circleY - 8, 
-                  { align: 'center' });
-            
-          // Reset position
-          doc.fillColor('black');
-        }
-        
+        // Add profile name and description
         doc.fontSize(14)
           .font('Helvetica-Bold')
-          .fillColor('#993399')
-          .text(assessment.genderProfile.name, 120, doc.y);
+          .fillColor('#3366cc')
+          .text(profile.name, 120, doc.y);
           
         doc.moveDown(0.3)
           .fontSize(11)
           .font('Helvetica')
           .fillColor('black')
-          .text(assessment.genderProfile.description, 120, doc.y, { width: 400 });
-      }
-      
-      // Add a few more sample profiles
-      doc.moveDown(2);
-      
-      // Add Harmonious Planner icon
-      if (INCLUDE_PROFILE_ICONS) {
-        try {
-          const hpIconPath = path.resolve('./attached_assets/HP.png');
-          console.log('Attempting to load HP icon from:', hpIconPath);
-          doc.image(hpIconPath, 50, doc.y, { width: 50 });
-        } catch (err) {
-          console.error('Error loading HP icon:', err);
-        }
-      } else {
-        const circleX = 75; // Center X of the circle
-        const circleY = doc.y + 25; // Center Y of the circle
-        const radius = 25;
-        
-        // Draw a colored circle as profile icon placeholder
-        doc.circle(circleX, circleY, radius)
-          .fillAndStroke('#3366cc', '#000000');
-        
-        // Add profile initial
-        doc.fillColor('white')
-          .fontSize(16)
-          .font('Helvetica-Bold')
-          .text('HP', circleX - 10, circleY - 8, { align: 'center' });
+          .text(profile.description, 120, doc.y, { width: 400 });
           
-        // Reset position
+        // Add compatibility information
+        doc.moveDown(0.5)
+          .fontSize(11)
+          .fillColor('#3182ce')
+          .font('Helvetica-Oblique')
+          .text(`Ideal match: ${profile.idealMatch}`, 120, doc.y, {
+            width: 400,
+            align: 'left'
+          });
+          
+        if (profile.nextBestMatches && profile.nextBestMatches.length > 0) {
+          doc.moveDown(0.2)
+            .text(`Next best matches: ${profile.nextBestMatches.join(', ')}`, 120, doc.y, {
+              width: 400,
+              align: 'left'
+            });
+        }
+        
         doc.fillColor('black');
       }
-      
-      doc.fontSize(14)
-        .font('Helvetica-Bold')
-        .fillColor('#3366cc')
-        .text('Harmonious Planner', 120, doc.y);
-        
-      const plannerDesc = 'The Harmonious Planner approaches relationships with a focus on peace, harmony, and careful preparation. They value emotional security and invest in creating a stable home environment. They approach decisions methodically, weighing all sides before committing, and excel at creating a life of balance and intentional living.';
-      
-      doc.moveDown(0.3)
-        .fontSize(11)
-        .font('Helvetica')
-        .fillColor('black')
-        .text(plannerDesc, 120, doc.y, { width: 400 });
-      
-      doc.moveDown(2);
-      
-      // Add Relationship Navigator icon
-      if (INCLUDE_PROFILE_ICONS) {
-        try {
-          const rnIconPath = path.resolve('./attached_assets/RN 7.png');
-          console.log('Attempting to load RN icon from:', rnIconPath);
-          doc.image(rnIconPath, 50, doc.y, { width: 50 });
-        } catch (err) {
-          console.error('Error loading RN icon:', err);
-        }
-      } else {
-        const circleX = 75; // Center X of the circle
-        const circleY = doc.y + 25; // Center Y of the circle
-        const radius = 25;
-        
-        // Draw a colored circle as profile icon placeholder
-        doc.circle(circleX, circleY, radius)
-          .fillAndStroke('#3366cc', '#000000');
-        
-        // Add profile initial
-        doc.fillColor('white')
-          .fontSize(16)
-          .font('Helvetica-Bold')
-          .text('RN', circleX - 10, circleY - 8, { align: 'center' });
-          
-        // Reset position
-        doc.fillColor('black');
+
+// Helper function to add a profile with icon to the document
+function addProfileToDoc(doc: any, profile: any, iconPath: string | undefined, isGenderProfile = false) {
+  try {
+    // Add icon if available
+    if (iconPath) {
+      const resolvedPath = path.resolve(iconPath);
+      if (fs.existsSync(resolvedPath)) {
+        doc.image(resolvedPath, 50, doc.y, { width: 40 });
       }
+    }
+    
+    // Add profile name in appropriate color
+    doc.fontSize(14)
+      .font('Helvetica-Bold')
+      .fillColor(isGenderProfile ? '#993399' : '#3366cc')
+      .text(profile.name, 120, doc.y);
       
-      doc.fontSize(14)
-        .font('Helvetica-Bold')
-        .fillColor('#3366cc')
-        .text('Relationship Navigator', 120, doc.y);
-        
-      const navigatorDesc = 'The Relationship Navigator has exceptional skills in guidance, direction, and emotional intelligence. They can sense relational dynamics and negotiate complex interpersonal situations with wisdom. They prioritize emotional connections and can adapt their approach to meet relationship needs effectively.';
-        
-      doc.moveDown(0.3)
-        .fontSize(11)
-        .font('Helvetica')
-        .fillColor('black')
-        .text(navigatorDesc, 120, doc.y, { width: 400 });
+    // Add profile description
+    doc.moveDown(0.3)
+      .fontSize(11)
+      .font('Helvetica')
+      .fillColor('black')
+      .text(profile.description, 120, doc.y, { width: 400 });
       
-      // Add Flexible Faithful profile
-      doc.moveDown(2);
+    // Add compatibility information
+    doc.moveDown(0.5)
+      .fontSize(11)
+      .fillColor('#3182ce')
+      .font('Helvetica-Oblique')
+      .text(`Ideal match: ${profile.name}`, 120, doc.y, {
+        width: 400,
+        align: 'left'
+      });
       
-      if (INCLUDE_PROFILE_ICONS) {
-        try {
-          const ffIconPath = path.resolve('./attached_assets/FF 3.png');
-          console.log('Attempting to load FF icon from:', ffIconPath);
-          doc.image(ffIconPath, 50, doc.y, { width: 50 });
-        } catch (err) {
-          console.error('Error loading FF icon:', err);
-        }
-      }
+    // Add next best matches based on profile type
+    const nextMatches = isGenderProfile 
+      ? 'Flexible Faithful, Pragmatic Partners' 
+      : 'Harmonious Planners, Balanced Visionaries';
       
-      doc.fontSize(14)
-        .font('Helvetica-Bold')
-        .fillColor('#3366cc')
-        .text('Flexible Faithful', 120, doc.y);
-        
-      const ffDesc = 'Flexible Faithful individuals balance unwavering core values with adaptability in changing circumstances. They maintain strong principles while being open to growth and new perspectives. This blend of stability and flexibility creates a foundation of trust while allowing space for partners to evolve together.';
-      
-      doc.moveDown(0.3)
-        .fontSize(11)
-        .font('Helvetica')
-        .fillColor('black')
-        .text(ffDesc, 120, doc.y, { width: 400 });
-      
-      // Add Spiritual Builder profile
-      doc.moveDown(2);
-      
-      if (INCLUDE_PROFILE_ICONS) {
-        try {
-          const sbIconPath = path.resolve('./attached_assets/SB 1.png');
-          console.log('Attempting to load SB icon from:', sbIconPath);
-          doc.image(sbIconPath, 50, doc.y, { width: 50 });
-        } catch (err) {
-          console.error('Error loading SB icon:', err);
-        }
-      }
-      
-      doc.fontSize(14)
-        .font('Helvetica-Bold')
-        .fillColor('#3366cc')
-        .text('Spiritual Builder', 120, doc.y);
-        
-      const sbDesc = 'Spiritual Builders approach relationships with deep faith and purpose. They view marriage as a spiritual journey and prioritize shared values and growth. They excel at building meaningful connections grounded in spiritual principles and seek to create relationships that honor their faith commitments.';
-      
-      doc.moveDown(0.3)
-        .fontSize(11)
-        .font('Helvetica')
-        .fillColor('black')
-        .text(sbDesc, 120, doc.y, { width: 400 });
+    doc.moveDown(0.2)
+      .text(`Next best matches: ${nextMatches}`, 120, doc.y, {
+        width: 400,
+        align: 'left'
+      });
+    
+    // Reset text color
+    doc.fillColor('black');
+  } catch (err) {
+    console.error('Error adding profile:', err);
+  }
+}
       
       // Footer with contact information
       doc.fontSize(10)
