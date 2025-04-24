@@ -1,9 +1,13 @@
 import { useLocation, Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useState } from "react";
 
 export default function Home() {
   const [_, navigate] = useLocation();
+  const [showBaucomCitations, setShowBaucomCitations] = useState(false);
+  const [showFinkelCitations, setShowFinkelCitations] = useState(false);
+  const [showGottmanCitations, setShowGottmanCitations] = useState(false);
   
   const handleStartIndividualAssessment = () => {
     navigate('/assessment', { replace: true, state: { assessmentType: 'individual' } });
@@ -235,32 +239,48 @@ export default function Home() {
                 <h3 className="text-blue-800 font-semibold mb-2">Dr. Donald Baucom's Research</h3>
                 <p className="text-sm text-gray-600 mb-3">Demonstrates that shared expectations lead to greater relationship satisfaction and stability over time.</p>
                 
-                <div className="space-y-3 border-t border-blue-200 pt-3">
-                  <div>
-                    <p className="text-xs font-medium text-blue-800">Shared expectations lead to greater satisfaction and stability</p>
-                    <p className="text-xs text-gray-600 mt-1">Baucom, D. H., Baucom, B. R., & Christensen, A. (2015). Journal of Family Psychology, 29(2), 301–310.</p>
-                    <a 
-                      href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8186435/" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-xs text-blue-600 hover:underline inline-block mt-1"
-                    >
-                      View Publication
-                    </a>
-                  </div>
+                <div className="border-t border-blue-200 pt-3">
+                  <p className="text-xs font-medium text-blue-800">Shared expectations lead to greater satisfaction and stability</p>
+                  <p className="text-xs text-gray-600 mt-1">Baucom, D. H., Baucom, B. R., & Christensen, A. (2015). Journal of Family Psychology, 29(2), 301–310.</p>
+                  <a 
+                    href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8186435/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-xs text-blue-600 hover:underline inline-block mt-1"
+                  >
+                    View Publication
+                  </a>
                   
-                  <div className="border-t border-blue-100 pt-2 mt-2">
-                    <p className="text-xs font-medium text-blue-800">Cognitive-behavioral approach to marital therapy emphasizes expectations</p>
-                    <p className="text-xs text-gray-600 mt-1">Baucom, D. H., & Epstein, N. (1990). Cognitive-Behavioral Marital Therapy (1st ed.). Routledge.</p>
-                    <a 
-                      href="https://www.taylorfrancis.com/books/mono/10.4324/9780203776599/cognitive-behavioral-marital-therapy-donald-baucom-norman-epstein" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-xs text-blue-600 hover:underline inline-block mt-1"
+                  <button 
+                    onClick={() => setShowBaucomCitations(!showBaucomCitations)} 
+                    className="mt-3 text-xs text-blue-700 flex items-center"
+                  >
+                    {showBaucomCitations ? "Hide" : "View"} additional publication
+                    <svg 
+                      className={`ml-1 h-3 w-3 transition-transform ${showBaucomCitations ? "rotate-180" : ""}`} 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24" 
+                      xmlns="http://www.w3.org/2000/svg"
                     >
-                      View Publication
-                    </a>
-                  </div>
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                  </button>
+                  
+                  {showBaucomCitations && (
+                    <div className="border-t border-blue-100 pt-2 mt-2">
+                      <p className="text-xs font-medium text-blue-800">Cognitive-behavioral approach to marital therapy emphasizes expectations</p>
+                      <p className="text-xs text-gray-600 mt-1">Baucom, D. H., & Epstein, N. (1990). Cognitive-Behavioral Marital Therapy (1st ed.). Routledge.</p>
+                      <a 
+                        href="https://www.taylorfrancis.com/books/mono/10.4324/9780203776599/cognitive-behavioral-marital-therapy-donald-baucom-norman-epstein" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-xs text-blue-600 hover:underline inline-block mt-1"
+                      >
+                        View Publication
+                      </a>
+                    </div>
+                  )}
                 </div>
               </div>
               
@@ -268,19 +288,17 @@ export default function Home() {
                 <h3 className="text-blue-800 font-semibold mb-2">Eli Finkel's Studies</h3>
                 <p className="text-sm text-gray-600 mb-3">Emphasizes the importance of adjusting expectations to realistic relationship dynamics for long-term success.</p>
                 
-                <div className="space-y-3 border-t border-blue-200 pt-3">
-                  <div>
-                    <p className="text-xs font-medium text-blue-800">Adjusting expectations to realistic dynamics enhances long-term success</p>
-                    <p className="text-xs text-gray-600 mt-1">Finkel, E. J., et al. (2014). Psychological Inquiry, 25(1), 1–41.</p>
-                    <a 
-                      href="https://www.tandfonline.com/doi/abs/10.1080/1047840X.2014.863723" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-xs text-blue-600 hover:underline inline-block mt-1"
-                    >
-                      View Publication
-                    </a>
-                  </div>
+                <div className="border-t border-blue-200 pt-3">
+                  <p className="text-xs font-medium text-blue-800">Adjusting expectations to realistic dynamics enhances long-term success</p>
+                  <p className="text-xs text-gray-600 mt-1">Finkel, E. J., et al. (2014). Psychological Inquiry, 25(1), 1–41.</p>
+                  <a 
+                    href="https://www.tandfonline.com/doi/abs/10.1080/1047840X.2014.863723" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-xs text-blue-600 hover:underline inline-block mt-1"
+                  >
+                    View Publication
+                  </a>
                 </div>
               </div>
               
@@ -288,19 +306,17 @@ export default function Home() {
                 <h3 className="text-blue-800 font-semibold mb-2">The Gottman Institute</h3>
                 <p className="text-sm text-gray-600 mb-3">Highlights that effective communication and mutual respect are essential for managing expectations in marriage.</p>
                 
-                <div className="space-y-3 border-t border-blue-200 pt-3">
-                  <div>
-                    <p className="text-xs font-medium text-blue-800">Effective communication and mutual respect manage expectations for stability</p>
-                    <p className="text-xs text-gray-600 mt-1">Gottman, J. M., & Silver, N. (1999). The Seven Principles for Making Marriage Work. Crown Publishing Group.</p>
-                    <a 
-                      href="https://www.amazon.com/Seven-Principles-Making-Marriage-Work/dp/0553447718" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-xs text-blue-600 hover:underline inline-block mt-1"
-                    >
-                      View Publication
-                    </a>
-                  </div>
+                <div className="border-t border-blue-200 pt-3">
+                  <p className="text-xs font-medium text-blue-800">Effective communication and mutual respect manage expectations for stability</p>
+                  <p className="text-xs text-gray-600 mt-1">Gottman, J. M., & Silver, N. (1999). The Seven Principles for Making Marriage Work. Crown Publishing Group.</p>
+                  <a 
+                    href="https://www.amazon.com/Seven-Principles-Making-Marriage-Work/dp/0553447718" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-xs text-blue-600 hover:underline inline-block mt-1"
+                  >
+                    View Publication
+                  </a>
                 </div>
               </div>
             </div>
