@@ -233,15 +233,75 @@ export default function Home() {
             <div className="grid md:grid-cols-3 gap-6 mt-6">
               <div className="bg-blue-50 p-4 rounded-md">
                 <h3 className="text-blue-800 font-semibold mb-2">Dr. Donald Baucom's Research</h3>
-                <p className="text-sm text-gray-600">Demonstrates that shared expectations lead to greater relationship satisfaction and stability over time.</p>
+                <p className="text-sm text-gray-600 mb-3">Demonstrates that shared expectations lead to greater relationship satisfaction and stability over time.</p>
+                
+                <div className="space-y-3 border-t border-blue-200 pt-3">
+                  <div>
+                    <p className="text-xs font-medium text-blue-800">Shared expectations lead to greater satisfaction and stability</p>
+                    <p className="text-xs text-gray-600 mt-1">Baucom, D. H., Baucom, B. R., & Christensen, A. (2015). Journal of Family Psychology, 29(2), 301–310.</p>
+                    <a 
+                      href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8186435/" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-xs text-blue-600 hover:underline inline-block mt-1"
+                    >
+                      View Publication
+                    </a>
+                  </div>
+                  
+                  <div className="border-t border-blue-100 pt-2 mt-2">
+                    <p className="text-xs font-medium text-blue-800">Cognitive-behavioral approach to marital therapy emphasizes expectations</p>
+                    <p className="text-xs text-gray-600 mt-1">Baucom, D. H., & Epstein, N. (1990). Cognitive-Behavioral Marital Therapy (1st ed.). Routledge.</p>
+                    <a 
+                      href="https://www.taylorfrancis.com/books/mono/10.4324/9780203776599/cognitive-behavioral-marital-therapy-donald-baucom-norman-epstein" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-xs text-blue-600 hover:underline inline-block mt-1"
+                    >
+                      View Publication
+                    </a>
+                  </div>
+                </div>
               </div>
+              
               <div className="bg-blue-50 p-4 rounded-md">
                 <h3 className="text-blue-800 font-semibold mb-2">Eli Finkel's Studies</h3>
-                <p className="text-sm text-gray-600">Emphasizes the importance of adjusting expectations to realistic relationship dynamics for long-term success.</p>
+                <p className="text-sm text-gray-600 mb-3">Emphasizes the importance of adjusting expectations to realistic relationship dynamics for long-term success.</p>
+                
+                <div className="space-y-3 border-t border-blue-200 pt-3">
+                  <div>
+                    <p className="text-xs font-medium text-blue-800">Adjusting expectations to realistic dynamics enhances long-term success</p>
+                    <p className="text-xs text-gray-600 mt-1">Finkel, E. J., et al. (2014). Psychological Inquiry, 25(1), 1–41.</p>
+                    <a 
+                      href="https://www.tandfonline.com/doi/abs/10.1080/1047840X.2014.863723" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-xs text-blue-600 hover:underline inline-block mt-1"
+                    >
+                      View Publication
+                    </a>
+                  </div>
+                </div>
               </div>
+              
               <div className="bg-blue-50 p-4 rounded-md">
                 <h3 className="text-blue-800 font-semibold mb-2">The Gottman Institute</h3>
-                <p className="text-sm text-gray-600">Highlights that effective communication and mutual respect are essential for managing expectations in marriage.</p>
+                <p className="text-sm text-gray-600 mb-3">Highlights that effective communication and mutual respect are essential for managing expectations in marriage.</p>
+                
+                <div className="space-y-3 border-t border-blue-200 pt-3">
+                  <div>
+                    <p className="text-xs font-medium text-blue-800">Effective communication and mutual respect manage expectations for stability</p>
+                    <p className="text-xs text-gray-600 mt-1">Gottman, J. M., & Silver, N. (1999). The Seven Principles for Making Marriage Work. Crown Publishing Group.</p>
+                    <a 
+                      href="https://www.amazon.com/Seven-Principles-Making-Marriage-Work/dp/0553447718" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-xs text-blue-600 hover:underline inline-block mt-1"
+                    >
+                      View Publication
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
             <p className="text-gray-700 mt-6">
