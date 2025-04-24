@@ -8,6 +8,7 @@ export default function Home() {
   const [showBaucomCitations, setShowBaucomCitations] = useState(false);
   const [showFinkelCitations, setShowFinkelCitations] = useState(false);
   const [showGottmanCitations, setShowGottmanCitations] = useState(false);
+  const [showDetailedResearch, setShowDetailedResearch] = useState(false);
   
   const handleStartIndividualAssessment = () => {
     navigate('/assessment', { replace: true, state: { assessmentType: 'individual' } });
@@ -321,8 +322,78 @@ export default function Home() {
               </div>
             </div>
             <p className="text-gray-700 mt-6">
-              Whether you're a Steadfast Believer seeking spiritual alignment or a Pragmatic Partner focused on practical compatibility, our assessment helps you understand your expectations and build a stronger future, backed by science and wisdom.
+              <h3 className="text-xl font-bold text-blue-900 mb-3">
+                What this Research Proves About "The 100 Marriage" Book + Assessment:
+              </h3>
+              These findings support the assessment's focus on aligning expectations, particularly in faith, communication, and practical areas, to enhance marriage outcomes. Baucom's work suggests that setting high, realistic expectations can improve treatment within relationships, Finkel's research supports adapting expectations for long-term harmony, and Gottman's insights underscore the role of communication in managing expectations, all of which align with the assessment's goals for users seeking compatibility and growth.
             </p>
+            
+            <div className="mt-4 border border-blue-100 rounded-md overflow-hidden">
+              <button 
+                onClick={() => setShowDetailedResearch(!showDetailedResearch)}
+                className="w-full py-3 px-4 bg-blue-50 hover:bg-blue-100 text-left text-blue-800 font-medium flex justify-between items-center"
+              >
+                <span>View Detailed Research Analysis</span>
+                <svg 
+                  className={`h-5 w-5 transition-transform ${showDetailedResearch ? "rotate-180" : ""}`} 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24" 
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </button>
+              
+              {showDetailedResearch && (
+                <div className="p-4 bg-white text-sm">
+                  <div className="mb-6">
+                    <h4 className="font-bold text-blue-800 mb-2">Dr. Donald Baucom's Research: Shared Expectations and Satisfaction</h4>
+                    <p className="text-gray-700 mb-3">
+                      Dr. Donald H. Baucom, a professor at the University of North Carolina, has extensively studied marital expectations, particularly how they shape relationship dynamics. His research, conducted over a decade at the University of North Carolina's Couples Lab, suggests that individuals tend to experience outcomes in their relationships that align with their expectations.
+                    </p>
+                    <p className="text-gray-700 mb-3">
+                      A key study supporting this is Baucom's work with Christensen, which examines how expectations influence communication and satisfaction. The study found that couples with aligned expectations, particularly in areas like kindness and respect, report higher marital adjustment and lower conflict, reinforcing the idea that shared expectations are crucial for relationship health.
+                    </p>
+                    <p className="text-gray-600 text-xs italic mb-2">
+                      Citation: Baucom, D. H., Baucom, B. R., & Christensen, A. (2015). Observational studies of couple interaction: Challenges and opportunities. Journal of Family Psychology, 29(2), 301–310. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8186435/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">View Publication</a>
+                    </p>
+                    <p className="text-gray-700 mb-3">
+                      Another relevant work is Baucom's collaboration with Epstein, where they discuss cognitive-behavioral approaches to marital therapy, emphasizing how expectations shape interaction patterns. This book provides a framework for understanding how shared expectations can lead to more constructive communication, enhancing stability over time.
+                    </p>
+                    <p className="text-gray-600 text-xs italic mb-2">
+                      Citation: Baucom, D. H., & Epstein, N. (1990). Cognitive-Behavioral Marital Therapy (1st ed.). Routledge. <a href="https://www.taylorfrancis.com/books/mono/10.4324/9780203776599/cognitive-behavioral-marital-therapy-donald-baucom-norman-epstein" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">View Publication</a>
+                    </p>
+                  </div>
+                  
+                  <div className="mb-6">
+                    <h4 className="font-bold text-blue-800 mb-2">Eli Finkel's Studies: Adjusting Expectations for Long-Term Success</h4>
+                    <p className="text-gray-700 mb-3">
+                      Eli Finkel, a social psychologist, focuses on how expectations influence long-term relationship dynamics, particularly emphasizing the need to adjust them to realistic levels for sustained success. His research, notably in "The All-or-Nothing Marriage," argues that modern couples face higher expectations due to societal changes, and recalibrating these to match realistic dynamics can reduce dissatisfaction and enhance longevity.
+                    </p>
+                    <p className="text-gray-700 mb-3">
+                      Finkel's study on marital expectations highlights that couples who adapt their expectations—balancing individual needs with partnership demands—experience lower conflict and higher satisfaction over time. This aligns with the assessment's approach, as it underscores the importance of adjusting expectations for long-term marital success.
+                    </p>
+                    <p className="text-gray-600 text-xs italic mb-2">
+                      Citation: Finkel, E. J., Hui, C. M., Carswell, K. L., & Larson, G. M. (2014). The suffocation of marriage: Climbing Mount Maslow without enough oxygen. Psychological Inquiry, 25(1), 1–41. <a href="https://www.tandfonline.com/doi/abs/10.1080/1047840X.2014.863723" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">View Publication</a>
+                    </p>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-bold text-blue-800 mb-2">The Gottman Institute: Communication and Mutual Respect</h4>
+                    <p className="text-gray-700 mb-3">
+                      The Gottman Institute, founded by Dr. John Gottman, is renowned for its research on marital stability, emphasizing effective communication and mutual respect as essential for managing expectations. Their studies, such as "The Seven Principles for Making Marriage Work," highlight that couples who communicate openly about expectations—such as kindness, respect, and loyalty—manage conflicts better, leading to stronger, more stable marriages.
+                    </p>
+                    <p className="text-gray-700 mb-3">
+                      Gottman's observational research shows that couples who maintain high expectations for respectful treatment, supported by effective communication, experience enhanced relationship quality. This supports the assessment's approach, as it underscores how managing expectations through communication is vital for marriage success.
+                    </p>
+                    <p className="text-gray-600 text-xs italic mb-2">
+                      Citation: Gottman, J. M., & Silver, N. (1999). The Seven Principles for Making Marriage Work. Crown Publishing Group. <a href="https://www.amazon.com/Seven-Principles-Making-Marriage-Work/dp/0553447718" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">View Publication</a>
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </section>
