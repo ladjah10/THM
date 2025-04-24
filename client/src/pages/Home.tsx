@@ -92,7 +92,7 @@ export default function Home() {
           </div>
           <div className="rounded-lg overflow-hidden shadow-xl">
             <img 
-              src="/couple-hero.jpg" 
+              src="/couple-hero-new.jpg" 
               alt="Happy couple embracing on the beach" 
               className="w-full h-auto object-cover rounded-lg"
             />
