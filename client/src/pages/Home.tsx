@@ -321,12 +321,14 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <p className="text-gray-700 mt-6">
+            <div className="mt-6">
               <h3 className="text-xl font-bold text-blue-900 mb-3">
                 What this Research Proves About "The 100 Marriage" Book + Assessment:
               </h3>
-              These findings support the assessment's focus on aligning expectations, particularly in faith, communication, and practical areas, to enhance marriage outcomes. Baucom's work suggests that setting high, realistic expectations can improve treatment within relationships, Finkel's research supports adapting expectations for long-term harmony, and Gottman's insights underscore the role of communication in managing expectations, all of which align with the assessment's goals for users seeking compatibility and growth.
-            </p>
+              <p className="text-gray-700">
+                These findings support the assessment's focus on aligning expectations, particularly in faith, communication, and practical areas, to enhance marriage outcomes. Baucom's work suggests that setting high, realistic expectations can improve treatment within relationships, Finkel's research supports adapting expectations for long-term harmony, and Gottman's insights underscore the role of communication in managing expectations, all of which align with the assessment's goals for users seeking compatibility and growth.
+              </p>
+            </div>
             
             <div className="mt-4 border border-blue-100 rounded-md overflow-hidden">
               <button 
