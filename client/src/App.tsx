@@ -13,6 +13,7 @@ import AssessmentTest from "@/pages/AssessmentTest";
 import ViewSamplePDF from "@/pages/ViewSamplePDF";
 import SampleCoupleAssessment from "@/pages/SampleCoupleAssessment";
 import IndividualAssessmentOnScreen from "@/pages/IndividualAssessmentOnScreen";
+import ViewAssessmentReports from "@/pages/ViewAssessmentReports";
 
 function Router() {
   return (
@@ -31,6 +32,7 @@ function Router() {
         window.location.href = "/realistic-couple-assessment.html";
         return null;
       }} />
+      <Route path="/view-reports" component={ViewAssessmentReports} />
       <Route component={NotFound} />
     </Switch>
   );
