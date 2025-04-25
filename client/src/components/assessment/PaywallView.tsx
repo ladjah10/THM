@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
@@ -46,6 +47,29 @@ export default function PaywallView({
 
   return (
     <div className="min-h-[70vh] flex flex-col items-center justify-center">
+      {/* Navigation Links */}
+      <div className="w-full max-w-lg mb-4 p-2 bg-white rounded-md shadow-sm flex justify-center space-x-8">
+        <Link href="/">
+          <span className="text-gray-700 hover:text-blue-700 font-medium cursor-pointer">Home</span>
+        </Link>
+        <a 
+          href="https://lawrenceadjah.com/about" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-gray-700 hover:text-blue-700 font-medium"
+        >
+          About
+        </a>
+        <a 
+          href="https://lawrenceadjah.com/the100marriagebook" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-gray-700 hover:text-blue-700 font-medium"
+        >
+          Purchase Book
+        </a>
+      </div>
+      
       <Card className="w-full max-w-lg border-primary-200 shadow-lg">
         <CardHeader className="text-center pb-6 bg-gradient-to-b from-blue-50 to-white">
           <CardTitle className="text-2xl text-blue-900">The 100 Marriage Assessment - Series 1</CardTitle>
