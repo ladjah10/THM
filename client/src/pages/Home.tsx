@@ -54,6 +54,9 @@ export default function Home() {
             >
               Purchase Book
             </a>
+            <Link href="/invite">
+              <span className="text-amber-600 hover:text-amber-500 font-medium cursor-pointer">Invite Friends</span>
+            </Link>
           </div>
           <div className="md:hidden">
             <button className="text-gray-700 hover:text-blue-700">

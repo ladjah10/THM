@@ -14,6 +14,7 @@ import ViewSamplePDF from "@/pages/ViewSamplePDF";
 import SampleCoupleAssessment from "@/pages/SampleCoupleAssessment";
 import IndividualAssessmentOnScreen from "@/pages/IndividualAssessmentOnScreen";
 import ViewAssessmentReports from "@/pages/ViewAssessmentReports";
+import InviteFriends from "@/pages/InviteFriends";
 
 function Router() {
   return (
@@ -33,6 +34,7 @@ function Router() {
         return null;
       }} />
       <Route path="/view-reports" component={ViewAssessmentReports} />
+      <Route path="/invite" component={InviteFriends} />
       <Route component={NotFound} />
     </Switch>
   );

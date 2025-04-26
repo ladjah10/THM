@@ -48,7 +48,7 @@ export default function PaywallView({
   return (
     <div className="min-h-[70vh] flex flex-col items-center justify-center">
       {/* Navigation Links */}
-      <div className="w-full max-w-lg mb-4 p-2 bg-white rounded-md shadow-sm flex justify-center space-x-8">
+      <div className="w-full max-w-lg mb-4 p-2 bg-white rounded-md shadow-sm flex justify-center space-x-6">
         <Link href="/">
           <span className="text-gray-700 hover:text-blue-700 font-medium cursor-pointer">Home</span>
         </Link>
@@ -68,6 +68,9 @@ export default function PaywallView({
         >
           Purchase Book
         </a>
+        <Link href="/invite">
+          <span className="text-amber-600 hover:text-amber-500 font-medium cursor-pointer">Invite Friends</span>
+        </Link>
       </div>
       
       <Card className="w-full max-w-lg border-primary-200 shadow-lg">
