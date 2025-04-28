@@ -338,6 +338,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Admin API to fetch all referrals/invitations
+  app.get('/api/admin/referrals', async (req: Request, res: Response) => {
+    try {
+      // In a real application, this endpoint would have proper authentication
+      const referrals = await storage.getAllReferrals();
+      
+      // Return the referrals
+      return res.status(200).json(referrals);
+    } catch (error) {
+      console.error("Error fetching referrals:", error);
+      return res.status(500).json({ 
+        success: false,
+        message: "Failed to fetch referrals"
+      });
+    }
+  });
+  
   // API to register a couple assessment early (before assessments are completed)
   app.post('/api/couple-assessment/register-early', async (req: Request, res: Response) => {
     try {
@@ -703,6 +720,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
           })
         );
       }
+      
+      // Wait for all referrals to be stored
+      await Promise.all(referralStorePromises);
       
       // Wait for all emails to be sent
       const emailResults = await Promise.all(emailPromises);

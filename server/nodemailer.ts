@@ -11,6 +11,7 @@ interface ReferralEmailData {
   referrerName: string;
   referrerEmail: string;
   recipientName: string;
+  promoCode?: string;
 }
 
 // Interface for couple invitation email data
@@ -273,7 +274,7 @@ function formatReferralEmail(data: ReferralEmailData): string {
         <div class="section" style="text-align: center;">
           <p>The assessment normally costs $49, but as an invited guest, you'll receive a special discount:</p>
           <h3 style="color: #e67e22; font-size: 24px;">Your Special Invitation Price: $39</h3>
-          <p>Use code <strong>INVITED10</strong> at checkout</p>
+          <p>Use code <strong>${data.promoCode || 'INVITED10'}</strong> at checkout</p>
           <a href="https://100marriage.com/assessment" class="cta-button">Take The Assessment Now</a>
           <p style="font-size: 14px; color: #7f8c8d; margin-top: 15px;">
             <strong>Couples Tip:</strong> Both you and your significant other can take your individual assessments and compare results to strengthen your relationship. Higher matching percentages indicate better alignment in your expectations!
