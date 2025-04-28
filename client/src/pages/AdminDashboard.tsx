@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import type { AssessmentScores, UserProfile, DemographicData, AssessmentResult, SectionScore } from "@/types/assessment";
+import type { ReferralData } from "@shared/schema";
 import {
   Dialog,
   DialogContent,
@@ -89,6 +90,7 @@ export default function AdminDashboard() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [referralSearchTerm, setReferralSearchTerm] = useState("");
   const [filterGender, setFilterGender] = useState<"all" | "male" | "female">("all");
   const [selectedAssessment, setSelectedAssessment] = useState<AssessmentResult | null>(null);
   const [detailModalOpen, setDetailModalOpen] = useState(false);
@@ -111,6 +113,24 @@ export default function AdminDashboard() {
     enabled: isAuthenticated,
   });
   
+  // Query to fetch referrals
+  const { data: referrals, isLoading: isLoadingReferrals, error: referralsError } = useQuery<ReferralData[]>({
+    queryKey: ['/api/admin/referrals'],
+    queryFn: async () => {
+      // Only fetch if authenticated
+      if (!isAuthenticated) return [];
+      
+      const response = await apiRequest("GET", "/api/admin/referrals");
+      
+      if (!response.ok) {
+        throw new Error("Failed to fetch referrals");
+      }
+      
+      return response.json();
+    },
+    enabled: isAuthenticated,
+  });
+  
   // Filter assessments by search term
   const filteredAssessments = assessments?.filter(assessment => {
     if (!searchTerm) return true;
@@ -121,6 +141,20 @@ export default function AdminDashboard() {
       assessment.email.toLowerCase().includes(searchLower) ||
       assessment.demographics.gender.toLowerCase().includes(searchLower) ||
       assessment.profile.name.toLowerCase().includes(searchLower)
+    );
+  });
+  
+  // Filter referrals by search term
+  const filteredReferrals = referrals?.filter(referral => {
+    if (!referralSearchTerm) return true;
+    
+    const searchLower = referralSearchTerm.toLowerCase();
+    return (
+      referral.referrerName.toLowerCase().includes(searchLower) ||
+      referral.referrerEmail.toLowerCase().includes(searchLower) ||
+      referral.invitedName.toLowerCase().includes(searchLower) ||
+      referral.invitedEmail.toLowerCase().includes(searchLower) ||
+      (referral.promoCode && referral.promoCode.toLowerCase().includes(searchLower))
     );
   });
   
