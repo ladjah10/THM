@@ -183,7 +183,16 @@ export default function AdminDashboard() {
     averageScore: assessments && assessments.length > 0 
       ? assessments.reduce((sum, assessment) => sum + assessment.scores.overallPercentage, 0) / assessments.length 
       : 0,
-    profileDistribution: {} as Record<string, number>
+    profileDistribution: {} as Record<string, number>,
+    referralsStats: {
+      total: referrals?.length || 0,
+      completed: referrals?.filter(r => r.status === 'completed').length || 0,
+      pending: referrals?.filter(r => r.status === 'sent').length || 0,
+      expired: referrals?.filter(r => r.status === 'expired').length || 0,
+      completionRate: referrals && referrals.length > 0
+        ? (referrals.filter(r => r.status === 'completed').length / referrals.length) * 100
+        : 0
+    }
   };
   
   // Count profiles
@@ -359,8 +368,8 @@ export default function AdminDashboard() {
     );
   };
 
-  // Handle CSV export
-  const handleExportCSV = () => {
+  // Handle Assessment CSV export
+  const handleExportAssessmentsCSV = () => {
     if (!assessments?.length) return;
     
     // Define CSV columns
@@ -408,6 +417,57 @@ export default function AdminDashboard() {
     const link = document.createElement('a');
     link.setAttribute('href', url);
     link.setAttribute('download', `100-marriage-assessments-${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+  
+  // Handle Referrals CSV export
+  const handleExportReferralsCSV = () => {
+    if (!referrals?.length) return;
+    
+    // Define CSV columns
+    const headers = [
+      "Referrer Name",
+      "Referrer Email",
+      "Invited Person",
+      "Invited Email",
+      "Date Sent",
+      "Status",
+      "Promo Code",
+      "Completion Date"
+    ];
+    
+    // Convert referral data to CSV rows
+    const rows = referrals.map(referral => [
+      referral.referrerName,
+      referral.referrerEmail,
+      referral.invitedName,
+      referral.invitedEmail,
+      referral.timestamp ? new Date(referral.timestamp).toISOString().split('T')[0] : '',
+      referral.status,
+      referral.promoCode || 'N/A',
+      referral.completedTimestamp ? new Date(referral.completedTimestamp).toISOString().split('T')[0] : 'N/A'
+    ]);
+    
+    // Add headers to beginning of rows
+    rows.unshift(headers);
+    
+    // Convert to CSV content
+    const csvContent = rows.map(row => row.map(cell => 
+      // Escape quotes and wrap in quotes if contains comma or quote
+      typeof cell === 'string' && (cell.includes(',') || cell.includes('"')) 
+        ? `"${cell.replace(/"/g, '""')}"` 
+        : cell
+    ).join(',')).join('\n');
+    
+    // Create a download link
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `100-marriage-referrals-${new Date().toISOString().split('T')[0]}.csv`);
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
@@ -467,11 +527,12 @@ export default function AdminDashboard() {
           <TabsList>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="assessments">Assessment Results</TabsTrigger>
+            <TabsTrigger value="referrals">Invitations & Referrals</TabsTrigger>
             <TabsTrigger value="matching">THM Pool Matching</TabsTrigger>
           </TabsList>
           
           <TabsContent value="analytics" className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <Card>
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm font-medium text-gray-500">Total Assessments</CardTitle>
@@ -502,6 +563,30 @@ export default function AdminDashboard() {
                   <div>
                     <div className="text-sm text-gray-500">Female</div>
                     <div className="text-2xl font-bold">{analytics.genderDistribution.female}</div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium text-gray-500">Referrals</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex justify-between items-center">
+                      <div className="text-sm text-gray-500">Total Invitations</div>
+                      <div className="text-lg font-semibold">{analytics.referralsStats.total}</div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div className="text-sm text-gray-500">Completed</div>
+                      <div className="text-lg font-semibold text-green-600">{analytics.referralsStats.completed}</div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div className="text-sm text-gray-500">Completion Rate</div>
+                      <div className="text-lg font-semibold">
+                        {analytics.referralsStats.completionRate.toFixed(1)}%
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -542,7 +627,7 @@ export default function AdminDashboard() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={handleExportCSV}
+                    onClick={handleExportAssessmentsCSV}
                     disabled={!assessments?.length}
                     className="whitespace-nowrap"
                   >
@@ -617,6 +702,105 @@ export default function AdminDashboard() {
               )}
             </div>
           </TabsContent>
+          <TabsContent value="referrals" className="space-y-4">
+            <div className="bg-white p-4 rounded-lg shadow-sm">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+                <h2 className="text-lg font-medium">Invitations & Referrals</h2>
+                
+                <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleExportReferralsCSV}
+                    disabled={!referrals?.length}
+                    className="whitespace-nowrap"
+                  >
+                    Export CSV
+                  </Button>
+                  
+                  <Input 
+                    placeholder="Search referrals..." 
+                    value={referralSearchTerm}
+                    onChange={(e) => setReferralSearchTerm(e.target.value)}
+                    className="w-full sm:w-64"
+                  />
+                </div>
+              </div>
+              
+              {isLoadingReferrals ? (
+                <div className="flex justify-center py-8">
+                  <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
+                </div>
+              ) : referralsError ? (
+                <div className="text-center py-8 text-red-500">
+                  Error loading referral data
+                </div>
+              ) : (
+                <div className="overflow-auto">
+                  <Table>
+                    <TableCaption>A list of all invitations and referrals</TableCaption>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Referrer</TableHead>
+                        <TableHead>Invited Person</TableHead>
+                        <TableHead>Invited Email</TableHead>
+                        <TableHead>Date Sent</TableHead>
+                        <TableHead>Promo Code</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Completion Date</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredReferrals?.length ? (
+                        filteredReferrals.map((referral) => (
+                          <TableRow key={referral.id}>
+                            <TableCell className="font-medium">
+                              {referral.referrerName}
+                              <div className="text-xs text-gray-500">{referral.referrerEmail}</div>
+                            </TableCell>
+                            <TableCell>{referral.invitedName}</TableCell>
+                            <TableCell>{referral.invitedEmail}</TableCell>
+                            <TableCell>{formatDate(referral.timestamp)}</TableCell>
+                            <TableCell>
+                              {referral.promoCode ? (
+                                <Badge variant="outline">{referral.promoCode}</Badge>
+                              ) : (
+                                <span className="text-gray-400">-</span>
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              <Badge 
+                                variant={
+                                  referral.status === 'completed' ? 'default' : 
+                                  referral.status === 'sent' ? 'outline' : 'secondary'
+                                }
+                              >
+                                {referral.status}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              {referral.completedTimestamp ? (
+                                formatDate(referral.completedTimestamp)
+                              ) : (
+                                <span className="text-gray-400">-</span>
+                              )}
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell colSpan={7} className="text-center py-8 text-gray-500">
+                            No referrals found
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </div>
+          </TabsContent>
+          
           <TabsContent value="matching" className="space-y-4">
             <div className="bg-white p-4 rounded-lg shadow-sm">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
