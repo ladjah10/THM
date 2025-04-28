@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, jsonb, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -124,4 +124,17 @@ export interface CoupleAssessmentReport {
   spouseAssessment: AssessmentResult;
   differenceAnalysis: DifferenceAnalysis;
   overallCompatibility: number;
+}
+
+// Interface for invitation/referral tracking
+export interface ReferralData {
+  id: string;
+  referrerName: string;
+  referrerEmail: string;
+  invitedName: string;
+  invitedEmail: string;
+  timestamp: string;
+  status: 'sent' | 'completed' | 'expired';
+  promoCode?: string;
+  completedTimestamp?: string;
 }

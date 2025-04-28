@@ -1,5 +1,5 @@
 import { users, type User, type InsertUser } from "@shared/schema";
-import { AssessmentResult, CoupleAssessmentReport } from "@shared/schema";
+import { AssessmentResult, CoupleAssessmentReport, ReferralData } from "@shared/schema";
 
 // modify the interface with any CRUD methods
 // you might need
@@ -17,18 +17,25 @@ export interface IStorage {
   getSpouseAssessment(coupleId: string, role: 'primary' | 'spouse'): Promise<AssessmentResult | null>;
   getCoupleAssessment(coupleId: string): Promise<CoupleAssessmentReport | null>;
   getAllCoupleAssessments(): Promise<CoupleAssessmentReport[]>;
+  
+  // Referral methods
+  saveReferral(referral: ReferralData): Promise<void>;
+  getAllReferrals(): Promise<ReferralData[]>;
+  updateReferralStatus(id: string, status: 'sent' | 'completed' | 'expired', completedTimestamp?: string): Promise<void>;
 }
 
 export class MemStorage implements IStorage {
   private users: Map<number, User>;
   private assessments: AssessmentResult[];
   private coupleAssessments: Map<string, CoupleAssessmentReport>;
+  private referrals: ReferralData[];
   currentId: number;
 
   constructor() {
     this.users = new Map();
     this.assessments = [];
     this.coupleAssessments = new Map();
+    this.referrals = [];
     this.currentId = 1;
   }
 
@@ -141,6 +148,38 @@ export class MemStorage implements IStorage {
     
     // Filter out null values and return
     return coupleAssessments.filter((report): report is CoupleAssessmentReport => report !== null);
+  }
+  
+  // Referral methods
+  async saveReferral(referral: ReferralData): Promise<void> {
+    // Check if referral already exists
+    const existingIndex = this.referrals.findIndex(r => 
+      r.id === referral.id
+    );
+    
+    if (existingIndex >= 0) {
+      // Update existing referral
+      this.referrals[existingIndex] = referral;
+    } else {
+      // Add new referral
+      this.referrals.push(referral);
+    }
+  }
+  
+  async getAllReferrals(): Promise<ReferralData[]> {
+    return [...this.referrals];
+  }
+  
+  async updateReferralStatus(id: string, status: 'sent' | 'completed' | 'expired', completedTimestamp?: string): Promise<void> {
+    const referralIndex = this.referrals.findIndex(r => r.id === id);
+    
+    if (referralIndex >= 0) {
+      this.referrals[referralIndex] = {
+        ...this.referrals[referralIndex],
+        status,
+        completedTimestamp: completedTimestamp || this.referrals[referralIndex].completedTimestamp
+      };
+    }
   }
 }
 

@@ -656,12 +656,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // 2. Are these emails on a spam/throwaway email domain blacklist?
       // 3. Is the referrer attempting to abuse the system with multiple referrals?
       
-      // In a production system, we would:
-      // 1. Store the referrals in a database
-      // 2. Send emails to each contact
-      // 3. Apply the $10 discount to the referrer
-      
-      // For this demo, we'll just simulate the process
+      // Store the referrals in the database and send emails
       
       // Log the referral information
       console.log("Referral received:", {
@@ -669,10 +664,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
         contacts: contacts.map(c => `${c.firstName} ${c.lastName} (${c.email})`)
       });
       
+      // Generate promo code for referrals
+      const promoCode = `INVITED10_${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+      
       // Send emails to contacts
       const emailPromises = [];
+      const referralStorePromises = [];
+      
       for (const contact of contacts) {
         console.log(`Sending invitation email to ${contact.email}...`);
+        
+        // Generate unique ID for this referral
+        const referralId = `ref_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+        
+        // Store the referral data
+        const referralData = {
+          id: referralId,
+          referrerName: `${referrer.firstName} ${referrer.lastName}`,
+          referrerEmail: referrer.email,
+          invitedName: `${contact.firstName} ${contact.lastName}`,
+          invitedEmail: contact.email,
+          timestamp: new Date().toISOString(),
+          status: 'sent' as const,
+          promoCode
+        };
+        
+        // Add to storage
+        referralStorePromises.push(storage.saveReferral(referralData));
         
         // Queue up email sending promises
         emailPromises.push(
@@ -680,7 +698,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
             to: contact.email,
             referrerName: `${referrer.firstName} ${referrer.lastName}`,
             referrerEmail: referrer.email,
-            recipientName: `${contact.firstName} ${contact.lastName}`
+            recipientName: `${contact.firstName} ${contact.lastName}`,
+            promoCode
           })
         );
       }
