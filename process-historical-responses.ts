@@ -12,7 +12,7 @@
 import * as XLSX from 'xlsx';
 import * as path from 'path';
 import * as fs from 'fs';
-import type { AssessmentScores, SectionScore, UserProfile, UserResponse, DemographicData, AssessmentResult } from "@shared/schema";
+import type { AssessmentScores, SectionScore, UserProfile, UserResponse, DemographicData, AssessmentResult } from "./shared/schema";
 import { generateIndividualPDF } from './server/pdf-generator';
 import { sendAssessmentEmail } from './server/sendgrid';
 import { calculateScores, determineProfile } from './server/assessment-processor';

@@ -2,7 +2,7 @@
  * Assessment processing logic for calculating scores and determining profiles
  */
 
-import type { AssessmentScores, SectionScore, UserProfile, UserResponse } from "@shared/schema";
+import type { AssessmentScores, SectionScore, UserProfile, UserResponse } from "../shared/schema";
 import { profiles } from './profiles-data';
 
 // Define section question mappings

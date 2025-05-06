@@ -1,140 +1,113 @@
-import { pgTable, text, serial, integer, boolean, jsonb, timestamp } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
+/**
+ * Shared type definitions for the 100 Marriage Assessment system
+ */
 
-export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
-  username: text("username").notNull().unique(),
-  password: text("password").notNull(),
-});
+// User response to a single question
+export interface UserResponse {
+  option: string;  // The text of the option they selected
+  value: number;   // The numeric value of their response (typically 1-5)
+}
 
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
-});
-
-export type InsertUser = z.infer<typeof insertUserSchema>;
-export type User = typeof users.$inferSelect;
-
-// Define assessment types
+// Score for a single section
 export interface SectionScore {
-  earned: number;
-  possible: number;
-  percentage: number;
+  earned: number;      // Points earned in this section
+  possible: number;    // Maximum possible points for this section
+  percentage: number;  // Earned/Possible as a percentage
 }
 
-export interface AssessmentScores {
-  sections: Record<string, SectionScore>;
-  overallPercentage: number;
-  strengths: string[];
-  improvementAreas: string[];
-  totalEarned: number;
-  totalPossible: number;
-}
-
+// Criteria for a psychographic profile
 export interface ProfileCriterion {
-  section: string;
-  min?: number;
-  max?: number;
+  section: string;     // The section this criterion applies to
+  min?: number;        // Minimum percentage score required (if applicable)
+  max?: number;        // Maximum percentage score required (if applicable)
 }
 
+// A psychographic profile
 export interface UserProfile {
   id: number;
   name: string;
   description: string;
-  genderSpecific: string | null;
-  criteria: ProfileCriterion[];
-  iconPath?: string; // Path to the profile icon image
+  genderSpecific: string | null;  // 'male', 'female', or null if applies to any gender
+  criteria: ProfileCriterion[];   // Criteria that determine this profile
+  iconPath?: string;              // Path to the profile's icon image
+  compatibleWith?: string[];      // List of profile names this profile is compatible with
 }
 
-export interface UserResponse {
-  option: string;
-  value: number;
+// Complete score results
+export interface AssessmentScores {
+  sections: Record<string, SectionScore>;  // Scores by section
+  overallPercentage: number;               // Overall score as a percentage
+  totalEarned: number;                     // Total points earned across all sections
+  totalPossible: number;                   // Total possible points across all sections
+  strengths: string[];                     // Top 3 sections (by percentage)
+  improvementAreas: string[];              // Bottom 3 sections (by percentage)
 }
 
+// Demographic data
 export interface DemographicData {
   firstName: string;
   lastName: string;
   email: string;
-  lifeStage: string;
-  birthday: string;
-  phone?: string;
   gender: string;
+  birthday: string;
+  lifeStage: string;
   marriageStatus: string;
   desireChildren: string;
   ethnicity: string;
-  hasPurchasedBook?: string;
-  purchaseDate?: string;
-  promoCode?: string;
-  hasPaid?: boolean;
-  interestedInArrangedMarriage?: boolean;
-  thmPoolApplied?: boolean;
   city: string;
   state: string;
   zipCode: string;
+  hasPurchasedBook: string;
 }
 
-export interface GenderComparisonData {
-  value: number;
-  average: number;
-  percentile: number;
-}
-
+// Complete assessment result
 export interface AssessmentResult {
   email: string;
   name: string;
   scores: AssessmentScores;
   profile: UserProfile;
-  genderProfile?: UserProfile | null;
+  genderProfile: UserProfile | null;  // Gender-specific profile if applicable
   responses: Record<string, UserResponse>;
   demographics: DemographicData;
   timestamp: string;
-  coupleId?: string; // Links two assessments in a couple
-  coupleRole?: 'primary' | 'spouse'; // Role in the couple assessment
-  genderComparison?: Record<string, GenderComparisonData>; // Gender-specific comparison data
 }
 
-// Interface for comparing assessment responses between partners
+// Analysis of differences between partners
 export interface DifferenceAnalysis {
-  differentResponses: {
-    questionId: string;
-    questionText: string;
-    questionWeight: number;
+  significantDifferences: Array<{
+    question: string;
     section: string;
-    primaryResponse: string;
-    spouseResponse: string;
-  }[];
-  majorDifferences: {
-    questionId: string;
-    questionText: string;
-    questionWeight: number;
-    section: string;
-    primaryResponse: string;
-    spouseResponse: string;
-  }[];
-  strengthAreas: string[];
-  vulnerabilityAreas: string[];
+    primaryResponse: UserResponse;
+    spouseResponse: UserResponse;
+    difference: number;
+  }>;
+  sectionDifferences: Record<string, {
+    primaryPercentage: number;
+    spousePercentage: number;
+    differencePct: number;
+  }>;
+  totalDifference: number;
+  compatibilityScore: number;
 }
 
-// Interface for couples assessment report
+// Couple assessment report
 export interface CoupleAssessmentReport {
-  coupleId: string;
+  primary: AssessmentResult;
+  spouse: AssessmentResult;
+  analysis: DifferenceAnalysis;
   timestamp: string;
-  primaryAssessment: AssessmentResult;
-  spouseAssessment: AssessmentResult;
-  differenceAnalysis: DifferenceAnalysis;
-  overallCompatibility: number;
+  compatibilityScore: number;
+  // Recommendations based on their specific results
+  recommendations: string[];
 }
 
-// Interface for invitation/referral tracking
-export interface ReferralData {
+// Question definition
+export interface Question {
   id: string;
-  referrerName: string;
-  referrerEmail: string;
-  invitedName: string;
-  invitedEmail: string;
-  timestamp: string;
-  status: 'sent' | 'completed' | 'expired';
-  promoCode?: string;
-  completedTimestamp?: string;
+  text: string;
+  section: string;
+  options: Array<{
+    text: string;
+    value: number;
+  }>;
 }
