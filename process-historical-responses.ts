@@ -17,10 +17,15 @@ import { generateIndividualPDF } from './server/pdf-generator';
 import { sendAssessmentEmail } from './server/sendgrid';
 import { calculateScores, determineProfile } from './server/assessment-processor';
 
-// Update this path to point to your Excel file
-const EXCEL_FILE_PATH = path.join(__dirname, 'attached_assets', 'Responses_The 100 Marriage Assessment (v1.0)(1-59).xlsx');
+// Declare global variable for TypeScript
+declare global {
+  var SEND_EMAILS: boolean;
+}
+
+// Path to the Excel/CSV file with historical responses
+const EXCEL_FILE_PATH = './attached_assets/Responses_The 100 Marriage Assessment (v1.0)(1-59).xlsx';
 // Whether to actually send emails or just simulate the process
-const SEND_EMAILS = false; // Set to true to send actual emails
+global.SEND_EMAILS = false; // Set to true to send actual emails
 
 // Main function to process the historical responses
 async function processHistoricalResponses() {
@@ -56,7 +61,7 @@ async function processHistoricalResponses() {
         console.log(`Generating PDF for ${assessmentResult.name}...`);
         const pdfPath = await generateIndividualPDF(assessmentResult);
         
-        if (SEND_EMAILS) {
+        if (global.SEND_EMAILS) {
           // Send email with PDF
           console.log(`Sending email to ${assessmentResult.email}...`);
           const result = await sendAssessmentEmail(assessmentResult, pdfPath);
@@ -169,7 +174,108 @@ function mapResponseToValue(response: string): number | null {
   return 3;
 }
 
-// Run the process
-processHistoricalResponses().catch(error => {
-  console.error('Unhandled error in process:', error);
-});
+// Analyze data in the CSV/Excel file
+async function analyzeResponseData(): Promise<void> {
+  try {
+    console.log('Analyzing historical response data...');
+    
+    // Read the Excel file
+    const workbook = XLSX.readFile(EXCEL_FILE_PATH);
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    
+    // Convert to JSON
+    const jsonData = XLSX.utils.sheet_to_json(worksheet);
+    
+    console.log(`Found ${jsonData.length} total responses in the file.`);
+    
+    // Count by gender
+    const genderCounts: Record<string, number> = {};
+    jsonData.forEach((row: any) => {
+      const gender = mapGender(row['What is your gender?']);
+      genderCounts[gender] = (genderCounts[gender] || 0) + 1;
+    });
+    
+    console.log('\nGender breakdown:');
+    Object.entries(genderCounts).forEach(([gender, count]) => {
+      console.log(`- ${gender}: ${count} (${((count/jsonData.length)*100).toFixed(1)}%)`);
+    });
+    
+    // Count by marriage status
+    const marriageCounts: Record<string, number> = {};
+    jsonData.forEach((row: any) => {
+      const status = row['What is your current marriage status?'] || 'Unknown';
+      marriageCounts[status] = (marriageCounts[status] || 0) + 1;
+    });
+    
+    console.log('\nMarriage status breakdown:');
+    Object.entries(marriageCounts).forEach(([status, count]) => {
+      console.log(`- ${status}: ${count} (${((count/jsonData.length)*100).toFixed(1)}%)`);
+    });
+    
+    // Get list of email domains
+    const emailDomains: Record<string, number> = {};
+    jsonData.forEach((row: any) => {
+      if (row['Email Address']) {
+        const email = row['Email Address'].toString();
+        const domain = email.split('@')[1]?.toLowerCase();
+        if (domain) {
+          emailDomains[domain] = (emailDomains[domain] || 0) + 1;
+        }
+      }
+    });
+    
+    console.log('\nTop 5 email domains:');
+    Object.entries(emailDomains)
+      .sort(([,a], [,b]) => b - a)
+      .slice(0, 5)
+      .forEach(([domain, count]) => {
+        console.log(`- ${domain}: ${count} (${((count/jsonData.length)*100).toFixed(1)}%)`);
+      });
+      
+    console.log('\nAnalysis complete.');
+  } catch (error) {
+    console.error('Error analyzing data:', error);
+  }
+}
+
+// Command-line interface
+async function main() {
+  // Parse command line args
+  const args = process.argv.slice(2);
+  const shouldSendEmails = args.includes('--send-emails');
+  const shouldAnalyze = args.includes('--analyze');
+  
+  // Just analyze data if requested
+  if (shouldAnalyze) {
+    await analyzeResponseData();
+    return;
+  }
+  
+  // Check if we need to send actual emails
+  if (shouldSendEmails) {
+    console.log('WARNING: Will send actual emails to respondents!');
+    console.log('You have 5 seconds to cancel (Ctrl+C) if this is not intended...');
+    await new Promise(resolve => setTimeout(resolve, 5000));
+    console.log('Proceeding with sending emails...');
+    
+    // Override the setting
+    global.SEND_EMAILS = true;
+  }
+  
+  // Run the process
+  await processHistoricalResponses().catch(error => {
+    console.error('Unhandled error in process:', error);
+    process.exit(1);
+  });
+  
+  console.log('Process completed successfully.');
+}
+
+// Run if called directly
+if (require.main === module) {
+  main().catch(error => {
+    console.error('Unhandled error:', error);
+    process.exit(1);
+  });
+}
