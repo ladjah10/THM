@@ -6,8 +6,8 @@ const fs = require('fs');
 const path = require('path');
 const XLSX = require('xlsx');
 
-// Path to the Excel/CSV file with historical responses
-const CSV_FILE_PATH = './attached_assets/Responses_The 100 Marriage Assessment (v1.0)(1-59).csv';
+// Path to the Excel/CSV file with historical responses - using absolute path
+const CSV_FILE_PATH = path.resolve(__dirname, 'attached_assets', 'Responses_The 100 Marriage Assessment (v1.0)(1-59).csv');
 
 async function main() {
   try {
