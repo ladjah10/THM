@@ -748,6 +748,56 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Analytics endpoints for the admin dashboard
+  app.get('/api/admin/analytics/summary', async (req: Request, res: Response) => {
+    try {
+      const period = (req.query.period as 'day' | 'week' | 'month' | 'year') || 'week';
+      const analyticsSummary = await storage.getAnalyticsSummary(period);
+      
+      return res.status(200).json(analyticsSummary);
+    } catch (error) {
+      console.error('Error fetching analytics summary:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to fetch analytics summary'
+      });
+    }
+  });
+  
+  app.get('/api/admin/analytics/page-views', async (req: Request, res: Response) => {
+    try {
+      const startDate = req.query.startDate as string | undefined;
+      const endDate = req.query.endDate as string | undefined;
+      
+      const pageViews = await storage.getPageViews(startDate, endDate);
+      
+      return res.status(200).json(pageViews);
+    } catch (error) {
+      console.error('Error fetching page views:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to fetch page views'
+      });
+    }
+  });
+  
+  app.get('/api/admin/analytics/visitor-sessions', async (req: Request, res: Response) => {
+    try {
+      const startDate = req.query.startDate as string | undefined;
+      const endDate = req.query.endDate as string | undefined;
+      
+      const visitorSessions = await storage.getVisitorSessions(startDate, endDate);
+      
+      return res.status(200).json(visitorSessions);
+    } catch (error) {
+      console.error('Error fetching visitor sessions:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to fetch visitor sessions'
+      });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
