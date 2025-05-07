@@ -2,6 +2,37 @@
  * Shared type definitions for the 100 Marriage Assessment system
  */
 
+// Analytics data types
+export interface PageView {
+  id: string;
+  path: string;
+  timestamp: string;
+  referrer: string;
+  userAgent: string;
+  ipAddress: string;
+  sessionId: string;
+}
+
+export interface VisitorSession {
+  id: string;
+  startTime: string;
+  endTime: string | null;
+  pageCount: number;
+  deviceType: string;
+  browser: string;
+  country: string;
+  region: string;
+}
+
+export interface AnalyticsSummary {
+  totalVisitors: number;
+  totalPageViews: number;
+  topPages: Array<{ path: string; count: number }>;
+  dailyVisitors: Array<{ date: string; count: number }>;
+  conversionRate: number;
+  averageSessionDuration: number;
+}
+
 // User response to a single question
 export interface UserResponse {
   option: string;  // The text of the option they selected
