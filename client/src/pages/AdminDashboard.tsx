@@ -132,6 +132,66 @@ export default function AdminDashboard() {
     enabled: isAuthenticated,
   });
   
+  // Website Analytics - summary data
+  const [analyticsPeriod, setAnalyticsPeriod] = useState<'day' | 'week' | 'month' | 'year'>('week');
+  
+  const { data: analyticsSummary, isLoading: isLoadingAnalytics } = useQuery<AnalyticsSummary>({
+    queryKey: ['/api/admin/analytics/summary', analyticsPeriod],
+    queryFn: async () => {
+      if (!isAuthenticated) return {
+        totalVisitors: 0,
+        totalPageViews: 0,
+        topPages: [],
+        dailyVisitors: [],
+        conversionRate: 0,
+        averageSessionDuration: 0
+      };
+      
+      const response = await apiRequest("GET", `/api/admin/analytics/summary?period=${analyticsPeriod}`);
+      
+      if (!response.ok) {
+        throw new Error("Failed to fetch analytics summary");
+      }
+      
+      return response.json();
+    },
+    enabled: isAuthenticated,
+  });
+  
+  // Website Analytics - page views data
+  const { data: pageViews, isLoading: isLoadingPageViews } = useQuery<PageView[]>({
+    queryKey: ['/api/admin/analytics/page-views'],
+    queryFn: async () => {
+      if (!isAuthenticated) return [];
+      
+      const response = await apiRequest("GET", "/api/admin/analytics/page-views");
+      
+      if (!response.ok) {
+        throw new Error("Failed to fetch page views");
+      }
+      
+      return response.json();
+    },
+    enabled: isAuthenticated,
+  });
+  
+  // Website Analytics - visitor sessions data
+  const { data: visitorSessions, isLoading: isLoadingVisitorSessions } = useQuery<VisitorSession[]>({
+    queryKey: ['/api/admin/analytics/visitor-sessions'],
+    queryFn: async () => {
+      if (!isAuthenticated) return [];
+      
+      const response = await apiRequest("GET", "/api/admin/analytics/visitor-sessions");
+      
+      if (!response.ok) {
+        throw new Error("Failed to fetch visitor sessions");
+      }
+      
+      return response.json();
+    },
+    enabled: isAuthenticated,
+  });
+  
   // Filter assessments by search term
   const filteredAssessments = assessments?.filter(assessment => {
     if (!searchTerm) return true;
@@ -617,6 +677,147 @@ export default function AdminDashboard() {
                 </div>
               </CardContent>
             </Card>
+            
+            {/* Website Traffic Analytics Section */}
+            <div className="mt-8">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold">Website Traffic Analytics</h2>
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm text-gray-500">Time period:</span>
+                  <select 
+                    value={analyticsPeriod}
+                    onChange={(e) => setAnalyticsPeriod(e.target.value as 'day' | 'week' | 'month' | 'year')}
+                    className="text-sm border rounded p-1"
+                  >
+                    <option value="day">Last 24 hours</option>
+                    <option value="week">Last 7 days</option>
+                    <option value="month">Last 30 days</option>
+                    <option value="year">Last 12 months</option>
+                  </select>
+                </div>
+              </div>
+              
+              {isLoadingAnalytics ? (
+                <div className="flex justify-center items-center h-64">
+                  <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></div>
+                </div>
+              ) : (
+                <>
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                    <Card>
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-sm font-medium text-gray-500">Total Visitors</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="text-3xl font-bold">{analyticsSummary?.totalVisitors || 0}</div>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card>
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-sm font-medium text-gray-500">Page Views</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="text-3xl font-bold">{analyticsSummary?.totalPageViews || 0}</div>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card>
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-sm font-medium text-gray-500">Conversion Rate</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="text-3xl font-bold">{(analyticsSummary?.conversionRate || 0).toFixed(1)}%</div>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card>
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-sm font-medium text-gray-500">Avg. Session</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="text-3xl font-bold">
+                          {Math.floor((analyticsSummary?.averageSessionDuration || 0) / 60)}m {Math.floor((analyticsSummary?.averageSessionDuration || 0) % 60)}s
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Visitor Trends</CardTitle>
+                        <CardDescription>Daily visitor count over time</CardDescription>
+                      </CardHeader>
+                      <CardContent className="h-80">
+                        {analyticsSummary?.dailyVisitors && analyticsSummary.dailyVisitors.length > 0 ? (
+                          <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={analyticsSummary.dailyVisitors}>
+                              <CartesianGrid strokeDasharray="3 3" />
+                              <XAxis 
+                                dataKey="date" 
+                                tickFormatter={(date) => new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                              />
+                              <YAxis allowDecimals={false} />
+                              <Tooltip 
+                                labelFormatter={(label) => new Date(label).toLocaleDateString('en-US', { 
+                                  weekday: 'long',
+                                  year: 'numeric', 
+                                  month: 'long', 
+                                  day: 'numeric' 
+                                })}
+                                formatter={(value) => [`${value} visitors`, 'Count']}
+                              />
+                              <Bar dataKey="count" fill="#8884d8" radius={[4, 4, 0, 0]} />
+                            </BarChart>
+                          </ResponsiveContainer>
+                        ) : (
+                          <div className="flex items-center justify-center h-full text-gray-500">
+                            No visitor data available for this period
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                    
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Top Pages</CardTitle>
+                        <CardDescription>Most visited pages on the website</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        {analyticsSummary?.topPages && analyticsSummary.topPages.length > 0 ? (
+                          <div className="space-y-4">
+                            {analyticsSummary.topPages.map((page, index) => (
+                              <div key={index} className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-sm font-medium w-6 text-center">{index + 1}</span>
+                                  <span className="text-sm truncate max-w-[200px]">{page.path}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <div className="w-32 h-2 bg-gray-100 rounded-full overflow-hidden">
+                                    <div 
+                                      className="h-full bg-primary" 
+                                      style={{ 
+                                        width: `${(page.count / (analyticsSummary.topPages[0]?.count || 1)) * 100}%` 
+                                      }}
+                                    />
+                                  </div>
+                                  <span className="text-sm font-medium">{page.count}</span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-center h-32 text-gray-500">
+                            No page view data available
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </div>
+                </>
+              )}
+            </div>
           </TabsContent>
           
           <TabsContent value="assessments" className="space-y-4">
