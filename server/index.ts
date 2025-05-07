@@ -1,10 +1,16 @@
 import express, { type Request, Response, NextFunction } from "express";
+import cookieParser from "cookie-parser";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { analyticsMiddleware } from "./analytics-middleware";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+
+// Add analytics middleware to track page views
+app.use(analyticsMiddleware);
 
 app.use((req, res, next) => {
   const start = Date.now();
