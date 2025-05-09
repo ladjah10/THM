@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import Stripe from 'stripe';
 import { storage } from './storage';
 import { v4 as uuidv4 } from 'uuid';
+import { sendNotificationEmail } from './nodemailer';
 
 // Initialize Stripe with the secret key
 if (!process.env.STRIPE_SECRET_KEY) {
