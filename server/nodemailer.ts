@@ -1,9 +1,16 @@
 import nodemailer from 'nodemailer';
+import sgMail from '@sendgrid/mail';
 import { AssessmentResult, CoupleAssessmentReport, PaymentTransaction } from '../shared/schema';
 import { generateIndividualAssessmentPDF } from './updated-individual-pdf';
 import { generateCoupleAssessmentPDF } from './updated-couple-pdf';
 import { formatCoupleAssessmentEmail } from './couple-email-template';
 import { formatCoupleInvitationEmail } from './couple-invitation-template';
+
+// Initialize SendGrid if API key is available
+if (process.env.SENDGRID_API_KEY) {
+  console.log('Initializing SendGrid...');
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+}
 
 // Interface for referral email data
 interface ReferralEmailData {
@@ -398,25 +405,21 @@ export async function sendNotificationEmail(transaction: PaymentTransaction): Pr
     if (process.env.SENDGRID_API_KEY) {
       try {
         console.log('Using SendGrid for notification email');
-        // Import the sendgrid module functions
-        const { MailService } = await import('@sendgrid/mail');
         
-        // Set up SendGrid
-        const mailService = new MailService();
-        mailService.setApiKey(process.env.SENDGRID_API_KEY);
+        // Send mail with SendGrid using the initialized instance
+        const verifiedSender = {
+          email: 'noreply@the100marriage.com',
+          name: 'The 100 Marriage Assessment'
+        };
         
-        // Send mail with SendGrid
         const msg = {
           to: 'lawrence@lawrenceadjah.com', // Always send to Lawrence
-          from: {
-            email: 'notifications@wgodw.com',
-            name: 'The 100 Marriage Assessment'
-          },
+          from: verifiedSender,
           subject: `New Payment: $${(transaction.amount / 100).toFixed(2)} - ${transaction.productType} Assessment`,
           html: emailHtml
         };
         
-        await mailService.send(msg);
+        await sgMail.send(msg);
         console.log(`SendGrid notification email sent to lawrence@lawrenceadjah.com`);
         
         return { 
@@ -567,25 +570,21 @@ export async function sendReferralEmail(data: ReferralEmailData): Promise<{ succ
     if (process.env.SENDGRID_API_KEY) {
       try {
         console.log('Using SendGrid for referral email');
-        // Import the sendgrid module functions
-        const { MailService } = await import('@sendgrid/mail');
         
-        // Set up SendGrid
-        const mailService = new MailService();
-        mailService.setApiKey(process.env.SENDGRID_API_KEY);
+        // Send mail with SendGrid using the initialized instance
+        const verifiedSender = {
+          email: 'noreply@the100marriage.com',
+          name: 'The 100 Marriage Assessment'
+        };
         
-        // Send mail with SendGrid
         const msg = {
           to: data.to,
-          from: {
-            email: 'referrals@wgodw.com',
-            name: 'The 100 Marriage Assessment'
-          },
+          from: verifiedSender,
           subject: `${data.referrerName} invited you to take The 100 Marriage Assessment`,
           html: emailHtml
         };
         
-        await mailService.send(msg);
+        await sgMail.send(msg);
         console.log(`SendGrid referral email sent to ${data.to}`);
         
         return { 
