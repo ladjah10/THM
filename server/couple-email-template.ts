@@ -63,9 +63,9 @@ export function formatCoupleAssessmentEmail(report: CoupleAssessmentReport): str
     let differencesHtml = '';
     
     // Get top 5 major differences
-    const topDifferences = differenceAnalysis.majorDifferences.slice(0, 5);
+    const topDifferences = analysis.majorDifferences.slice(0, 5);
     
-    topDifferences.forEach(diff => {
+    topDifferences.forEach((diff: any) => {
       differencesHtml += `
         <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #f3f4f6;">
           <div style="font-weight: 500; color: #1f2937; margin-bottom: 8px;">${diff.questionText}</div>
@@ -89,7 +89,7 @@ export function formatCoupleAssessmentEmail(report: CoupleAssessmentReport): str
     let strengthsHtml = '';
     let vulnerabilitiesHtml = '';
     
-    differenceAnalysis.strengthAreas.forEach(area => {
+    analysis.strengthAreas.forEach((area: any) => {
       strengthsHtml += `
         <li style="margin-bottom: 8px;">
           <span style="color: #15803d; margin-right: 8px;">✓</span> ${area}
@@ -97,7 +97,7 @@ export function formatCoupleAssessmentEmail(report: CoupleAssessmentReport): str
       `;
     });
     
-    differenceAnalysis.vulnerabilityAreas.forEach(area => {
+    analysis.vulnerabilityAreas.forEach((area: any) => {
       vulnerabilitiesHtml += `
         <li style="margin-bottom: 8px;">
           <span style="color: #d97706; margin-right: 8px;">⚠</span> ${area}
@@ -148,9 +148,9 @@ export function formatCoupleAssessmentEmail(report: CoupleAssessmentReport): str
           <!-- Couple Compatibility Score -->
           <div style="text-align: center; margin-bottom: 30px;">
             <div style="font-size: 18px; font-weight: 600; color: #1f2937; margin-bottom: 15px;">Your Couple Compatibility Score</div>
-            <div style="width: 150px; height: 150px; border-radius: 50%; background-color: white; border: 8px solid ${getCompatibilityColor(overallCompatibility)}; margin: 0 auto; display: flex; align-items: center; justify-content: center; flex-direction: column; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-              <div style="font-size: 36px; font-weight: 700; color: ${getCompatibilityColor(overallCompatibility)};">${Math.round(overallCompatibility)}%</div>
-              <div style="font-size: 14px; color: #4b5563;">${getCompatibilityLevel(overallCompatibility)} Compatibility</div>
+            <div style="width: 150px; height: 150px; border-radius: 50%; background-color: white; border: 8px solid ${getCompatibilityColor(compatibility)}; margin: 0 auto; display: flex; align-items: center; justify-content: center; flex-direction: column; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+              <div style="font-size: 36px; font-weight: 700; color: ${getCompatibilityColor(compatibility)};">${Math.round(compatibility)}%</div>
+              <div style="font-size: 14px; color: #4b5563;">${getCompatibilityLevel(compatibility)} Compatibility</div>
             </div>
             <p style="margin-top: 15px; font-size: 15px; color: #4b5563;">
               This score represents how well aligned your marriage expectations are. A higher score means you have more similar views on marriage.

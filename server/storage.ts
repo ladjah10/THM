@@ -1,528 +1,332 @@
+import { z } from "zod";
 import { 
-  pageViews,
-  visitorSessions,
-  paymentTransactions,
-  assessmentResults,
-  type AssessmentResultDB,
-  type CoupleAssessmentDB,
-  type InsertAssessmentResult,
-  type InsertCoupleAssessment,
-  type User,
-  type InsertUser
+  User, type InsertUser, 
+  type AssessmentResult, 
+  type CoupleAssessmentReport, 
+  type PageView, 
+  type VisitorSession, 
+  type AnalyticsSummary, 
+  type PaymentTransaction, 
+  type ReferralData, 
+  type DemographicData,
+  type UserProfile,
+  type DifferenceAnalysis
 } from "@shared/schema";
-import { 
-  AssessmentResult, 
-  CoupleAssessmentReport, 
-  ReferralData, 
-  PageView, 
-  VisitorSession, 
-  AnalyticsSummary,
-  PaymentTransaction
-} from "@shared/schema";
-import { db } from "./db";
-import { eq, desc, and, between, sql, gte, lte } from "drizzle-orm";
-import { v4 as uuidv4 } from 'uuid';
 
-// Storage interface defining all storage operations
-export interface IStorage {
-  getUser(id: number): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
-  saveAssessment(assessment: AssessmentResult): Promise<void>;
-  saveAssessmentProgress(tempId: string, assessment: Partial<AssessmentResult>): Promise<void>;
-  getAssessments(email: string): Promise<AssessmentResult[]>;
-  getAllAssessments(): Promise<AssessmentResult[]>;
-  
-  // Couple assessment methods
-  saveCoupleAssessment(primaryAssessment: AssessmentResult, spouseEmail: string): Promise<string>; // Returns coupleId
-  getSpouseAssessment(coupleId: string, role: 'primary' | 'spouse'): Promise<AssessmentResult | null>;
-  getCoupleAssessment(coupleId: string): Promise<CoupleAssessmentReport | null>;
-  getAllCoupleAssessments(): Promise<CoupleAssessmentReport[]>;
-  
-  // Referral methods
-  saveReferral(referral: ReferralData): Promise<void>;
-  getAllReferrals(): Promise<ReferralData[]>;
-  updateReferralStatus(id: string, status: 'sent' | 'completed' | 'expired', completedTimestamp?: string): Promise<void>;
-  
-  // Analytics methods
-  recordPageView(pageView: PageView): Promise<void>;
-  createVisitorSession(session: VisitorSession): Promise<void>;
-  updateVisitorSession(sessionId: string, endTime: string, pageCount: number): Promise<void>;
-  getPageViews(startDate?: string, endDate?: string): Promise<PageView[]>;
-  getVisitorSessions(startDate?: string, endDate?: string): Promise<VisitorSession[]>;
-  getAnalyticsSummary(period: 'day' | 'week' | 'month' | 'year'): Promise<AnalyticsSummary>;
-  
-  // Payment transaction methods
-  savePaymentTransaction(transaction: PaymentTransaction): Promise<void>;
-  getPaymentTransactions(startDate?: string, endDate?: string): Promise<PaymentTransaction[]>;
-  getPaymentTransactionByStripeId(stripeId: string): Promise<PaymentTransaction | null>;
-  updatePaymentTransactionStatus(stripeId: string, status: string): Promise<void>;
-  recordRefund(stripeId: string, amount: number, reason?: string): Promise<void>;
-  
-  // Promo code methods
-  recordPromoCodeUsage(data: {promoCode: string, assessmentType: string, timestamp: string}): Promise<void>;
-}
-
-// In-memory storage implementation
-export class MemStorage implements IStorage {
-  private users: Map<number, User>;
-  private assessments: AssessmentResult[];
-  private coupleAssessments: Map<string, CoupleAssessmentReport>;
-  private referrals: ReferralData[];
+// Memory-based storage implementation
+class MemStorage {
+  // Internal storage structures
+  private users: User[] = [];
+  private assessments: Map<string, AssessmentResult> = new Map();
+  private coupleAssessments: Map<string, CoupleAssessmentReport> = new Map();
+  private partialAssessments: Map<string, Partial<AssessmentResult>> = new Map();
   private pageViews: PageView[] = [];
-  private visitorSessions: VisitorSession[] = [];
-  private paymentTransactions: PaymentTransaction[] = [];
-  currentId: number;
+  private sessions: Map<string, VisitorSession> = new Map();
+  private payments: Map<string, PaymentTransaction> = new Map();
+  private referrals: ReferralData[] = [];
+  private promoCodesUsage: { promoCode: string, assessmentType: string, timestamp: string }[] = [];
 
-  constructor() {
-    this.users = new Map();
-    this.assessments = [];
-    this.coupleAssessments = new Map();
-    this.referrals = [];
-    this.pageViews = [];
-    this.visitorSessions = [];
-    this.paymentTransactions = [];
-    this.currentId = 1;
-  }
-
+  // User management methods
   async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+    return this.users.find(user => user.id === id);
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+    return this.users.find(user => user.username === username);
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentId++;
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
+    const id = this.users.length + 1;
+    const user = { ...insertUser, id };
+    this.users.push(user);
     return user;
   }
-  
-  async saveAssessment(assessment: AssessmentResult): Promise<void> {
-    // If this is an update to an existing assessment, remove the old one first
-    if (assessment.email) {
-      const existingIndex = this.assessments.findIndex(a => 
-        a.email === assessment.email && 
-        (!assessment.coupleId || a.coupleId === assessment.coupleId)
-      );
-      
-      if (existingIndex >= 0) {
-        this.assessments.splice(existingIndex, 1);
-      }
-    }
-    
-    this.assessments.push(assessment);
+
+  // Method to record promo code usage
+  async recordPromoCodeUsage(data: {promoCode: string, assessmentType: string, timestamp: string}): Promise<void> {
+    this.promoCodesUsage.push(data);
+    console.log('Promo code usage recorded in memory:', data.promoCode, data.assessmentType);
   }
   
+  // Save assessment progress during assessment (for auto-save functionality)
   async saveAssessmentProgress(tempId: string, assessment: Partial<AssessmentResult>): Promise<void> {
-    // Find existing partial assessment progress by tempId
-    const existingIndex = this.assessments.findIndex(a => 
-      (a.email === tempId || a.tempId === tempId) && a.isPartial === true
-    );
-    
-    // Create a full assessment object with partial data and tempId
-    const progressAssessment = {
-      ...assessment,
-      tempId: tempId,
-      isPartial: true,
-      timestamp: assessment.timestamp || new Date().toISOString()
-    } as AssessmentResult;
-    
-    if (existingIndex >= 0) {
-      // Update existing partial assessment
-      // Merge existing data with new data, new data takes precedence
-      this.assessments[existingIndex] = {
-        ...this.assessments[existingIndex],
-        ...progressAssessment,
-        // Merge responses separately to keep all existing responses
-        responses: {
-          ...this.assessments[existingIndex].responses,
-          ...progressAssessment.responses
-        },
-        // If assessment has demographics, merge them
-        demographics: progressAssessment.demographics
-          ? {
-              ...this.assessments[existingIndex].demographics,
-              ...progressAssessment.demographics
-            }
-          : this.assessments[existingIndex].demographics
-      };
+    console.log(`Saving partial assessment progress for tempId: ${tempId}`);
+    // If assessment has an existing tempId, merge with existing data
+    if (this.partialAssessments.has(tempId)) {
+      const existingAssessment = this.partialAssessments.get(tempId) || {};
+      const updatedAssessment = { ...existingAssessment, ...assessment };
+      updatedAssessment.isPartial = true;
+      updatedAssessment.tempId = tempId;
+      this.partialAssessments.set(tempId, updatedAssessment);
     } else {
-      // Add new partial assessment
-      this.assessments.push(progressAssessment);
+      // Otherwise, create a new entry
+      const newAssessment = { ...assessment };
+      newAssessment.isPartial = true;
+      newAssessment.tempId = tempId;
+      this.partialAssessments.set(tempId, newAssessment);
     }
   }
-  
+
+  // Method to get assessment progress for the continue feature
+  async getAssessmentProgress(tempId: string): Promise<Partial<AssessmentResult> | null> {
+    return this.partialAssessments.get(tempId) || null;
+  }
+
+  // Assessment methods
+  async saveAssessment(assessment: AssessmentResult): Promise<void> {
+    // Use email as the key for individual assessments when no couple ID present
+    const key = assessment.coupleId || assessment.demographics.email;
+    this.assessments.set(key, assessment);
+    console.log(`Assessment saved in memory for ${assessment.demographics.email}`);
+  }
+
   async getAssessments(email: string): Promise<AssessmentResult[]> {
-    return this.assessments.filter(a => a.email === email);
-  }
-  
-  async getAllAssessments(): Promise<AssessmentResult[]> {
-    return [...this.assessments];
-  }
-  
-  // Couple assessment methods
-  async saveCoupleAssessment(primaryAssessment: AssessmentResult, spouseEmail: string): Promise<string> {
-    // Generate a unique coupleId
-    const coupleId = `couple_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
-    
-    // Save primary assessment with coupleId
-    const primaryWithCoupleId = {
-      ...primaryAssessment,
-      coupleId,
-      coupleRole: 'primary' as const
-    };
-    
-    await this.saveAssessment(primaryWithCoupleId);
-    
-    // Return the coupleId - the spouse will use this to link their assessment
-    return coupleId;
-  }
-  
-  async getSpouseAssessment(coupleId: string, role: 'primary' | 'spouse'): Promise<AssessmentResult | null> {
-    const assessment = this.assessments.find(a => 
-      a.coupleId === coupleId && a.coupleRole === role
-    );
-    
-    return assessment || null;
-  }
-  
-  async getCoupleAssessment(coupleId: string): Promise<CoupleAssessmentReport | null> {
-    // Check if we already have a computed report
-    if (this.coupleAssessments.has(coupleId)) {
-      return this.coupleAssessments.get(coupleId) || null;
-    }
-    
-    // Find primary and spouse assessments
-    const primaryAssessment = await this.getSpouseAssessment(coupleId, 'primary');
-    const spouseAssessment = await this.getSpouseAssessment(coupleId, 'spouse');
-    
-    if (!primaryAssessment || !spouseAssessment) {
-      return null; // Not found or not complete
-    }
-    
-    // Import the utility function dynamically on the server side
-    const { generateCoupleReport } = await import('../client/src/utils/coupleAnalysisUtils');
-    
-    // Generate full couple assessment report
-    const coupleReport = generateCoupleReport(primaryAssessment, spouseAssessment, coupleId);
-    
-    // Store for future reference
-    this.coupleAssessments.set(coupleId, coupleReport);
-    
-    return coupleReport;
-  }
-  
-  async getAllCoupleAssessments(): Promise<CoupleAssessmentReport[]> {
-    // Get all unique coupleIds
-    const coupleIds = new Set<string>();
+    const assessments: AssessmentResult[] = [];
     this.assessments.forEach(assessment => {
-      if (assessment.coupleId) {
-        coupleIds.add(assessment.coupleId);
+      if (assessment.demographics.email === email) {
+        assessments.push(assessment);
       }
     });
-    
-    // Get couple assessments for each coupleId
-    const coupleAssessments = await Promise.all(
-      Array.from(coupleIds).map(id => this.getCoupleAssessment(id))
-    );
-    
-    // Filter out null values and return
-    return coupleAssessments.filter((report): report is CoupleAssessmentReport => report !== null);
+    return assessments;
   }
-  
+
+  async getAllAssessments(): Promise<AssessmentResult[]> {
+    return Array.from(this.assessments.values());
+  }
+
+  // Couple assessment methods
+  async saveCoupleAssessment(primaryAssessment: AssessmentResult, spouseEmail: string): Promise<string> {
+    // Generate a unique couple ID
+    const coupleId = `${primaryAssessment.demographics.email}_${spouseEmail}_${Date.now()}`;
+    
+    // Update the primary assessment with the couple ID
+    const updatedPrimaryAssessment = { ...primaryAssessment, coupleId, coupleRole: 'primary' as const };
+    
+    // Save the updated primary assessment
+    await this.saveAssessment(updatedPrimaryAssessment);
+    
+    return coupleId;
+  }
+
+  async getSpouseAssessment(coupleId: string, role: 'primary' | 'spouse'): Promise<AssessmentResult | null> {
+    for (const assessment of this.assessments.values()) {
+      if (assessment.coupleId === coupleId && assessment.coupleRole === role) {
+        return assessment;
+      }
+    }
+    return null;
+  }
+
+  async saveCoupleAssessmentReport(report: CoupleAssessmentReport): Promise<void> {
+    this.coupleAssessments.set(report.coupleId, report);
+    console.log(`Couple assessment saved in memory for couple ID: ${report.coupleId}`);
+  }
+
+  async getCoupleAssessment(coupleId: string): Promise<CoupleAssessmentReport | null> {
+    return this.coupleAssessments.get(coupleId) || null;
+  }
+
+  async getAllCoupleAssessments(): Promise<CoupleAssessmentReport[]> {
+    return Array.from(this.coupleAssessments.values());
+  }
+
   // Referral methods
   async saveReferral(referral: ReferralData): Promise<void> {
-    // Check if referral already exists
-    const existingIndex = this.referrals.findIndex(r => 
-      r.id === referral.id
-    );
-    
-    if (existingIndex >= 0) {
-      // Update existing referral
-      this.referrals[existingIndex] = referral;
-    } else {
-      // Add new referral
-      this.referrals.push(referral);
-    }
+    this.referrals.push(referral);
+    console.log(`Referral saved in memory: ${referral.referrerEmail} referred ${referral.recipientEmail}`);
   }
-  
+
   async getAllReferrals(): Promise<ReferralData[]> {
-    return [...this.referrals];
+    return this.referrals;
   }
-  
+
   async updateReferralStatus(id: string, status: 'sent' | 'completed' | 'expired', completedTimestamp?: string): Promise<void> {
-    const referralIndex = this.referrals.findIndex(r => r.id === id);
-    
-    if (referralIndex >= 0) {
-      this.referrals[referralIndex] = {
-        ...this.referrals[referralIndex],
-        status,
-        completedTimestamp: completedTimestamp || this.referrals[referralIndex].completedTimestamp
-      };
+    const index = this.referrals.findIndex(ref => ref.id === id);
+    if (index !== -1) {
+      this.referrals[index].status = status;
+      if (completedTimestamp) {
+        this.referrals[index].completedTimestamp = completedTimestamp;
+      }
+      console.log(`Referral ${id} status updated to ${status}`);
     }
   }
-  
+
   // Analytics methods
   async recordPageView(pageView: PageView): Promise<void> {
-    // Just store in memory
     this.pageViews.push(pageView);
     console.log(`Page view recorded in memory: ${pageView.path}`);
   }
-  
+
   async createVisitorSession(session: VisitorSession): Promise<void> {
-    // Just store in memory
-    this.visitorSessions.push(session);
+    this.sessions.set(session.id, session);
     console.log(`Visitor session created in memory: ${session.id}`);
   }
-  
+
   async updateVisitorSession(sessionId: string, endTime: string, pageCount: number): Promise<void> {
-    // Update in memory
-    const sessionIndex = this.visitorSessions.findIndex(s => s.id === sessionId);
-    
-    if (sessionIndex >= 0) {
-      this.visitorSessions[sessionIndex] = {
-        ...this.visitorSessions[sessionIndex],
-        endTime,
-        pageCount
-      };
+    const session = this.sessions.get(sessionId);
+    if (session) {
+      session.endTime = endTime;
+      session.pageCount = pageCount;
+      this.sessions.set(sessionId, session);
       console.log(`Visitor session updated in memory: ${sessionId}`);
     }
   }
-  
-  // Method to record promo code usage
-  async recordPromoCodeUsage(data: {promoCode: string, assessmentType: string, timestamp: string}): Promise<void> {
-    console.log(`Recording promo code usage in memory: ${data.promoCode} for ${data.assessmentType} assessment`);
-    // In a real implementation with memory storage, we would track this in a dedicated array
-    // For now, we'll just log it
-  }
-  
+
   async getPageViews(startDate?: string, endDate?: string): Promise<PageView[]> {
     if (!startDate && !endDate) {
-      return [...this.pageViews];
+      return this.pageViews;
     }
     
     return this.pageViews.filter(view => {
       const viewDate = new Date(view.timestamp);
-      const isAfterStart = startDate ? viewDate >= new Date(startDate) : true;
-      const isBeforeEnd = endDate ? viewDate <= new Date(endDate) : true;
+      const isAfterStart = !startDate || viewDate >= new Date(startDate);
+      const isBeforeEnd = !endDate || viewDate <= new Date(endDate);
       return isAfterStart && isBeforeEnd;
     });
   }
-  
+
   async getVisitorSessions(startDate?: string, endDate?: string): Promise<VisitorSession[]> {
+    const sessions = Array.from(this.sessions.values());
+    
     if (!startDate && !endDate) {
-      return [...this.visitorSessions];
+      return sessions;
     }
     
-    return this.visitorSessions.filter(session => {
+    return sessions.filter(session => {
       const sessionDate = new Date(session.startTime);
-      const isAfterStart = startDate ? sessionDate >= new Date(startDate) : true;
-      const isBeforeEnd = endDate ? sessionDate <= new Date(endDate) : true;
+      const isAfterStart = !startDate || sessionDate >= new Date(startDate);
+      const isBeforeEnd = !endDate || sessionDate <= new Date(endDate);
       return isAfterStart && isBeforeEnd;
     });
   }
-  
+
   async getAnalyticsSummary(period: 'day' | 'week' | 'month' | 'year'): Promise<AnalyticsSummary> {
-    // Calculate start date based on period
-    let startDate: Date;
+    // Calculate the start date based on the period
     const now = new Date();
-    const endDate = now;
+    let startDate = new Date(now);
     
     switch (period) {
       case 'day':
-        startDate = new Date(now);
         startDate.setDate(now.getDate() - 1);
         break;
       case 'week':
-        startDate = new Date(now);
         startDate.setDate(now.getDate() - 7);
         break;
       case 'month':
-        startDate = new Date(now);
         startDate.setMonth(now.getMonth() - 1);
         break;
       case 'year':
-        startDate = new Date(now);
         startDate.setFullYear(now.getFullYear() - 1);
         break;
     }
     
-    // Get page views within period
-    const periodViews = await this.getPageViews(startDate.toISOString(), endDate.toISOString());
+    // Filter page views and sessions within the time period
+    const filteredPageViews = await this.getPageViews(startDate.toISOString(), now.toISOString());
+    const filteredSessions = await this.getVisitorSessions(startDate.toISOString(), now.toISOString());
     
-    // Get sessions within period
-    const periodSessions = await this.getVisitorSessions(startDate.toISOString(), endDate.toISOString());
-    
-    // Get payment transactions within period
-    const periodTransactions = await this.getPaymentTransactions(startDate.toISOString(), endDate.toISOString());
-    
-    // Calculate top pages
-    const pageMap = new Map<string, number>();
-    for (const view of periodViews) {
-      const currentCount = pageMap.get(view.path) || 0;
-      pageMap.set(view.path, currentCount + 1);
-    }
-    
-    const topPages = Array.from(pageMap.entries())
-      .map(([path, count]) => ({ path, count }))
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 10);
-    
-    // Calculate daily visitors
-    const dailyVisitorMap = new Map<string, number>();
-    for (const session of periodSessions) {
-      const date = new Date(session.startTime).toISOString().split('T')[0];
-      const currentCount = dailyVisitorMap.get(date) || 0;
-      dailyVisitorMap.set(date, currentCount + 1);
-    }
-    
-    const dailyVisitors = Array.from(dailyVisitorMap.entries())
-      .map(([date, count]) => ({ date, count }))
-      .sort((a, b) => a.date.localeCompare(b.date));
-    
-    // Calculate average session duration
-    let totalDuration = 0;
-    let completedSessions = 0;
-    
-    for (const session of periodSessions) {
+    // Calculate metrics
+    const totalPageViews = filteredPageViews.length;
+    const uniqueVisitors = new Set(filteredSessions.map(s => s.id)).size;
+    const averageSessionDuration = filteredSessions.reduce((total, session) => {
       if (session.endTime) {
-        const startTime = new Date(session.startTime).getTime();
-        const endTime = new Date(session.endTime).getTime();
-        const duration = (endTime - startTime) / 1000; // Duration in seconds
-        
-        if (duration > 0 && duration < 7200) { // Ignore sessions longer than 2 hours (likely errors)
-          totalDuration += duration;
-          completedSessions++;
-        }
+        const duration = new Date(session.endTime).getTime() - new Date(session.startTime).getTime();
+        return total + duration;
       }
-    }
+      return total;
+    }, 0) / Math.max(1, filteredSessions.length);
     
-    const averageSessionDuration = completedSessions > 0 ? Math.round(totalDuration / completedSessions) : 0;
+    // Get popular pages
+    const pageCounts = filteredPageViews.reduce<Record<string, number>>((counts, view) => {
+      counts[view.path] = (counts[view.path] || 0) + 1;
+      return counts;
+    }, {});
     
-    // Calculate conversion rate based on actual payments
-    const conversions = periodTransactions.filter(t => t.status === 'succeeded').length;
-    const conversionRate = periodSessions.length > 0 ? (conversions / periodSessions.length) * 100 : 0;
+    const popularPages = Object.entries(pageCounts)
+      .sort(([, countA], [, countB]) => countB - countA)
+      .slice(0, 5)
+      .map(([path, count]) => ({ path, count }));
     
-    // Calculate sales metrics
-    const totalSales = periodTransactions
-      .filter(t => t.status === 'succeeded' && !t.isRefunded)
-      .reduce((sum, t) => sum + t.amount, 0) / 100; // Convert from cents to dollars
-      
-    // Calculate sales by product type
-    const salesByProductType: Record<string, number> = {};
-    for (const transaction of periodTransactions) {
-      if (transaction.status === 'succeeded' && !transaction.isRefunded) {
-        const productType = transaction.productType || 'unknown';
-        salesByProductType[productType] = (salesByProductType[productType] || 0) + (transaction.amount / 100);
-      }
-    }
-    
-    // Calculate daily sales
-    const dailySalesMap = new Map<string, number>();
-    for (const transaction of periodTransactions) {
-      if (transaction.status === 'succeeded' && !transaction.isRefunded) {
-        const date = new Date(transaction.created).toISOString().split('T')[0];
-        const currentAmount = dailySalesMap.get(date) || 0;
-        dailySalesMap.set(date, currentAmount + (transaction.amount / 100));
-      }
-    }
-    
-    const dailySales = Array.from(dailySalesMap.entries())
-      .map(([date, amount]) => ({ date, amount }))
-      .sort((a, b) => a.date.localeCompare(b.date));
-    
-    // Get recent transactions
-    const recentTransactions = [...periodTransactions]
-      .sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime())
-      .slice(0, 10);
-      
     return {
-      totalVisitors: periodSessions.length,
-      totalPageViews: periodViews.length,
-      topPages,
-      dailyVisitors,
-      conversionRate,
+      periodStart: startDate.toISOString(),
+      periodEnd: now.toISOString(),
+      totalPageViews,
+      uniqueVisitors,
       averageSessionDuration,
-      salesData: {
-        totalSales,
-        recentTransactions,
-        salesByProductType,
-        dailySales
-      }
+      popularPages,
     };
   }
-  
-  // Payment transaction methods
+
+  // Payment methods
   async savePaymentTransaction(transaction: PaymentTransaction): Promise<void> {
-    const existingIndex = this.paymentTransactions.findIndex(t => t.stripeId === transaction.stripeId);
-    
-    if (existingIndex >= 0) {
-      this.paymentTransactions[existingIndex] = transaction;
-    } else {
-      this.paymentTransactions.push(transaction);
-    }
-    
-    console.log(`Payment transaction recorded in memory: ${transaction.stripeId}`);
+    this.payments.set(transaction.stripeId, transaction);
+    console.log(`Payment transaction saved in memory: ${transaction.stripeId}`);
   }
-  
+
   async getPaymentTransactions(startDate?: string, endDate?: string): Promise<PaymentTransaction[]> {
+    const transactions = Array.from(this.payments.values());
+    
     if (!startDate && !endDate) {
-      return [...this.paymentTransactions];
+      return transactions;
     }
     
-    return this.paymentTransactions.filter(transaction => {
-      const transactionDate = new Date(transaction.created);
-      const isAfterStart = startDate ? transactionDate >= new Date(startDate) : true;
-      const isBeforeEnd = endDate ? transactionDate <= new Date(endDate) : true;
+    return transactions.filter(transaction => {
+      const txDate = new Date(transaction.created);
+      const isAfterStart = !startDate || txDate >= new Date(startDate);
+      const isBeforeEnd = !endDate || txDate <= new Date(endDate);
       return isAfterStart && isBeforeEnd;
     });
   }
-  
+
   async getPaymentTransactionByStripeId(stripeId: string): Promise<PaymentTransaction | null> {
-    const transaction = this.paymentTransactions.find(t => t.stripeId === stripeId);
-    return transaction || null;
+    return this.payments.get(stripeId) || null;
   }
-  
+
   async updatePaymentTransactionStatus(stripeId: string, status: string): Promise<void> {
-    const transactionIndex = this.paymentTransactions.findIndex(t => t.stripeId === stripeId);
-    
-    if (transactionIndex >= 0) {
-      this.paymentTransactions[transactionIndex] = {
-        ...this.paymentTransactions[transactionIndex],
-        status
-      };
+    const transaction = this.payments.get(stripeId);
+    if (transaction) {
+      transaction.status = status;
+      this.payments.set(stripeId, transaction);
       console.log(`Payment transaction status updated in memory: ${stripeId} -> ${status}`);
     }
   }
-  
+
   async recordRefund(stripeId: string, amount: number, reason?: string): Promise<void> {
-    const transactionIndex = this.paymentTransactions.findIndex(t => t.stripeId === stripeId);
-    
-    if (transactionIndex >= 0) {
-      this.paymentTransactions[transactionIndex] = {
-        ...this.paymentTransactions[transactionIndex],
-        isRefunded: true,
-        refundAmount: amount,
-        refundReason: reason
-      };
+    const transaction = this.payments.get(stripeId);
+    if (transaction) {
+      transaction.isRefunded = true;
+      transaction.refundAmount = amount;
+      if (reason) {
+        transaction.refundReason = reason;
+      }
+      this.payments.set(stripeId, transaction);
       console.log(`Refund recorded in memory for transaction: ${stripeId}`);
     }
   }
 }
 
 // Database storage implementation
-export class DatabaseStorage implements IStorage {
+export class DatabaseStorage {
   // Shared memory storage for fallback
   private memStorage: MemStorage;
+  sessionStore: any;
   
   constructor() {
     // Initialize database connection and memory fallback
     this.memStorage = new MemStorage();
+    
+    // Create a simple memory session store for now
+    // The actual session store will be properly initialized in the auth module
+    // where it imports express-session directly
+    this.sessionStore = {
+      all: () => ({}),
+      destroy: () => {},
+      clear: () => {},
+      length: () => 0,
+      get: () => null,
+      set: () => {},
+      touch: () => {}
+    };
+    
     console.log('Database storage initialized with memory fallback');
   }
   
@@ -583,10 +387,37 @@ export class DatabaseStorage implements IStorage {
   
   async saveAssessment(assessment: AssessmentResult): Promise<void> {
     try {
-      // Implementation of database storage
+      // Store in the database using the assessmentResults table
+      const { db } = await import('./db');
+      const { assessmentResults } = await import('@shared/schema');
+      
+      const jsonScores = JSON.stringify(assessment.scores);
+      const jsonProfile = JSON.stringify(assessment.profile);
+      const jsonGenderProfile = assessment.genderProfile ? JSON.stringify(assessment.genderProfile) : null;
+      const jsonResponses = JSON.stringify(assessment.responses);
+      const jsonDemographics = JSON.stringify(assessment.demographics);
+      
+      // Insert into database using column names directly from schema
+      await db.insert(assessmentResults).values({
+        email: assessment.demographics.email,
+        name: `${assessment.demographics.firstName} ${assessment.demographics.lastName}`,
+        scores: jsonScores,
+        profile: jsonProfile,
+        gender_profile: jsonGenderProfile,
+        responses: jsonResponses,
+        demographics: jsonDemographics,
+        couple_id: assessment.coupleId,
+        couple_role: assessment.coupleRole
+        // transaction_id will be linked when a payment is made
+      });
+      
+      console.log(`Assessment saved to database for ${assessment.demographics.email}`);
+      
+      // Still keep in memory as a fallback
       await this.memStorage.saveAssessment(assessment);
     } catch (error) {
-      console.error('Error saving assessment:', error);
+      console.error('Error saving assessment to database:', error);
+      // Fall back to memory storage if database operation fails
       await this.memStorage.saveAssessment(assessment);
     }
   }
