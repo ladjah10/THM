@@ -2,7 +2,8 @@ import { useState, useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import type { AssessmentScores, UserProfile, DemographicData, AssessmentResult, SectionScore } from "@/types/assessment";
-import type { ReferralData, AnalyticsSummary, PageView, VisitorSession } from "@shared/schema";
+import type { AnalyticsSummary, PageView, VisitorSession, PaymentTransaction } from "@shared/schema";
+import type { ReferralData } from "@/types/referrals";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import {
   Dialog,
@@ -1035,6 +1036,221 @@ export default function AdminDashboard() {
                     </TableBody>
                   </Table>
                 </div>
+              )}
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="payments" className="space-y-4">
+            <div className="bg-white p-4 rounded-lg shadow-sm">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+                <div>
+                  <h2 className="text-lg font-medium">Payment Transactions</h2>
+                  <p className="text-sm text-gray-500">
+                    View revenue and payment details
+                  </p>
+                </div>
+                
+                <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-500">From:</span>
+                    <input 
+                      type="date" 
+                      className="text-sm border rounded p-1"
+                      value={transactionDateRange.start || ''}
+                      onChange={(e) => setTransactionDateRange(prev => ({...prev, start: e.target.value}))}
+                    />
+                    <span className="text-sm text-gray-500">To:</span>
+                    <input 
+                      type="date" 
+                      className="text-sm border rounded p-1"
+                      value={transactionDateRange.end || ''}
+                      onChange={(e) => setTransactionDateRange(prev => ({...prev, end: e.target.value}))}
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              {isLoadingPaymentTransactions ? (
+                <div className="flex justify-center py-8">
+                  <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
+                </div>
+              ) : (
+                <>
+                  {/* Revenue Summary */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <Card>
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-sm font-medium text-gray-500">Total Revenue</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="text-3xl font-bold">
+                          ${paymentTransactions 
+                            ? paymentTransactions
+                                .filter(t => !t.isRefunded)
+                                .reduce((sum, t) => sum + Number(t.amount), 0)
+                                .toFixed(2)
+                            : '0.00'
+                          }
+                        </div>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card>
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-sm font-medium text-gray-500">Transactions</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="text-3xl font-bold">{paymentTransactions?.length || 0}</div>
+                        <div className="text-sm text-gray-500">
+                          {paymentTransactions 
+                            ? `${paymentTransactions.filter(t => !t.isRefunded).length} active / 
+                               ${paymentTransactions.filter(t => t.isRefunded).length} refunded`
+                            : '0 active / 0 refunded'
+                          }
+                        </div>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card>
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-sm font-medium text-gray-500">Product Breakdown</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-1 text-sm">
+                          <div className="flex justify-between items-center">
+                            <span>Individual Assessments:</span>
+                            <span className="font-medium">
+                              ${paymentTransactions 
+                                ? paymentTransactions
+                                    .filter(t => t.productType === 'individual' && !t.isRefunded)
+                                    .reduce((sum, t) => sum + Number(t.amount), 0)
+                                    .toFixed(2)
+                                : '0.00'
+                              }
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span>Couple Assessments:</span>
+                            <span className="font-medium">
+                              ${paymentTransactions 
+                                ? paymentTransactions
+                                    .filter(t => t.productType === 'couple' && !t.isRefunded)
+                                    .reduce((sum, t) => sum + Number(t.amount), 0)
+                                    .toFixed(2)
+                                : '0.00'
+                              }
+                            </span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                  
+                  {/* Revenue Chart */}
+                  {paymentTransactions && paymentTransactions.length > 0 && (
+                    <Card className="mb-6">
+                      <CardHeader>
+                        <CardTitle>Revenue by Product Type</CardTitle>
+                        <CardDescription>Distribution of revenue across assessment types</CardDescription>
+                      </CardHeader>
+                      <CardContent className="h-80">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <PieChart>
+                            <Pie
+                              data={[
+                                { 
+                                  name: 'Individual Assessments', 
+                                  value: paymentTransactions
+                                    .filter(t => t.productType === 'individual' && !t.isRefunded)
+                                    .reduce((sum, t) => sum + Number(t.amount), 0)
+                                },
+                                { 
+                                  name: 'Couple Assessments', 
+                                  value: paymentTransactions
+                                    .filter(t => t.productType === 'couple' && !t.isRefunded)
+                                    .reduce((sum, t) => sum + Number(t.amount), 0)
+                                }
+                              ]}
+                              cx="50%"
+                              cy="50%"
+                              labelLine={true}
+                              outerRadius={120}
+                              fill="#8884d8"
+                              dataKey="value"
+                              label={({ name, value, percent }) => 
+                                `${name}: $${Number(value).toFixed(2)} (${(percent * 100).toFixed(1)}%)`
+                              }
+                            >
+                              <Cell key="individual" fill="#8884d8" />
+                              <Cell key="couple" fill="#82ca9d" />
+                            </Pie>
+                            <Tooltip formatter={(value) => [`$${Number(value).toFixed(2)}`, 'Revenue']} />
+                          </PieChart>
+                        </ResponsiveContainer>
+                      </CardContent>
+                    </Card>
+                  )}
+                  
+                  {/* Transactions Table */}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Transaction History</CardTitle>
+                      <CardDescription>
+                        Complete transaction records from Stripe
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Date</TableHead>
+                            <TableHead>Customer</TableHead>
+                            <TableHead>Product</TableHead>
+                            <TableHead>Amount</TableHead>
+                            <TableHead>Status</TableHead>
+                            <TableHead>Transaction ID</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {paymentTransactions && paymentTransactions.length > 0 ? (
+                            paymentTransactions
+                              .sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime())
+                              .map((transaction) => (
+                                <TableRow key={transaction.id} className={transaction.isRefunded ? "bg-red-50" : ""}>
+                                  <TableCell>{formatDate(transaction.created)}</TableCell>
+                                  <TableCell>{transaction.customerEmail || "Anonymous"}</TableCell>
+                                  <TableCell>
+                                    <Badge variant={transaction.productType === 'individual' ? 'outline' : 'default'}>
+                                      {transaction.productType === 'individual' ? 'Individual' : 'Couple'}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell className="font-medium">
+                                    ${Number(transaction.amount).toFixed(2)}
+                                  </TableCell>
+                                  <TableCell>
+                                    {transaction.isRefunded ? (
+                                      <Badge variant="destructive">Refunded</Badge>
+                                    ) : transaction.status === 'succeeded' ? (
+                                      <Badge variant="default">Succeeded</Badge>
+                                    ) : (
+                                      <Badge variant="outline">{transaction.status}</Badge>
+                                    )}
+                                  </TableCell>
+                                  <TableCell className="font-mono text-xs">{transaction.stripeId.substring(0, 14)}...</TableCell>
+                                </TableRow>
+                              ))
+                          ) : (
+                            <TableRow>
+                              <TableCell colSpan={6} className="text-center py-8 text-gray-500">
+                                No transactions found for the selected period
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </TableBody>
+                      </Table>
+                    </CardContent>
+                  </Card>
+                </>
               )}
             </div>
           </TabsContent>
