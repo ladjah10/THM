@@ -515,110 +515,421 @@ export class DatabaseStorage {
   
   async recordPageView(pageView: PageView): Promise<void> {
     try {
-      // Implementation of database storage
+      // Store in the database using the pageViews table
+      const { db } = await import('./db');
+      const { pageViews } = await import('@shared/schema');
+      
+      // Insert into database
+      await db.insert(pageViews).values({
+        path: pageView.path,
+        timestamp: pageView.timestamp,
+        referrer: pageView.referrer,
+        user_agent: pageView.userAgent,
+        ip_address: pageView.ipAddress,
+        session_id: pageView.sessionId
+      });
+      
+      console.log(`Page view recorded in database: ${pageView.path}`);
+      
+      // Still keep in memory as a fallback
       await this.memStorage.recordPageView(pageView);
     } catch (error) {
-      console.error('Error recording page view:', error);
+      console.error('Error recording page view in database:', error);
+      // Fall back to memory storage if database operation fails
       await this.memStorage.recordPageView(pageView);
     }
   }
   
   async createVisitorSession(session: VisitorSession): Promise<void> {
     try {
-      // Implementation of database storage
+      // Store in the database using the visitorSessions table
+      const { db } = await import('./db');
+      const { visitorSessions } = await import('@shared/schema');
+      
+      // Insert into database
+      await db.insert(visitorSessions).values({
+        id: session.id,
+        start_time: session.startTime,
+        end_time: session.endTime,
+        user_agent: session.userAgent,
+        ip_address: session.ipAddress,
+        page_count: session.pageCount,
+        referrer: session.referrer,
+        user_id: session.userId
+      });
+      
+      console.log(`Visitor session created in database: ${session.id}`);
+      
+      // Still keep in memory as a fallback
       await this.memStorage.createVisitorSession(session);
     } catch (error) {
-      console.error('Error creating visitor session:', error);
+      console.error('Error creating visitor session in database:', error);
+      // Fall back to memory storage if database operation fails
       await this.memStorage.createVisitorSession(session);
     }
   }
   
   async updateVisitorSession(sessionId: string, endTime: string, pageCount: number): Promise<void> {
     try {
-      // Implementation of database update
+      // Update in the database
+      const { db } = await import('./db');
+      const { visitorSessions } = await import('@shared/schema');
+      const { eq } = await import('drizzle-orm');
+      
+      // Update the session in the database
+      await db.update(visitorSessions)
+        .set({
+          end_time: endTime,
+          page_count: pageCount
+        })
+        .where(eq(visitorSessions.id, sessionId));
+      
+      console.log(`Visitor session updated in database: ${sessionId}`);
+      
+      // Still update memory storage
       await this.memStorage.updateVisitorSession(sessionId, endTime, pageCount);
     } catch (error) {
-      console.error('Error updating visitor session:', error);
+      console.error('Error updating visitor session in database:', error);
+      // Fall back to memory storage if database operation fails
       await this.memStorage.updateVisitorSession(sessionId, endTime, pageCount);
     }
   }
   
   async getPageViews(startDate?: string, endDate?: string): Promise<PageView[]> {
     try {
-      // Implementation of database retrieval
-      return await this.memStorage.getPageViews(startDate, endDate);
+      // Retrieve from database
+      const { db } = await import('./db');
+      const { pageViews } = await import('@shared/schema');
+      const { and, gte, lte, desc } = await import('drizzle-orm');
+      
+      let query = db.select().from(pageViews);
+      
+      // Apply date filters if provided
+      if (startDate || endDate) {
+        const conditions = [];
+        if (startDate) {
+          conditions.push(gte(pageViews.timestamp, new Date(startDate)));
+        }
+        if (endDate) {
+          conditions.push(lte(pageViews.timestamp, new Date(endDate)));
+        }
+        if (conditions.length > 0) {
+          query = query.where(and(...conditions));
+        }
+      }
+      
+      // Order by most recent first
+      query = query.orderBy(desc(pageViews.timestamp));
+      
+      // Execute query
+      const results = await query;
+      
+      // Transform and return
+      return results.map(row => ({
+        id: row.id ?? '',
+        path: row.path,
+        timestamp: row.timestamp.toISOString(),
+        referrer: row.referrer ?? '',
+        userAgent: row.user_agent ?? '',
+        ipAddress: row.ip_address ?? '',
+        sessionId: row.session_id ?? ''
+      }));
     } catch (error) {
-      console.error('Error getting page views:', error);
+      console.error('Error getting page views from database:', error);
+      // Fall back to memory storage
       return await this.memStorage.getPageViews(startDate, endDate);
     }
   }
   
   async getVisitorSessions(startDate?: string, endDate?: string): Promise<VisitorSession[]> {
     try {
-      // Implementation of database retrieval
-      return await this.memStorage.getVisitorSessions(startDate, endDate);
+      // Retrieve from database
+      const { db } = await import('./db');
+      const { visitorSessions } = await import('@shared/schema');
+      const { and, gte, lte, desc } = await import('drizzle-orm');
+      
+      let query = db.select().from(visitorSessions);
+      
+      // Apply date filters if provided
+      if (startDate || endDate) {
+        const conditions = [];
+        if (startDate) {
+          conditions.push(gte(visitorSessions.start_time, new Date(startDate)));
+        }
+        if (endDate) {
+          conditions.push(lte(visitorSessions.start_time, new Date(endDate)));
+        }
+        if (conditions.length > 0) {
+          query = query.where(and(...conditions));
+        }
+      }
+      
+      // Order by most recent first
+      query = query.orderBy(desc(visitorSessions.start_time));
+      
+      // Execute query
+      const results = await query;
+      
+      // Transform and return
+      return results.map(row => ({
+        id: row.id,
+        startTime: row.start_time.toISOString(),
+        endTime: row.end_time ? row.end_time.toISOString() : undefined,
+        pageCount: row.page_count ?? 0,
+        userAgent: row.user_agent ?? '',
+        ipAddress: row.ip_address ?? '',
+        referrer: row.referrer ?? '',
+        userId: row.user_id
+      }));
     } catch (error) {
-      console.error('Error getting visitor sessions:', error);
+      console.error('Error getting visitor sessions from database:', error);
+      // Fall back to memory storage
       return await this.memStorage.getVisitorSessions(startDate, endDate);
     }
   }
   
   async getAnalyticsSummary(period: 'day' | 'week' | 'month' | 'year'): Promise<AnalyticsSummary> {
     try {
-      // Implementation of database retrieval and computation
-      return await this.memStorage.getAnalyticsSummary(period);
+      // Calculate the start date based on the period
+      const now = new Date();
+      let startDate = new Date(now);
+      
+      switch (period) {
+        case 'day':
+          startDate.setDate(now.getDate() - 1);
+          break;
+        case 'week':
+          startDate.setDate(now.getDate() - 7);
+          break;
+        case 'month':
+          startDate.setMonth(now.getMonth() - 1);
+          break;
+        case 'year':
+          startDate.setFullYear(now.getFullYear() - 1);
+          break;
+      }
+      
+      // Get page views and sessions for the period directly from database
+      const pageViews = await this.getPageViews(startDate.toISOString(), now.toISOString());
+      const sessions = await this.getVisitorSessions(startDate.toISOString(), now.toISOString());
+      
+      // Calculate metrics
+      const totalPageViews = pageViews.length;
+      const uniqueVisitors = new Set(sessions.map(s => s.id)).size;
+      
+      // Calculate average session duration
+      let totalDuration = 0;
+      let countedSessions = 0;
+      
+      for (const session of sessions) {
+        if (session.endTime) {
+          const duration = new Date(session.endTime).getTime() - new Date(session.startTime).getTime();
+          if (duration > 0) {
+            totalDuration += duration;
+            countedSessions++;
+          }
+        }
+      }
+      
+      const averageSessionDuration = countedSessions > 0 ? totalDuration / countedSessions : 0;
+      
+      // Count page views by path
+      const pathCounts: Record<string, number> = {};
+      for (const view of pageViews) {
+        pathCounts[view.path] = (pathCounts[view.path] || 0) + 1;
+      }
+      
+      // Sort paths by view count and get top 5
+      const popularPages = Object.entries(pathCounts)
+        .sort(([, countA], [, countB]) => countB - countA)
+        .slice(0, 5)
+        .map(([path, count]) => ({ path, count }));
+      
+      return {
+        period,
+        startDate: startDate.toISOString(),
+        endDate: now.toISOString(),
+        totalPageViews,
+        uniqueVisitors,
+        averageSessionDuration,
+        popularPages
+      };
     } catch (error) {
-      console.error('Error getting analytics summary:', error);
+      console.error('Error getting analytics summary from database:', error);
+      // Fall back to memory storage
       return await this.memStorage.getAnalyticsSummary(period);
     }
   }
   
   async savePaymentTransaction(transaction: PaymentTransaction): Promise<void> {
     try {
-      // Implementation of database storage
+      // Store in the database using the payments table
+      const { db } = await import('./db');
+      const { payments } = await import('@shared/schema');
+      
+      // Insert into database
+      await db.insert(payments).values({
+        stripe_id: transaction.stripeId,
+        customer_email: transaction.customerEmail,
+        amount: transaction.amount,
+        currency: transaction.currency,
+        status: transaction.status,
+        created: new Date(transaction.created),
+        assessment_type: transaction.assessmentType,
+        metadata: JSON.stringify(transaction.metadata || {}),
+        is_refunded: transaction.isRefunded || false,
+        refund_amount: transaction.refundAmount,
+        refund_reason: transaction.refundReason,
+        promo_code: transaction.promoCode
+      });
+      
+      console.log(`Payment transaction saved to database: ${transaction.stripeId}`);
+      
+      // Still keep in memory as a fallback
       await this.memStorage.savePaymentTransaction(transaction);
     } catch (error) {
-      console.error('Error saving payment transaction:', error);
+      console.error('Error saving payment transaction to database:', error);
+      // Fall back to memory storage if database operation fails
       await this.memStorage.savePaymentTransaction(transaction);
     }
   }
   
   async getPaymentTransactions(startDate?: string, endDate?: string): Promise<PaymentTransaction[]> {
     try {
-      // Implementation of database retrieval
-      return await this.memStorage.getPaymentTransactions(startDate, endDate);
+      // Retrieve from database
+      const { db } = await import('./db');
+      const { payments } = await import('@shared/schema');
+      const { and, gte, lte, desc } = await import('drizzle-orm');
+      
+      let query = db.select().from(payments);
+      
+      // Apply date filters if provided
+      if (startDate || endDate) {
+        const conditions = [];
+        if (startDate) {
+          conditions.push(gte(payments.created, new Date(startDate)));
+        }
+        if (endDate) {
+          conditions.push(lte(payments.created, new Date(endDate)));
+        }
+        if (conditions.length > 0) {
+          query = query.where(and(...conditions));
+        }
+      }
+      
+      // Order by most recent first
+      query = query.orderBy(desc(payments.created));
+      
+      // Execute query
+      const results = await query;
+      
+      // Transform and return
+      return results.map(row => ({
+        stripeId: row.stripe_id,
+        customerEmail: row.customer_email,
+        amount: row.amount,
+        currency: row.currency,
+        status: row.status,
+        created: row.created.toISOString(),
+        assessmentType: row.assessment_type,
+        metadata: row.metadata ? JSON.parse(row.metadata) : {},
+        isRefunded: row.is_refunded ?? false,
+        refundAmount: row.refund_amount,
+        refundReason: row.refund_reason,
+        promoCode: row.promo_code
+      }));
     } catch (error) {
-      console.error('Error getting payment transactions:', error);
+      console.error('Error getting payment transactions from database:', error);
+      // Fall back to memory storage
       return await this.memStorage.getPaymentTransactions(startDate, endDate);
     }
   }
   
   async getPaymentTransactionByStripeId(stripeId: string): Promise<PaymentTransaction | null> {
     try {
-      // Implementation of database retrieval
-      return await this.memStorage.getPaymentTransactionByStripeId(stripeId);
+      // Retrieve from database
+      const { db } = await import('./db');
+      const { payments } = await import('@shared/schema');
+      const { eq } = await import('drizzle-orm');
+      
+      // Find transaction by Stripe ID
+      const [transaction] = await db.select()
+        .from(payments)
+        .where(eq(payments.stripe_id, stripeId));
+      
+      if (!transaction) {
+        return null;
+      }
+      
+      // Transform and return
+      return {
+        stripeId: transaction.stripe_id,
+        customerEmail: transaction.customer_email,
+        amount: transaction.amount,
+        currency: transaction.currency,
+        status: transaction.status,
+        created: transaction.created.toISOString(),
+        assessmentType: transaction.assessment_type,
+        metadata: transaction.metadata ? JSON.parse(transaction.metadata) : {},
+        isRefunded: transaction.is_refunded ?? false,
+        refundAmount: transaction.refund_amount,
+        refundReason: transaction.refund_reason,
+        promoCode: transaction.promo_code
+      };
     } catch (error) {
-      console.error('Error getting payment transaction by Stripe ID:', error);
+      console.error('Error getting payment transaction by Stripe ID from database:', error);
+      // Fall back to memory storage
       return await this.memStorage.getPaymentTransactionByStripeId(stripeId);
     }
   }
   
   async updatePaymentTransactionStatus(stripeId: string, status: string): Promise<void> {
     try {
-      // Implementation of database update
+      // Update in the database
+      const { db } = await import('./db');
+      const { payments } = await import('@shared/schema');
+      const { eq } = await import('drizzle-orm');
+      
+      // Update the transaction status
+      await db.update(payments)
+        .set({ status })
+        .where(eq(payments.stripe_id, stripeId));
+      
+      console.log(`Payment transaction status updated in database: ${stripeId} -> ${status}`);
+      
+      // Also update in memory storage
       await this.memStorage.updatePaymentTransactionStatus(stripeId, status);
     } catch (error) {
-      console.error('Error updating payment transaction status:', error);
+      console.error('Error updating payment transaction status in database:', error);
+      // Fall back to memory storage
       await this.memStorage.updatePaymentTransactionStatus(stripeId, status);
     }
   }
   
   async recordRefund(stripeId: string, amount: number, reason?: string): Promise<void> {
     try {
-      // Implementation of database update
+      // Update in the database
+      const { db } = await import('./db');
+      const { payments } = await import('@shared/schema');
+      const { eq } = await import('drizzle-orm');
+      
+      // Update the transaction with refund information
+      await db.update(payments)
+        .set({
+          is_refunded: true,
+          refund_amount: amount,
+          refund_reason: reason,
+          status: 'refunded'
+        })
+        .where(eq(payments.stripe_id, stripeId));
+      
+      console.log(`Refund recorded in database for transaction: ${stripeId}`);
+      
+      // Also update in memory storage
       await this.memStorage.recordRefund(stripeId, amount, reason);
     } catch (error) {
-      console.error('Error recording refund:', error);
+      console.error('Error recording refund in database:', error);
+      // Fall back to memory storage
       await this.memStorage.recordRefund(stripeId, amount, reason);
     }
   }
