@@ -891,8 +891,211 @@ export const questions: Question[] = [
     ],
     weight: 2
   },
+  {
+    id: 66,
+    section: "Your Family/Home Life",
+    subsection: "Traditions: Family Photos",
+    type: "M",
+    text: "Your Family/Home Life: Traditions: Family Photos",
+    options: [
+      "We are committed to taking a full immediate family photo at least once per year",
+      "We are committed to taking a full immediate family photo at least once every two years",
+      "Other: Please detail"
+    ],
+    weight: 1
+  },
+  {
+    id: 67,
+    section: "Your Family/Home Life",
+    subsection: "House Cleaning & Maintenance",
+    type: "M",
+    text: "Your Family/Home Life: House Cleaning & Maintenance",
+    options: [
+      "In view of gifting and capacity, we commit to being the primary individual in our family who manages and executes the periodic functions of our house cleaning and maintenance, which includes but is not limited to cleaning and maintenance of living space, laundry and dry cleaning.",
+      "We commit to not conflating this role and responsibility with function as always being the one executing the function/ responsibility day to day. What this means is is primarily and ultimately responsible and accountable for seeing it get done, within the financial and capacity constraints of the family."
+    ],
+    weight: 3
+  },
+  {
+    id: 68,
+    section: "Your Family/Home Life",
+    subsection: "Cleaning Model with Home (Inside)",
+    type: "M",
+    text: "Your Family/Home Life: Cleaning Model with Home (Inside)",
+    options: [
+      "We commit to a model of weekly house cleaning taking place on Saturdays or Sundays which includes but is not limited to, cleaning of general living areas, kitchen, bathrooms and bedrooms and laundry (assumption of general tidiness, cleaning after self during the week).",
+      "We commit to a model of bi-weekly house cleaning taking place on Saturdays or Sundays which includes but is not limited to, cleaning of general living areas, kitchen, bathrooms and bedrooms and laundry (assumption of general tidiness, cleaning after self during the week).",
+      "We commit to a model of bi-weekly house cleaning by an outside cleaning vendor which includes but is not limited to, cleaning of general living areas, kitchen, bathrooms and bedrooms and laundry (assumption of general tidiness, cleaning after self during the week).",
+      "Other: Please detail"
+    ],
+    weight: 2
+  },
+  {
+    id: 69,
+    section: "Your Family/Home Life",
+    subsection: "Cleaning Model with Food",
+    type: "M",
+    text: "Your Family/Home Life: Cleaning Model with Food",
+    options: [
+      "We commit to a model where the person who prepares the food is not the person who cleans up the kitchen, sink and table after the food is prepared and consumed. It is the responsibility of the noncooking spouse/children to clean.",
+      "We commit to a model where the person who prepares the food is responsible for cleaning up after the meal is done.",
+      "We commit to a model where the person who prepares the food is responsible for cleaning up as they cook and after the meal is done.",
+      "Other: Please detail"
+    ],
+    weight: 2
+  },
+  {
+    id: 70,
+    section: "Your Family/Home Life",
+    subsection: "Cleaning Model with Home (Outside)",
+    type: "M",
+    text: "Your Family/Home Life: Cleaning Model with Home (Outside) (if applicable)",
+    options: [
+      "We commit to a model of weekly outside housework taking place on Saturdays or Sundays which includes but is not limited to, cleaning of vehicles, lawn care, cleaning of trash & recycling bins, deck, sidewalk and general gardening",
+      "We commit to a model of monthly outside housework taking place on Saturdays or Sundays which includes but is not limited to, cleaning of vehicles, lawn care, cleaning of trash & recycling bins, deck, sidewalk and general gardening",
+      "We commit to a model of outside housework by a hired outside vendor which includes but is not limited to, cleaning of vehicles, lawn care, cleaning of trash & recycling bins, deck, sidewalk and general gardening",
+      "Other: Please detail"
+    ],
+    weight: 2
+  },
+  {
+    id: 71,
+    section: "Your Family/Home Life",
+    subsection: "Traditions: Family Outings",
+    type: "M",
+    text: "Your Family/Home Life: Traditions: Family Outings [Excludes Date Night]",
+    options: [
+      "We are committed to doing at least one outing as a family at least once weekly",
+      "We are committed to doing at least one outing as a family at least bi-weekly",
+      "We are committed to doing at least one outing as a family at least monthly",
+      "Other: Please detail"
+    ],
+    weight: 2
+  },
+  {
+    id: 72,
+    section: "Your Finances",
+    subsection: "The Overall Model",
+    type: "M",
+    text: "Your Finances: The Overall Model",
+    options: [
+      "We commit to having a \"One Flesh, One Financial\" model where any and every amount of income generated by either spouse is considered the family's resources and is budgeted and apportioned against our prayerfully planned annual budget",
+      "Other: Before committing to this we need further discussion in our session around how this would operate"
+    ],
+    weight: 8
+  },
+  {
+    id: 73,
+    section: "Your Finances",
+    subsection: "Financial Planning Model",
+    type: "M",
+    text: "Your Finances: Financial Planning Model",
+    options: [
+      "We commit to developing an annual budget, with monthly discussions on the of each month, around our status (actuals) against our goals",
+      "We commit to working with a financial advisor, who will help us develop an annual budget, with monthly discussion around our status (actuals) against our goals",
+      "We commit to developing an annual budget, with bi-monthly discussions on the of every other month, around our status (actuals) against our goals",
+      "Other: Please detail"
+    ],
+    weight: 5
+  },
+  {
+    id: 74,
+    section: "Your Finances",
+    subsection: "Financial Management Model",
+    type: "M",
+    text: "Your Finances: Financial Management Model",
+    options: [
+      "In view of gifting and capacity, we commit to being the primary individual in our family who manages the periodic functions of our finances, which includes but is not limited to, developing the budget, financial reconciliations, bill-payment and investment related asset management and allocation",
+      "Other: We commit to having a licensed financial professional handle and manage all of our financial matters. We commit to at least monthly updates (indefinitely) with the professional of our choosing."
+    ],
+    weight: 5
+  },
+  {
+    id: 75,
+    section: "Your Finances",
+    subsection: "Financial Generosity (in Faith)",
+    type: "M",
+    text: "Your Finances: Financial Generosity (in Faith)",
+    options: [
+      "We commit to giving at least 10% of our net income to our faith community monthly",
+      "We commit to giving at least 2% of our net income to our faith community monthly, with the goal of increasing giving by 1% each year",
+      "We commit to giving at least 10% of our net income to our faith community and at least 2% to causes and missions we believe in.",
+      "Other: Please detail"
+    ],
+    weight: 6
+  },
+  {
+    id: 76,
+    section: "Your Finances",
+    subsection: "Financial Management: Payments Execution (Public Social)",
+    type: "M",
+    text: "Your Finances: Financial Management: Payments Execution (Public Social)",
+    options: [
+      "We're committed to paying for social outings, based on who initiated the outing.",
+      "We're committed to paying for social outings, based on whoever has the means at that moment.",
+      "We're committed to paying for social outings, with the male generally being the one pulling out the card."
+    ],
+    weight: 2
+  },
+  {
+    id: 77,
+    section: "Your Finances",
+    subsection: "Financial Management: with Children (Allowance)",
+    type: "M",
+    text: "Your Finances: Financial Management: with Children (Allowance)",
+    options: [
+      "We commit to giving our children a weekly allowance as an opportunity to teach financial stewardship",
+      "While we believe in teaching our children proper financial stewardship, we do not believe in giving them an allowance. We will provide resources as needed and available.",
+      "We commit to giving our children a monthly allowance as an opportunity to teach stewardship",
+      "Other: Please detail"
+    ],
+    weight: 2
+  },
+  {
+    id: 78,
+    section: "Your Finances",
+    subsection: "Financial Management: with Children (Investments / Savings)",
+    type: "M",
+    text: "Your Finances: Financial Management: with Children (Investments / Savings)",
+    options: [
+      "We commit to opening a 529 plan/account for our children after they are born and depositing a budget sensitive amount monthly",
+      "We commit to opening a savings account for our children after they are born and depositing a budget sensitive amount monthly",
+      "We commit to opening a brokerage account for our children after they are born and depositing a budget sensitive amount monthly",
+      "We commit to opening both a 529 plan/account and a brokerage account for our children after they are born and depositing a budget sensitive amount monthly",
+      "Other: Please detail"
+    ],
+    weight: 2
+  },
+  {
+    id: 79,
+    section: "Your Family/Home Life",
+    subsection: "Food Preparation & Planning: Overall Model: Responsibility",
+    type: "M",
+    text: "Your Family/Home Life: Food Preparation & Planning: Overall Model: Responsibility",
+    options: [
+      "We commit to having be responsible for the overall food planning and preparation for the family, with considerations made for date night, family outings and circumstances when one is unable to do. (80/20)",
+      "We commit to having be responsible for the overall food planning and preparation for the family, with a split of being responsible for meals during the week (M-Fri) and being responsible for meals during the weekend.",
+      "We commit to having a chef / nanny be responsible for the overall food planning and preparation for the family.",
+      "Other: Please detail"
+    ],
+    weight: 4
+  },
+  {
+    id: 80,
+    section: "Your Family/Home Life",
+    subsection: "Financial Stewardship & Nutrition Health Goals",
+    type: "M",
+    text: "Your Family/Home Life: Financial Stewardship & Nutrition Health Goals",
+    options: [
+      "We commit to meal planning weekly and batch cooking (if doing it ourselves) with a goal of minimizing eating out to 1x per week for both stewardship and health benefits",
+      "We commit to meal planning weekly and batch cooking (if doing it ourselves) with a goal of minimizing eating out to 2x per week for both stewardship and health benefits",
+      "We commit to meal planning weekly and batch cooking (if doing it ourselves) with a goal of minimizing eating out to 3x per week for both stewardship and health benefits",
+      "Other: Please detail"
+    ],
+    weight: 3
+  },
   
-  // Add additional declaration questions (67-99) to reach 99 total
+  // Add additional declaration questions (81-83, 87-88) to reach 99 total
   {
     id: 84,
     section: "Your Health and Wellness",
