@@ -124,7 +124,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         profile: validatedData.data.profile,
         genderProfile: validatedData.data.genderProfile || null,
         responses: validatedData.data.responses,
-        demographics: validatedData.data.demographics,
+        demographics: {
+          ...validatedData.data.demographics,
+          hasPurchasedBook: validatedData.data.demographics.hasPurchasedBook || "No"
+        },
         timestamp: new Date().toISOString()
       };
       
@@ -251,7 +254,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         profile: validatedData.primaryAssessment.profile,
         genderProfile: validatedData.primaryAssessment.genderProfile,
         responses: validatedData.primaryAssessment.responses,
-        demographics: validatedData.primaryAssessment.demographics,
+        demographics: {
+          ...validatedData.primaryAssessment.demographics,
+          hasPurchasedBook: validatedData.primaryAssessment.demographics.hasPurchasedBook || "No"
+        },
         timestamp: validatedData.primaryAssessment.timestamp || new Date().toISOString()
       };
       
@@ -300,7 +306,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         profile: validatedData.spouseAssessment.profile,
         genderProfile: validatedData.spouseAssessment.genderProfile,
         responses: validatedData.spouseAssessment.responses,
-        demographics: validatedData.spouseAssessment.demographics,
+        demographics: {
+          ...validatedData.spouseAssessment.demographics,
+          hasPurchasedBook: validatedData.spouseAssessment.demographics.hasPurchasedBook || "No"
+        },
         coupleId: validatedData.coupleId,
         coupleRole: 'spouse',
         timestamp: validatedData.spouseAssessment.timestamp || new Date().toISOString()
@@ -564,50 +573,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const { v4: uuidv4 } = await import('uuid');
         
         // Create a minimal assessment result with just the THM pool information
-        const minimalAssessment = {
-          id: uuidv4(),
+        const minimalAssessment: AssessmentResult = {
           email: customerInfo.email,
           name: `${customerInfo.firstName} ${customerInfo.lastName}`,
-          scores: JSON.stringify({
+          scores: {
             overallPercentage: 0,
             totalEarned: 0,
             totalPossible: 0,
             sections: {},
             strengths: [],
             improvementAreas: []
-          }),
-          profile: JSON.stringify({
+          },
+          profile: {
             id: 0,
             name: "THM Pool Applicant",
             description: "Applied to THM Arranged Marriage Pool but has not completed assessment",
             genderSpecific: null,
             criteria: []
-          }),
+          },
           genderProfile: null, // Adding missing required field
-          responses: JSON.stringify({}),
-          demographics: JSON.stringify({
+          responses: {},
+          demographics: {
             firstName: customerInfo.firstName,
             lastName: customerInfo.lastName,
             email: customerInfo.email,
-            phone: customerInfo.phone || '',
-            gender: '', // Required field
-            birthday: '', // Required field
-            lifeStage: '', // Required field
-            marriageStatus: '', // Required field
-            desireChildren: '', // Required field
-            ethnicity: '', // Required field
-            city: '', // Required field
-            state: '', // Required field
-            zipCode: '', // Required field
-            hasPurchasedBook: 'no', // Required field
-            purchaseDate: '', // Required field
-            thmPoolApplied: true,
-            assessmentType: customerInfo.assessmentType || 'individual',
-            completedAssessment: false,
-            pendingCompletion: true
-          }),
-          transactionId: transaction.id,
+            gender: 'Not specified', // Required field
+            birthday: 'Not specified', // Required field
+            lifeStage: 'Not specified', // Required field
+            marriageStatus: 'Not specified', // Required field
+            desireChildren: 'Not specified', // Required field
+            ethnicity: 'Not specified', // Required field
+            city: 'Not specified', // Required field
+            state: 'Not specified', // Required field
+            zipCode: 'Not specified', // Required field
+            hasPurchasedBook: 'No', // Required field
+          },
           timestamp: new Date().toISOString(),
+          transactionId: transaction.id,
           reportSent: false
         };
         
