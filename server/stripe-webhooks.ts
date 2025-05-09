@@ -213,8 +213,33 @@ async function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent)
     // Continue without the customer information
   }
   
-  // Determine product type from metadata or default to 'individual'
-  const productType = paymentIntent.metadata?.productType || 'individual';
+  // Extract product information from the description or metadata
+  let productType = paymentIntent.metadata?.productType || 'individual';
+  let productName = paymentIntent.metadata?.productName || '';
+  
+  // If there's a charge description containing "THM Arranged Marriage Pool", update the product type
+  try {
+    const charges = await stripe.charges.list({ payment_intent: paymentIntent.id });
+    if (charges.data.length > 0) {
+      const charge = charges.data[0];
+      const description = charge.description || '';
+      
+      if (description.includes('THM Arranged Marriage Pool')) {
+        productType = 'marriage_pool';
+        productName = 'THM Arranged Marriage Pool Application Fee';
+      } else if (description.includes('The 100 Marriage Assessment - Series 1 (Couple)')) {
+        productType = 'couple';
+        productName = 'The 100 Marriage Assessment - Series 1 (Couple)';
+      } else if (description.includes('The 100 Marriage Assessment - Series 1 (Individual)')) {
+        productType = 'individual';
+        productName = 'The 100 Marriage Assessment - Series 1 (Individual)';
+      } else if (!productName) {
+        productName = description; // Use charge description as fallback
+      }
+    }
+  } catch (error) {
+    console.error(`Failed to fetch charge descriptions for payment intent ${paymentIntent.id}:`, error);
+  }
   
   // Create transaction object
   const transaction = {
@@ -227,10 +252,13 @@ async function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent)
     status: 'succeeded',
     created: new Date(paymentIntent.created * 1000).toISOString(),
     productType,
+    productName,
     metadata: JSON.stringify(paymentIntent.metadata),
     isRefunded: false,
     sessionId: paymentIntent.metadata?.sessionId
   };
+  
+  console.log(`Recording payment for: ${productName} (${productType}) - Amount: ${paymentIntent.amount/100} ${paymentIntent.currency.toUpperCase()}`)
   
   // Save the new transaction
   await storage.savePaymentTransaction(transaction);
@@ -278,8 +306,33 @@ async function handlePaymentIntentFailed(paymentIntent: Stripe.PaymentIntent) {
     // Continue without the customer information
   }
   
-  // Determine product type from metadata or default to 'individual'
-  const productType = paymentIntent.metadata?.productType || 'individual';
+  // Extract product information from the description or metadata
+  let productType = paymentIntent.metadata?.productType || 'individual';
+  let productName = paymentIntent.metadata?.productName || '';
+  
+  // If there's a charge description, update product info
+  try {
+    const charges = await stripe.charges.list({ payment_intent: paymentIntent.id });
+    if (charges.data.length > 0) {
+      const charge = charges.data[0];
+      const description = charge.description || '';
+      
+      if (description.includes('THM Arranged Marriage Pool')) {
+        productType = 'marriage_pool';
+        productName = 'THM Arranged Marriage Pool Application Fee';
+      } else if (description.includes('The 100 Marriage Assessment - Series 1 (Couple)')) {
+        productType = 'couple';
+        productName = 'The 100 Marriage Assessment - Series 1 (Couple)';
+      } else if (description.includes('The 100 Marriage Assessment - Series 1 (Individual)')) {
+        productType = 'individual';
+        productName = 'The 100 Marriage Assessment - Series 1 (Individual)';
+      } else if (!productName) {
+        productName = description; // Use charge description as fallback
+      }
+    }
+  } catch (error) {
+    console.error(`Failed to fetch charge descriptions for failed payment intent ${paymentIntent.id}:`, error);
+  }
   
   // Save the failed transaction
   await storage.savePaymentTransaction({
@@ -292,6 +345,7 @@ async function handlePaymentIntentFailed(paymentIntent: Stripe.PaymentIntent) {
     status: 'failed',
     created: new Date(paymentIntent.created * 1000).toISOString(),
     productType,
+    productName,
     metadata: JSON.stringify(paymentIntent.metadata),
     isRefunded: false,
     sessionId: paymentIntent.metadata?.sessionId

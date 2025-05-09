@@ -36,7 +36,8 @@ export const paymentTransactions = pgTable('payment_transactions', {
   currency: text('currency').notNull().default('usd'),
   status: text('status').notNull(),
   created: timestamp('created').notNull().defaultNow(),
-  productType: text('product_type').notNull(), // 'individual' or 'couple'
+  productType: text('product_type').notNull(), // 'individual', 'couple', or 'marriage_pool'
+  productName: text('product_name'), // Full descriptive name of the product
   metadata: text('metadata'), // JSON string for additional data
   isRefunded: boolean('is_refunded').notNull().default(false),
   refundAmount: numeric('refund_amount'),
@@ -91,6 +92,7 @@ export interface PaymentTransaction {
   status: string;
   created: string;
   productType: string;
+  productName?: string;
   metadata?: string;
   isRefunded: boolean;
   refundAmount?: number;
