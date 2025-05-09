@@ -515,6 +515,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // If this was a THM pool application and the transaction doesn't have an email,
       // create a partial assessment record to show in the admin dashboard
       if (customerInfo.thmPoolApplied && (!transaction.customerEmail || transaction.productType === 'marriage_pool')) {
+        // Import uuid
+        const { v4: uuidv4 } = await import('uuid');
+        
         // Create a minimal assessment result with just the THM pool information
         const minimalAssessment = {
           id: uuidv4(),
@@ -535,12 +538,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
             genderSpecific: null,
             criteria: []
           }),
+          genderProfile: null, // Adding missing required field
           responses: JSON.stringify({}),
           demographics: JSON.stringify({
             firstName: customerInfo.firstName,
             lastName: customerInfo.lastName,
             email: customerInfo.email,
             phone: customerInfo.phone || '',
+            gender: '', // Required field
+            birthday: '', // Required field
+            lifeStage: '', // Required field
+            marriageStatus: '', // Required field
+            desireChildren: '', // Required field
+            ethnicity: '', // Required field
+            city: '', // Required field
+            state: '', // Required field
+            zipCode: '', // Required field
+            hasPurchasedBook: 'no', // Required field
+            purchaseDate: '', // Required field
             thmPoolApplied: true,
             assessmentType: customerInfo.assessmentType || 'individual',
             completedAssessment: false,
@@ -789,7 +804,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
           invitedEmail: contact.email,
           timestamp: new Date().toISOString(),
           status: 'sent' as const,
-          promoCode
+          promoCode,
+          // Additional required fields for ReferralData type
+          fromEmail: referrer.email,
+          toEmail: contact.email,
+          createdTimestamp: new Date().toISOString()
         };
         
         // Add to storage
@@ -1007,6 +1026,132 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({
         success: false,
         message: `Failed to sync Stripe payments: ${error instanceof Error ? error.message : String(error)}`
+      });
+    }
+  });
+  
+  // Send follow-up emails to users who paid but haven't completed their assessment
+  app.post('/api/admin/send-assessment-reminders', async (req: Request, res: Response) => {
+    try {
+      // In production, authenticate this endpoint
+      const { daysAgo = 3 } = req.body;
+      
+      // Find incomplete assessments with transactions
+      // 1. Get all transactions with successful payments
+      const allTransactions = await storage.getPaymentTransactions();
+      const successfulTransactions = allTransactions.filter(t => 
+        t.status === 'succeeded' && t.customerEmail && 
+        (t.productType === 'individual' || t.productType === 'couple')
+      );
+      
+      // Track statistics for reporting
+      const stats = {
+        transactionsChecked: successfulTransactions.length,
+        incompleteAssessments: 0,
+        emailsSent: 0,
+        errors: 0
+      };
+      
+      // Calculate the cutoff date for reminders 
+      // (only send to payments made at least X days ago)
+      const cutoffDate = new Date();
+      cutoffDate.setDate(cutoffDate.getDate() - Number(daysAgo));
+      const cutoffISOString = cutoffDate.toISOString();
+      
+      console.log(`Checking for incomplete assessments paid before ${cutoffISOString}`);
+      
+      // Keep track of emails we've processed
+      const processedEmails = new Set<string>();
+      const emailPromises: Promise<any>[] = [];
+      
+      // Process each transaction
+      for (const transaction of successfulTransactions) {
+        try {
+          // Skip if no email available
+          if (!transaction.customerEmail || processedEmails.has(transaction.customerEmail)) {
+            continue;
+          }
+          
+          // Skip if transaction is too recent (within daysAgo)
+          if (transaction.created > cutoffISOString) {
+            continue;
+          }
+          
+          // Check if there's a completed assessment for this email
+          const assessments = await storage.getAssessments(transaction.customerEmail);
+          
+          // If no assessments or no completed ones, send a reminder
+          const hasCompletedAssessment = assessments.some(a => {
+            const demographics = JSON.parse(a.demographics);
+            return demographics?.completedAssessment === true;
+          });
+          
+          if (!hasCompletedAssessment) {
+            stats.incompleteAssessments++;
+            
+            // Get customer name from transaction metadata
+            let customerName = '';
+            if (transaction.metadata) {
+              try {
+                const metadata = JSON.parse(transaction.metadata);
+                if (metadata.firstName && metadata.lastName) {
+                  customerName = `${metadata.firstName} ${metadata.lastName}`;
+                }
+              } catch (err) {
+                console.error(`Error parsing metadata for transaction ${transaction.id}:`, err);
+              }
+            }
+            
+            // Default name if not available
+            if (!customerName) {
+              customerName = 'Valued Customer';
+            }
+            
+            // Send reminder email
+            console.log(`Sending assessment reminder to ${transaction.customerEmail}`);
+            
+            emailPromises.push(
+              sendAssessmentReminder({
+                to: transaction.customerEmail,
+                customerName,
+                assessmentType: transaction.productType as 'individual' | 'couple',
+                purchaseDate: transaction.created,
+                transactionId: transaction.id
+              }).then(result => {
+                if (result.success) {
+                  stats.emailsSent++;
+                } else {
+                  stats.errors++;
+                }
+                return result;
+              }).catch(err => {
+                stats.errors++;
+                console.error(`Error sending reminder to ${transaction.customerEmail}:`, err);
+                return { success: false, error: err.message };
+              })
+            );
+            
+            // Mark this email as processed
+            processedEmails.add(transaction.customerEmail);
+          }
+        } catch (err) {
+          console.error(`Error processing transaction ${transaction.id}:`, err);
+          stats.errors++;
+        }
+      }
+      
+      // Wait for all emails to be sent
+      await Promise.all(emailPromises);
+      
+      return res.status(200).json({
+        success: true,
+        stats
+      });
+    } catch (error) {
+      console.error('Error sending assessment reminders:', error);
+      return res.status(500).json({
+        success: false,
+        message: `Failed to send assessment reminders: ${error instanceof Error ? error.message : String(error)}`
       });
     }
   });

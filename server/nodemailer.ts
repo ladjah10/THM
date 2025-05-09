@@ -484,6 +484,141 @@ export async function sendReferralEmail(data: ReferralEmailData): Promise<{ succ
 /**
  * Sends invitation emails to both partners for a couple assessment
  */
+// Interface for assessment reminder email
+interface AssessmentReminderData {
+  to: string;
+  customerName: string;
+  assessmentType: 'individual' | 'couple';
+  purchaseDate: string;
+  transactionId: string;
+}
+
+/**
+ * Format the assessment reminder email for users who haven't completed their assessment
+ */
+function formatAssessmentReminderEmail(data: AssessmentReminderData): string {
+  const { customerName, assessmentType, purchaseDate } = data;
+  
+  // Format purchase date
+  const date = new Date(purchaseDate);
+  const formattedDate = date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+  
+  // Customize message based on assessment type
+  const assessmentTypeText = assessmentType === 'couple' ? 'Couple Assessment' : 'Individual Assessment';
+  
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <title>Complete Your 100 Marriage Assessment</title>
+      <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; }
+        .container { padding: 20px; }
+        .header { margin-bottom: 30px; }
+        .section { margin-bottom: 25px; }
+        h1 { color: #2c3e50; }
+        h2 { color: #3498db; margin-top: 20px; }
+        .cta-button { 
+          display: inline-block; 
+          background-color: #3498db; 
+          color: white !important; 
+          padding: 12px 24px; 
+          text-decoration: none; 
+          border-radius: 4px; 
+          font-weight: bold; 
+          margin: 15px 0;
+        }
+        .reminder-box { 
+          background-color: #fff8e1; 
+          border-left: 4px solid #ffc107; 
+          padding: 15px; 
+          margin: 15px 0; 
+        }
+        .footer { margin-top: 30px; text-align: center; font-size: 12px; color: #7f8c8d; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>Your 100 Marriage Assessment Is Waiting For You</h1>
+        </div>
+        
+        <div class="section">
+          <p>Dear ${customerName},</p>
+          <p>We noticed that you purchased The 100 Marriage Assessment - Series 1 (${assessmentTypeText}) on ${formattedDate}, but you haven't completed the assessment yet.</p>
+        </div>
+        
+        <div class="reminder-box">
+          <h2 style="margin-top: 0; color: #f39c12;">Your Assessment is Ready to Complete</h2>
+          <p>You've already paid for this valuable assessment, and we're excited for you to experience the clarity and insights it provides.</p>
+          <p><strong>Benefits of completing your assessment:</strong></p>
+          <ul>
+            <li>Discover your unique psychographic profile</li>
+            <li>Understand your expectations in relationships and marriage</li>
+            <li>Identify your relationship strengths and areas for growth</li>
+            <li>Receive a beautiful, detailed PDF report of your results</li>
+          </ul>
+        </div>
+        
+        <div class="section" style="text-align: center;">
+          <a href="https://100marriage.com/assessment" class="cta-button">Complete My Assessment Now</a>
+          <p style="font-size: 14px; color: #7f8c8d; margin-top: 5px;">Takes just 15-20 minutes to complete</p>
+        </div>
+        
+        <div class="section">
+          <p>If you have any questions or need assistance, please reply to this email or contact us at <a href="mailto:support@100marriage.com">support@100marriage.com</a>.</p>
+          <p>We're looking forward to providing you with valuable insights about your relationship expectations!</p>
+          <p>Warmly,<br>The 100 Marriage Assessment Team</p>
+        </div>
+        
+        <div class="footer">
+          <p>(c) 2025 Lawrence E. Adjah - The 100 Marriage Assessment - Series 1</p>
+          <p>This email was sent because you purchased The 100 Marriage Assessment but haven't completed it yet.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+}
+
+/**
+ * Sends an assessment reminder email to users who haven't completed their assessment
+ */
+export async function sendAssessmentReminder(data: AssessmentReminderData): Promise<{ success: boolean, previewUrl?: string }> {
+  try {
+    // Create transporter
+    const { transporter, testAccount } = await createTransporter();
+    
+    // Format the email HTML content
+    const emailHtml = formatAssessmentReminderEmail(data);
+    
+    // Send mail with defined transport object
+    const info = await transporter.sendMail({
+      from: `"The 100 Marriage Assessment" <reminders@wgodw.com>`,
+      to: data.to,
+      subject: `Don't Miss Out - Complete Your 100 Marriage Assessment`,
+      html: emailHtml,
+    });
+
+    console.log(`Assessment reminder email sent: ${info.messageId}`);
+    const previewUrl = nodemailer.getTestMessageUrl(info);
+    console.log(`Preview URL: ${previewUrl}`);
+    
+    return { 
+      success: true,
+      previewUrl: previewUrl ? previewUrl : undefined
+    };
+  } catch (error) {
+    console.error('Assessment reminder email error:', error);
+    return { success: false };
+  }
+}
+
 export async function sendCoupleInvitationEmails(
   data: CoupleInvitationData
 ): Promise<{ success: boolean, previewUrls?: string[] }> {
