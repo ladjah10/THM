@@ -1075,6 +1075,85 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Admin endpoint to recover customer data directly from Stripe
+  app.get('/api/admin/customer-data-recovery', async (req: Request, res: Response) => {
+    try {
+      // Initialize Stripe
+      if (!process.env.STRIPE_SECRET_KEY) {
+        throw new Error('Missing STRIPE_SECRET_KEY environment variable');
+      }
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+      
+      // Get all payment intents from Stripe since May 6, 2025
+      const paymentIntents = await stripe.paymentIntents.list({
+        limit: 100,
+        created: {
+          gte: Math.floor(new Date('2025-05-06').getTime() / 1000)
+        }
+      });
+      
+      console.log(`Retrieved ${paymentIntents.data.length} payment intents for customer data recovery`);
+      
+      // Collect detailed customer information for each payment
+      const customerData = [];
+      
+      for (const intent of paymentIntents.data) {
+        if (intent.status !== 'succeeded') continue;
+        
+        // Get associated charges for more customer details
+        const charges = await stripe.charges.list({ payment_intent: intent.id });
+        const charge = charges.data[0] || null;
+        
+        // Get customer information if available
+        let customerInfo = null;
+        if (typeof intent.customer === 'string' && intent.customer) {
+          try {
+            customerInfo = await stripe.customers.retrieve(intent.customer);
+          } catch (error) {
+            console.error(`Error retrieving customer ${intent.customer}:`, error);
+          }
+        }
+        
+        // Extract all possible customer information
+        const customerRecord = {
+          payment_id: intent.id,
+          payment_date: new Date(intent.created * 1000).toISOString(),
+          amount: intent.amount / 100,
+          currency: intent.currency.toUpperCase(),
+          description: charge?.description || '',
+          email: intent.receipt_email || 
+                (customerInfo && !Array.isArray(customerInfo) ? customerInfo.email : null) || 
+                charge?.billing_details?.email || 
+                intent.metadata?.email || '',
+          name: charge?.billing_details?.name || 
+               (customerInfo && !Array.isArray(customerInfo) ? customerInfo.name : null) || 
+               intent.metadata?.name || 
+               `${intent.metadata?.firstName || ''} ${intent.metadata?.lastName || ''}`.trim() || '',
+          phone: charge?.billing_details?.phone || 
+                (customerInfo && !Array.isArray(customerInfo) ? customerInfo.phone : null) || 
+                intent.metadata?.phone || '',
+          address: charge?.billing_details?.address || 
+                  (customerInfo && !Array.isArray(customerInfo) ? customerInfo.address : null) || {},
+          metadata: intent.metadata || {},
+          product_type: charge?.description?.includes('THM Arranged Marriage Pool') ? 'marriage_pool' :
+                      charge?.description?.includes('Couple') ? 'couple' : 
+                      charge?.description?.includes('Individual') ? 'individual' : 
+                      intent.metadata?.productType || intent.metadata?.type || 'unknown'
+        };
+        
+        customerData.push(customerRecord);
+      }
+      
+      res.status(200).json(customerData);
+    } catch (error) {
+      console.error('Error recovering customer data from Stripe:', error);
+      res.status(500).json({
+        success: false,
+        message: `Error recovering customer data: ${error instanceof Error ? error.message : String(error)}`
+      });
+    }
+  });
+  
   // Send follow-up emails to users who paid but haven't completed their assessment
   app.post('/api/admin/send-assessment-reminders', async (req: Request, res: Response) => {
     try {

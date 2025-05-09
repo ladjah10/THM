@@ -885,10 +885,146 @@ export default function AdminDashboard() {
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="assessments">Assessment Results</TabsTrigger>
             <TabsTrigger value="historical">Historical Data (Since May 6)</TabsTrigger>
+            <TabsTrigger value="data-recovery">Customer Data Recovery</TabsTrigger>
             <TabsTrigger value="referrals">Invitations & Referrals</TabsTrigger>
             <TabsTrigger value="payments">Payment Transactions</TabsTrigger>
             <TabsTrigger value="matching">THM Pool Matching</TabsTrigger>
           </TabsList>
+          
+          {/* Customer Data Recovery Tab */}
+          <TabsContent value="data-recovery" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Customer Data Recovery</CardTitle>
+                <CardDescription>
+                  Recover customer information directly from Stripe for customers who made payments since May 6, 2025
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="mb-4">
+                  <Button 
+                    onClick={() => {
+                      setIsLoading(true);
+                      
+                      apiRequest("GET", "/api/admin/customer-data-recovery")
+                        .then(res => res.json())
+                        .then(data => {
+                          setCustomerRecoveryData(data);
+                          setIsLoading(false);
+                          toast({
+                            title: "Data Recovery Complete",
+                            description: `Retrieved contact information for ${data.length} customers`,
+                            variant: "default"
+                          });
+                        })
+                        .catch(error => {
+                          setIsLoading(false);
+                          toast({
+                            title: "Data Recovery Failed",
+                            description: error.message,
+                            variant: "destructive"
+                          });
+                        });
+                    }}
+                    className="bg-green-600 hover:bg-green-700 text-white"
+                  >
+                    <FileDown className="h-4 w-4 mr-2" />
+                    Recover Customer Data from Stripe
+                  </Button>
+                </div>
+                
+                {isLoading ? (
+                  <div className="flex justify-center items-center py-12">
+                    <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
+                    <span className="ml-2 text-gray-500">Retrieving customer data from Stripe...</span>
+                  </div>
+                ) : customerRecoveryData && customerRecoveryData.length > 0 ? (
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Date</TableHead>
+                          <TableHead>Email</TableHead>
+                          <TableHead>Name</TableHead>
+                          <TableHead>Phone</TableHead>
+                          <TableHead>Amount</TableHead>
+                          <TableHead>Product Type</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {customerRecoveryData.map((customer, index) => (
+                          <TableRow key={index}>
+                            <TableCell>{new Date(customer.payment_date).toLocaleDateString()}</TableCell>
+                            <TableCell>{customer.email || 'N/A'}</TableCell>
+                            <TableCell>{customer.name || 'N/A'}</TableCell>
+                            <TableCell>{customer.phone || 'N/A'}</TableCell>
+                            <TableCell>${customer.amount}</TableCell>
+                            <TableCell>
+                              <Badge variant={
+                                customer.product_type === 'marriage_pool' ? 'secondary' :
+                                customer.product_type === 'individual' ? 'outline' :
+                                customer.product_type === 'couple' ? 'default' : 'destructive'
+                              }>
+                                {customer.product_type}
+                              </Badge>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                    
+                    <div className="mt-4 flex justify-between items-center">
+                      <div className="text-sm text-gray-500">
+                        Total records: {customerRecoveryData.length}
+                      </div>
+                      <Button 
+                        onClick={() => {
+                          // Create CSV data
+                          const headers = ["Date", "Email", "Name", "Phone", "Amount", "Product Type", "Description"];
+                          
+                          const csvRows = [
+                            headers.join(','),
+                            ...customerRecoveryData.map(customer => [
+                              new Date(customer.payment_date).toLocaleDateString(),
+                              `"${customer.email || ''}"`,
+                              `"${customer.name || ''}"`,
+                              `"${customer.phone || ''}"`,
+                              customer.amount,
+                              customer.product_type,
+                              `"${customer.description || ''}"`,
+                            ].join(','))
+                          ];
+                          
+                          const csvString = csvRows.join('\n');
+                          const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+                          const url = URL.createObjectURL(blob);
+                          const link = document.createElement('a');
+                          link.setAttribute('href', url);
+                          link.setAttribute('download', `customer-data-${new Date().toISOString().split('T')[0]}.csv`);
+                          link.style.visibility = 'hidden';
+                          document.body.appendChild(link);
+                          link.click();
+                          document.body.removeChild(link);
+                        }}
+                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                        size="sm"
+                      >
+                        Download CSV
+                      </Button>
+                    </div>
+                  </div>
+                ) : customerRecoveryData ? (
+                  <div className="text-center py-12 text-gray-500">
+                    No customer data found. Try syncing with Stripe first.
+                  </div>
+                ) : (
+                  <div className="text-center py-12 text-gray-500">
+                    Click the button above to recover customer data from Stripe.
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
           
           <TabsContent value="analytics" className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
