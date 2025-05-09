@@ -757,7 +757,7 @@ export class DatabaseStorage {
         // If no session exists, create one
         if (existing.length === 0) {
           // Create a default session
-          await db.query(
+          await pool.query(
             'INSERT INTO visitor_sessions (id, start_time, page_count) VALUES ($1, $2, $3) ON CONFLICT (id) DO NOTHING',
             [sessionId, new Date(), 1]
           );
@@ -770,7 +770,8 @@ export class DatabaseStorage {
       }
       
       // Now insert the page view with raw SQL to handle any schema discrepancies
-      await db.query(
+      const { pool } = await import('./db');
+      await pool.query(
         'INSERT INTO page_views (id, path, timestamp, referrer, user_agent, ip_address, session_id) VALUES ($1, $2, $3, $4, $5, $6, $7)',
         [
           crypto.randomUUID(),
@@ -812,8 +813,9 @@ export class DatabaseStorage {
           : session.endTime;
       }
       
-      // Insert into database using raw SQL with query method
-      await db.query(
+      // Insert into database using raw SQL with pool.query
+      const { pool } = await import('./db');
+      await pool.query(
         `INSERT INTO visitor_sessions (
           id, start_time, end_time, page_count, user_agent, ip_address, referrer, user_id
         )
@@ -862,8 +864,9 @@ export class DatabaseStorage {
         endTimeDate = new Date(); // Default to current time if invalid
       }
       
-      // Update the session in the database using SQL query with query method
-      await db.query(
+      // Update the session in the database using SQL query with pool.query
+      const { pool } = await import('./db');
+      await pool.query(
         'UPDATE visitor_sessions SET end_time = $1, page_count = $2 WHERE id = $3',
         [endTimeDate, pageCount, sessionId]
       );
@@ -882,7 +885,7 @@ export class DatabaseStorage {
   async getPageViews(startDate?: string, endDate?: string): Promise<PageView[]> {
     try {
       // Retrieve from database using raw SQL to avoid schema mapping issues
-      const { db } = await import('./db');
+      const { pool } = await import('./db');
       
       // Build the query with optional date filters
       let query = `
@@ -911,7 +914,7 @@ export class DatabaseStorage {
       query += ' ORDER BY timestamp DESC';
       
       // Execute query
-      const results = await db.execute(query, params);
+      const results = await pool.query(query, params);
       
       // Transform and return
       return results.rows.map((row: any) => ({
@@ -935,7 +938,7 @@ export class DatabaseStorage {
   async getVisitorSessions(startDate?: string, endDate?: string): Promise<VisitorSession[]> {
     try {
       // Retrieve from database using raw SQL to avoid schema mapping issues
-      const { db } = await import('./db');
+      const { pool } = await import('./db');
       
       // Build the query with optional date filters
       let query = `
@@ -971,7 +974,7 @@ export class DatabaseStorage {
       query += ' ORDER BY start_time DESC';
       
       // Execute query
-      const results = await db.execute(query, params);
+      const results = await pool.query(query, params);
       
       // Transform and return
       return results.rows.map((row: any) => ({
@@ -1106,7 +1109,7 @@ export class DatabaseStorage {
   async getPaymentTransactions(startDate?: string, endDate?: string): Promise<PaymentTransaction[]> {
     try {
       // Retrieve from database using raw SQL to avoid schema mapping issues
-      const { db } = await import('./db');
+      const { pool } = await import('./db');
       
       // Build the query with optional date filters
       let query = `
@@ -1123,7 +1126,7 @@ export class DatabaseStorage {
           refund_amount as "refundAmount", 
           refund_reason as "refundReason", 
           promo_code as "promoCode"
-        FROM payments
+        FROM payment_transactions
         WHERE 1=1
       `;
       
@@ -1146,7 +1149,7 @@ export class DatabaseStorage {
       query += ' ORDER BY created DESC';
       
       // Execute query
-      const results = await db.execute(query, params);
+      const results = await pool.query(query, params);
       
       // Transform and return
       return results.rows.map((row: any) => ({
@@ -1177,7 +1180,7 @@ export class DatabaseStorage {
   async getPaymentTransactionByStripeId(stripeId: string): Promise<PaymentTransaction | null> {
     try {
       // Retrieve from database using raw SQL to avoid schema mapping issues
-      const { db } = await import('./db');
+      const { pool } = await import('./db');
       
       // Build the query to get transaction by Stripe ID
       const query = `
@@ -1194,12 +1197,12 @@ export class DatabaseStorage {
           refund_amount as "refundAmount", 
           refund_reason as "refundReason", 
           promo_code as "promoCode"
-        FROM payments
+        FROM payment_transactions
         WHERE stripe_id = $1
       `;
       
       // Execute query with stripeId parameter
-      const result = await db.execute(query, [stripeId]);
+      const result = await pool.query(query, [stripeId]);
       
       if (!result.rows || result.rows.length === 0) {
         return null;
@@ -1235,15 +1238,14 @@ export class DatabaseStorage {
   
   async updatePaymentTransactionStatus(stripeId: string, status: string): Promise<void> {
     try {
-      // Update in the database
-      const { db } = await import('./db');
-      const { payments } = await import('@shared/schema');
-      const { eq } = await import('drizzle-orm');
+      // Update in the database using raw SQL to avoid schema mapping issues
+      const { pool } = await import('./db');
       
-      // Update the transaction status
-      await db.update(payments)
-        .set({ status })
-        .where(eq(payments.stripe_id, stripeId));
+      // Update the transaction status with a simple query
+      await pool.query(
+        'UPDATE payment_transactions SET status = $1 WHERE stripe_id = $2',
+        [status, stripeId]
+      );
       
       console.log(`Payment transaction status updated in database: ${stripeId} -> ${status}`);
       
