@@ -1195,6 +1195,26 @@ export default function AdminDashboard() {
                         onChange={(e) => setTransactionDateRange(prev => ({...prev, end: e.target.value}))}
                       />
                     </div>
+                    
+                    {/* Email search input */}
+                    <div className="flex items-center gap-2 mt-2 sm:mt-0">
+                      <input
+                        type="email"
+                        placeholder="Search by email..."
+                        className="text-sm border rounded p-1 w-full sm:w-60"
+                        value={emailSearchTerm}
+                        onChange={(e) => setEmailSearchTerm(e.target.value)}
+                      />
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleEmailSearch}
+                        disabled={!emailSearchTerm}
+                      >
+                        Search
+                      </Button>
+                    </div>
+
                     <Button 
                       variant="default"
                       size="sm" 
@@ -1289,6 +1309,53 @@ export default function AdminDashboard() {
                     </Card>
                   </div>
                   
+                  {/* Search Results */}
+                  {searchResults && searchResults.length > 0 && (
+                    <Card className="mb-6">
+                      <CardHeader>
+                        <CardTitle>Search Results for: {emailSearchTerm}</CardTitle>
+                        <CardDescription>Found {searchResults.length} assessment{searchResults.length > 1 ? 's' : ''}</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-4">
+                          {searchResults.map(assessment => (
+                            <div key={assessment.id} className="border rounded-lg p-4 hover:bg-gray-50">
+                              <div className="flex justify-between">
+                                <div>
+                                  <div className="text-lg font-medium">{assessment.name}</div>
+                                  <div className="text-sm text-gray-500">{assessment.email}</div>
+                                  <div className="flex mt-2 gap-2">
+                                    <Badge>{assessment.demographics.gender}</Badge>
+                                    <Badge variant="outline">{assessment.profile.name}</Badge>
+                                    <Badge variant="secondary">{assessment.scores.overallPercentage.toFixed(1)}%</Badge>
+                                  </div>
+                                </div>
+                                <Button 
+                                  variant="outline" 
+                                  size="sm"
+                                  onClick={() => handleViewDetails(assessment)}
+                                >
+                                  View Details
+                                </Button>
+                              </div>
+                              <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm">
+                                <div>
+                                  <span className="font-medium">Demographics:</span> {assessment.demographics.marriageStatus}, {assessment.demographics.ethnicity}
+                                </div>
+                                <div>
+                                  <span className="font-medium">Location:</span> {assessment.demographics.city}, {assessment.demographics.state}
+                                </div>
+                                <div>
+                                  <span className="font-medium">Date:</span> {formatDate(assessment.timestamp)}
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
+
                   {/* Revenue Chart */}
                   {paymentTransactions && paymentTransactions.length > 0 && (
                     <Card className="mb-6">
