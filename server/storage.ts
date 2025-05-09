@@ -5,7 +5,8 @@ import {
   ReferralData, 
   PageView, 
   VisitorSession, 
-  AnalyticsSummary 
+  AnalyticsSummary,
+  PaymentTransaction
 } from "@shared/schema";
 
 // modify the interface with any CRUD methods
@@ -37,6 +38,13 @@ export interface IStorage {
   getPageViews(startDate?: string, endDate?: string): Promise<PageView[]>;
   getVisitorSessions(startDate?: string, endDate?: string): Promise<VisitorSession[]>;
   getAnalyticsSummary(period: 'day' | 'week' | 'month' | 'year'): Promise<AnalyticsSummary>;
+  
+  // Payment transaction methods
+  savePaymentTransaction(transaction: PaymentTransaction): Promise<void>;
+  getPaymentTransactions(startDate?: string, endDate?: string): Promise<PaymentTransaction[]>;
+  getPaymentTransactionByStripeId(stripeId: string): Promise<PaymentTransaction | null>;
+  updatePaymentTransactionStatus(stripeId: string, status: string): Promise<void>;
+  recordRefund(stripeId: string, amount: number, reason?: string): Promise<void>;
 }
 
 export class MemStorage implements IStorage {
@@ -46,6 +54,7 @@ export class MemStorage implements IStorage {
   private referrals: ReferralData[];
   private pageViews: PageView[] = [];
   private visitorSessions: VisitorSession[] = [];
+  private paymentTransactions: PaymentTransaction[] = [];
   currentId: number;
 
   constructor() {
@@ -55,6 +64,7 @@ export class MemStorage implements IStorage {
     this.referrals = [];
     this.pageViews = [];
     this.visitorSessions = [];
+    this.paymentTransactions = [];
     this.currentId = 1;
   }
 

@@ -1,7 +1,7 @@
 /**
  * Shared type definitions for the 100 Marriage Assessment system
  */
-import { pgTable, text, integer, timestamp, uuid, serial } from "drizzle-orm/pg-core";
+import { pgTable, text, integer, timestamp, uuid, serial, numeric, boolean } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -27,17 +27,37 @@ export const pageViews = pgTable('page_views', {
   sessionId: uuid('session_id').notNull().references(() => visitorSessions.id)
 });
 
+export const paymentTransactions = pgTable('payment_transactions', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  stripeId: text('stripe_id').unique().notNull(),
+  customerId: text('customer_id'),
+  customerEmail: text('customer_email'),
+  amount: numeric('amount').notNull(),
+  currency: text('currency').notNull().default('usd'),
+  status: text('status').notNull(),
+  created: timestamp('created').notNull().defaultNow(),
+  productType: text('product_type').notNull(), // 'individual' or 'couple'
+  metadata: text('metadata'), // JSON string for additional data
+  isRefunded: boolean('is_refunded').notNull().default(false),
+  refundAmount: numeric('refund_amount'),
+  refundReason: text('refund_reason'),
+  sessionId: uuid('session_id').references(() => visitorSessions.id)
+});
+
 // Drizzle schema for insertions
 export const insertPageViewSchema = createInsertSchema(pageViews);
 export const insertVisitorSessionSchema = createInsertSchema(visitorSessions);
+export const insertPaymentTransactionSchema = createInsertSchema(paymentTransactions);
 
 // TypeScript types for inserts
 export type InsertPageView = z.infer<typeof insertPageViewSchema>;
 export type InsertVisitorSession = z.infer<typeof insertVisitorSessionSchema>;
+export type InsertPaymentTransaction = z.infer<typeof insertPaymentTransactionSchema>;
 
 // TypeScript types for selections
 export type PageViewDB = typeof pageViews.$inferSelect;
 export type VisitorSessionDB = typeof visitorSessions.$inferSelect;
+export type PaymentTransactionDB = typeof paymentTransactions.$inferSelect;
 
 // Analytics data interfaces for frontend usage
 export interface PageView {
@@ -61,6 +81,23 @@ export interface VisitorSession {
   region: string;
 }
 
+export interface PaymentTransaction {
+  id: string;
+  stripeId: string;
+  customerId?: string;
+  customerEmail?: string;
+  amount: number;
+  currency: string;
+  status: string;
+  created: string;
+  productType: string;
+  metadata?: string;
+  isRefunded: boolean;
+  refundAmount?: number;
+  refundReason?: string;
+  sessionId?: string;
+}
+
 export interface AnalyticsSummary {
   totalVisitors: number;
   totalPageViews: number;
@@ -68,6 +105,12 @@ export interface AnalyticsSummary {
   dailyVisitors: Array<{ date: string; count: number }>;
   conversionRate: number;
   averageSessionDuration: number;
+  salesData?: {
+    totalSales: number;
+    recentTransactions: PaymentTransaction[];
+    salesByProductType: Record<string, number>;
+    dailySales: Array<{ date: string; amount: number }>;
+  };
 }
 
 // User response to a single question
