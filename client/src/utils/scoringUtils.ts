@@ -49,7 +49,8 @@ export function calculateScores(
     } else {
       // Strictly cap at 100% maximum
       const rawPercentage = (earned / possible) * 100;
-      sectionScores[section].percentage = Math.min(100, Math.round(rawPercentage));
+      // Round to 1 decimal place for more precise percentages
+      sectionScores[section].percentage = Math.min(100, Math.round(rawPercentage * 10) / 10);
     }
   });
   
@@ -58,7 +59,8 @@ export function calculateScores(
   if (totalPossible > 0) {
     // Strictly cap at 100% maximum
     const rawPercentage = (totalEarned / totalPossible) * 100;
-    overallPercentage = Math.min(100, Math.round(rawPercentage));
+    // Round to 1 decimal place for more precise percentages
+    overallPercentage = Math.min(100, Math.round(rawPercentage * 10) / 10);
   }
   
   // Determine strengths and improvement areas
