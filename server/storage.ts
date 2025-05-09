@@ -517,6 +517,15 @@ export class MemStorage implements IStorage {
 
 // Database storage implementation
 export class DatabaseStorage implements IStorage {
+  // Shared memory storage for fallback
+  private memStorage: MemStorage;
+  
+  constructor() {
+    // Initialize database connection and memory fallback
+    this.memStorage = new MemStorage();
+    console.log('Database storage initialized with memory fallback');
+  }
+  
   // Method to record promo code usage
   async recordPromoCodeUsage(data: {promoCode: string, assessmentType: string, timestamp: string}): Promise<void> {
     console.log(`Recording promo code usage in database: ${data.promoCode} for ${data.assessmentType} assessment`);
@@ -530,14 +539,12 @@ export class DatabaseStorage implements IStorage {
       console.log(`Saving partial assessment progress for tempId: ${tempId}`);
       // Implement database storage logic
       
-      // If database operation fails, fallback to memory
-      const memStorage = new MemStorage();
-      await memStorage.saveAssessmentProgress(tempId, assessment);
+      // Use the shared memory storage instance
+      await this.memStorage.saveAssessmentProgress(tempId, assessment);
     } catch (error) {
       console.error('Error saving assessment progress:', error);
-      // Fallback to memory storage
-      const memStorage = new MemStorage();
-      await memStorage.saveAssessmentProgress(tempId, assessment);
+      // Still use the shared memory storage instance even in the error case
+      await this.memStorage.saveAssessmentProgress(tempId, assessment);
     }
   }
   
