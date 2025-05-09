@@ -180,23 +180,30 @@ export async function sendAssessmentEmail(assessment: AssessmentResult): Promise
     if (process.env.SENDGRID_API_KEY) {
       try {
         console.log('Using SendGrid for email delivery');
-        // Import the sendgrid module functions
-        const { MailService } = await import('@sendgrid/mail');
+        // Import the sendgrid module
+        const sgMail = await import('@sendgrid/mail');
         
         // Set up SendGrid
-        const mailService = new MailService();
-        mailService.setApiKey(process.env.SENDGRID_API_KEY);
+        sgMail.default.setApiKey(process.env.SENDGRID_API_KEY);
         
         // Format the email HTML content
         const emailHtml = formatAssessmentEmail(assessment);
         
         // Send mail with SendGrid
+        // Log email details for debugging
+        console.log(`Sending email to: ${assessment.email}`);
+        
+        // Use a verified sender email that is configured in SendGrid
+        const verifiedSender = {
+          email: 'noreply@the100marriage.com',
+          name: 'The 100 Marriage Assessment'
+        };
+        
+        console.log(`Using verified sender: ${verifiedSender.email}`);
+        
         const msg = {
           to: assessment.email,
-          from: {
-            email: 'lawrence@lawrenceadjah.com',
-            name: 'The 100 Marriage Assessment'
-          },
+          from: verifiedSender,
           subject: `${assessment.name} - The 100 Marriage Assessment - Series 1 Results`,
           html: emailHtml,
           attachments: [
@@ -209,7 +216,7 @@ export async function sendAssessmentEmail(assessment: AssessmentResult): Promise
           ]
         };
         
-        await mailService.send(msg);
+        await sgMail.default.send(msg);
         console.log(`SendGrid email with PDF attachment sent to ${assessment.email}`);
         
         return { 
