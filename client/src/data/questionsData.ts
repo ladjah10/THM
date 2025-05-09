@@ -144,6 +144,18 @@ export const questions: Question[] = [
   
   // YOUR FAITH LIFE
   {
+    id: 11,
+    section: "Your Faith Life",
+    subsection: "Church Community",
+    type: "D",
+    text: "Your Faith Life: Church Community - Will you attend the same church as a family?",
+    options: [
+      "We're committed to finding a single church which to attend both individually and as a family.",
+      "We're comfortable with having separate churches to attend individually and as a family."
+    ],
+    weight: 12
+  },
+  {
     id: 12,
     section: "Your Faith Life",
     subsection: "Worship Life: Marriage",
@@ -563,6 +575,44 @@ export const questions: Question[] = [
       "Homeschool"
     ],
     weight: 5
+  },
+  {
+    id: 43,
+    section: "Your Marriage Life",
+    subsection: "Marriage: Living - Home Type",
+    type: "M",
+    text: "Your Marriage Life: Marriage: Living - Home Type",
+    options: [
+      "We're committed to living in an apartment long-term as our primary residence.",
+      "We're committed to living in a standalone single-family house long-term as our primary residence.",
+      "We're committed to living in a standalone single-family townhouse long-term as our primary residence.",
+      "We're committed to living in a multi-family house long-term."
+    ],
+    weight: 3
+  },
+  {
+    id: 44,
+    section: "Your Parenting Life",
+    subsection: "Children Decision: To Have Them (Biologically)",
+    type: "M",
+    text: "Your Parenting Life: Children Decision: To Have Them (Biologically)",
+    options: [
+      "We commit to having children (according to God's will).",
+      "We do not commit to having children."
+    ],
+    weight: 4
+  },
+  {
+    id: 45,
+    section: "Your Parenting Life",
+    subsection: "Children Decision: How To Have Them (Method of Delivery Preference)",
+    type: "M",
+    text: "Your Parenting Life: Children Decision: How To Have Them (Method of Delivery Preference)",
+    options: [
+      "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer: A Water Delivery (if medically prudent and possible)",
+      "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer: Vaginal Delivery (with potential for C-Section if medically necessary)"
+    ],
+    weight: 3
   },
   
   // Add more declaration questions for Marriage Life
