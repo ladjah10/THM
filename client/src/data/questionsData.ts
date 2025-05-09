@@ -1249,5 +1249,488 @@ export const questions: Question[] = [
       "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer: Vaginal Delivery (with potential for C-Section if medically necessary)"
     ],
     weight: 3
+  },
+  {
+    id: 95,
+    section: "Your Marriage Life with Children",
+    subsection: "Children Decision: Where To Have Them (Location Preference)",
+    type: "M",
+    text: "Your Marriage Life with Children: Children Decision: Where To Have Them (Location Preference)",
+    options: [
+      "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer: A Home Birth (if medically prudent and possible)",
+      "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer: A Hospital Birth",
+      "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer: A Birth Center (if medically prudent and possible)"
+    ],
+    weight: 3
+  },
+  {
+    id: 96,
+    section: "Your Marriage Life with Children",
+    subsection: "Children Decision: Number of Children (Adopted)",
+    type: "M",
+    text: "Your Marriage Life with Children: Children Decision: Number of Children (Adopted)",
+    options: [
+      "We commit to adopting at least one child during our marriage.",
+      "We admire and believe in adoption but do not plan to adopt during our marriage.",
+      "We are committed to having children biologically (according to God's will), but would consider adoption if we discern it's not His will for us to have children biologically."
+    ],
+    weight: 4
+  },
+  {
+    id: 97,
+    section: "Your Marriage Life with Children",
+    subsection: "Children Decision: Naming of Children (Model)",
+    type: "M",
+    text: "Your Marriage Life with Children: Children Decision: Naming of Children (Model)",
+    options: [
+      "We commit to naming our children with first names that are from the Bible.",
+      "We commit to naming our children with first names that honor a family member from either side of the family.",
+      "We commit to naming our children with first names that are gender neutral.",
+      "Other: Please detail"
+    ],
+    weight: 2
+  },
+  {
+    id: 98,
+    section: "Your Marriage Life with Children",
+    subsection: "Children Decision: Naming of Children (Jr's)",
+    type: "M",
+    text: "Your Marriage Life with Children: Children Decision: Naming of Children (Jr's)",
+    options: [
+      "We agree that it's an option to name one of our children after a parent.",
+      "We agree that's not an option name one of our children after a parent.",
+      "Not Applicable"
+    ],
+    weight: 2
+  },
+  {
+    id: 99,
+    section: "Your Marriage Life with Children",
+    subsection: "Pregnancy Announcement",
+    type: "M",
+    text: "Your Marriage Life with Children: Pregnancy Announcement",
+    options: [
+      "We commit to keeping the news of our pregnancy private until the end of the 1st trimester.",
+      "We commit to keeping the news of our pregnancy private until the end of the 2nd trimester.",
+      "We do not have a specific guideline around if and when we will share news of a pregnancy.",
+      "Not Applicable"
+    ],
+    weight: 2
+  },
+  {
+    id: 100,
+    section: "Your Marriage Life with Children",
+    subsection: "Communication & Discipline",
+    type: "D",
+    text: "Your Marriage Life with Children: Communication & Discipline",
+    options: [
+      "We commit to being a united front before our children, never keeping any secrets from the other parent and never undermining a decision or perspective given by your spouse, whether in front of the children as a couple, or separate from your spouse with the children",
+      "We disagree with this statement."
+    ],
+    weight: 6
+  },
+  {
+    id: 101,
+    section: "Your Marriage Life with Children",
+    subsection: "Communication & Conflict Resolution",
+    type: "M",
+    text: "Your Marriage Life with Children: Communication & Conflict Resolution",
+    options: [
+      "We commit to not fighting or having serious arguments in front of the children, rather, we'd wait for time alone and away from the children, either in our check-in time or immediately after to discuss things away from them.",
+      "We commit to fighting respectfully, even if it's a serious disagreement, in front of the children, because we believe it's healthy and constructive to model positive conflict resolution and to set realistic expectations for them in a marriage."
+    ],
+    weight: 5
+  },
+  {
+    id: 102,
+    section: "Your Marriage Life with Children",
+    subsection: "Communication: Sex",
+    type: "M",
+    text: "Your Marriage Life with Children: Communication: Sex",
+    options: [
+      "We commit to discussing sex with our children together at no later than 5 years old, specifically, discussing appropriate/inappropriate touch and expectations of communication if it happens.",
+      "We commit to discussing sex with our children one on one (each parent has their own talk) at no later than 5 years old specifically, discussing appropriate/inappropriate touch and expectations of communication if it happens and talking through anatomy and what sex is.",
+      "We commit to discussing sex with our children together at no later than 5 years old; however, we'll discuss appropriate/inappropriate touch and expectations of communication if it happens, between by age 7 and we'll talk through anatomy, what sex is and its purpose, by puberty (10-13).",
+      "We commit to discussing sex with our children one on one (each parent has their own talk) at no later than 5 years old; however, we'll discuss appropriate/inappropriate touch and expectations of communication if it happens, between by age 7 and we'll talk through anatomy, what sex is and its purpose, by puberty (10-13).",
+      "Other: Please detail"
+    ],
+    weight: 5
+  },
+  {
+    id: 103,
+    section: "Your Marriage Life with Children",
+    subsection: "Social Media (New Child)",
+    type: "M",
+    text: "Your Marriage Life with Children: Social Media (New Child)",
+    options: [
+      "We're committed to guarding the image and identity of our children and are committed to not posting any photos of them on social media indefinitely",
+      "We're committed to guarding the image and identity of our children and are committed to limiting their exposure on social media by restricting others from sharing photos of our children on social media (direct/indirectly) and posting family/individual photos we've mutually agreed to share",
+      "We're committed to approaching the issue of social media exposure of our children's image and identity with discretion; however, we do not believe any specific restrictions on sharing / posting from friends and family are necessary",
+      "We're committed to guarding the image and identity of our children and are committed to limiting their exposure on social media by limiting others from sharing photos of our children on social media (direct/indirectly) without our permission and posting family/individual photos we've mutually agreed to share."
+    ],
+    weight: 3
+  },
+  {
+    id: 104,
+    section: "Your Marriage Life with Children",
+    subsection: "Mobile Phone (Access)",
+    type: "M",
+    text: "Your Marriage Life with Children: Mobile Phone (Access)",
+    options: [
+      "We're committed to guarding the psychological development and physical safety of our children while allowing them to be socially connected and technologically adept, with that said, we do not believe it is appropriate for our children to have a mobile phone until they become high school age",
+      "We're committed to guarding the psychological development and physical safety of our children while allowing them to be socially connected and technologically adept, with that said, we do not believe it is appropriate for our children to have a mobile phone until they become middle school age",
+      "We're committed to guarding the psychological development and physical safety of our children while allowing them to be socially connected and technologically adept, with that said, we will allow closely monitored mobile phone use from as early as we feel comfortable they can properly use it without losing or damaging it.",
+      "Other: Please detail"
+    ],
+    weight: 3
+  },
+  {
+    id: 105,
+    section: "Your Marriage Life with Children",
+    subsection: "Social Media (New Child Documentation)",
+    type: "M",
+    text: "Your Marriage Life with Children: Social Media (New Child Documentation)",
+    options: [
+      "We're committed to guarding the image and identity of our children and are committed to not posting any photos of them on social media indefinitely.",
+      "We're committed to approaching the issue of social media exposure of our children's image and identity with care, still, we do not plan to create an account on their behalf or have any unique restrictions to friends/family or ourselves of sharing photos with them in them.",
+      "We're committed to creating and managing an account on our children's behalf, with photos we will share from their birth until we believe they are of age to take over their account."
+    ],
+    weight: 2
+  },
+  {
+    id: 106,
+    section: "Your Marriage Life with Children",
+    subsection: "Communication: Sex / Gender & Sexuality",
+    type: "M",
+    text: "Your Marriage Life with Children: Communication: Sex / Gender & Sexuality",
+    options: [
+      "We believe God created man and woman, as the two genders, with a sexual ethic of marriage and relationship between a man and a woman, with that said, we also acknowledge many aspects of our human experience are often not in line with God's highest design for humanity and as a result, we want to prepare our children to not only understand God's intentions for them in terms of gender and sexual ethics, but also, we want to raise children who can also effectively engage with those different from them. As such, we commit to discussing this topic with our children by age [specific age]",
+      "While we recognize and acknowledge God's highest design for humanity around gender and sexuality, we do not feel equipped to have this conversation with our children because we need to develop and deepen our own understanding of this topic through our own study and consultation with spiritual counsel. As such, we commit to doing intentional study on our own and in the meantime, allowing our faith community and counsel to provide the primary guidance to our children.",
+      "Other: Please detail"
+    ],
+    weight: 5
+  },
+  {
+    id: 107,
+    section: "Your Marriage Life with Children",
+    subsection: "Communication: Race / Racial Dynamics",
+    type: "M",
+    text: "Your Marriage Life with Children: Communication: Race / Racial Dynamics",
+    options: [
+      "We recognize the reality of race as well as its role and history still we don't believe we should have an explicit discussion about race / racial dynamics in the world and in our country with our children",
+      "We commit to discussing race with our children together at no later than 10 years old, specifically, discussing the history of race / racial dynamics, where it stems from a biblical perspective (Genesis 3), and expectations you have of them around their approach to engaging the issue in this world",
+      "We commit to discussing race with our children one on one (each parent has their own talk) at no later than 10 years old, specifically, discussing the history of race / racial dynamics, where it stems from a biblical perspective (Genesis 3), and expectations you have of them around their approach to engaging the issue in this world",
+      "Other: Please detail"
+    ],
+    weight: 5
+  },
+  {
+    id: 108,
+    section: "Your Family/Home Life",
+    subsection: "Traditions: Family Dinner",
+    type: "M",
+    text: "Your Family Life: Traditions: Family Dinner [Excludes Date Night]",
+    options: [
+      "We are committed to eating dinner as a family every single day, outside of unique and rare circumstances",
+      "We are committed to eating dinner as a family at least once weekly, on [specific day]",
+      "We are committed to eating dinner as a family at least once monthly, on the [specific date] of each month",
+      "Other: Please detail"
+    ],
+    weight: 4
+  },
+  {
+    id: 109,
+    section: "Your Family/Home Life",
+    subsection: "Traditions: Family Vacations",
+    type: "M",
+    text: "Your Family Life: Traditions: Family Vacations",
+    options: [
+      "We are committed to budgeting, planning and going on at least one family vacation per year",
+      "We are committed to budgeting, planning and going on at least two family vacations per year",
+      "Other: Please detail"
+    ],
+    weight: 3
+  },
+  {
+    id: 110,
+    section: "Your Family/Home Life",
+    subsection: "Traditions: Family Photos",
+    type: "M",
+    text: "Your Family Life: Traditions: Family Photos",
+    options: [
+      "We are committed to taking a full immediate family photo at least once per year",
+      "We are committed to taking a full immediate family photo at least once every two years",
+      "Other: Please detail"
+    ],
+    weight: 2
+  },
+  {
+    id: 111,
+    section: "Your Family/Home Life",
+    subsection: "Cleaning Model with Home (Inside)",
+    type: "M",
+    text: "Your Family Life: Cleaning Model with Home (Inside)",
+    options: [
+      "We commit to a model of weekly house cleaning taking place on Saturdays or Sundays which includes but is not limited to, cleaning of general living areas, kitchen, bathrooms and bedrooms and laundry (assumption of general tidiness, cleaning after self during the week).",
+      "We commit to a model of bi-weekly house cleaning taking place on Saturdays or Sundays which includes but is not limited to, cleaning of general living areas, kitchen, bathrooms and bedrooms and laundry (assumption of general tidiness, cleaning after self during the week).",
+      "We commit to a model of bi-weekly house cleaning by an outside cleaning vendor which includes but is not limited to, cleaning of general living areas, kitchen, bathrooms and bedrooms and laundry (assumption of general tidiness, cleaning after self during the week).",
+      "Other: Please detail"
+    ],
+    weight: 4
+  },
+  {
+    id: 112,
+    section: "Your Family/Home Life",
+    subsection: "Cleaning Model with Food",
+    type: "M",
+    text: "Your Family Life: Cleaning Model with Food",
+    options: [
+      "We commit to a model where the person who prepares the food is not the person who cleans up the kitchen, sink and table after the food is prepared and consumed. It is the responsibility of the noncooking spouse/children to clean.",
+      "We commit to a model where the person who prepares the food is responsible for cleaning up after the meal is done.",
+      "We commit to a model where the person who prepares the food is responsible for cleaning up as they cook and after the meal is done.",
+      "Other: Please detail"
+    ],
+    weight: 4
+  },
+  {
+    id: 113,
+    section: "Your Family/Home Life",
+    subsection: "Cleaning Model with Home (Outside)",
+    type: "M",
+    text: "Your Family Life: Cleaning Model with Home (Outside) (if applicable)",
+    options: [
+      "We commit to a model of weekly outside housework taking place on Saturdays or Sundays which includes but is not limited to, cleaning of vehicles, lawn care, cleaning of trash & recycling bins, deck, sidewalk and general gardening",
+      "We commit to a model of monthly outside housework taking place on Saturdays or Sundays which includes but is not limited to, cleaning of vehicles, lawn care, cleaning of trash & recycling bins, deck, sidewalk and general gardening",
+      "We commit to a model of outside housework by a hired outside vendor which includes but is not limited to, cleaning of vehicles, lawn care, cleaning of trash & recycling bins, deck, sidewalk and general gardening",
+      "Other: Please detail"
+    ],
+    weight: 3
+  },
+  {
+    id: 114,
+    section: "Your Family/Home Life",
+    subsection: "Traditions: Family Outings",
+    type: "M",
+    text: "Your Family Life: Traditions: Family Outings [Excludes Date Night]",
+    options: [
+      "We are committed to doing at least one outing as a family at least once weekly",
+      "We are committed to doing at least one outing as a family at least bi-weekly",
+      "We are committed to doing at least one outing as a family at least monthly",
+      "Other: Please detail"
+    ],
+    weight: 3
+  },
+  {
+    id: 115,
+    section: "Your Finances",
+    subsection: "Financial Planning Model",
+    type: "M",
+    text: "Your Finances: Financial Planning Model",
+    options: [
+      "We commit to developing an annual budget, with monthly discussions on the [specific date] of each month, around our status (actuals) against our goals",
+      "We commit to working with a financial advisor, who will help us develop an annual budget, with monthly discussion around our status (actuals) against our goals",
+      "We commit to developing an annual budget, with bi-monthly discussions on the [specific date] of every other month, around our status (actuals) against our goals",
+      "Other: Please detail"
+    ],
+    weight: 4
+  },
+  {
+    id: 116,
+    section: "Your Finances",
+    subsection: "Financial Management Model",
+    type: "M",
+    text: "Your Finances: Financial Management Model",
+    options: [
+      "In view of gifting and capacity, we commit to being the primary individual in our family who manages the periodic functions of our finances, which includes but is not limited to, developing the budget, financial reconciliations, bill-payment and investment related asset management and allocation",
+      "Other: We commit to having a licensed financial professional handle and manage all of our financial matters. We commit to at least monthly updates (indefinitely) with the professional of our choosing."
+    ],
+    weight: 4
+  },
+  {
+    id: 117,
+    section: "Your Finances",
+    subsection: "Financial Management: Payments Execution (Public Social)",
+    type: "M",
+    text: "Your Finances: Financial Management: Payments Execution (Public Social)",
+    options: [
+      "We commit to paying for things when we go out together in public, unless we explicitly discuss another plan in advance",
+      "We're committed to a more flexible setup where there is no set expectation for one spouse paying (because it's ultimately coming from the same source) and we talk about it in advance each time",
+      "Other: Please detail"
+    ],
+    weight: 3
+  },
+  {
+    id: 118,
+    section: "Your Finances",
+    subsection: "Financial Management: with Children (Investments / Savings)",
+    type: "M",
+    text: "Your Finances: Financial Management: with Children (Investments / Savings)",
+    options: [
+      "We commit to opening a 529 plan/account for our children after they are born and depositing a budget sensitive amount monthly",
+      "We commit to opening a savings account for our children after they are born and depositing a budget sensitive amount monthly",
+      "We commit to opening a brokerage account for our children after they are born and depositing a budget sensitive amount monthly",
+      "We commit to opening both a 529 plan/account and a brokerage account for our children after they are born and depositing a budget sensitive amount monthly",
+      "Other: Please detail"
+    ],
+    weight: 3
+  },
+  {
+    id: 119,
+    section: "Your Family/Home Life",
+    subsection: "Food Preparation & Planning: Overall Model: Responsibility",
+    type: "M",
+    text: "Your Family Life: Food Preparation & Planning: Overall Model: Responsibility",
+    options: [
+      "We commit to having [spouse name] be responsible for the overall food planning and preparation for the family, with considerations made for date night, family outings and circumstances when one is unable to do. (80/20)",
+      "We commit to having [spouse name] be responsible for the overall food planning and preparation for the family, with a split of [spouse name] being responsible for meals during the week (M-Fri) and [spouse name] being responsible for meals during the weekend.",
+      "We commit to having a chef / nanny be responsible for the overall food planning and preparation for the family.",
+      "Other: Please detail"
+    ],
+    weight: 4
+  },
+  {
+    id: 120,
+    section: "Your Finances",
+    subsection: "Financial Stewardship & Nutrition Health Goals",
+    type: "M",
+    text: "Your Finances: Financial Stewardship & Nutrition Health Goals",
+    options: [
+      "We commit to enjoying home-cooked meals at least 4 of the 7 days per week",
+      "We commit to enjoying home-cooked meals at least 2 of the 7 days per week",
+      "We commit to enjoying healthy meals through all channels (without specific constraints beyond it being in line with financial budget)",
+      "Other: Please detail"
+    ],
+    weight: 3
+  },
+  {
+    id: 121,
+    section: "Your Health and Wellness",
+    subsection: "Specific Consumption Goals [Meal Types]",
+    type: "M",
+    text: "Your Health and Wellness: Specific Consumption Goals [Meal Types]",
+    options: [
+      "We commit to a healthy balanced diet with no special restriction on any meats (seafood, chicken, beef, pork), dairy, fruits and vegetables, and whole grains or nuts",
+      "We commit to a healthy balanced diet including all meats except pork (seafood, chicken, beef), dairy, fruits and vegetables, and whole grains or nuts",
+      "We commit to a healthy balanced vegetarian diet",
+      "We commit to a healthy balanced pescatarian diet",
+      "We commit to a healthy balanced diet which is flexible to individual needs (e.g., husband can pursue carnivore and wife can pursue vegetarian, while children can be unrestricted, for example)"
+    ],
+    weight: 3
+  },
+  {
+    id: 122,
+    section: "Your Health and Wellness",
+    subsection: "New Babies: Nutrition: Breastfeeding",
+    type: "M",
+    text: "Your Health and Wellness: New Babies: Nutrition: Breastfeeding",
+    options: [
+      "We commit to breastfeeding primarily and only using formula in rare circumstances.",
+      "We commit to breastfeeding whenever possible, still, we do not have any reservations about relying on high quality formula."
+    ],
+    weight: 3
+  },
+  {
+    id: 123,
+    section: "Your Health and Wellness",
+    subsection: "New Babies: Nutrition: Breastfeeding Length",
+    type: "M",
+    text: "Your Health and Wellness: New Babies: Nutrition: Breastfeeding Length",
+    options: [
+      "We're committed to breastfeeding along with introducing appropriate complementary foods for up to 2 years for our children.",
+      "We're committed to breastfeeding along with introducing appropriate complementary foods whenever possible still, we do not plan to do it beyond 1 year for our children.",
+      "We do not have a strong perspective about breastfeeding and will take the guidance of our medical professional when the time comes."
+    ],
+    weight: 3
+  },
+  {
+    id: 124,
+    section: "Your Health and Wellness",
+    subsection: "Natural Birth or Epidural",
+    type: "M",
+    text: "Your Health and Wellness: Approach to Medicine, Illness and Pain Management: Natural Birth or Epidural",
+    options: [
+      "We are committed to having a natural birth.",
+      "We are committed to having an epidural or anything medically available to relieve labor pain.",
+      "We're not well educated enough on the subject to make an informed decision on what's best so we plan to research and revisit this when the time comes."
+    ],
+    weight: 3
+  },
+  {
+    id: 125,
+    section: "Your Marriage and Boundaries",
+    subsection: "Openness / Technology",
+    type: "M",
+    text: "Your Marriage & Boundaries: Openness / Technology",
+    options: [
+      "While we fully trust God and our spouse, we believe in oneness and there being no hidden spaces, thus, we believe in \"transparent access\" which means we each have the passcodes for all our technology (hardware) and digital media accounts.",
+      "While we fully trust God and our spouse, and believe in being one, we do not believe in \"transparent access\" and do not believe it is necessary to commit to having the passcodes for all of our technology (hardware) and digital media accounts."
+    ],
+    weight: 5
+  },
+  {
+    id: 126,
+    section: "Your Marriage and Boundaries",
+    subsection: "In-Laws/Loves After Having First Child",
+    type: "M",
+    text: "Your Marriage & Boundaries: In-Laws/Loves After Having First Child",
+    options: [
+      "We're committed to having at least one parent stay with us for a period of a month, after the birth of our first child.",
+      "We're committed to setting frequent and intentional early interactions with our new child and our parents, for visits and help with care, still, we prefer not to have anyone stay for an extended length of time in the first month.",
+      "We're committed to having at least one parent stay with us for a period of two weeks, after the birth of our first child.",
+      "Other: Please detail"
+    ],
+    weight: 3
+  },
+  {
+    id: 127,
+    section: "Your Marriage and Boundaries",
+    subsection: "Social Media: Interactions with the Opposite Sex",
+    type: "M",
+    text: "Your Marriage & Boundaries: Social Media: Interactions with the Opposite Sex",
+    options: [
+      "While we fully trust God and our spouse, we believe in honoring our covenant in and through all our actions, as such: We commit to ensuring there is no direct communications via message or comments with any member of the opposite sex on any platform, unless it's someone we both unequivocally know and trust",
+      "We commit to exercising discretion and discernment, and we do not believe a firm line is necessary",
+      "Other: Please detail"
+    ],
+    weight: 5
+  },
+  {
+    id: 128,
+    section: "Your Marriage and Boundaries",
+    subsection: "Social Media: Connection/Interaction with Past Significant Others/Romantic Interests",
+    type: "M",
+    text: "Your Marriage & Boundaries: Social Media: Connection/Interaction with Past Significant Others/Romantic Interests",
+    options: [
+      "While we fully trust God and our spouse, we believe in honoring our covenant in and through all our actions, as such: We commit to ensuring there is no direct connection (via follow / being followed, friendship or connection) and/or direct communications via message or comments with any past significant other(s) / past romantic interests on any platform",
+      "We commit to ensuring all past significant other(s) / past romantic interests are blocked on every platform",
+      "Not Applicable",
+      "Other: Please detail"
+    ],
+    weight: 5
+  },
+  {
+    id: 129,
+    section: "Your Marriage and Boundaries",
+    subsection: "Digital Media & Physical Devices: Private and Public Content (Images & Other Media) with Past Significant Others/Romantic Interests",
+    type: "M",
+    text: "Your Marriage & Boundaries: Digital Media & Physical Devices: Private and Public Content (Images & Other Media) with Past Significant Others/Romantic Interests",
+    options: [
+      "While we fully trust God and our spouse, we believe in honoring our covenant in and through all our actions, as such: We commit to deleting all private and public media with any past significant other(s) / past romantic interests from all private devices and public accounts (active or not) by [specific date]",
+      "Not Applicable",
+      "Other: Please detail"
+    ],
+    weight: 5
+  },
+  {
+    id: 130,
+    section: "Your Penultimate Vow",
+    subsection: "Final Commitment",
+    type: "D",
+    text: "Your Penultimate Vow",
+    options: [
+      "We each promise and commit, before God and each other, to honor the agreements made and expectations set throughout this book. While we recognize we will each be imperfect and inevitably fall short, we each willingly agree by our own volition to be accountable to every single commitment, before God, our spouse and spiritual counsel in our adherence to everything we agreed to in this book. We each make space for adjustments, if and only if, we mutually agree, if not, we submit to our original commitment with trust in God and without any form or threat of retaliation. Most importantly, it is our mutual intention for us each to work daily to be children of God who reflect His unwaivering promises, character and Word through the preceding (and following) commitments made with our words and carried out through our lives. As such, in view of the vows we will make on our day of holy matrimony, we make this vow, to honor these commitments in the name of the Father, the Son and the Holy Spirit, Amen and Amen.",
+      "We disagree with this statement."
+    ],
+    weight: 15
   }
 ];
