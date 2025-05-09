@@ -483,6 +483,91 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Update payment transaction with customer metadata
+  app.post('/api/update-payment-metadata', async (req, res) => {
+    try {
+      const { paymentIntentId, customerInfo } = req.body;
+      
+      if (!paymentIntentId || !customerInfo) {
+        return res.status(400).json({ error: 'Missing required parameters' });
+      }
+      
+      // Get the payment transaction from the database
+      const transaction = await storage.getPaymentTransactionByStripeId(paymentIntentId);
+      
+      if (!transaction) {
+        return res.status(404).json({ error: 'Payment transaction not found' });
+      }
+      
+      // Update transaction with customer information
+      await stripe.paymentIntents.update(paymentIntentId, {
+        metadata: {
+          ...transaction.metadata ? JSON.parse(transaction.metadata) : {},
+          firstName: customerInfo.firstName,
+          lastName: customerInfo.lastName,
+          email: customerInfo.email,
+          phone: customerInfo.phone || '',
+          assessmentType: customerInfo.assessmentType || 'individual',
+          thmPoolApplied: customerInfo.thmPoolApplied ? 'true' : 'false'
+        }
+      });
+      
+      // If this was a THM pool application and the transaction doesn't have an email,
+      // create a partial assessment record to show in the admin dashboard
+      if (customerInfo.thmPoolApplied && (!transaction.customerEmail || transaction.productType === 'marriage_pool')) {
+        // Create a minimal assessment result with just the THM pool information
+        const minimalAssessment = {
+          id: uuidv4(),
+          email: customerInfo.email,
+          name: `${customerInfo.firstName} ${customerInfo.lastName}`,
+          scores: JSON.stringify({
+            overallPercentage: 0,
+            totalEarned: 0,
+            totalPossible: 0,
+            sections: {},
+            strengths: [],
+            improvementAreas: []
+          }),
+          profile: JSON.stringify({
+            id: 0,
+            name: "THM Pool Applicant",
+            description: "Applied to THM Arranged Marriage Pool but has not completed assessment",
+            genderSpecific: null,
+            criteria: []
+          }),
+          responses: JSON.stringify({}),
+          demographics: JSON.stringify({
+            firstName: customerInfo.firstName,
+            lastName: customerInfo.lastName,
+            email: customerInfo.email,
+            phone: customerInfo.phone || '',
+            thmPoolApplied: true,
+            assessmentType: customerInfo.assessmentType || 'individual',
+            completedAssessment: false,
+            pendingCompletion: true
+          }),
+          transactionId: transaction.id,
+          timestamp: new Date().toISOString(),
+          reportSent: false
+        };
+        
+        // Check if an assessment already exists for this email
+        const existingAssessments = await storage.getAssessments(customerInfo.email);
+        
+        if (existingAssessments.length === 0) {
+          // Only save if there's no existing assessment for this email
+          await storage.saveAssessment(minimalAssessment);
+          console.log(`Created partial assessment record for THM Pool applicant: ${customerInfo.email}`);
+        }
+      }
+      
+      res.status(200).json({ success: true });
+    } catch (error) {
+      console.error('Error updating payment metadata:', error);
+      res.status(500).json({ error: 'Failed to update payment metadata' });
+    }
+  });
+
   // Create a Stripe payment intent for assessment purchase
   app.post('/api/create-payment-intent', async (req, res) => {
     try {

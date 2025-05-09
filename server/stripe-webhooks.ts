@@ -256,9 +256,32 @@ async function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent)
     return;
   }
   
-  // Fetch the associated charge for this payment intent to get customer info
+  // Fetch customer information from payment intent and charges
   let customerEmail: string | undefined;
   let customerId: string | undefined;
+  let firstName: string | undefined;
+  let lastName: string | undefined;
+  let customerName: string | undefined;
+  let phone: string | undefined;
+  let assessmentType: string = 'individual';
+  let thmPoolApplied: boolean = false;
+  
+  // First check the payment intent metadata for customer details
+  // This would be present if the customer used our enhanced payment form
+  if (paymentIntent.metadata) {
+    firstName = paymentIntent.metadata.firstName;
+    lastName = paymentIntent.metadata.lastName;
+    customerEmail = paymentIntent.metadata.email || customerEmail;
+    phone = paymentIntent.metadata.phone;
+    thmPoolApplied = paymentIntent.metadata.thmPoolApplied === 'true';
+    assessmentType = paymentIntent.metadata.assessmentType || assessmentType;
+    
+    if (firstName && lastName) {
+      customerName = `${firstName} ${lastName}`;
+    }
+    
+    console.log(`Found customer info in payment metadata: ${customerName || 'Unknown'} (${customerEmail || 'No email'})`);
+  }
   
   try {
     // Get the charges directly from Stripe API
@@ -266,13 +289,31 @@ async function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent)
     
     if (charges.data.length > 0) {
       const charge = charges.data[0];
-      customerEmail = charge.billing_details.email || undefined;
+      // Only use the charge email if we don't already have one from metadata
+      customerEmail = customerEmail || charge.billing_details.email || undefined;
       customerId = typeof charge.customer === 'string' ? charge.customer : 
                   charge.customer ? charge.customer.id : undefined;
+      
+      // Try to extract name from charge billing details if we don't have it yet
+      if (!customerName && charge.billing_details.name) {
+        customerName = charge.billing_details.name;
+        
+        // Try to split into first/last name if we don't have them yet
+        if ((!firstName || !lastName) && customerName) {
+          const nameParts = customerName.split(' ');
+          if (nameParts.length >= 2) {
+            firstName = firstName || nameParts[0];
+            lastName = lastName || nameParts.slice(1).join(' ');
+          }
+        }
+      }
+      
+      // Get phone if not already present
+      phone = phone || charge.billing_details.phone || undefined;
     }
   } catch (error) {
     console.error(`Failed to fetch charges for payment intent ${paymentIntent.id}:`, error);
-    // Continue without the customer information
+    // Continue without the customer information from charges
   }
   
   // Extract product information from the description or metadata
