@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import { RefreshCw, FileDown, Search, Loader2, Mail } from "lucide-react";
 import type { AssessmentScores, UserProfile, DemographicData, AssessmentResult, SectionScore } from "@/types/assessment";
 import type { AnalyticsSummary, PageView, VisitorSession, PaymentTransaction } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
@@ -17,6 +18,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { 
   Tabs, 
@@ -869,6 +872,7 @@ export default function AdminDashboard() {
           <TabsList>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="assessments">Assessment Results</TabsTrigger>
+            <TabsTrigger value="historical">Historical Data (Since May 6)</TabsTrigger>
             <TabsTrigger value="referrals">Invitations & Referrals</TabsTrigger>
             <TabsTrigger value="payments">Payment Transactions</TabsTrigger>
             <TabsTrigger value="matching">THM Pool Matching</TabsTrigger>
@@ -1186,6 +1190,158 @@ export default function AdminDashboard() {
               )}
             </div>
           </TabsContent>
+          <TabsContent value="historical" className="space-y-4">
+            <div className="bg-white p-4 rounded-lg shadow-sm">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+                <h2 className="text-lg font-medium">Historical Assessment Data (Since May 6)</h2>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleExportAssessmentsCSV}
+                  disabled={!assessments?.length}
+                  className="whitespace-nowrap"
+                >
+                  Export CSV
+                </Button>
+              </div>
+              
+              {/* Date Filter Controls */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4 bg-gray-50 p-4 rounded-lg">
+                <div>
+                  <Label htmlFor="startDate">From Date</Label>
+                  <Input
+                    type="date"
+                    id="startDate"
+                    value={assessmentDateRange.startDate || "2025-05-06"}
+                    onChange={(e) => setAssessmentDateRange({
+                      ...assessmentDateRange,
+                      startDate: e.target.value || "2025-05-06"
+                    })}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="endDate">To Date</Label>
+                  <Input
+                    type="date"
+                    id="endDate"
+                    value={assessmentDateRange.endDate || ""}
+                    onChange={(e) => setAssessmentDateRange({
+                      ...assessmentDateRange,
+                      endDate: e.target.value
+                    })}
+                    className="mt-1"
+                  />
+                </div>
+                <div className="flex flex-col justify-end">
+                  <div className="flex items-center space-x-2 h-10">
+                    <Checkbox
+                      id="requirePayment"
+                      checked={assessmentDateRange.requirePayment}
+                      onCheckedChange={(checked) => setAssessmentDateRange({
+                        ...assessmentDateRange,
+                        requirePayment: checked === true
+                      })}
+                    />
+                    <Label htmlFor="requirePayment">Paid assessments only</Label>
+                  </div>
+                  <Button 
+                    variant="default" 
+                    onClick={() => refetchAssessments()}
+                    className="mt-2"
+                  >
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    Apply Filters
+                  </Button>
+                </div>
+              </div>
+              
+              {/* Results Summary */}
+              <div className="text-sm text-muted-foreground mb-4">
+                Found {filteredAssessments?.length || 0} assessments from {assessmentDateRange.startDate || "May 6, 2025"} 
+                {assessmentDateRange.endDate ? ` to ${assessmentDateRange.endDate}` : " to present"}
+                {assessmentDateRange.requirePayment ? " (paid assessments only)" : ""}
+              </div>
+              
+              {/* Assessment Results Table */}
+              <div className="rounded-md border">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="font-medium">Name</TableHead>
+                      <TableHead className="font-medium">Email</TableHead>
+                      <TableHead className="font-medium">Date</TableHead>
+                      <TableHead className="font-medium">Gender</TableHead>
+                      <TableHead className="font-medium">Location</TableHead>
+                      <TableHead className="font-medium">Marriage Status</TableHead>
+                      <TableHead className="font-medium">Profile</TableHead>
+                      <TableHead className="font-medium">Score</TableHead>
+                      <TableHead className="font-medium"></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {isLoading ? (
+                      <TableRow>
+                        <TableCell colSpan={9} className="h-24 text-center">
+                          <div className="flex justify-center">
+                            <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ) : filteredAssessments && filteredAssessments.length > 0 ? (
+                      // Display filtered assessments sorted by date
+                      filteredAssessments
+                        .sort((a, b) => {
+                          // Sort by most recent first
+                          const dateA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+                          const dateB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+                          return dateB - dateA;
+                        })
+                        .map((assessment, index) => (
+                          <TableRow key={index}>
+                            <TableCell>{assessment.name}</TableCell>
+                            <TableCell className="font-mono text-xs">{assessment.email}</TableCell>
+                            <TableCell>
+                              {assessment.timestamp ? formatDate(assessment.timestamp) : "N/A"}
+                            </TableCell>
+                            <TableCell>{assessment.demographics.gender}</TableCell>
+                            <TableCell>
+                              {assessment.demographics.city}, {assessment.demographics.state}
+                            </TableCell>
+                            <TableCell>{assessment.demographics.marriageStatus}</TableCell>
+                            <TableCell>
+                              <Badge variant="outline">{assessment.profile.name}</Badge>
+                            </TableCell>
+                            <TableCell>
+                              {assessment.scores.overallPercentage.toFixed(1)}%
+                            </TableCell>
+                            <TableCell>
+                              <Button 
+                                variant="ghost" 
+                                size="icon"
+                                onClick={() => {
+                                  setSelectedAssessment(assessment);
+                                  setDetailModalOpen(true);
+                                }}
+                              >
+                                <Search className="h-4 w-4" />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={9} className="h-24 text-center">
+                          No assessment results found in this date range.
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+          </TabsContent>
+          
           <TabsContent value="referrals" className="space-y-4">
             <div className="bg-white p-4 rounded-lg shadow-sm">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
