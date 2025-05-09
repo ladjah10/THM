@@ -58,6 +58,9 @@ export interface IStorage {
   getPaymentTransactionByStripeId(stripeId: string): Promise<PaymentTransaction | null>;
   updatePaymentTransactionStatus(stripeId: string, status: string): Promise<void>;
   recordRefund(stripeId: string, amount: number, reason?: string): Promise<void>;
+  
+  // Promo code methods
+  recordPromoCodeUsage(data: {promoCode: string, assessmentType: string, timestamp: string}): Promise<void>;
 }
 
 export class MemStorage implements IStorage {
@@ -741,6 +744,19 @@ export class MemStorage implements IStorage {
 }
 
 export class DatabaseStorage implements IStorage {
+  // Method to record promo code usage
+  async recordPromoCodeUsage(data: {promoCode: string, assessmentType: string, timestamp: string}): Promise<void> {
+    try {
+      console.log(`Recording promo code usage in database: ${data.promoCode} for ${data.assessmentType} assessment`);
+      // In a real implementation, this would insert into a dedicated table
+      // For now, we'll just log it
+    } catch (error) {
+      console.error('Error recording promo code usage in database:', error);
+      // Fallback to memory storage if database insert fails
+      const memStorage = new MemStorage();
+      await memStorage.recordPromoCodeUsage(data);
+    }
+  }
   async getUser(id: number): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user;
