@@ -1,4 +1,4 @@
-import { Question, UserResponse, AssessmentScores } from "@/types/assessment";
+import { Question, UserResponse, AssessmentScores, UserProfile } from "@/types/assessment";
 import { psychographicProfiles } from "@/data/psychographicProfiles";
 
 /**
@@ -29,15 +29,14 @@ export function calculateScores(
     
     // Calculate earned value based on weight
     const earned = response.value * (question.weight || 1);
-    const possible = question.weight || 1;
+    const possible = 5 * (question.weight || 1); // Max value is 5 (strongly agree)
     
-    // Add to section scores - ensure we don't exceed the possible points
-    const newEarned = Math.min(sectionScores[question.section].earned + earned, sectionScores[question.section].possible + possible);
-    sectionScores[question.section].earned = newEarned;
+    // Add to section scores
+    sectionScores[question.section].earned += earned;
     sectionScores[question.section].possible += possible;
     
-    // Add to total scores - ensure we don't exceed the possible points
-    totalEarned = Math.min(totalEarned + earned, totalPossible + possible);
+    // Add to total scores
+    totalEarned += earned;
     totalPossible += possible;
   });
   
@@ -110,7 +109,7 @@ export function determineProfiles(scores: AssessmentScores, gender?: string) {
         let score = 0;
         
         // Check section matches
-        current.criteria.forEach(criterion => {
+        current.criteria.forEach((criterion: {section: string, min?: number, max?: number}) => {
           const sectionScore = scores.sections[criterion.section]?.percentage || 0;
           
           if (criterion.min && sectionScore >= criterion.min) {
