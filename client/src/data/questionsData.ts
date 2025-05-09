@@ -9,7 +9,8 @@ export const sections = [
   "Your Family/Home Life", 
   "Your Finances",
   "Your Health and Wellness",
-  "Your Marriage and Boundaries"
+  "Your Marriage and Boundaries",
+  "Your Marriage Life with Children"
 ];
 
 // Questions from the authentic 100 Marriage Assessment book
@@ -1094,8 +1095,73 @@ export const questions: Question[] = [
     ],
     weight: 3
   },
-  
-  // Add additional declaration questions (81-83, 87-88) to reach 99 total
+  {
+    id: 81,
+    section: "Your Health and Wellness",
+    subsection: "Approach to Medicine, Illness and Pain Management",
+    type: "M",
+    text: "Your Health and Wellness: Approach to Medicine, Illness and Pain Management",
+    options: [
+      "We commit to preparing and enjoying healthy meals as a family, as defined by completely restricting fried food, fast food, candy as well as any other non-whole, highly processed junk foods from our family's consumption at least 5 of the 7 days per week.",
+      "We commit to preparing and enjoying healthy meals as a family, as defined by completely restricting fried food, fast food, candy as well as any other non-whole, highly processed junk foods from our family's consumption at least 4 of the 7 days per week.",
+      "Other: Please detail"
+    ],
+    weight: 4
+  },
+  {
+    id: 82,
+    section: "Your Health and Wellness",
+    subsection: "Specific Consumption Goals [Meal Types]",
+    type: "M",
+    text: "Your Health and Wellness: Specific Consumption Goals [Meal Types]",
+    options: [
+      "We commit to a healthy balanced diet with no special restriction on any meats (seafood, chicken, beef, pork), dairy, fruits and vegetables, and whole grains or nuts",
+      "We commit to a healthy balanced diet including all meats except pork (seafood, chicken, beef), dairy, fruits and vegetables, and whole grains or nuts",
+      "We commit to a healthy balanced vegetarian diet",
+      "We commit to a healthy balanced ascertain diet",
+      "We commit to a healthy balanced diet which is flexible to individual needs (e.g., husband can pursue carnivore and wife can pursue vegetarian, while children can be unrestricted, for example)"
+    ],
+    weight: 4
+  },
+  {
+    id: 83,
+    section: "Your Health and Wellness",
+    subsection: "New Babies: Nutrition: Breastfeeding",
+    type: "M",
+    text: "Your Health and Wellness: New Babies: Nutrition: Breastfeeding",
+    options: [
+      "We commit to breastfeeding primarily and only using formula in rare circumstances.",
+      "We commit to breastfeeding whenever possible, still, we do not have any reservations about relying on high quality formula."
+    ],
+    weight: 3
+  },
+  {
+    id: 87,
+    section: "Your Health and Wellness",
+    subsection: "Approach to Medicine, Illness and Pain Management: Natural Birth or Epidural",
+    type: "M",
+    text: "Your Health and Wellness: Approach to Medicine, Illness and Pain Management: Natural Birth or Epidural",
+    options: [
+      "We are committed to having a natural birth.",
+      "We are committed to having an epidural or anything medically available to relieve labor pain.",
+      "We're not well educated enough on the subject to make an informed decision on what's best so we plan to research and revisit this when the time comes."
+    ],
+    weight: 3
+  },
+  {
+    id: 88,
+    section: "Your Health and Wellness",
+    subsection: "Psychological / Physical (Individual Therapy)",
+    type: "M",
+    text: "Your Health and Wellness: Psychological / Physical (Individual Therapy)",
+    options: [
+      "We are each committed to seeing a (faith-aligned) therapist individually, at least 6 times per year during our marriage (as our resources allow).",
+      "We are each committed to seeing a (faith-aligned) therapist individually, at least 4 times per year during our marriage (as our resources allow).",
+      "We are each committed to seeing a (faith-aligned) therapist individually, at least 12 times per year during our marriage (as our resources allow).",
+      "While we believe in seeking counsel for our marriage, we're not ready to commit to long-term individual therapy currently."
+    ],
+    weight: 4
+  },
   {
     id: 84,
     section: "Your Health and Wellness",
