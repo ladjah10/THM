@@ -1075,25 +1075,51 @@ export class DatabaseStorage {
   
   async savePaymentTransaction(transaction: PaymentTransaction): Promise<void> {
     try {
-      // Store in the database using the payments table
-      const { db } = await import('./db');
-      const { payments } = await import('@shared/schema');
+      // Store in the database using raw SQL to avoid schema mapping issues
+      const { pool } = await import('./db');
       
-      // Insert into database
-      await db.insert(payments).values({
-        stripe_id: transaction.stripeId,
-        customer_email: transaction.customerEmail,
-        amount: transaction.amount,
-        currency: transaction.currency,
-        status: transaction.status,
-        created: new Date(transaction.created),
-        assessment_type: transaction.assessmentType,
-        metadata: JSON.stringify(transaction.metadata || {}),
-        is_refunded: transaction.isRefunded || false,
-        refund_amount: transaction.refundAmount,
-        refund_reason: transaction.refundReason,
-        promo_code: transaction.promoCode
-      });
+      // Generate a UUID for the transaction id if not provided
+      const id = transaction.id || crypto.randomUUID();
+      
+      // Insert into database using a SQL query
+      await pool.query(
+        `INSERT INTO payment_transactions (
+          id, stripe_id, customer_email, amount, currency, status, created, 
+          product_type, assessment_type, metadata, is_refunded, refund_amount, 
+          refund_reason, promo_code
+        ) VALUES (
+          $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14
+        )
+        ON CONFLICT (stripe_id) DO UPDATE SET
+          customer_email = $3,
+          amount = $4,
+          currency = $5,
+          status = $6,
+          created = $7,
+          product_type = $8,
+          assessment_type = $9,
+          metadata = $10,
+          is_refunded = $11,
+          refund_amount = $12,
+          refund_reason = $13,
+          promo_code = $14`,
+        [
+          id,
+          transaction.stripeId,
+          transaction.customerEmail || null,
+          transaction.amount,
+          transaction.currency,
+          transaction.status,
+          new Date(transaction.created),
+          transaction.productType || transaction.assessmentType, // Use productType as fallback
+          transaction.assessmentType || null,
+          JSON.stringify(transaction.metadata || {}),
+          transaction.isRefunded || false,
+          transaction.refundAmount || null,
+          transaction.refundReason || null,
+          transaction.promoCode || null
+        ]
+      );
       
       console.log(`Payment transaction saved to database: ${transaction.stripeId}`);
       
@@ -1114,12 +1140,14 @@ export class DatabaseStorage {
       // Build the query with optional date filters
       let query = `
         SELECT 
+          id,
           stripe_id as "stripeId", 
           customer_email as "customerEmail", 
           amount, 
           currency, 
           status, 
           created, 
+          product_type as "productType",
           assessment_type as "assessmentType", 
           metadata, 
           is_refunded as "isRefunded", 
@@ -1153,6 +1181,7 @@ export class DatabaseStorage {
       
       // Transform and return
       return results.rows.map((row: any) => ({
+        id: row.id,
         stripeId: row.stripeId,
         customerEmail: row.customerEmail,
         amount: row.amount,
@@ -1161,7 +1190,8 @@ export class DatabaseStorage {
         created: typeof row.created === 'string' 
           ? row.created 
           : row.created.toISOString(),
-        assessmentType: row.assessmentType,
+        productType: row.productType || row.assessmentType || 'individual',
+        assessmentType: row.assessmentType || row.productType || 'individual',
         metadata: typeof row.metadata === 'string' 
           ? JSON.parse(row.metadata) 
           : (row.metadata || {}),
@@ -1185,12 +1215,14 @@ export class DatabaseStorage {
       // Build the query to get transaction by Stripe ID
       const query = `
         SELECT 
+          id,
           stripe_id as "stripeId", 
           customer_email as "customerEmail", 
           amount, 
           currency, 
           status, 
           created, 
+          product_type as "productType",
           assessment_type as "assessmentType", 
           metadata, 
           is_refunded as "isRefunded", 
@@ -1212,6 +1244,7 @@ export class DatabaseStorage {
       
       // Transform and return
       return {
+        id: row.id,
         stripeId: row.stripeId,
         customerEmail: row.customerEmail,
         amount: row.amount,
@@ -1220,7 +1253,8 @@ export class DatabaseStorage {
         created: typeof row.created === 'string' 
           ? row.created 
           : row.created.toISOString(),
-        assessmentType: row.assessmentType,
+        productType: row.productType || row.assessmentType || 'individual',
+        assessmentType: row.assessmentType || row.productType || 'individual',
         metadata: typeof row.metadata === 'string' 
           ? JSON.parse(row.metadata) 
           : (row.metadata || {}),
@@ -1260,20 +1294,19 @@ export class DatabaseStorage {
   
   async recordRefund(stripeId: string, amount: number, reason?: string): Promise<void> {
     try {
-      // Update in the database
-      const { db } = await import('./db');
-      const { payments } = await import('@shared/schema');
-      const { eq } = await import('drizzle-orm');
+      // Update in the database using raw SQL to avoid schema mapping issues
+      const { pool } = await import('./db');
       
-      // Update the transaction with refund information
-      await db.update(payments)
-        .set({
-          is_refunded: true,
-          refund_amount: amount,
-          refund_reason: reason,
-          status: 'refunded'
-        })
-        .where(eq(payments.stripe_id, stripeId));
+      // Update the transaction with refund information using SQL
+      await pool.query(
+        `UPDATE payment_transactions 
+         SET is_refunded = true, 
+             refund_amount = $1, 
+             refund_reason = $2, 
+             status = 'refunded' 
+         WHERE stripe_id = $3`,
+        [amount, reason || null, stripeId]
+      );
       
       console.log(`Refund recorded in database for transaction: ${stripeId}`);
       
