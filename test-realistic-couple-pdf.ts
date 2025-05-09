@@ -30,14 +30,15 @@ function calculateSectionScores(responses: Record<string, { option: string, valu
   let totalPossible = 0;
   
   for (const section in sectionScores) {
-    sectionScores[section].percentage = (sectionScores[section].earned / sectionScores[section].possible) * 100;
+    // Calculate with 1 decimal precision
+    sectionScores[section].percentage = Math.round(((sectionScores[section].earned / sectionScores[section].possible) * 100) * 10) / 10;
     totalEarned += sectionScores[section].earned;
     totalPossible += sectionScores[section].possible;
   }
   
   return {
     sections: sectionScores,
-    overallPercentage: (totalEarned / totalPossible) * 100,
+    overallPercentage: Math.round(((totalEarned / totalPossible) * 100) * 10) / 10,
     strengths: determineStrengthsAndImprovements(sectionScores).strengths,
     improvementAreas: determineStrengthsAndImprovements(sectionScores).improvements,
     totalEarned,
@@ -344,8 +345,8 @@ function calculateCompatibility(primaryAssessment: AssessmentResult, spouseAsses
   const sectionAlignmentImpact = (avgSectionDifference / 10); // Each 10% avg difference reduces score by 1%
   compatibilityScore -= sectionAlignmentImpact;
   
-  // Ensure compatibility is between 0-100%
-  return Math.max(1, Math.min(99, Math.round(compatibilityScore)));
+  // Ensure compatibility is between 0-100% with 1 decimal place precision
+  return Math.max(1, Math.min(99, Math.round(compatibilityScore * 10) / 10));
 }
 
 // Entry point for generating a realistic couple assessment with meaningful data and differences
