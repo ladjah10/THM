@@ -728,8 +728,8 @@ export class DatabaseStorage {
   
   async recordPageView(pageView: PageView): Promise<void> {
     try {
-      // Store in the database using the pageViews table
-      const { db } = await import('./db');
+      // First import all the necessary dependencies
+      const { pool } = await import('./db');
       const { pageViews } = await import('@shared/schema');
       
       // Convert timestamp to a Date object if it's a string
@@ -748,6 +748,7 @@ export class DatabaseStorage {
         // Check if a session with this ID already exists
         const { visitorSessions } = await import('@shared/schema');
         const { eq } = await import('drizzle-orm');
+        const { db } = await import('./db');
         
         const existing = await db.select()
           .from(visitorSessions)
@@ -770,7 +771,6 @@ export class DatabaseStorage {
       }
       
       // Now insert the page view with raw SQL to handle any schema discrepancies
-      const { pool } = await import('./db');
       await pool.query(
         'INSERT INTO page_views (id, path, timestamp, referrer, user_agent, ip_address, session_id) VALUES ($1, $2, $3, $4, $5, $6, $7)',
         [
@@ -797,8 +797,8 @@ export class DatabaseStorage {
   
   async createVisitorSession(session: VisitorSession): Promise<void> {
     try {
-      // Store in the database using raw SQL to avoid schema mapping issues
-      const { db } = await import('./db');
+      // First import all necessary dependencies
+      const { pool } = await import('./db');
       
       // Prepare the timestamp for startTime
       const startTime = typeof session.startTime === 'string' 
@@ -814,7 +814,6 @@ export class DatabaseStorage {
       }
       
       // Insert into database using raw SQL with pool.query
-      const { pool } = await import('./db');
       await pool.query(
         `INSERT INTO visitor_sessions (
           id, start_time, end_time, page_count, user_agent, ip_address, referrer, user_id
@@ -852,9 +851,8 @@ export class DatabaseStorage {
   
   async updateVisitorSession(sessionId: string, endTime: string, pageCount: number): Promise<void> {
     try {
-      // Update in the database
-      const { db } = await import('./db');
-      const { visitorSessions } = await import('@shared/schema');
+      // Import all necessary dependencies at the beginning
+      const { pool } = await import('./db');
       
       // Convert endTime to a Date object if it's a string
       let endTimeDate: Date;
@@ -865,7 +863,6 @@ export class DatabaseStorage {
       }
       
       // Update the session in the database using SQL query with pool.query
-      const { pool } = await import('./db');
       await pool.query(
         'UPDATE visitor_sessions SET end_time = $1, page_count = $2 WHERE id = $3',
         [endTimeDate, pageCount, sessionId]
