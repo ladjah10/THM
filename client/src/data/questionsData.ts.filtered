@@ -144,18 +144,6 @@ export const questions: Question[] = [
   
   // YOUR FAITH LIFE
   {
-    id: 11,
-    section: "Your Faith Life",
-    subsection: "Church Community",
-    type: "D",
-    text: "Your Faith Life: Church Community - Will you attend the same church as a family?",
-    options: [
-      "We're committed to finding a single church which to attend both individually and as a family.",
-      "We're comfortable with having separate churches to attend individually and as a family."
-    ],
-    weight: 12
-  },
-  {
     id: 12,
     section: "Your Faith Life",
     subsection: "Worship Life: Marriage",
@@ -579,108 +567,6 @@ export const questions: Question[] = [
   
   // Add more declaration questions for Marriage Life
   {
-    id: 62,
-    section: "Your Marriage Life",
-    subsection: "Social Media Boundaries",
-    type: "D",
-    text: "Your Marriage Life: Social Media Boundaries - I believe we should have access to each other's social media accounts.",
-    options: [
-      "We do believe spouses should have access to each other's social media accounts for transparency and trust",
-      "We do not believe spouses should have access to each other's social media accounts as this infringes on personal privacy"
-    ],
-    weight: 4
-  },
-  {
-    id: 63,
-    section: "Your Marriage Life",
-    subsection: "Phone Privacy",
-    type: "D",
-    text: "Your Marriage Life: Phone Privacy - I believe we should have access to each other's phones.",
-    options: [
-      "We do believe spouses should have full access to each other's phones and passwords",
-      "We do not believe spouses need access to each other's phones as that violates personal privacy"
-    ],
-    weight: 4
-  },
-  {
-    id: 64,
-    section: "Your Marriage Life",
-    subsection: "Friendship Boundaries",
-    type: "D",
-    text: "Your Marriage Life: Friendship Boundaries - I believe we should limit close friendships with the opposite sex.",
-    options: [
-      "We do believe spouses should limit close one-on-one friendships with the opposite sex out of respect for our marriage",
-      "We do not believe limiting friendships based on gender is necessary in a trusting marriage"
-    ],
-    weight: 5
-  },
-  {
-    id: 65,
-    section: "Your Marriage Life",
-    subsection: "Spiritual Leadership",
-    type: "D",
-    text: "Your Marriage Life: Spiritual Leadership - I believe the husband should be the spiritual leader of the home.",
-    options: [
-      "We do believe the husband should take primary responsibility for spiritual leadership in the home",
-      "We do not believe spiritual leadership is gender-specific and should be shared equally"
-    ],
-    weight: 6
-  },
-  {
-    id: 66,
-    section: "Your Marriage Life",
-    subsection: "Financial Decisions",
-    type: "D",
-    text: "Your Marriage Life: Financial Decisions - I believe major financial decisions should be made together.",
-    options: [
-      "We do believe all major financial decisions should be discussed and agreed upon by both spouses",
-      "We do not believe all financial decisions need joint approval and each spouse should have some autonomy"
-    ],
-    weight: 6
-  },
-  
-  // YOUR FAMILY/HOME LIFE
-  {
-    id: 43,
-    section: "Your Family/Home Life",
-    subsection: "Extended Family: Boundaries",
-    type: "D",
-    text: "Your Family/Home Life: Extended Family: Boundaries - Do you agree that your spouse should come before extended family?",
-    options: [
-      "Agree",
-      "Disagree"
-    ],
-    weight: 12
-  },
-  {
-    id: 44,
-    section: "Your Family/Home Life",
-    subsection: "Extended Family: Living With Parents",
-    type: "D",
-    text: "Your Family/Home Life: Extended Family: Living With Parents - Would you be willing to have parents live with you?",
-    options: [
-      "Yes, permanently if needed",
-      "Yes, but only temporarily",
-      "No, unless extremely necessary",
-      "Never under any circumstances"
-    ],
-    weight: 5
-  },
-  {
-    id: 45,
-    section: "Your Family/Home Life",
-    subsection: "Extended Family: Money To Parents",
-    type: "D",
-    text: "Your Family/Home Life: Extended Family: Money To Parents - Are you willing to financially support parents?",
-    options: [
-      "Yes, regularly and substantially",
-      "Yes, occasionally as needed",
-      "Only in emergencies",
-      "No, we need to focus on our own finances"
-    ],
-    weight: 5
-  },
-  {
     id: 46,
     section: "Your Family/Home Life",
     subsection: "Holidays",
@@ -737,50 +623,6 @@ export const questions: Question[] = [
     weight: 5
   },
   {
-    id: 50,
-    section: "Your Finances",
-    subsection: "Financial Philosophy: Emergency Fund",
-    type: "M",
-    text: "Your Finances: Financial Philosophy: Emergency Fund - How much emergency savings do you think is necessary?",
-    options: [
-      "Less than 1 month of expenses",
-      "1-3 months of expenses",
-      "3-6 months of expenses",
-      "6+ months of expenses"
-    ],
-    weight: 3
-  },
-  {
-    id: 51,
-    section: "Your Finances",
-    subsection: "Financial Philosophy: Debt",
-    type: "M",
-    text: "Your Finances: Financial Philosophy: Debt - What's your approach to debt?",
-    options: [
-      "All debt is bad, avoid completely",
-      "Mortgage only, no other debt",
-      "Strategic debt is acceptable (education, mortgage, etc.)",
-      "Debt is a tool that can be used freely"
-    ],
-    weight: 5
-  },
-  {
-    id: 52,
-    section: "Your Finances",
-    subsection: "Financial Decisions: Large Purchases",
-    type: "M",
-    text: "Your Finances: Financial Decisions: Large Purchases - At what amount should you consult your spouse before spending?",
-    options: [
-      "$100 or more",
-      "$500 or more",
-      "$1000 or more",
-      "Any amount that affects the monthly budget"
-    ],
-    weight: 5
-  },
-  
-  // YOUR HEALTH AND WELLNESS
-  {
     id: 53,
     section: "Your Health and Wellness",
     subsection: "Physical Health: Exercise",
@@ -809,36 +651,6 @@ export const questions: Question[] = [
     weight: 5
   },
   {
-    id: 55,
-    section: "Your Health and Wellness",
-    subsection: "Substance Use: Alcohol",
-    type: "M",
-    text: "Your Health and Wellness: Substance Use: Alcohol - What are your views on alcohol use?",
-    options: [
-      "Both abstain completely",
-      "Moderate use in social settings only",
-      "Regular moderate consumption is acceptable",
-      "Different standards for each spouse"
-    ],
-    weight: 5
-  },
-  {
-    id: 56,
-    section: "Your Health and Wellness",
-    subsection: "Medical Decisions",
-    type: "D",
-    text: "Your Health and Wellness: Medical Decisions - How will you approach major medical decisions?",
-    options: [
-      "Joint decision-making for all major medical issues",
-      "Each spouse makes their own medical decisions",
-      "Final authority goes to the spouse receiving treatment",
-      "Decisions guided primarily by medical professionals"
-    ],
-    weight: 5
-  },
-  
-  // YOUR MARRIAGE AND BOUNDARIES
-  {
     id: 57,
     section: "Your Marriage and Boundaries",
     subsection: "Opposite Sex Friendships",
@@ -851,20 +663,6 @@ export const questions: Question[] = [
       "No special restrictions for opposite sex friendships"
     ],
     weight: 12
-  },
-  {
-    id: 58,
-    section: "Your Marriage and Boundaries",
-    subsection: "Social Media Boundaries",
-    type: "D",
-    text: "Your Marriage and Boundaries: Social Media Boundaries - What level of social media transparency do you expect?",
-    options: [
-      "Complete access to all accounts and passwords",
-      "No secrets but no need to share passwords",
-      "Private accounts but appropriate online behavior",
-      "Complete privacy in social media accounts"
-    ],
-    weight: 5
   },
   {
     id: 59,
@@ -909,210 +707,6 @@ export const questions: Question[] = [
   
   // Add additional declaration questions (67-99) to reach 99 total
   {
-    id: 67,
-    section: "Your Faith Life",
-    subsection: "Bible Study",
-    type: "D",
-    text: "Your Faith Life: Bible Study - I believe we should have regular Bible study together.",
-    options: [
-      "We do believe in having regular Bible study together as a couple",
-      "We do not believe regular couple Bible study is necessary as long as we each maintain our own spiritual disciplines"
-    ],
-    weight: 5
-  },
-  {
-    id: 68,
-    section: "Your Faith Life",
-    subsection: "Faith Mentorship",
-    type: "D",
-    text: "Your Faith Life: Faith Mentorship - I believe we should have spiritual mentors for our marriage.",
-    options: [
-      "We do believe having spiritual mentors or counselors for our marriage is important",
-      "We do not believe having formal spiritual mentors is necessary for a healthy marriage"
-    ],
-    weight: 4
-  },
-  {
-    id: 69,
-    section: "Your Faith Life",
-    subsection: "Sabbath Observance",
-    type: "D",
-    text: "Your Faith Life: Sabbath Observance - I believe we should set aside a sabbath day for rest and worship.",
-    options: [
-      "We do believe in setting aside a specific sabbath day for rest and worship", 
-      "We do not believe formally observing a sabbath day is necessary for our faith practice"
-    ],
-    weight: 3
-  },
-  {
-    id: 70,
-    section: "Your Parenting Life",
-    subsection: "Religious Education",
-    type: "D",
-    text: "Your Parenting Life: Religious Education - I believe our children should attend religious schools.",
-    options: [
-      "We do believe our children should attend religious schools for their education",
-      "We do not believe religious schools are necessary for our children's education"
-    ],
-    weight: 5
-  },
-  {
-    id: 71,
-    section: "Your Parenting Life",
-    subsection: "Gender Roles",
-    type: "D",
-    text: "Your Parenting Life: Gender Roles - I believe we should raise our children with traditional gender roles.",
-    options: [
-      "We do believe in raising our children with traditional gender roles and expectations",
-      "We do not believe in emphasizing traditional gender roles when raising our children"
-    ],
-    weight: 6
-  },
-  {
-    id: 72,
-    section: "Your Parenting Life",
-    subsection: "Technology Access",
-    type: "D",
-    text: "Your Parenting Life: Technology Access - I believe we should strictly limit our children's access to technology.",
-    options: [
-      "We do believe in strictly limiting and monitoring our children's access to technology",
-      "We do not believe in strict limitations on technology but rather teaching responsible use"
-    ],
-    weight: 4
-  },
-  {
-    id: 73,
-    section: "Your Parenting Life",
-    subsection: "Allowance",
-    type: "D",
-    text: "Your Parenting Life: Allowance - I believe children should earn allowance through chores.",
-    options: [
-      "We do believe children should earn allowance through completing chores and responsibilities",
-      "We do not believe allowance should be tied to chores as children should contribute to the household regardless"
-    ],
-    weight: 3
-  },
-  {
-    id: 74,
-    section: "Your Parenting Life",
-    subsection: "Extended Family Childcare",
-    type: "D",
-    text: "Your Parenting Life: Extended Family Childcare - I believe extended family should be involved in childcare.",
-    options: [
-      "We do believe extended family should be regularly involved in caring for our children",
-      "We do not believe extended family should have a primary role in providing regular childcare"
-    ],
-    weight: 4
-  },
-  {
-    id: 75,
-    section: "Your Family/Home Life",
-    subsection: "Housework Division",
-    type: "D",
-    text: "Your Family/Home Life: Housework Division - I believe housework should be divided based on traditional gender roles.",
-    options: [
-      "We do believe housework should generally follow traditional gender role divisions",
-      "We do not believe housework should be divided based on gender but rather on preferences and availability"
-    ],
-    weight: 5
-  },
-  {
-    id: 76,
-    section: "Your Family/Home Life",
-    subsection: "Home Decor Decisions",
-    type: "D",
-    text: "Your Family/Home Life: Home Decor Decisions - I believe home decoration decisions should be made together.",
-    options: [
-      "We do believe all home decoration decisions should be made jointly",
-      "We do not believe all decoration decisions need joint approval and can be more independent"
-    ],
-    weight: 3
-  },
-  {
-    id: 77,
-    section: "Your Family/Home Life",
-    subsection: "Pet Ownership",
-    type: "D",
-    text: "Your Family/Home Life: Pet Ownership - I believe pets are important members of the family.",
-    options: [
-      "We do believe pets are important family members and should be treated as such",
-      "We do not believe pets should be considered equivalent to family members"
-    ],
-    weight: 3
-  },
-  {
-    id: 78,
-    section: "Your Family/Home Life",
-    subsection: "Television Time",
-    type: "D",
-    text: "Your Family/Home Life: Television Time - I believe we should limit television/screen time in our home.",
-    options: [
-      "We do believe in setting strict limits on television and screen time in our home",
-      "We do not believe strict screen time limits are necessary as long as other responsibilities are met"
-    ],
-    weight: 3
-  },
-  {
-    id: 79,
-    section: "Your Finances",
-    subsection: "Saving Priority",
-    type: "D",
-    text: "Your Finances: Saving Priority - I believe saving for the future should be a top financial priority.",
-    options: [
-      "We do believe saving for the future should take priority over current lifestyle expenses",
-      "We do not believe aggressive saving should come at the expense of enjoying life in the present"
-    ],
-    weight: 5
-  },
-  {
-    id: 80,
-    section: "Your Finances",
-    subsection: "Financial Transparency",
-    type: "D",
-    text: "Your Finances: Financial Transparency - I believe we should have complete transparency about all spending.",
-    options: [
-      "We do believe in complete transparency and detailed accounting of all spending",
-      "We do not believe every purchase needs to be reported as long as the budget is respected"
-    ],
-    weight: 5
-  },
-  {
-    id: 81,
-    section: "Your Finances",
-    subsection: "Lending to Family",
-    type: "D",
-    text: "Your Finances: Lending to Family - I believe we should lend money to family members in need.",
-    options: [
-      "We do believe in lending or giving money to family members in need when we are able",
-      "We do not believe in lending money to family as it can create relationship complications"
-    ],
-    weight: 5
-  },
-  {
-    id: 82,
-    section: "Your Finances",
-    subsection: "Financial Education",
-    type: "D",
-    text: "Your Finances: Financial Education - I believe we should actively educate ourselves about finances.",
-    options: [
-      "We do believe in continually educating ourselves about financial management and investing",
-      "We do not believe extensive financial education is necessary beyond basic budgeting skills"
-    ],
-    weight: 4
-  },
-  {
-    id: 83,
-    section: "Your Finances",
-    subsection: "Giving Decisions",
-    type: "D",
-    text: "Your Finances: Giving Decisions - I believe charitable giving decisions should be made jointly.",
-    options: [
-      "We do believe all charitable giving decisions should be made together as a couple",
-      "We do not believe all giving requires joint approval and each spouse should have some autonomy"
-    ],
-    weight: 4
-  },
-  {
     id: 84,
     section: "Your Health and Wellness",
     subsection: "Diet Expectations",
@@ -1149,30 +743,6 @@ export const questions: Question[] = [
     weight: 4
   },
   {
-    id: 87,
-    section: "Your Health and Wellness",
-    subsection: "Mental Health Openness",
-    type: "D",
-    text: "Your Health and Wellness: Mental Health Openness - I believe in being open about mental health struggles.",
-    options: [
-      "We do believe in openly discussing and seeking help for mental health struggles",
-      "We do not believe mental health issues need to be widely discussed outside of professional treatment"
-    ],
-    weight: 5
-  },
-  {
-    id: 88,
-    section: "Your Health and Wellness",
-    subsection: "Health Accountability",
-    type: "D",
-    text: "Your Health and Wellness: Health Accountability - I believe spouses should hold each other accountable for health goals.",
-    options: [
-      "We do believe spouses should actively hold each other accountable for health goals",
-      "We do not believe in imposing accountability and each person should manage their own health goals"
-    ],
-    weight: 4
-  },
-  {
     id: 89,
     section: "Your Marriage and Boundaries",
     subsection: "Device-Free Time",
@@ -1184,70 +754,7 @@ export const questions: Question[] = [
     ],
     weight: 4
   },
-  
-  // The following are authentic questions from the original book that were previously missing
-  {
-    id: 90,
-    section: "Your Marriage Life",
-    subsection: "Sex - Initiation",
-    type: "M",
-    text: "Your Marriage Life: Sex - Initiation",
-    options: [
-      "We commit to alternating who initiates sex by week.",
-      "We commit to alternating who initiates sex by day/instance.",
-      "We commit to \"letting it flow\" naturally without a set alternation schedule, with that said, we each willingly acknowledge it is not the responsibility of one spouse to initiate a duty before God."
-    ],
-    weight: 5
-  },
-  {
-    id: 91,
-    section: "Your Marriage Life",
-    subsection: "Sex - Communication",
-    type: "M",
-    text: "Your Marriage Life: Sex - Communication",
-    options: [
-      "We commit to having a conversation within the first month about what we individually enjoy in sex with our spouse and what aspect of the experience, if anything, you would each enjoy more of.",
-      "We commit to having a conversation within the first 3 months about what we individually enjoy in sex with our spouse and what aspect of the experience, if anything, you would each enjoy more of.",
-      "We commit to having a conversation within the first 6 months about what we individually enjoy in sex with our spouse and what aspect of the experience, if anything, you would each enjoy more of.",
-      "Other: Before committing to this we need further discussion in our session around how this would operate."
-    ],
-    weight: 5
-  },
-  {
-    id: 92,
-    section: "Your Marriage Life",
-    subsection: "Sex - Contraception",
-    type: "M",
-    text: "Your Marriage Life: Sex - Contraception",
-    options: [
-      "We do not plan to use contraception of any form during marriage.",
-      "We plan to use contraception, but we do not plan to use any which require oral consumption (health concerns/considerations) or invasive surgery (vasectomy, fallopian \"tubes tied\").",
-      "We plan to use all forms of contraception available to us which includes oral consumption and/or invasive surgery as an option (vasectomy, fallopian \"tubes tied\")."
-    ],
-    weight: 5
-  },
-  {
-    id: 93,
-    section: "Your Marriage Life",
-    subsection: "Sex - Boundaries",
-    type: "D",
-    text: "Your Marriage Life: Sex - Boundaries (Declarations)",
-    options: [
-      "We commit to never discussing our sex lives with anyone (friends, colleagues, and family members) unless we mutually agree to seek outside counsel on that aspect of our relationship.",
-      "We disagree with this statement."
-    ],
-    weight: 6
-  },
-  {
-    id: 94,
-    section: "Your Marriage Life with Children",
-    subsection: "Children Decision: How To Have Them (Method of Delivery Preference)",
-    type: "M",
-    text: "Your Marriage Life with Children: Children Decision: How To Have Them (Method of Delivery Preference)",
-    options: [
-      "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer: A Water Delivery (if medically prudent and possible)",
-      "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer: Vaginal Delivery (with potential for C-Section if medically necessary)"
-    ],
-    weight: 3
-  }
+  // Questions 90-99 have been removed as they were not part of the original book content
+  // They will be replaced with authentic questions from the book once we have access to the original content
 ];
+Found 55 remaining questions
