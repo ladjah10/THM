@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { RefreshCw, FileDown, Search, Loader2, Mail } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import type { AssessmentScores, UserProfile, DemographicData, AssessmentResult, SectionScore } from "@/types/assessment";
 import type { AnalyticsSummary, PageView, VisitorSession, PaymentTransaction } from "@shared/schema";
 
@@ -19,7 +20,6 @@ interface CustomerRecoveryData {
   metadata: any;
   product_type: string;
 }
-import { useToast } from "@/hooks/use-toast";
 import type { ReferralData } from "@/types/referrals";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import {
@@ -438,8 +438,7 @@ export default function AdminDashboard() {
   const [emailSearchTerm, setEmailSearchTerm] = useState<string>("");
   const [searchResults, setSearchResults] = useState<AssessmentResult[] | null>(null);
   
-  // Customer data recovery state
-  const [customerRecoveryData, setCustomerRecoveryData] = useState<CustomerRecoveryData[] | null>(null);
+  // Remove customerRecoveryData state as it's now in the RecoverySection component
   
   // State for assessment reminder system
   const [sendingReminders, setSendingReminders] = useState<boolean>(false);
@@ -1842,7 +1841,7 @@ export default function AdminDashboard() {
                       <CardContent>
                         <div className="space-y-4">
                           {searchResults.map(assessment => (
-                            <div key={assessment.id} className="border rounded-lg p-4 hover:bg-gray-50">
+                            <div key={assessment.email} className="border rounded-lg p-4 hover:bg-gray-50">
                               <div className="flex justify-between">
                                 <div>
                                   <div className="text-lg font-medium">{assessment.name}</div>
