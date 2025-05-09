@@ -118,11 +118,15 @@ export default function AdminDashboard() {
   const [assessmentDateRange, setAssessmentDateRange] = useState<{
     startDate?: string,
     endDate?: string,
-    requirePayment: boolean
+    requirePayment: boolean,
+    promoCodeUsed: boolean,
+    completedOnly: boolean
   }>({
     startDate: "2025-05-06", // Default to May 6, 2025
     endDate: undefined,
-    requirePayment: false
+    requirePayment: false,
+    promoCodeUsed: false,
+    completedOnly: true
   });
 
   // Query to fetch assessments with date filtering
@@ -144,6 +148,14 @@ export default function AdminDashboard() {
       
       if (assessmentDateRange.requirePayment) {
         params.append('requirePayment', 'true');
+      }
+      
+      if (assessmentDateRange.promoCodeUsed) {
+        params.append('promoCodeUsed', 'true');
+      }
+      
+      if (assessmentDateRange.completedOnly) {
+        params.append('completedOnly', 'true');
       }
       
       const queryString = params.toString();
