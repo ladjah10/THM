@@ -9,8 +9,7 @@ export const sections = [
   "Your Family/Home Life", 
   "Your Finances",
   "Your Health and Wellness",
-  "Your Marriage and Boundaries",
-  "Your Penultimate Vow"
+  "Your Marriage and Boundaries"
 ];
 
 // Questions from the authentic 100 Marriage Assessment book
@@ -887,16 +886,5 @@ export const questions: Question[] = [
     ],
     weight: 2
   },
-  {
-    id: 100,
-    section: "Your Penultimate Vow",
-    subsection: "Final Commitment",
-    type: "D",
-    text: "Your Penultimate Vow",
-    options: [
-      "We each promise and commit, before God and each other, to honor the agreements made and expectations set throughout this book. While we recognize we will each be imperfect and inevitably fall short, we each willingly agree by our own volition to be accountable to every single commitment, before God, our spouse and spiritual counsel in our adherence to everything we agreed to in this book. We each make space for adjustments, if and only if, we mutually agree, if not, we submit to our original commitment with trust in God and without any form or threat of retaliation. Most importantly, it is our mutual intention for us each to work daily to be children of God who reflect His unwaivering promises, character and Word through the preceding (and following) commitments made with our words and carried out through our lives. As such, in view of the vows we will make on our day of holy matrimony, we make this vow, to honor these commitments in the name of the Father, the Son and the Holy Spirit, Amen and Amen.",
-      "We disagree with this statement."
-    ],
-    weight: 15
-  }
+
 ];
