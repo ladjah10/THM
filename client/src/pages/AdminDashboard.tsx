@@ -251,7 +251,22 @@ export default function AdminDashboard() {
     }
   });
   
-  const { data: paymentTransactions, isLoading: isLoadingPaymentTransactions } = useQuery<PaymentTransaction[]>({
+  // Define a type for enhanced transactions including assessment data
+  type EnhancedTransaction = PaymentTransaction & { 
+    assessmentData?: { 
+      firstName?: string;
+      lastName?: string; 
+      gender?: string;
+      marriageStatus?: string;
+      desireChildren?: string;
+      ethnicity?: string;
+      city?: string;
+      state?: string;
+      zipCode?: string;
+    }
+  };
+  
+  const { data: paymentTransactions, isLoading: isLoadingPaymentTransactions } = useQuery<EnhancedTransaction[]>({
     queryKey: ['/api/admin/analytics/payment-transactions', transactionDateRange],
     queryFn: async () => {
       if (!isAuthenticated) return [];
@@ -266,6 +281,9 @@ export default function AdminDashboard() {
       if (transactionDateRange.end) {
         params.append('endDate', transactionDateRange.end);
       }
+      
+      // Request assessment data to be included
+      params.append('includeAssessmentData', 'true');
       
       const queryString = params.toString();
       if (queryString) {
@@ -1278,6 +1296,7 @@ export default function AdminDashboard() {
                             <TableHead>Customer</TableHead>
                             <TableHead>Product</TableHead>
                             <TableHead>Description</TableHead>
+                            <TableHead>Demographics</TableHead>
                             <TableHead>Amount</TableHead>
                             <TableHead>Status</TableHead>
                             <TableHead>Transaction ID</TableHead>
@@ -1290,7 +1309,16 @@ export default function AdminDashboard() {
                               .map((transaction) => (
                                 <TableRow key={transaction.id} className={transaction.isRefunded ? "bg-red-50" : ""}>
                                   <TableCell>{formatDate(transaction.created)}</TableCell>
-                                  <TableCell>{transaction.customerEmail || "Anonymous"}</TableCell>
+                                  <TableCell>
+                                    {transaction.assessmentData?.firstName && transaction.assessmentData?.lastName ? (
+                                      <div className="flex flex-col">
+                                        <span className="font-medium">{`${transaction.assessmentData.firstName} ${transaction.assessmentData.lastName}`}</span>
+                                        <span className="text-xs text-muted-foreground">{transaction.customerEmail || 'N/A'}</span>
+                                      </div>
+                                    ) : (
+                                      <span>{transaction.customerEmail || "Anonymous"}</span>
+                                    )}
+                                  </TableCell>
                                   <TableCell>
                                     {transaction.productType === 'individual' ? (
                                       <Badge variant="outline">Individual</Badge>
@@ -1310,6 +1338,29 @@ export default function AdminDashboard() {
                                       'Unknown Product'
                                     )}
                                   </TableCell>
+                                  <TableCell>
+                                    {transaction.assessmentData ? (
+                                      <div className="space-y-1 text-xs">
+                                        {transaction.assessmentData.gender && (
+                                          <div className="flex items-center gap-1">
+                                            <span className="font-medium">Gender:</span> {transaction.assessmentData.gender}
+                                          </div>
+                                        )}
+                                        {transaction.assessmentData.marriageStatus && (
+                                          <div className="flex items-center gap-1">
+                                            <span className="font-medium">Status:</span> {transaction.assessmentData.marriageStatus}
+                                          </div>
+                                        )}
+                                        {transaction.assessmentData.city && transaction.assessmentData.state && (
+                                          <div className="flex items-center gap-1">
+                                            <span className="font-medium">Location:</span> {`${transaction.assessmentData.city}, ${transaction.assessmentData.state}`}
+                                          </div>
+                                        )}
+                                      </div>
+                                    ) : (
+                                      <span className="text-xs text-muted-foreground">No data</span>
+                                    )}
+                                  </TableCell>
                                   <TableCell className="font-medium">
                                     ${(Number(transaction.amount)/100).toFixed(2)}
                                   </TableCell>
@@ -1327,7 +1378,7 @@ export default function AdminDashboard() {
                               ))
                           ) : (
                             <TableRow>
-                              <TableCell colSpan={7} className="text-center py-8 text-gray-500">
+                              <TableCell colSpan={8} className="text-center py-8 text-gray-500">
                                 No transactions found for the selected period
                               </TableCell>
                             </TableRow>
