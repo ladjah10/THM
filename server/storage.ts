@@ -397,9 +397,10 @@ export class MemStorage implements IStorage {
   }
   
   async getAnalyticsSummary(period: 'day' | 'week' | 'month' | 'year'): Promise<AnalyticsSummary> {
-    // Calculate date range based on period
-    const now = new Date();
+    // Calculate start date based on period
     let startDate: Date;
+    const now = new Date();
+    const endDate = now;
     
     switch (period) {
       case 'day':
@@ -420,183 +421,308 @@ export class MemStorage implements IStorage {
         break;
     }
     
-    try {
-      // Try to use database for better performance
-      const { db } = await import('./db');
-      const { pageViews, visitorSessions } = await import('@shared/schema');
-      const { sql, and, gte, lte, count, countDistinct } = await import('drizzle-orm');
-      
-      // Filter data for the period
-      const startDateISO = startDate.toISOString();
-      const nowISO = now.toISOString();
-      
-      // Get page views in the period
-      const filteredPageViews = await this.getPageViews(startDateISO, nowISO);
-      
-      // Count unique visitors directly from database
-      const uniqueVisitorsResult = await db
-        .select({ 
-          count: countDistinct(pageViews.sessionId)
-        })
-        .from(pageViews)
-        .where(
-          and(
-            gte(pageViews.timestamp, startDate),
-            lte(pageViews.timestamp, now)
-          )
-        );
-      
-      const uniqueVisitors = uniqueVisitorsResult[0]?.count || 0;
-      
-      // Get top pages directly from database
-      const topPagesResult = await db
-        .select({
-          path: pageViews.path,
-          count: count(pageViews.id)
-        })
-        .from(pageViews)
-        .where(
-          and(
-            gte(pageViews.timestamp, startDate),
-            lte(pageViews.timestamp, now)
-          )
-        )
-        .groupBy(pageViews.path)
-        .orderBy(sql`count DESC`)
-        .limit(5);
-      
-      const topPages = topPagesResult.map(row => ({
-        path: row.path,
-        count: Number(row.count) // Ensure it's a number
-      }));
-      
-      // Calculate daily visitors using raw SQL for date formatting
-      const dailyVisitorsResult = await db
-        .execute(sql`
-          SELECT TO_CHAR(timestamp, 'YYYY-MM-DD') as date, COUNT(*) as count
-          FROM page_views
-          WHERE timestamp >= ${startDate} AND timestamp <= ${now}
-          GROUP BY TO_CHAR(timestamp, 'YYYY-MM-DD')
-          ORDER BY date ASC
-        `);
-      
-      const dailyVisitors = (dailyVisitorsResult as any[]).map(row => ({
-        date: row.date,
-        count: Number(row.count)
-      }));
-      
-      // Get filtered sessions
-      const filteredSessions = await this.getVisitorSessions(startDateISO, nowISO);
-      
-      // Calculate conversion rate (assessments started / visitors)
-      const uniqueAssessmentEmails = new Set(
-        this.assessments
-          .filter(a => new Date(a.timestamp) >= startDate)
-          .map(a => a.email)
-      ).size;
-      
-      const conversionRate = uniqueVisitors > 0 
-        ? (uniqueAssessmentEmails / uniqueVisitors) * 100 
-        : 0;
-      
-      // Calculate average session duration from database
-      const durationsResult = await db.execute(sql`
-        SELECT 
-          AVG(EXTRACT(EPOCH FROM (end_time - start_time))) as avg_duration
-        FROM 
-          visitor_sessions
-        WHERE 
-          start_time >= ${startDate}
-          AND start_time <= ${now}
-          AND end_time IS NOT NULL
-      `);
-      
-      const avgDurationRow = durationsResult[0] as any;
-      const averageSessionDuration = avgDurationRow?.avg_duration ? Number(avgDurationRow.avg_duration) : 0;
-      
-      return {
-        totalVisitors: Number(uniqueVisitors),
-        totalPageViews: filteredPageViews.length,
-        topPages,
-        dailyVisitors,
-        conversionRate,
-        averageSessionDuration
-      };
-    } catch (error) {
-      console.log('Using in-memory analytics summary calculation', error);
-      
-      // Filter data for the period
-      const filteredPageViews = await this.getPageViews(startDate.toISOString(), now.toISOString());
-      const filteredSessions = await this.getVisitorSessions(startDate.toISOString(), now.toISOString());
-      
-      // Count unique visitors (by sessionId)
-      const uniqueVisitors = new Set(filteredPageViews.map(view => view.sessionId)).size;
-      
-      // Get top pages
-      const pageCounts: Record<string, number> = {};
-      filteredPageViews.forEach(view => {
-        if (!pageCounts[view.path]) {
-          pageCounts[view.path] = 0;
-        }
-        pageCounts[view.path]++;
-      });
-      
-      const topPages = Object.entries(pageCounts)
-        .map(([path, count]) => ({ path, count }))
-        .sort((a, b) => b.count - a.count)
-        .slice(0, 5);
-      
-      // Calculate daily visitors
-      const dailyVisitorMap: Record<string, number> = {};
-      filteredPageViews.forEach(view => {
-        const date = new Date(view.timestamp).toISOString().split('T')[0];
-        if (!dailyVisitorMap[date]) {
-          dailyVisitorMap[date] = 0;
-        }
-        dailyVisitorMap[date]++;
-      });
-      
-      const dailyVisitors = Object.entries(dailyVisitorMap)
-        .map(([date, count]) => ({ date, count }))
-        .sort((a, b) => a.date.localeCompare(b.date));
-      
-      // Calculate conversion rate (assessments started / visitors)
-      const uniqueAssessmentEmails = new Set(
-        this.assessments
-          .filter(a => new Date(a.timestamp) >= startDate)
-          .map(a => a.email)
-      ).size;
-      
-      const conversionRate = uniqueVisitors > 0 
-        ? (uniqueAssessmentEmails / uniqueVisitors) * 100 
-        : 0;
-      
-      // Calculate average session duration
-      let totalDuration = 0;
-      let completedSessions = 0;
-      
-      filteredSessions.forEach(session => {
-        if (session.endTime) {
-          const startTime = new Date(session.startTime).getTime();
-          const endTime = new Date(session.endTime).getTime();
-          const duration = (endTime - startTime) / 1000; // in seconds
+    // Get page views within period
+    const periodViews = await this.getPageViews(startDate.toISOString(), endDate.toISOString());
+    
+    // Get sessions within period
+    const periodSessions = await this.getVisitorSessions(startDate.toISOString(), endDate.toISOString());
+    
+    // Get payment transactions within period
+    const periodTransactions = await this.getPaymentTransactions(startDate.toISOString(), endDate.toISOString());
+    
+    // Calculate top pages
+    const pageMap = new Map<string, number>();
+    for (const view of periodViews) {
+      const currentCount = pageMap.get(view.path) || 0;
+      pageMap.set(view.path, currentCount + 1);
+    }
+    
+    const topPages = Array.from(pageMap.entries())
+      .map(([path, count]) => ({ path, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10);
+    
+    // Calculate daily visitors
+    const dailyVisitorMap = new Map<string, number>();
+    for (const session of periodSessions) {
+      const date = new Date(session.startTime).toISOString().split('T')[0];
+      const currentCount = dailyVisitorMap.get(date) || 0;
+      dailyVisitorMap.set(date, currentCount + 1);
+    }
+    
+    const dailyVisitors = Array.from(dailyVisitorMap.entries())
+      .map(([date, count]) => ({ date, count }))
+      .sort((a, b) => a.date.localeCompare(b.date));
+    
+    // Calculate average session duration
+    let totalDuration = 0;
+    let completedSessions = 0;
+    
+    for (const session of periodSessions) {
+      if (session.endTime) {
+        const startTime = new Date(session.startTime).getTime();
+        const endTime = new Date(session.endTime).getTime();
+        const duration = (endTime - startTime) / 1000; // Duration in seconds
+        
+        if (duration > 0 && duration < 7200) { // Ignore sessions longer than 2 hours (likely errors)
           totalDuration += duration;
           completedSessions++;
         }
+      }
+    }
+    
+    const averageSessionDuration = completedSessions > 0 ? Math.round(totalDuration / completedSessions) : 0;
+    
+    // Calculate conversion rate based on actual payments
+    const conversions = periodTransactions.filter(t => t.status === 'succeeded').length;
+    const conversionRate = periodSessions.length > 0 ? (conversions / periodSessions.length) * 100 : 0;
+    
+    // Calculate sales metrics
+    const totalSales = periodTransactions
+      .filter(t => t.status === 'succeeded' && !t.isRefunded)
+      .reduce((sum, t) => sum + t.amount, 0) / 100; // Convert from cents to dollars
+      
+    // Calculate sales by product type
+    const salesByProductType: Record<string, number> = {};
+    for (const transaction of periodTransactions) {
+      if (transaction.status === 'succeeded' && !transaction.isRefunded) {
+        const productType = transaction.productType || 'unknown';
+        salesByProductType[productType] = (salesByProductType[productType] || 0) + (transaction.amount / 100);
+      }
+    }
+    
+    // Calculate daily sales
+    const dailySalesMap = new Map<string, number>();
+    for (const transaction of periodTransactions) {
+      if (transaction.status === 'succeeded' && !transaction.isRefunded) {
+        const date = new Date(transaction.created).toISOString().split('T')[0];
+        const currentAmount = dailySalesMap.get(date) || 0;
+        dailySalesMap.set(date, currentAmount + (transaction.amount / 100));
+      }
+    }
+    
+    const dailySales = Array.from(dailySalesMap.entries())
+      .map(([date, amount]) => ({ date, amount }))
+      .sort((a, b) => a.date.localeCompare(b.date));
+    
+    // Get recent transactions
+    const recentTransactions = [...periodTransactions]
+      .sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime())
+      .slice(0, 10);
+      
+    return {
+      totalVisitors: periodSessions.length,
+      totalPageViews: periodViews.length,
+      topPages,
+      dailyVisitors,
+      conversionRate,
+      averageSessionDuration,
+      salesData: {
+        totalSales,
+        recentTransactions,
+        salesByProductType,
+        dailySales
+      }
+    };
+  }
+  
+  // Payment transaction methods
+  async savePaymentTransaction(transaction: PaymentTransaction): Promise<void> {
+    try {
+      // Try to use database if available
+      const { db } = await import('./db');
+      const { paymentTransactions } = await import('@shared/schema');
+      
+      await db.insert(paymentTransactions).values({
+        id: transaction.id,
+        stripeId: transaction.stripeId,
+        customerId: transaction.customerId || null,
+        customerEmail: transaction.customerEmail || null,
+        amount: transaction.amount,
+        currency: transaction.currency,
+        status: transaction.status,
+        created: new Date(transaction.created),
+        productType: transaction.productType,
+        metadata: transaction.metadata || null,
+        isRefunded: transaction.isRefunded,
+        refundAmount: transaction.refundAmount || null,
+        refundReason: transaction.refundReason || null,
+        sessionId: transaction.sessionId || null
       });
       
-      const averageSessionDuration = completedSessions > 0 
-        ? totalDuration / completedSessions 
-        : 0;
+      console.log(`Payment transaction recorded in database: ${transaction.stripeId}`);
+    } catch (error) {
+      // Fallback to in-memory storage
+      const existingIndex = this.paymentTransactions.findIndex(t => t.stripeId === transaction.stripeId);
       
+      if (existingIndex >= 0) {
+        this.paymentTransactions[existingIndex] = transaction;
+      } else {
+        this.paymentTransactions.push(transaction);
+      }
+      
+      console.log(`Payment transaction recorded in memory: ${transaction.stripeId}`);
+    }
+  }
+  
+  async getPaymentTransactions(startDate?: string, endDate?: string): Promise<PaymentTransaction[]> {
+    try {
+      // Try to use database if available
+      const { db } = await import('./db');
+      const { paymentTransactions } = await import('@shared/schema');
+      const { and, gte, lte } = await import('drizzle-orm');
+      
+      let query = db.select().from(paymentTransactions);
+      
+      if (startDate && endDate) {
+        query = query.where(
+          and(
+            gte(paymentTransactions.created, new Date(startDate)),
+            lte(paymentTransactions.created, new Date(endDate))
+          )
+        );
+      } else if (startDate) {
+        query = query.where(gte(paymentTransactions.created, new Date(startDate)));
+      } else if (endDate) {
+        query = query.where(lte(paymentTransactions.created, new Date(endDate)));
+      }
+      
+      const dbTransactions = await query;
+      console.log(`Retrieved ${dbTransactions.length} payment transactions from database`);
+      
+      // Convert database records to PaymentTransaction interface
+      return dbTransactions.map(t => ({
+        id: t.id,
+        stripeId: t.stripeId,
+        customerId: t.customerId || undefined,
+        customerEmail: t.customerEmail || undefined,
+        amount: t.amount,
+        currency: t.currency,
+        status: t.status,
+        created: t.created.toISOString(),
+        productType: t.productType,
+        metadata: t.metadata || undefined,
+        isRefunded: t.isRefunded,
+        refundAmount: t.refundAmount || undefined,
+        refundReason: t.refundReason || undefined,
+        sessionId: t.sessionId || undefined
+      }));
+    } catch (error) {
+      // Fallback to in-memory storage
+      console.log('Using in-memory payment transactions', error);
+      
+      if (!startDate && !endDate) {
+        return [...this.paymentTransactions];
+      }
+      
+      return this.paymentTransactions.filter(transaction => {
+        const transactionDate = new Date(transaction.created);
+        const isAfterStart = startDate ? transactionDate >= new Date(startDate) : true;
+        const isBeforeEnd = endDate ? transactionDate <= new Date(endDate) : true;
+        return isAfterStart && isBeforeEnd;
+      });
+    }
+  }
+  
+  async getPaymentTransactionByStripeId(stripeId: string): Promise<PaymentTransaction | null> {
+    try {
+      // Try to use database if available
+      const { db } = await import('./db');
+      const { paymentTransactions } = await import('@shared/schema');
+      const { eq } = await import('drizzle-orm');
+      
+      const [transaction] = await db
+        .select()
+        .from(paymentTransactions)
+        .where(eq(paymentTransactions.stripeId, stripeId));
+      
+      if (!transaction) {
+        return null;
+      }
+      
+      // Convert to PaymentTransaction interface
       return {
-        totalVisitors: uniqueVisitors,
-        totalPageViews: filteredPageViews.length,
-        topPages,
-        dailyVisitors,
-        conversionRate,
-        averageSessionDuration
+        id: transaction.id,
+        stripeId: transaction.stripeId,
+        customerId: transaction.customerId || undefined,
+        customerEmail: transaction.customerEmail || undefined,
+        amount: transaction.amount,
+        currency: transaction.currency,
+        status: transaction.status,
+        created: transaction.created.toISOString(),
+        productType: transaction.productType,
+        metadata: transaction.metadata || undefined,
+        isRefunded: transaction.isRefunded,
+        refundAmount: transaction.refundAmount || undefined,
+        refundReason: transaction.refundReason || undefined,
+        sessionId: transaction.sessionId || undefined
       };
+    } catch (error) {
+      // Fallback to in-memory storage
+      console.log('Using in-memory payment transaction lookup', error);
+      
+      const transaction = this.paymentTransactions.find(t => t.stripeId === stripeId);
+      return transaction || null;
+    }
+  }
+  
+  async updatePaymentTransactionStatus(stripeId: string, status: string): Promise<void> {
+    try {
+      // Try to use database if available
+      const { db } = await import('./db');
+      const { paymentTransactions } = await import('@shared/schema');
+      const { eq } = await import('drizzle-orm');
+      
+      await db
+        .update(paymentTransactions)
+        .set({ status })
+        .where(eq(paymentTransactions.stripeId, stripeId));
+      
+      console.log(`Payment transaction status updated in database: ${stripeId} -> ${status}`);
+    } catch (error) {
+      // Fallback to in-memory storage
+      const transactionIndex = this.paymentTransactions.findIndex(t => t.stripeId === stripeId);
+      
+      if (transactionIndex >= 0) {
+        this.paymentTransactions[transactionIndex] = {
+          ...this.paymentTransactions[transactionIndex],
+          status
+        };
+        console.log(`Payment transaction status updated in memory: ${stripeId} -> ${status}`);
+      }
+    }
+  }
+  
+  async recordRefund(stripeId: string, amount: number, reason?: string): Promise<void> {
+    try {
+      // Try to use database if available
+      const { db } = await import('./db');
+      const { paymentTransactions } = await import('@shared/schema');
+      const { eq } = await import('drizzle-orm');
+      
+      await db
+        .update(paymentTransactions)
+        .set({ 
+          isRefunded: true,
+          refundAmount: amount,
+          refundReason: reason || null
+        })
+        .where(eq(paymentTransactions.stripeId, stripeId));
+      
+      console.log(`Refund recorded in database: ${stripeId}, amount: ${amount}`);
+    } catch (error) {
+      // Fallback to in-memory storage
+      const transactionIndex = this.paymentTransactions.findIndex(t => t.stripeId === stripeId);
+      
+      if (transactionIndex >= 0) {
+        this.paymentTransactions[transactionIndex] = {
+          ...this.paymentTransactions[transactionIndex],
+          isRefunded: true,
+          refundAmount: amount,
+          refundReason: reason
+        };
+        console.log(`Refund recorded in memory: ${stripeId}, amount: ${amount}`);
+      }
     }
   }
 }
