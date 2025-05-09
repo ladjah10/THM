@@ -518,7 +518,7 @@ export class DatabaseStorage {
   async saveCoupleAssessmentReport(report: CoupleAssessmentReport): Promise<void> {
     try {
       // Save to database using the coupleAssessments table
-      const { db } = await import('./db');
+      const { pool } = await import('./db');
       
       // First, ensure the primary and spouse assessments are saved to the database
       if (report.primary) {
@@ -541,7 +541,7 @@ export class DatabaseStorage {
       const reportId = report.id || crypto.randomUUID();
       
       // Insert into database using raw SQL to bypass schema mapping issues
-      await db.execute(`
+      await pool.query(`
         INSERT INTO couple_assessments (
           id, couple_id, primary_id, spouse_id, analysis, 
           timestamp, compatibility_score, recommendations, report_sent
@@ -581,10 +581,10 @@ export class DatabaseStorage {
   async getCoupleAssessment(coupleId: string): Promise<CoupleAssessmentReport | null> {
     try {
       // Get from database using raw SQL to avoid schema mapping issues
-      const { db } = await import('./db');
+      const { pool } = await import('./db');
       
       // Query the database for the couple assessment with the given coupleId
-      const results = await db.execute(`
+      const results = await pool.query(`
         SELECT id, couple_id as "coupleId", primary_id as "primaryId", spouse_id as "spouseId", 
                analysis, timestamp, compatibility_score as "compatibilityScore", 
                recommendations, report_sent as "reportSent"
@@ -634,10 +634,10 @@ export class DatabaseStorage {
   async getAllCoupleAssessments(): Promise<CoupleAssessmentReport[]> {
     try {
       // Get from database using raw SQL
-      const { db } = await import('./db');
+      const { pool } = await import('./db');
       
       // Query the database for all couple assessments
-      const results = await db.execute(`
+      const results = await pool.query(`
         SELECT id, couple_id as "coupleId", primary_id as "primaryId", spouse_id as "spouseId", 
                analysis, timestamp, compatibility_score as "compatibilityScore", 
                recommendations, report_sent as "reportSent"
