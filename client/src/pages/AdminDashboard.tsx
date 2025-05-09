@@ -1,8 +1,9 @@
 import { useState, useEffect, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 import type { AssessmentScores, UserProfile, DemographicData, AssessmentResult, SectionScore } from "@/types/assessment";
 import type { AnalyticsSummary, PageView, VisitorSession, PaymentTransaction } from "@shared/schema";
+import { useToast } from "@/hooks/use-toast";
 import type { ReferralData } from "@/types/referrals";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import {
@@ -96,6 +97,7 @@ export default function AdminDashboard() {
   const [filterGender, setFilterGender] = useState<"all" | "male" | "female">("all");
   const [selectedAssessment, setSelectedAssessment] = useState<AssessmentResult | null>(null);
   const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const { toast } = useToast();
 
   // Query to fetch assessments
   const { data: assessments, isLoading, error } = useQuery<AssessmentResult[]>({
@@ -195,6 +197,40 @@ export default function AdminDashboard() {
   
   // Payment transactions data
   const [transactionDateRange, setTransactionDateRange] = useState<{start?: string, end?: string}>({});
+  
+  // Sync Stripe payments mutation
+  const { mutate: syncStripePayments, isPending: isSyncingPayments } = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest("POST", "/api/admin/stripe/sync-payments", {
+        startDate: transactionDateRange.start,
+        endDate: transactionDateRange.end
+      });
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Failed to sync Stripe payments: ${errorText}`);
+      }
+      
+      return response.json();
+    },
+    onSuccess: (data) => {
+      toast({
+        title: "Sync Successful",
+        description: `Successfully synced ${data.count || 0} payments from Stripe`,
+        variant: "default"
+      });
+      
+      // Invalidate payment transactions query to refresh the data
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/analytics/payment-transactions'] });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Sync Failed",
+        description: error.message,
+        variant: "destructive"
+      });
+    }
+  });
   
   const { data: paymentTransactions, isLoading: isLoadingPaymentTransactions } = useQuery<PaymentTransaction[]>({
     queryKey: ['/api/admin/analytics/payment-transactions', transactionDateRange],
@@ -1066,6 +1102,20 @@ export default function AdminDashboard() {
                       value={transactionDateRange.end || ''}
                       onChange={(e) => setTransactionDateRange(prev => ({...prev, end: e.target.value}))}
                     />
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => syncStripePayments()}
+                      disabled={isSyncingPayments}
+                      className="ml-2"
+                    >
+                      {isSyncingPayments ? (
+                        <>
+                          <span className="animate-spin mr-2 h-4 w-4 border-2 border-primary border-t-transparent rounded-full" />
+                          Syncing...
+                        </>
+                      ) : "Sync with Stripe"}
+                    </Button>
                   </div>
                 </div>
               </div>

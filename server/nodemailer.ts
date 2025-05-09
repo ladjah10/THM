@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import { AssessmentResult, CoupleAssessmentReport } from '../shared/schema';
+import { AssessmentResult, CoupleAssessmentReport, PaymentTransaction } from '../shared/schema';
 import { generateIndividualAssessmentPDF } from './updated-individual-pdf';
 import { generateCoupleAssessmentPDF } from './updated-couple-pdf';
 import { formatCoupleAssessmentEmail } from './couple-email-template';
@@ -202,6 +202,154 @@ export async function sendAssessmentEmail(assessment: AssessmentResult): Promise
     };
   } catch (error) {
     console.error('Email error:', error);
+    return { success: false };
+  }
+}
+
+/**
+ * Format a payment notification email
+ */
+function formatPaymentNotificationEmail(transaction: PaymentTransaction): string {
+  // Extract product type and format it nicely
+  const productType = transaction.productType === 'couple' ? 'Couple Assessment' : 'Individual Assessment';
+  
+  // Format amount as dollars
+  const amount = (transaction.amount / 100).toFixed(2);
+  
+  // Format date
+  const date = new Date(transaction.created);
+  const formattedDate = date.toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true
+  });
+  
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <title>New Payment Notification - The 100 Marriage Assessment</title>
+      <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .section { margin-bottom: 25px; }
+        h1 { color: #2c3e50; }
+        h2 { color: #3498db; margin-top: 20px; }
+        .highlight-box { 
+          background-color: #f8f9fa; 
+          border-left: 4px solid #3498db; 
+          padding: 15px; 
+          margin: 15px 0; 
+        }
+        .details-table { 
+          width: 100%; 
+          border-collapse: collapse; 
+          margin: 15px 0; 
+        }
+        .details-table th { 
+          background-color: #3498db; 
+          color: white; 
+          text-align: left; 
+          padding: 10px; 
+        }
+        .details-table td, .details-table th { 
+          border: 1px solid #ddd; 
+          padding: 8px; 
+        }
+        .footer { margin-top: 30px; text-align: center; font-size: 12px; color: #7f8c8d; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>New Payment Notification</h1>
+        </div>
+        
+        <div class="section">
+          <p>A new payment has been processed for The 100 Marriage Assessment.</p>
+        </div>
+        
+        <div class="highlight-box">
+          <h2 style="margin-top: 0;">Payment Details</h2>
+          <table class="details-table">
+            <tr>
+              <td><strong>Product:</strong></td>
+              <td>${productType}</td>
+            </tr>
+            <tr>
+              <td><strong>Amount:</strong></td>
+              <td>$${amount} ${transaction.currency.toUpperCase()}</td>
+            </tr>
+            <tr>
+              <td><strong>Date:</strong></td>
+              <td>${formattedDate}</td>
+            </tr>
+            <tr>
+              <td><strong>Status:</strong></td>
+              <td>${transaction.status.toUpperCase()}</td>
+            </tr>
+            <tr>
+              <td><strong>Customer Email:</strong></td>
+              <td>${transaction.customerEmail || 'Not provided'}</td>
+            </tr>
+            <tr>
+              <td><strong>Stripe Transaction ID:</strong></td>
+              <td>${transaction.stripeId}</td>
+            </tr>
+          </table>
+        </div>
+        
+        <div class="section">
+          <p>
+            You can view the full transaction details in your admin dashboard at
+            <a href="https://100marriage.com/admin">https://100marriage.com/admin</a>
+          </p>
+        </div>
+        
+        <div class="footer">
+          <p>(c) 2025 Lawrence E. Adjah - The 100 Marriage Assessment - Series 1</p>
+          <p>This is an automated notification. Please do not reply to this email.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+}
+
+/**
+ * Sends a payment notification email
+ */
+export async function sendNotificationEmail(transaction: PaymentTransaction): Promise<{ success: boolean, previewUrl?: string }> {
+  try {
+    // Create transporter
+    const { transporter, testAccount } = await createTransporter();
+    
+    // Format the email HTML content
+    const emailHtml = formatPaymentNotificationEmail(transaction);
+    
+    // Send mail with defined transport object
+    const info = await transporter.sendMail({
+      from: `"The 100 Marriage Assessment" <notifications@wgodw.com>`,
+      to: 'lawrence@lawrenceadjah.com', // Always send to Lawrence
+      subject: `New Payment: $${(transaction.amount / 100).toFixed(2)} - ${transaction.productType} Assessment`,
+      html: emailHtml,
+    });
+
+    console.log(`Payment notification email sent: ${info.messageId}`);
+    const previewUrl = nodemailer.getTestMessageUrl(info);
+    console.log(`Preview URL: ${previewUrl}`);
+    
+    return { 
+      success: true,
+      previewUrl: previewUrl ? previewUrl : undefined
+    };
+  } catch (error) {
+    console.error('Payment notification email error:', error);
     return { success: false };
   }
 }

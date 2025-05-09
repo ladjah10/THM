@@ -6,7 +6,7 @@ import { z } from "zod";
 import { sendAssessmentEmail, sendReferralEmail, sendCoupleInvitationEmails } from "./nodemailer";
 import { generateShareImage } from "./shareImage";
 import { AssessmentResult } from "../shared/schema";
-import { handleStripeWebhook } from "./stripe-webhooks";
+import { handleStripeWebhook, syncStripePayments } from "./stripe-webhooks";
 
 // Initialize Stripe with the secret key
 if (!process.env.STRIPE_SECRET_KEY) {
@@ -853,6 +853,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Stripe webhook endpoint to receive webhook events from Stripe
   app.post('/api/webhooks/stripe', express.raw({ type: 'application/json' }), handleStripeWebhook);
+  
+  // Admin API to manually sync Stripe payments
+  app.post('/api/admin/stripe/sync-payments', async (req: Request, res: Response) => {
+    try {
+      // In production, authenticate this endpoint
+      const { startDate, endDate } = req.body;
+      
+      // Sync payments from Stripe
+      const result = await syncStripePayments(startDate, endDate);
+      
+      return res.status(result.success ? 200 : 500).json(result);
+    } catch (error) {
+      console.error('Error syncing Stripe payments:', error);
+      return res.status(500).json({
+        success: false,
+        message: `Failed to sync Stripe payments: ${error instanceof Error ? error.message : String(error)}`
+      });
+    }
+  });
 
   const httpServer = createServer(app);
   return httpServer;

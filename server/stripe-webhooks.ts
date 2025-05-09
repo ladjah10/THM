@@ -13,10 +13,101 @@ if (!process.env.STRIPE_SECRET_KEY) {
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 /**
+ * Sync historical payments from Stripe to our database
+ * This allows us to backfill transaction data from before webhook setup
+ */
+export async function syncStripePayments(startDate?: string, endDate?: string): Promise<{
+  success: boolean;
+  count: number;
+  synced: number;
+  errors: number;
+  message: string;
+}> {
+  try {
+    let startTimestamp: number | undefined;
+    let endTimestamp: number | undefined;
+    
+    // Convert dates to Unix timestamps if provided
+    if (startDate) {
+      startTimestamp = Math.floor(new Date(startDate).getTime() / 1000);
+    }
+    
+    if (endDate) {
+      endTimestamp = Math.floor(new Date(endDate).getTime() / 1000);
+    }
+    
+    console.log(`Syncing Stripe payments from ${startDate || 'beginning'} to ${endDate || 'now'}...`);
+    
+    // Get payments from Stripe
+    const paymentIntents = await stripe.paymentIntents.list({
+      limit: 100,
+      created: {
+        ...(startTimestamp && { gte: startTimestamp }),
+        ...(endTimestamp && { lte: endTimestamp })
+      }
+    });
+    
+    console.log(`Found ${paymentIntents.data.length} payment intents to sync`);
+    
+    let syncedCount = 0;
+    let errorCount = 0;
+    
+    // Process each payment intent
+    for (const paymentIntent of paymentIntents.data) {
+      try {
+        // Skip if we already have this transaction
+        const existingTransaction = await storage.getPaymentTransactionByStripeId(paymentIntent.id);
+        if (existingTransaction) {
+          console.log(`Payment ${paymentIntent.id} already exists in database, skipping...`);
+          continue;
+        }
+        
+        if (paymentIntent.status === 'succeeded') {
+          await handlePaymentIntentSucceeded(paymentIntent);
+          syncedCount++;
+        } else if (paymentIntent.status === 'canceled') {
+          await handlePaymentIntentFailed(paymentIntent);
+          syncedCount++;
+        }
+      } catch (error) {
+        console.error(`Error syncing payment ${paymentIntent.id}:`, error);
+        errorCount++;
+      }
+    }
+    
+    return {
+      success: true,
+      count: syncedCount,
+      synced: syncedCount,
+      errors: errorCount,
+      message: `Successfully synced ${syncedCount} payments, encountered ${errorCount} errors`
+    };
+  } catch (error) {
+    console.error('Error syncing Stripe payments:', error);
+    return {
+      success: false,
+      count: 0,
+      synced: 0,
+      errors: 1,
+      message: `Failed to sync payments: ${error instanceof Error ? error.message : String(error)}`
+    };
+  }
+}
+
+/**
  * Handle Stripe webhook events to sync payment data with our database
  */
 export async function handleStripeWebhook(req: Request, res: Response) {
   let event: Stripe.Event;
+  
+  // Log the incoming webhook for debugging
+  console.log('📌 Received Stripe webhook:', {
+    timestamp: new Date().toISOString(),
+    headers: {
+      'stripe-signature': req.headers['stripe-signature'] ? '✓ Present' : '✗ Missing',
+      'content-type': req.headers['content-type']
+    }
+  });
   
   const sig = req.headers['stripe-signature'];
   
@@ -42,6 +133,8 @@ export async function handleStripeWebhook(req: Request, res: Response) {
   
   // Handle specific event types
   try {
+    console.log(`📦 Processing Stripe event: ${event.type} (id: ${event.id})`);
+    
     switch (event.type) {
       // When a payment intent succeeds
       case 'payment_intent.succeeded':
@@ -62,6 +155,9 @@ export async function handleStripeWebhook(req: Request, res: Response) {
       case 'checkout.session.completed':
         await handleCheckoutSessionCompleted(event.data.object as Stripe.Checkout.Session);
         break;
+        
+      default:
+        console.log(`⚠️ Unhandled event type: ${event.type}`);
     }
     
     // Return a 200 response to acknowledge receipt of the event
@@ -84,6 +180,14 @@ async function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent)
     // Just update the status if needed
     if (existingTransaction.status !== 'succeeded') {
       await storage.updatePaymentTransactionStatus(paymentIntent.id, 'succeeded');
+      
+      // Send notification email for status change
+      try {
+        await sendNotificationEmail(existingTransaction);
+        console.log(`Payment notification email sent for updated transaction: ${paymentIntent.id}`);
+      } catch (error) {
+        console.error('Failed to send payment notification email:', error);
+      }
     }
     return;
   }
@@ -110,8 +214,8 @@ async function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent)
   // Determine product type from metadata or default to 'individual'
   const productType = paymentIntent.metadata?.productType || 'individual';
   
-  // Save the new transaction
-  await storage.savePaymentTransaction({
+  // Create transaction object
+  const transaction = {
     id: uuidv4(),
     stripeId: paymentIntent.id,
     customerId,
@@ -124,9 +228,19 @@ async function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent)
     metadata: JSON.stringify(paymentIntent.metadata),
     isRefunded: false,
     sessionId: paymentIntent.metadata?.sessionId
-  });
+  };
   
+  // Save the new transaction
+  await storage.savePaymentTransaction(transaction);
   console.log(`Payment transaction recorded: ${paymentIntent.id}`);
+  
+  // Send notification email
+  try {
+    await sendNotificationEmail(transaction);
+    console.log(`Payment notification email sent for new transaction: ${paymentIntent.id}`);
+  } catch (error) {
+    console.error('Failed to send payment notification email:', error);
+  }
 }
 
 /**
