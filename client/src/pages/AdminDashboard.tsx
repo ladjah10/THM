@@ -201,6 +201,13 @@ export default function AdminDashboard() {
   // Sync Stripe payments mutation
   const { mutate: syncStripePayments, isPending: isSyncingPayments } = useMutation({
     mutationFn: async () => {
+      // Show toast that sync is starting
+      toast({
+        title: "Syncing Transactions",
+        description: "Retrieving payment data from Stripe...",
+        variant: "default"
+      });
+      
       const response = await apiRequest("POST", "/api/admin/stripe/sync-payments", {
         startDate: transactionDateRange.start,
         endDate: transactionDateRange.end
@@ -214,9 +221,21 @@ export default function AdminDashboard() {
       return response.json();
     },
     onSuccess: (data) => {
+      const newCount = data.count || 0;
+      const detail = data.detail || {};
+      
+      // Build a more detailed message
+      let detailMessage = "";
+      if (detail.individual) detailMessage += `\n• ${detail.individual} individual assessment(s)`;
+      if (detail.couple) detailMessage += `\n• ${detail.couple} couple assessment(s)`;
+      if (detail.marriage_pool) detailMessage += `\n• ${detail.marriage_pool} arranged marriage pool application(s)`;
+      if (detail.other) detailMessage += `\n• ${detail.other} other transaction(s)`;
+      
       toast({
-        title: "Sync Successful",
-        description: `Successfully synced ${data.count || 0} payments from Stripe`,
+        title: newCount > 0 ? "Sync Successful" : "Sync Complete",
+        description: newCount > 0 
+          ? `Found ${newCount} new payment(s):${detailMessage}`
+          : "No new transactions found. You're up to date!",
         variant: "default"
       });
       

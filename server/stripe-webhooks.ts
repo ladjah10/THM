@@ -21,6 +21,7 @@ export async function syncStripePayments(startDate?: string, endDate?: string): 
   count: number;
   synced: number;
   errors: number;
+  detail?: Record<string, number>;
   message: string;
 }> {
   try {
