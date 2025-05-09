@@ -1087,34 +1087,36 @@ export default function AdminDashboard() {
                 </div>
                 
                 <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-500">From:</span>
-                    <input 
-                      type="date" 
-                      className="text-sm border rounded p-1"
-                      value={transactionDateRange.start || ''}
-                      onChange={(e) => setTransactionDateRange(prev => ({...prev, start: e.target.value}))}
-                    />
-                    <span className="text-sm text-gray-500">To:</span>
-                    <input 
-                      type="date" 
-                      className="text-sm border rounded p-1"
-                      value={transactionDateRange.end || ''}
-                      onChange={(e) => setTransactionDateRange(prev => ({...prev, end: e.target.value}))}
-                    />
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-500">From:</span>
+                      <input 
+                        type="date" 
+                        className="text-sm border rounded p-1"
+                        value={transactionDateRange.start || ''}
+                        onChange={(e) => setTransactionDateRange(prev => ({...prev, start: e.target.value}))}
+                      />
+                      <span className="text-sm text-gray-500">To:</span>
+                      <input 
+                        type="date" 
+                        className="text-sm border rounded p-1"
+                        value={transactionDateRange.end || ''}
+                        onChange={(e) => setTransactionDateRange(prev => ({...prev, end: e.target.value}))}
+                      />
+                    </div>
                     <Button 
-                      variant="outline" 
+                      variant="default"
                       size="sm" 
                       onClick={() => syncStripePayments()}
                       disabled={isSyncingPayments}
-                      className="ml-2"
+                      className="ml-2 whitespace-nowrap"
                     >
                       {isSyncingPayments ? (
                         <>
-                          <span className="animate-spin mr-2 h-4 w-4 border-2 border-primary border-t-transparent rounded-full" />
-                          Syncing...
+                          <span className="animate-spin mr-2 h-4 w-4 border-2 border-primary-foreground border-t-transparent rounded-full" />
+                          Syncing Transactions...
                         </>
-                      ) : "Sync with Stripe"}
+                      ) : "Sync Missing Transactions"}
                     </Button>
                   </div>
                 </div>
@@ -1256,6 +1258,7 @@ export default function AdminDashboard() {
                             <TableHead>Date</TableHead>
                             <TableHead>Customer</TableHead>
                             <TableHead>Product</TableHead>
+                            <TableHead>Description</TableHead>
                             <TableHead>Amount</TableHead>
                             <TableHead>Status</TableHead>
                             <TableHead>Transaction ID</TableHead>
@@ -1270,12 +1273,26 @@ export default function AdminDashboard() {
                                   <TableCell>{formatDate(transaction.created)}</TableCell>
                                   <TableCell>{transaction.customerEmail || "Anonymous"}</TableCell>
                                   <TableCell>
-                                    <Badge variant={transaction.productType === 'individual' ? 'outline' : 'default'}>
-                                      {transaction.productType === 'individual' ? 'Individual' : 'Couple'}
-                                    </Badge>
+                                    {transaction.productType === 'individual' ? (
+                                      <Badge variant="outline">Individual</Badge>
+                                    ) : transaction.productType === 'couple' ? (
+                                      <Badge variant="default">Couple</Badge>
+                                    ) : transaction.productType === 'marriage_pool' ? (
+                                      <Badge variant="secondary">Marriage Pool</Badge>
+                                    ) : (
+                                      <Badge>{transaction.productType}</Badge>
+                                    )}
+                                  </TableCell>
+                                  <TableCell className="text-sm">
+                                    {transaction.productName || (
+                                      transaction.productType === 'individual' ? 'The 100 Marriage Assessment - Series 1 (Individual)' :
+                                      transaction.productType === 'couple' ? 'The 100 Marriage Assessment - Series 1 (Couple)' :
+                                      transaction.productType === 'marriage_pool' ? 'THM Arranged Marriage Pool Application Fee' :
+                                      'Unknown Product'
+                                    )}
                                   </TableCell>
                                   <TableCell className="font-medium">
-                                    ${Number(transaction.amount).toFixed(2)}
+                                    ${(Number(transaction.amount)/100).toFixed(2)}
                                   </TableCell>
                                   <TableCell>
                                     {transaction.isRefunded ? (
@@ -1291,7 +1308,7 @@ export default function AdminDashboard() {
                               ))
                           ) : (
                             <TableRow>
-                              <TableCell colSpan={6} className="text-center py-8 text-gray-500">
+                              <TableCell colSpan={7} className="text-center py-8 text-gray-500">
                                 No transactions found for the selected period
                               </TableCell>
                             </TableRow>
