@@ -1,4 +1,4 @@
-import type { Express, Request, Response } from "express";
+import express, { type Express, type Request, type Response } from "express";
 import { createServer, type Server } from "http";
 import Stripe from "stripe";
 import { storage } from "./storage";
@@ -6,6 +6,7 @@ import { z } from "zod";
 import { sendAssessmentEmail, sendReferralEmail, sendCoupleInvitationEmails } from "./nodemailer";
 import { generateShareImage } from "./shareImage";
 import { AssessmentResult } from "../shared/schema";
+import { handleStripeWebhook } from "./stripe-webhooks";
 
 // Initialize Stripe with the secret key
 if (!process.env.STRIPE_SECRET_KEY) {
@@ -797,6 +798,61 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     }
   });
+  
+  // API to fetch payment transactions for analytics
+  app.get('/api/admin/analytics/payment-transactions', async (req: Request, res: Response) => {
+    try {
+      const startDate = req.query.startDate as string | undefined;
+      const endDate = req.query.endDate as string | undefined;
+      
+      const transactions = await storage.getPaymentTransactions(startDate, endDate);
+      
+      return res.status(200).json(transactions);
+    } catch (error) {
+      console.error('Error fetching payment transactions:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to fetch payment transactions'
+      });
+    }
+  });
+  
+  // API to fetch a single payment transaction by Stripe ID
+  app.get('/api/admin/payment-transactions/:stripeId', async (req: Request, res: Response) => {
+    try {
+      const stripeId = req.params.stripeId;
+      
+      if (!stripeId) {
+        return res.status(400).json({
+          success: false,
+          message: 'Stripe ID is required'
+        });
+      }
+      
+      const transaction = await storage.getPaymentTransactionByStripeId(stripeId);
+      
+      if (!transaction) {
+        return res.status(404).json({
+          success: false,
+          message: 'Payment transaction not found'
+        });
+      }
+      
+      return res.status(200).json({
+        success: true,
+        transaction
+      });
+    } catch (error) {
+      console.error('Error fetching payment transaction:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to fetch payment transaction'
+      });
+    }
+  });
+  
+  // Stripe webhook endpoint to receive webhook events from Stripe
+  app.post('/api/webhooks/stripe', express.raw({ type: 'application/json' }), handleStripeWebhook);
 
   const httpServer = createServer(app);
   return httpServer;
