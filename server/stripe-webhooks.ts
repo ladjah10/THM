@@ -53,6 +53,14 @@ export async function syncStripePayments(startDate?: string, endDate?: string): 
     let syncedCount = 0;
     let errorCount = 0;
     
+    // Tracking transactions by product type
+    const transactionDetail: Record<string, number> = {
+      individual: 0,
+      couple: 0,
+      marriage_pool: 0,
+      other: 0
+    };
+    
     // Process each payment intent
     for (const paymentIntent of paymentIntents.data) {
       try {
@@ -63,9 +71,31 @@ export async function syncStripePayments(startDate?: string, endDate?: string): 
           continue;
         }
         
+        // Determine product type before processing to track it properly
+        let productType = 'other';
+        try {
+          const charges = await stripe.charges.list({ payment_intent: paymentIntent.id });
+          if (charges.data.length > 0) {
+            const description = charges.data[0].description || '';
+            
+            if (description.includes('THM Arranged Marriage Pool')) {
+              productType = 'marriage_pool';
+            } else if (description.includes('The 100 Marriage Assessment - Series 1 (Couple)')) {
+              productType = 'couple';
+            } else if (description.includes('The 100 Marriage Assessment - Series 1 (Individual)')) {
+              productType = 'individual';
+            }
+          }
+        } catch (error) {
+          console.error(`Could not determine product type for ${paymentIntent.id}:`, error);
+          // Continue with default 'other' type
+        }
+        
         if (paymentIntent.status === 'succeeded') {
           await handlePaymentIntentSucceeded(paymentIntent);
           syncedCount++;
+          transactionDetail[productType]++;
+          console.log(`✓ Synced ${productType} payment: ${paymentIntent.id}`);
         } else if (paymentIntent.status === 'canceled') {
           await handlePaymentIntentFailed(paymentIntent);
           syncedCount++;
@@ -81,16 +111,33 @@ export async function syncStripePayments(startDate?: string, endDate?: string): 
       count: syncedCount,
       synced: syncedCount,
       errors: errorCount,
+      detail: transactionDetail,
       message: `Successfully synced ${syncedCount} payments, encountered ${errorCount} errors`
     };
   } catch (error) {
     console.error('Error syncing Stripe payments:', error);
+    
+    // Additional diagnostics for Stripe API failures
+    let diagnosticInfo = '';
+    
+    if (error instanceof Error) {
+      if ('type' in error && typeof error.type === 'string') {
+        // This is likely a Stripe API error with additional info
+        diagnosticInfo = ` (Type: ${error.type})`;
+        
+        if ('code' in error && typeof error.code === 'string') {
+          diagnosticInfo += ` [Code: ${error.code}]`;
+        }
+      }
+    }
+    
     return {
       success: false,
       count: 0,
       synced: 0,
       errors: 1,
-      message: `Failed to sync payments: ${error instanceof Error ? error.message : String(error)}`
+      detail: { individual: 0, couple: 0, marriage_pool: 0, other: 0 },
+      message: `Failed to sync payments: ${error instanceof Error ? error.message : String(error)}${diagnosticInfo}`
     };
   }
 }
@@ -102,13 +149,27 @@ export async function handleStripeWebhook(req: Request, res: Response) {
   let event: Stripe.Event;
   
   // Log the incoming webhook for debugging
+  const requestTimestamp = new Date().toISOString();
   console.log('📌 Received Stripe webhook:', {
-    timestamp: new Date().toISOString(),
+    timestamp: requestTimestamp,
     headers: {
       'stripe-signature': req.headers['stripe-signature'] ? '✓ Present' : '✗ Missing',
       'content-type': req.headers['content-type']
     }
   });
+  
+  // Log additional details for deeper debugging
+  const bodyType = typeof req.body;
+  console.log(`Webhook body type: ${bodyType}`);
+  
+  // Check if body is parseable (if string) and log the event type
+  try {
+    const parsedBody = bodyType === 'string' ? JSON.parse(req.body) : req.body;
+    console.log(`Webhook event type from body: ${parsedBody.type || 'unknown'}`);
+    console.log(`Webhook event ID from body: ${parsedBody.id || 'unknown'}`);
+  } catch (error) {
+    console.error('Could not parse webhook body for logging:', error);
+  }
   
   const sig = req.headers['stripe-signature'];
   
