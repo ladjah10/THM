@@ -326,6 +326,33 @@ async function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent)
   await storage.savePaymentTransaction(transaction);
   console.log(`Payment transaction recorded: ${paymentIntent.id}`);
   
+  // If this customer has an assessment, link it to this transaction
+  if (customerEmail) {
+    try {
+      // Get all assessments for this customer's email
+      const customerAssessments = await storage.getAssessments(customerEmail);
+      
+      if (customerAssessments.length > 0) {
+        // Sort by timestamp to get the most recent assessment
+        const sortedAssessments = customerAssessments.sort(
+          (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+        );
+        
+        // Update the most recent assessment with the transaction ID
+        const latestAssessment = sortedAssessments[0];
+        
+        if (!latestAssessment.transactionId) {
+          latestAssessment.transactionId = transaction.id;
+          await storage.saveAssessment(latestAssessment);
+          console.log(`Linked assessment to transaction: ${transaction.id} -> ${latestAssessment.email}`);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to link assessment to transaction:', error);
+      // Continue processing even if linking fails
+    }
+  }
+  
   // Send notification email
   try {
     await sendNotificationEmail(transaction);

@@ -1,6 +1,27 @@
 /**
  * Shared type definitions for the 100 Marriage Assessment system
  */
+// User types for authentication
+export interface User {
+  id: number;
+  username: string;
+  password: string;
+  email?: string;
+}
+
+export type InsertUser = Omit<User, 'id'>;
+
+// Referral data for tracking invites
+export interface ReferralData {
+  id: string;
+  fromEmail: string;
+  toEmail: string;
+  message?: string;
+  status: 'sent' | 'completed' | 'expired';
+  createdTimestamp: string;
+  completedTimestamp?: string;
+  promoCode?: string;
+}
 import { pgTable, text, integer, timestamp, uuid, serial, numeric, boolean } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
@@ -45,20 +66,56 @@ export const paymentTransactions = pgTable('payment_transactions', {
   sessionId: uuid('session_id').references(() => visitorSessions.id)
 });
 
+// Assessment data storage
+export const assessmentResults = pgTable('assessment_results', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  email: text('email').notNull(),
+  name: text('name').notNull(),
+  scores: text('scores').notNull(), // JSON string of AssessmentScores
+  profile: text('profile').notNull(), // JSON string of UserProfile
+  genderProfile: text('gender_profile'), // JSON string of UserProfile or null
+  responses: text('responses').notNull(), // JSON string of responses
+  demographics: text('demographics').notNull(), // JSON string of DemographicData
+  timestamp: timestamp('timestamp').notNull().defaultNow(),
+  transactionId: uuid('transaction_id').references(() => paymentTransactions.id),
+  coupleId: text('couple_id'), // For linking spouse assessments
+  coupleRole: text('couple_role'), // 'primary' or 'spouse'
+  reportSent: boolean('report_sent').notNull().default(false)
+});
+
+// Couple assessment reports
+export const coupleAssessments = pgTable('couple_assessments', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  coupleId: text('couple_id').notNull().unique(),
+  primaryId: uuid('primary_id').references(() => assessmentResults.id),
+  spouseId: uuid('spouse_id').references(() => assessmentResults.id),
+  analysis: text('analysis').notNull(), // JSON string of DifferenceAnalysis
+  timestamp: timestamp('timestamp').notNull().defaultNow(),
+  compatibilityScore: numeric('compatibility_score').notNull(),
+  recommendations: text('recommendations').notNull(), // JSON string of recommendations
+  reportSent: boolean('report_sent').notNull().default(false)
+});
+
 // Drizzle schema for insertions
 export const insertPageViewSchema = createInsertSchema(pageViews);
 export const insertVisitorSessionSchema = createInsertSchema(visitorSessions);
 export const insertPaymentTransactionSchema = createInsertSchema(paymentTransactions);
+export const insertAssessmentResultSchema = createInsertSchema(assessmentResults);
+export const insertCoupleAssessmentSchema = createInsertSchema(coupleAssessments);
 
 // TypeScript types for inserts
 export type InsertPageView = z.infer<typeof insertPageViewSchema>;
 export type InsertVisitorSession = z.infer<typeof insertVisitorSessionSchema>;
 export type InsertPaymentTransaction = z.infer<typeof insertPaymentTransactionSchema>;
+export type InsertAssessmentResult = z.infer<typeof insertAssessmentResultSchema>;
+export type InsertCoupleAssessment = z.infer<typeof insertCoupleAssessmentSchema>;
 
 // TypeScript types for selections
 export type PageViewDB = typeof pageViews.$inferSelect;
 export type VisitorSessionDB = typeof visitorSessions.$inferSelect;
 export type PaymentTransactionDB = typeof paymentTransactions.$inferSelect;
+export type AssessmentResultDB = typeof assessmentResults.$inferSelect;
+export type CoupleAssessmentDB = typeof coupleAssessments.$inferSelect;
 
 // Analytics data interfaces for frontend usage
 export interface PageView {
@@ -175,6 +232,7 @@ export interface DemographicData {
 
 // Complete assessment result
 export interface AssessmentResult {
+  id?: string;  // UUID for database storage
   email: string;
   name: string;
   scores: AssessmentScores;
@@ -183,6 +241,10 @@ export interface AssessmentResult {
   responses: Record<string, UserResponse>;
   demographics: DemographicData;
   timestamp: string;
+  transactionId?: string;  // Link to payment transaction
+  coupleId?: string;       // For linking spouse assessments
+  coupleRole?: 'primary' | 'spouse';  // Role in couple assessment
+  reportSent?: boolean;    // Whether report has been sent by email
 }
 
 // Analysis of differences between partners
@@ -205,6 +267,8 @@ export interface DifferenceAnalysis {
 
 // Couple assessment report
 export interface CoupleAssessmentReport {
+  id?: string;               // UUID for database storage
+  coupleId: string;          // Unique identifier for couple
   primary: AssessmentResult;
   spouse: AssessmentResult;
   analysis: DifferenceAnalysis;
@@ -212,6 +276,7 @@ export interface CoupleAssessmentReport {
   compatibilityScore: number;
   // Recommendations based on their specific results
   recommendations: string[];
+  reportSent?: boolean;      // Whether report has been sent
 }
 
 // Question definition
