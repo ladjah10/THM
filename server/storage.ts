@@ -1421,23 +1421,39 @@ export class DatabaseStorage implements IStorage {
       // First get the transactions
       const transactions = await this.getPaymentTransactions(startDate, endDate);
       
+      // First, let's get all assessments to have the data ready for matching
+      console.log(`Fetching assessment data for ${transactions.length} transactions`);
+      const allAssessments = await db.select().from(assessmentResults);
+      console.log(`Found ${allAssessments.length} total assessments in the database`);
+      
       // Create an enhanced transactions array with assessment data
       const enhancedTransactions = await Promise.all(
         transactions.map(async (transaction) => {
           try {
-            if (!transaction.customerEmail) {
-              return transaction;
-            }
+            let matchedAssessment = null;
             
-            // Find assessments for this email
-            const assessmentsByEmail = await db.select()
-              .from(assessmentResults)
-              .where(eq(assessmentResults.email, transaction.customerEmail))
-              .orderBy(desc(assessmentResults.timestamp));
+            // Try to match by email first
+            if (transaction.customerEmail) {
+              // Try exact email match
+              matchedAssessment = allAssessments.find(a => 
+                a.email === transaction.customerEmail
+              );
               
-            if (assessmentsByEmail && assessmentsByEmail.length > 0) {
-              const assessment = assessmentsByEmail[0];
-              const demographics = assessment.demographics ? JSON.parse(assessment.demographics) : {};
+              // If no exact match, try case-insensitive email match
+              if (!matchedAssessment) {
+                const transactionEmailLower = transaction.customerEmail.toLowerCase();
+                matchedAssessment = allAssessments.find(a => 
+                  a.email.toLowerCase() === transactionEmailLower
+                );
+              }
+              
+              // Debug log to check matching process
+              console.log(`Transaction ${transaction.id} (${transaction.customerEmail}): ${matchedAssessment ? 'Matched assessment' : 'No match found'}`);
+            }
+              
+            if (matchedAssessment) {
+              // Parse the demographics if found
+              const demographics = matchedAssessment.demographics ? JSON.parse(matchedAssessment.demographics) : {};
               
               return {
                 ...transaction,
@@ -1455,6 +1471,42 @@ export class DatabaseStorage implements IStorage {
                 }
               };
             }
+            
+            // Secondary matching attempt by transaction.metadata if available
+            if (transaction.metadata) {
+              try {
+                const metadata = JSON.parse(transaction.metadata);
+                if (metadata && metadata.email) {
+                  // Try to match by metadata email
+                  matchedAssessment = allAssessments.find(a => 
+                    a.email === metadata.email || a.email.toLowerCase() === metadata.email.toLowerCase()
+                  );
+                  
+                  if (matchedAssessment) {
+                    const demographics = matchedAssessment.demographics ? JSON.parse(matchedAssessment.demographics) : {};
+                    console.log(`Transaction ${transaction.id}: Matched by metadata email`);
+                    
+                    return {
+                      ...transaction,
+                      assessmentData: {
+                        firstName: demographics.firstName,
+                        lastName: demographics.lastName,
+                        email: demographics.email,
+                        gender: demographics.gender,
+                        marriageStatus: demographics.marriageStatus,
+                        desireChildren: demographics.desireChildren,
+                        ethnicity: demographics.ethnicity,
+                        city: demographics.city,
+                        state: demographics.state,
+                        zipCode: demographics.zipCode
+                      }
+                    };
+                  }
+                }
+              } catch (e) {
+                console.log(`Error parsing metadata for transaction ${transaction.id}: ${e.message}`);
+              }
+            }
           } catch (error) {
             console.error(`Error fetching assessment data for transaction ${transaction.id}:`, error);
           }
@@ -1464,6 +1516,7 @@ export class DatabaseStorage implements IStorage {
         })
       );
       
+      console.log(`Enhanced ${enhancedTransactions.filter(t => t.assessmentData).length} out of ${transactions.length} transactions with assessment data`);
       return enhancedTransactions;
     } catch (error) {
       console.error('Error retrieving enhanced payment transactions:', error);

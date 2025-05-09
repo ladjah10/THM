@@ -854,6 +854,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     }
   });
+
+  // API to search for assessments by email
+  app.get('/api/admin/assessments/search', async (req: Request, res: Response) => {
+    try {
+      const email = req.query.email as string;
+      
+      if (!email) {
+        return res.status(400).json({
+          success: false,
+          message: 'Email parameter is required'
+        });
+      }
+      
+      // First try exact match
+      let assessments = await storage.getAssessments(email);
+      
+      // If no results, try case-insensitive match
+      if (assessments.length === 0) {
+        // Get all assessments and filter by case-insensitive email
+        const allAssessments = await storage.getAllAssessments();
+        assessments = allAssessments.filter(a => 
+          a.email.toLowerCase() === email.toLowerCase()
+        );
+      }
+      
+      return res.status(200).json({
+        success: true,
+        assessments
+      });
+    } catch (error) {
+      console.error('Error searching for assessments:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to search for assessments'
+      });
+    }
+  });
   
   // Stripe webhook endpoint to receive webhook events from Stripe
   app.post('/api/webhooks/stripe', (req, res) => {

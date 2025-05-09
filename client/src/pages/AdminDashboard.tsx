@@ -197,6 +197,8 @@ export default function AdminDashboard() {
   
   // Payment transactions data
   const [transactionDateRange, setTransactionDateRange] = useState<{start?: string, end?: string}>({});
+  const [emailSearchTerm, setEmailSearchTerm] = useState<string>("");
+  const [searchResults, setSearchResults] = useState<AssessmentResult[] | null>(null);
   
   // Sync Stripe payments mutation
   const { mutate: syncStripePayments, isPending: isSyncingPayments } = useMutation({
@@ -404,6 +406,58 @@ export default function AdminDashboard() {
   const handleViewDetails = (assessment: AssessmentResult) => {
     setSelectedAssessment(assessment);
     setDetailModalOpen(true);
+  };
+  
+  // Handle searching for assessments by email
+  const handleEmailSearch = async () => {
+    if (!emailSearchTerm) return;
+    
+    try {
+      // Show loading toast
+      toast({
+        title: "Searching...",
+        description: `Looking for assessments with email: ${emailSearchTerm}`,
+      });
+      
+      const response = await apiRequest(
+        "GET", 
+        `/api/admin/assessments/search?email=${encodeURIComponent(emailSearchTerm)}`
+      );
+      
+      if (!response.ok) {
+        throw new Error(`Search failed: ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      
+      if (data.assessments.length === 0) {
+        toast({
+          title: "No Results Found",
+          description: `No assessments found for email: ${emailSearchTerm}`,
+          variant: "destructive"
+        });
+        setSearchResults(null);
+      } else {
+        toast({
+          title: "Search Results",
+          description: `Found ${data.assessments.length} assessment(s) for ${emailSearchTerm}`,
+        });
+        setSearchResults(data.assessments);
+        
+        // If there's exactly one result, open the details modal
+        if (data.assessments.length === 1) {
+          setSelectedAssessment(data.assessments[0]);
+          setDetailModalOpen(true);
+        }
+      }
+    } catch (error) {
+      console.error("Error searching for assessments:", error);
+      toast({
+        title: "Search Failed",
+        description: error instanceof Error ? error.message : "Unknown error occurred",
+        variant: "destructive"
+      });
+    }
   };
   
   // Pool Candidates Table component for THM matching
