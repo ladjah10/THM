@@ -1,8 +1,45 @@
 /**
  * Shared type definitions for the 100 Marriage Assessment system
  */
+import { pgTable, text, integer, timestamp, uuid, serial } from "drizzle-orm/pg-core";
+import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
 
-// Analytics data types
+// Database schema definition
+export const visitorSessions = pgTable('visitor_sessions', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  startTime: timestamp('start_time').notNull().defaultNow(),
+  endTime: timestamp('end_time'),
+  pageCount: integer('page_count').notNull().default(0),
+  deviceType: text('device_type'),
+  browser: text('browser'),
+  country: text('country'),
+  region: text('region')
+});
+
+export const pageViews = pgTable('page_views', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  path: text('path').notNull(),
+  timestamp: timestamp('timestamp').notNull().defaultNow(),
+  referrer: text('referrer'),
+  userAgent: text('user_agent'),
+  ipAddress: text('ip_address'),
+  sessionId: uuid('session_id').notNull().references(() => visitorSessions.id)
+});
+
+// Drizzle schema for insertions
+export const insertPageViewSchema = createInsertSchema(pageViews);
+export const insertVisitorSessionSchema = createInsertSchema(visitorSessions);
+
+// TypeScript types for inserts
+export type InsertPageView = z.infer<typeof insertPageViewSchema>;
+export type InsertVisitorSession = z.infer<typeof insertVisitorSessionSchema>;
+
+// TypeScript types for selections
+export type PageViewDB = typeof pageViews.$inferSelect;
+export type VisitorSessionDB = typeof visitorSessions.$inferSelect;
+
+// Analytics data interfaces for frontend usage
 export interface PageView {
   id: string;
   path: string;
