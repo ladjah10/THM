@@ -804,8 +804,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const startDate = req.query.startDate as string | undefined;
       const endDate = req.query.endDate as string | undefined;
+      const includeAssessmentData = req.query.includeAssessmentData === 'true';
       
-      const transactions = await storage.getPaymentTransactions(startDate, endDate);
+      // Choose whether to fetch basic transactions or enhanced ones with assessment data
+      const transactions = includeAssessmentData
+        ? await storage.getPaymentTransactionsWithAssessments(startDate, endDate)
+        : await storage.getPaymentTransactions(startDate, endDate);
       
       return res.status(200).json(transactions);
     } catch (error) {

@@ -1334,11 +1334,39 @@ export class DatabaseStorage implements IStorage {
       });
       
       console.log(`Payment transaction saved to database: ${transaction.stripeId}`);
+      
+      // If there's a customer email, try to link this transaction to an assessment
+      if (transaction.customerEmail) {
+        await this.linkTransactionToAssessment(transaction);
+      }
     } catch (error) {
       console.error('Error saving payment transaction to database:', error);
       // Fallback to memory storage
       const memStorage = new MemStorage();
       await memStorage.savePaymentTransaction(transaction);
+    }
+  }
+  
+  // Helper method to link a transaction to an assessment
+  private async linkTransactionToAssessment(transaction: PaymentTransaction): Promise<void> {
+    try {
+      // Find the latest assessment for this email
+      const [assessment] = await db.select()
+        .from(assessmentResults)
+        .where(eq(assessmentResults.email, transaction.customerEmail!))
+        .orderBy(desc(assessmentResults.timestamp))
+        .limit(1);
+      
+      if (assessment && !assessment.transactionId) {
+        // Update the assessment with the transaction ID
+        await db.update(assessmentResults)
+          .set({ transactionId: transaction.id })
+          .where(eq(assessmentResults.id, assessment.id));
+          
+        console.log(`Linked transaction ${transaction.id} to assessment ${assessment.id}`);
+      }
+    } catch (error) {
+      console.error('Error linking transaction to assessment:', error);
     }
   }
   
@@ -1384,6 +1412,62 @@ export class DatabaseStorage implements IStorage {
       // Fallback to memory storage
       const memStorage = new MemStorage();
       return memStorage.getPaymentTransactions(startDate, endDate);
+    }
+  }
+  
+  // Get payment transactions with linked assessment data
+  async getPaymentTransactionsWithAssessments(startDate?: string, endDate?: string): Promise<Array<PaymentTransaction & { assessmentData?: Partial<DemographicData> }>> {
+    try {
+      // First get the transactions
+      const transactions = await this.getPaymentTransactions(startDate, endDate);
+      
+      // Create an enhanced transactions array with assessment data
+      const enhancedTransactions = await Promise.all(
+        transactions.map(async (transaction) => {
+          try {
+            if (!transaction.customerEmail) {
+              return transaction;
+            }
+            
+            // Find assessments for this email
+            const assessmentsByEmail = await db.select()
+              .from(assessmentResults)
+              .where(eq(assessmentResults.email, transaction.customerEmail))
+              .orderBy(desc(assessmentResults.timestamp));
+              
+            if (assessmentsByEmail && assessmentsByEmail.length > 0) {
+              const assessment = assessmentsByEmail[0];
+              const demographics = assessment.demographics ? JSON.parse(assessment.demographics) : {};
+              
+              return {
+                ...transaction,
+                assessmentData: {
+                  firstName: demographics.firstName,
+                  lastName: demographics.lastName,
+                  email: demographics.email,
+                  gender: demographics.gender,
+                  marriageStatus: demographics.marriageStatus,
+                  desireChildren: demographics.desireChildren,
+                  ethnicity: demographics.ethnicity,
+                  city: demographics.city,
+                  state: demographics.state,
+                  zipCode: demographics.zipCode
+                }
+              };
+            }
+          } catch (error) {
+            console.error(`Error fetching assessment data for transaction ${transaction.id}:`, error);
+          }
+          
+          // Return the original transaction if no assessment is found
+          return transaction;
+        })
+      );
+      
+      return enhancedTransactions;
+    } catch (error) {
+      console.error('Error retrieving enhanced payment transactions:', error);
+      return this.getPaymentTransactions(startDate, endDate);
     }
   }
   
