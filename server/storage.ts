@@ -757,11 +757,10 @@ export class DatabaseStorage {
         // If no session exists, create one
         if (existing.length === 0) {
           // Create a default session
-          await db.execute(`
-            INSERT INTO visitor_sessions (id, start_time, page_count) 
-            VALUES ($1, $2, $3)
-            ON CONFLICT (id) DO NOTHING
-          `, [sessionId, new Date(), 1]);
+          await db.query(
+            'INSERT INTO visitor_sessions (id, start_time, page_count) VALUES ($1, $2, $3) ON CONFLICT (id) DO NOTHING',
+            [sessionId, new Date(), 1]
+          );
           
           console.log(`Created default visitor session for pageView: ${sessionId}`);
         }
@@ -771,18 +770,18 @@ export class DatabaseStorage {
       }
       
       // Now insert the page view with raw SQL to handle any schema discrepancies
-      await db.execute(`
-        INSERT INTO page_views (id, path, timestamp, referrer, user_agent, ip_address, session_id)
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
-      `, [
-        crypto.randomUUID(),
-        pageView.path,
-        timestamp,
-        pageView.referrer || null,
-        pageView.userAgent || null,
-        pageView.ipAddress || null,
-        sessionId
-      ]);
+      await db.query(
+        'INSERT INTO page_views (id, path, timestamp, referrer, user_agent, ip_address, session_id) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+        [
+          crypto.randomUUID(),
+          pageView.path,
+          timestamp,
+          pageView.referrer || null,
+          pageView.userAgent || null,
+          pageView.ipAddress || null,
+          sessionId
+        ]
+      );
       
       console.log(`Page view recorded in database: ${pageView.path}`);
       
@@ -813,9 +812,9 @@ export class DatabaseStorage {
           : session.endTime;
       }
       
-      // Insert into database using raw SQL
-      await db.execute(`
-        INSERT INTO visitor_sessions (
+      // Insert into database using raw SQL with query method
+      await db.query(
+        `INSERT INTO visitor_sessions (
           id, start_time, end_time, page_count, user_agent, ip_address, referrer, user_id
         )
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
@@ -825,17 +824,18 @@ export class DatabaseStorage {
           user_agent = $5,
           ip_address = $6,
           referrer = $7,
-          user_id = $8
-      `, [
-        session.id,
-        startTime,
-        endTime,
-        session.pageCount || 0,
-        session.userAgent || null,
-        session.ipAddress || null,
-        session.referrer || null,
-        session.userId || null
-      ]);
+          user_id = $8`,
+        [
+          session.id,
+          startTime,
+          endTime,
+          session.pageCount || 0,
+          session.userAgent || null,
+          session.ipAddress || null,
+          session.referrer || null,
+          session.userId || null
+        ]
+      );
       
       console.log(`Visitor session created/updated in database: ${session.id}`);
       
@@ -862,12 +862,11 @@ export class DatabaseStorage {
         endTimeDate = new Date(); // Default to current time if invalid
       }
       
-      // Update the session in the database using SQL query to avoid drizzle-orm issues
-      await db.execute(`
-        UPDATE visitor_sessions 
-        SET end_time = $1, page_count = $2 
-        WHERE id = $3
-      `, [endTimeDate, pageCount, sessionId]);
+      // Update the session in the database using SQL query with query method
+      await db.query(
+        'UPDATE visitor_sessions SET end_time = $1, page_count = $2 WHERE id = $3',
+        [endTimeDate, pageCount, sessionId]
+      );
       
       console.log(`Visitor session updated in database: ${sessionId}`);
       
