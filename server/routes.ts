@@ -698,6 +698,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Check if the promo code is valid
       const isValid = validPromoCodes.includes(promoCode);
       
+      // If valid, record promo code usage (in a real app, this would be stored)
+      if (isValid) {
+        console.log(`Promo code ${promoCode} used successfully for ${assessmentType} assessment`);
+        
+        // Track usage in database if needed
+        try {
+          await storage.recordPromoCodeUsage({
+            promoCode,
+            assessmentType,
+            timestamp: new Date().toISOString()
+          });
+        } catch (storageError) {
+          console.error("Error recording promo code usage:", storageError);
+          // Continue even if storage fails - don't block the user
+        }
+      }
+      
       res.status(200).json({ 
         valid: isValid,
         assessmentType,

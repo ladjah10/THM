@@ -43,11 +43,12 @@ export function calculateScores(
   // Calculate percentages for each section
   Object.keys(sectionScores).forEach(section => {
     const { earned, possible } = sectionScores[section];
-    sectionScores[section].percentage = Math.round((earned / possible) * 100);
+    // Make sure percentage is capped at 100% to avoid confusion
+    sectionScores[section].percentage = Math.min(100, Math.round((earned / possible) * 100));
   });
   
-  // Calculate overall percentage
-  const overallPercentage = Math.round((totalEarned / totalPossible) * 100);
+  // Calculate overall percentage (capped at 100%)
+  const overallPercentage = Math.min(100, Math.round((totalEarned / totalPossible) * 100));
   
   // Determine strengths and improvement areas
   const sectionEntries = Object.entries(sectionScores);
