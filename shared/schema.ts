@@ -32,6 +32,10 @@ export const visitorSessions = pgTable('visitor_sessions', {
   startTime: timestamp('start_time').notNull().defaultNow(),
   endTime: timestamp('end_time'),
   pageCount: integer('page_count').notNull().default(0),
+  userAgent: text('user_agent'),
+  ipAddress: text('ip_address'),
+  referrer: text('referrer'),
+  userId: uuid('user_id'),
   deviceType: text('device_type'),
   browser: text('browser'),
   country: text('country'),
@@ -58,12 +62,14 @@ export const paymentTransactions = pgTable('payment_transactions', {
   status: text('status').notNull(),
   created: timestamp('created').notNull().defaultNow(),
   productType: text('product_type').notNull(), // 'individual', 'couple', or 'marriage_pool'
+  assessmentType: text('assessment_type'), // 'individual' or 'couple' (alias for productType for backward compatibility)
   productName: text('product_name'), // Full descriptive name of the product
   metadata: text('metadata'), // JSON string for additional data
   isRefunded: boolean('is_refunded').notNull().default(false),
   refundAmount: numeric('refund_amount'),
   refundReason: text('refund_reason'),
-  sessionId: uuid('session_id').references(() => visitorSessions.id)
+  sessionId: uuid('session_id').references(() => visitorSessions.id),
+  promoCode: text('promo_code')
 });
 
 // Assessment data storage
@@ -131,12 +137,16 @@ export interface PageView {
 export interface VisitorSession {
   id: string;
   startTime: string;
-  endTime: string | null;
+  endTime?: string;
   pageCount: number;
-  deviceType: string;
-  browser: string;
-  country: string;
-  region: string;
+  userAgent?: string;
+  ipAddress?: string;
+  referrer?: string;
+  userId?: string;
+  deviceType?: string;
+  browser?: string;
+  country?: string;
+  region?: string;
 }
 
 export interface PaymentTransaction {
@@ -149,21 +159,28 @@ export interface PaymentTransaction {
   status: string;
   created: string;
   productType: string;
+  assessmentType?: string; // 'individual' or 'couple' (alias for productType for backward compatibility)
   productName?: string;
-  metadata?: string;
+  metadata?: any;
   isRefunded: boolean;
   refundAmount?: number;
   refundReason?: string;
   sessionId?: string;
+  promoCode?: string;
 }
 
 export interface AnalyticsSummary {
+  period?: 'day' | 'week' | 'month' | 'year';
+  startDate?: string;
+  endDate?: string;
   totalVisitors: number;
   totalPageViews: number;
+  popularPages?: Array<{ path: string; count: number }>;
   topPages: Array<{ path: string; count: number }>;
   dailyVisitors: Array<{ date: string; count: number }>;
   conversionRate: number;
   averageSessionDuration: number;
+  uniqueVisitors?: number;
   salesData?: {
     totalSales: number;
     recentTransactions: PaymentTransaction[];
