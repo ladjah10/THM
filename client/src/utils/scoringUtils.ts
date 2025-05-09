@@ -31,24 +31,36 @@ export function calculateScores(
     const earned = response.value * (question.weight || 1);
     const possible = question.weight || 1;
     
-    // Add to section scores
-    sectionScores[question.section].earned += earned;
+    // Add to section scores - ensure we don't exceed the possible points
+    const newEarned = Math.min(sectionScores[question.section].earned + earned, sectionScores[question.section].possible + possible);
+    sectionScores[question.section].earned = newEarned;
     sectionScores[question.section].possible += possible;
     
-    // Add to total scores
-    totalEarned += earned;
+    // Add to total scores - ensure we don't exceed the possible points
+    totalEarned = Math.min(totalEarned + earned, totalPossible + possible);
     totalPossible += possible;
   });
   
   // Calculate percentages for each section
   Object.keys(sectionScores).forEach(section => {
     const { earned, possible } = sectionScores[section];
-    // Make sure percentage is capped at 100% to avoid confusion
-    sectionScores[section].percentage = Math.min(100, Math.round((earned / possible) * 100));
+    // Ensure we don't exceed 100%
+    if (possible === 0) {
+      sectionScores[section].percentage = 0;
+    } else {
+      // Strictly cap at 100% maximum
+      const rawPercentage = (earned / possible) * 100;
+      sectionScores[section].percentage = Math.min(100, Math.round(rawPercentage));
+    }
   });
   
   // Calculate overall percentage (capped at 100%)
-  const overallPercentage = Math.min(100, Math.round((totalEarned / totalPossible) * 100));
+  let overallPercentage = 0;
+  if (totalPossible > 0) {
+    // Strictly cap at 100% maximum
+    const rawPercentage = (totalEarned / totalPossible) * 100;
+    overallPercentage = Math.min(100, Math.round(rawPercentage));
+  }
   
   // Determine strengths and improvement areas
   const sectionEntries = Object.entries(sectionScores);

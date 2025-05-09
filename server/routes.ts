@@ -45,6 +45,72 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Share image generation endpoint for social media sharing
   app.get('/api/share-image', generateShareImage);
+  // Auto-save assessment responses endpoint
+  app.post('/api/assessment/save-progress', async (req, res) => {
+    try {
+      // Validate the request body
+      const progressSchema = z.object({
+        email: z.string().email().optional(),
+        demographicData: z.object({
+          firstName: z.string().optional(),
+          lastName: z.string().optional(),
+          email: z.string().email().optional(),
+          phone: z.string().optional(),
+          gender: z.string().optional(),
+          marriageStatus: z.string().optional(),
+          desireChildren: z.string().optional(),
+          ethnicity: z.string().optional(),
+          lifeStage: z.string().optional(),
+          birthday: z.string().optional(),
+          city: z.string().optional(),
+          state: z.string().optional(),
+          zipCode: z.string().optional(),
+          hasPurchasedBook: z.string().optional(),
+          purchaseDate: z.string().optional(),
+          promoCode: z.string().optional(),
+          interestedInArrangedMarriage: z.boolean().optional(),
+          thmPoolApplied: z.boolean().optional(),
+          hasPaid: z.boolean().optional(),
+        }).optional(),
+        responses: z.record(z.object({
+          option: z.string(),
+          value: z.number()
+        })).optional(),
+        assessmentType: z.enum(['individual', 'couple']).optional(),
+        timestamp: z.string().optional()
+      });
+      
+      const validatedData = progressSchema.parse(req.body);
+      
+      // Generate tempId if email is not provided yet
+      const tempId = validatedData.email || `temp-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+      
+      // Create a minimal assessment result for storing progress
+      const minimalAssessment: Partial<AssessmentResult> = {
+        email: validatedData.email,
+        demographics: validatedData.demographicData,
+        responses: validatedData.responses || {},
+        timestamp: validatedData.timestamp || new Date().toISOString(),
+        isPartial: true // Flag to indicate this is a partial save
+      };
+      
+      // Store partial assessment
+      await storage.saveAssessmentProgress(tempId, minimalAssessment);
+      
+      return res.status(200).json({ 
+        success: true,
+        tempId,
+        message: "Assessment progress saved successfully"
+      });
+    } catch (error) {
+      console.error("Error saving assessment progress:", error);
+      return res.status(400).json({ 
+        success: false,
+        message: error instanceof Error ? error.message : "Failed to save assessment progress"
+      });
+    }
+  });
+
   // Email sending endpoint
   app.post('/api/email/send', async (req, res) => {
     try {
