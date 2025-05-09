@@ -445,40 +445,221 @@ export class DatabaseStorage {
   // Couple assessment methods
   async saveCoupleAssessment(primaryAssessment: AssessmentResult, spouseEmail: string): Promise<string> {
     try {
-      // Implementation of database storage
-      return await this.memStorage.saveCoupleAssessment(primaryAssessment, spouseEmail);
+      // Generate a unique couple ID
+      const coupleId = `${primaryAssessment.demographics.email}_${spouseEmail}_${Date.now()}`;
+      
+      // Update the primary assessment with the couple ID
+      const updatedPrimaryAssessment = { ...primaryAssessment, coupleId, coupleRole: 'primary' as const };
+      
+      // Save the updated primary assessment to database
+      await this.saveAssessment(updatedPrimaryAssessment);
+      
+      console.log(`Couple assessment initiated in database for couple ID: ${coupleId}`);
+      
+      // Still keep in memory as a fallback
+      await this.memStorage.saveCoupleAssessment(updatedPrimaryAssessment, spouseEmail);
+      
+      return coupleId;
     } catch (error) {
-      console.error('Error saving couple assessment:', error);
+      console.error('Error saving couple assessment to database:', error);
+      // Fall back to memory storage if database operation fails
       return await this.memStorage.saveCoupleAssessment(primaryAssessment, spouseEmail);
     }
   }
   
   async getSpouseAssessment(coupleId: string, role: 'primary' | 'spouse'): Promise<AssessmentResult | null> {
     try {
-      // Implementation of database retrieval
-      return await this.memStorage.getSpouseAssessment(coupleId, role);
+      // Get from database using the assessmentResults table
+      const { db } = await import('./db');
+      const { assessmentResults } = await import('@shared/schema');
+      const { eq, and } = await import('drizzle-orm');
+      
+      // Query the database for the assessment with the given coupleId and role
+      const results = await db.select()
+        .from(assessmentResults)
+        .where(
+          and(
+            eq(assessmentResults.couple_id, coupleId),
+            eq(assessmentResults.couple_role, role)
+          )
+        );
+      
+      if (results.length === 0) {
+        console.log(`No ${role} assessment found in database for couple ID: ${coupleId}`);
+        return await this.memStorage.getSpouseAssessment(coupleId, role);
+      }
+      
+      // Convert database record to AssessmentResult
+      const dbResult = results[0];
+      const assessment: AssessmentResult = {
+        id: dbResult.id,
+        email: dbResult.email,
+        name: dbResult.name,
+        scores: JSON.parse(dbResult.scores),
+        profile: JSON.parse(dbResult.profile),
+        genderProfile: dbResult.gender_profile ? JSON.parse(dbResult.gender_profile) : null,
+        responses: JSON.parse(dbResult.responses),
+        demographics: JSON.parse(dbResult.demographics),
+        timestamp: dbResult.timestamp.toISOString(),
+        coupleId: dbResult.couple_id || undefined,
+        coupleRole: dbResult.couple_role as 'primary' | 'spouse' || undefined,
+        reportSent: dbResult.report_sent
+      };
+      
+      console.log(`${role} assessment retrieved from database for couple ID: ${coupleId}`);
+      return assessment;
     } catch (error) {
-      console.error('Error getting spouse assessment:', error);
+      console.error(`Error getting ${role} assessment from database:`, error);
+      // Fall back to memory storage if database operation fails
       return await this.memStorage.getSpouseAssessment(coupleId, role);
+    }
+  }
+  
+  async saveCoupleAssessmentReport(report: CoupleAssessmentReport): Promise<void> {
+    try {
+      // Save to database using the coupleAssessments table
+      const { db } = await import('./db');
+      const { coupleAssessments } = await import('@shared/schema');
+      
+      // First, ensure the primary and spouse assessments are saved to the database
+      if (report.primary) {
+        await this.saveAssessment(report.primary);
+      }
+      
+      if (report.spouse) {
+        await this.saveAssessment(report.spouse);
+      }
+      
+      // Get the IDs of the primary and spouse assessments
+      const primaryId = report.primary.id;
+      const spouseId = report.spouse.id;
+      
+      if (!primaryId || !spouseId) {
+        throw new Error('Primary or spouse assessment ID is missing');
+      }
+      
+      // Insert into database
+      await db.insert(coupleAssessments).values({
+        couple_id: report.coupleId,
+        primary_id: primaryId,
+        spouse_id: spouseId,
+        analysis: JSON.stringify(report.analysis),
+        compatibility_score: report.compatibilityScore,
+        recommendations: JSON.stringify(report.recommendations || []),
+        report_sent: report.reportSent || false
+      });
+      
+      console.log(`Couple assessment report saved to database for couple ID: ${report.coupleId}`);
+      
+      // Still keep in memory as a fallback
+      await this.memStorage.saveCoupleAssessmentReport(report);
+    } catch (error) {
+      console.error('Error saving couple assessment report to database:', error);
+      // Fall back to memory storage if database operation fails
+      await this.memStorage.saveCoupleAssessmentReport(report);
     }
   }
   
   async getCoupleAssessment(coupleId: string): Promise<CoupleAssessmentReport | null> {
     try {
-      // Implementation of database retrieval
-      return await this.memStorage.getCoupleAssessment(coupleId);
+      // Get from database using the coupleAssessments table
+      const { db } = await import('./db');
+      const { coupleAssessments } = await import('@shared/schema');
+      const { eq } = await import('drizzle-orm');
+      
+      // Query the database for the couple assessment with the given coupleId
+      const results = await db.select()
+        .from(coupleAssessments)
+        .where(eq(coupleAssessments.couple_id, coupleId));
+      
+      if (results.length === 0) {
+        console.log(`No couple assessment found in database for couple ID: ${coupleId}`);
+        return await this.memStorage.getCoupleAssessment(coupleId);
+      }
+      
+      // Get the primary and spouse assessments
+      const dbResult = results[0];
+      const primaryAssessment = await this.getSpouseAssessment(coupleId, 'primary');
+      const spouseAssessment = await this.getSpouseAssessment(coupleId, 'spouse');
+      
+      if (!primaryAssessment || !spouseAssessment) {
+        console.log(`Primary or spouse assessment missing for couple ID: ${coupleId}`);
+        return await this.memStorage.getCoupleAssessment(coupleId);
+      }
+      
+      // Convert database record to CoupleAssessmentReport
+      const report: CoupleAssessmentReport = {
+        id: dbResult.id,
+        coupleId: dbResult.couple_id,
+        primary: primaryAssessment,
+        spouse: spouseAssessment,
+        analysis: JSON.parse(dbResult.analysis),
+        timestamp: dbResult.timestamp.toISOString(),
+        compatibilityScore: Number(dbResult.compatibility_score),
+        recommendations: JSON.parse(dbResult.recommendations),
+        reportSent: dbResult.report_sent
+      };
+      
+      console.log(`Couple assessment report retrieved from database for couple ID: ${coupleId}`);
+      return report;
     } catch (error) {
-      console.error('Error getting couple assessment:', error);
+      console.error('Error getting couple assessment from database:', error);
+      // Fall back to memory storage if database operation fails
       return await this.memStorage.getCoupleAssessment(coupleId);
     }
   }
   
   async getAllCoupleAssessments(): Promise<CoupleAssessmentReport[]> {
     try {
-      // Implementation of database retrieval
-      return await this.memStorage.getAllCoupleAssessments();
+      // Get from database using the coupleAssessments table
+      const { db } = await import('./db');
+      const { coupleAssessments } = await import('@shared/schema');
+      
+      // Query the database for all couple assessments
+      const results = await db.select().from(coupleAssessments);
+      
+      if (results.length === 0) {
+        console.log('No couple assessments found in database');
+        return await this.memStorage.getAllCoupleAssessments();
+      }
+      
+      // Convert database records to CoupleAssessmentReport objects
+      const reports: CoupleAssessmentReport[] = [];
+      
+      for (const dbResult of results) {
+        try {
+          const primaryAssessment = await this.getSpouseAssessment(dbResult.couple_id, 'primary');
+          const spouseAssessment = await this.getSpouseAssessment(dbResult.couple_id, 'spouse');
+          
+          if (primaryAssessment && spouseAssessment) {
+            reports.push({
+              id: dbResult.id,
+              coupleId: dbResult.couple_id,
+              primary: primaryAssessment,
+              spouse: spouseAssessment,
+              analysis: JSON.parse(dbResult.analysis),
+              timestamp: dbResult.timestamp.toISOString(),
+              compatibilityScore: Number(dbResult.compatibility_score),
+              recommendations: JSON.parse(dbResult.recommendations),
+              reportSent: dbResult.report_sent
+            });
+          }
+        } catch (err) {
+          console.error(`Error processing couple assessment ${dbResult.couple_id}:`, err);
+        }
+      }
+      
+      console.log(`Retrieved ${reports.length} couple assessments from database`);
+      
+      if (reports.length === 0) {
+        // Fall back to memory storage if no valid reports were created
+        return await this.memStorage.getAllCoupleAssessments();
+      }
+      
+      return reports;
     } catch (error) {
-      console.error('Error getting all couple assessments:', error);
+      console.error('Error getting all couple assessments from database:', error);
+      // Fall back to memory storage if database operation fails
       return await this.memStorage.getAllCoupleAssessments();
     }
   }
@@ -519,10 +700,18 @@ export class DatabaseStorage {
       const { db } = await import('./db');
       const { pageViews } = await import('@shared/schema');
       
+      // Convert timestamp to a Date object if it's a string
+      let timestamp: Date;
+      if (typeof pageView.timestamp === 'string') {
+        timestamp = new Date(pageView.timestamp);
+      } else {
+        timestamp = new Date(); // Default to current time if invalid
+      }
+      
       // Insert into database
       await db.insert(pageViews).values({
         path: pageView.path,
-        timestamp: pageView.timestamp,
+        timestamp: timestamp,
         referrer: pageView.referrer,
         user_agent: pageView.userAgent,
         ip_address: pageView.ipAddress,
