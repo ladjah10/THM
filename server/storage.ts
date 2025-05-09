@@ -529,8 +529,8 @@ export class DatabaseStorage implements IStorage {
   // Method to record promo code usage
   async recordPromoCodeUsage(data: {promoCode: string, assessmentType: string, timestamp: string}): Promise<void> {
     console.log(`Recording promo code usage in database: ${data.promoCode} for ${data.assessmentType} assessment`);
-    // In a real implementation, this would insert into a dedicated table
-    // For now, we'll just log it
+    // Record in memory storage
+    await this.memStorage.recordPromoCodeUsage(data);
   }
   
   // Save assessment progress during assessment (for auto-save functionality)
@@ -551,292 +551,244 @@ export class DatabaseStorage implements IStorage {
   async getUser(id: number): Promise<User | undefined> {
     try {
       // Implementation would use database access
-      // For now, use memory storage as fallback
-      const memStorage = new MemStorage();
-      return await memStorage.getUser(id);
+      // Use shared memory storage as fallback
+      return await this.memStorage.getUser(id);
     } catch (error) {
       console.error('Error getting user:', error);
-      const memStorage = new MemStorage();
-      return await memStorage.getUser(id);
+      return await this.memStorage.getUser(id);
     }
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
     try {
       // Implementation would use database access
-      // For now, use memory storage as fallback
-      const memStorage = new MemStorage();
-      return await memStorage.getUserByUsername(username);
+      // Use shared memory storage as fallback
+      return await this.memStorage.getUserByUsername(username);
     } catch (error) {
       console.error('Error getting user by username:', error);
-      const memStorage = new MemStorage();
-      return await memStorage.getUserByUsername(username);
+      return await this.memStorage.getUserByUsername(username);
     }
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
     try {
       // Implementation would use database access
-      // For now, use memory storage as fallback
-      const memStorage = new MemStorage();
-      return await memStorage.createUser(insertUser);
+      // Use shared memory storage as fallback
+      return await this.memStorage.createUser(insertUser);
     } catch (error) {
       console.error('Error creating user:', error);
-      const memStorage = new MemStorage();
-      return await memStorage.createUser(insertUser);
+      return await this.memStorage.createUser(insertUser);
     }
   }
   
   async saveAssessment(assessment: AssessmentResult): Promise<void> {
     try {
       // Implementation of database storage
-      const memStorage = new MemStorage();
-      await memStorage.saveAssessment(assessment);
+      await this.memStorage.saveAssessment(assessment);
     } catch (error) {
       console.error('Error saving assessment:', error);
-      const memStorage = new MemStorage();
-      await memStorage.saveAssessment(assessment);
+      await this.memStorage.saveAssessment(assessment);
     }
   }
   
   async getAssessments(email: string): Promise<AssessmentResult[]> {
     try {
       // Implementation of database retrieval
-      const memStorage = new MemStorage();
-      return await memStorage.getAssessments(email);
+      return await this.memStorage.getAssessments(email);
     } catch (error) {
       console.error('Error getting assessments:', error);
-      const memStorage = new MemStorage();
-      return await memStorage.getAssessments(email);
+      return await this.memStorage.getAssessments(email);
     }
   }
   
   async getAllAssessments(): Promise<AssessmentResult[]> {
     try {
       // Implementation of database retrieval
-      const memStorage = new MemStorage();
-      return await memStorage.getAllAssessments();
+      return await this.memStorage.getAllAssessments();
     } catch (error) {
       console.error('Error getting all assessments:', error);
-      const memStorage = new MemStorage();
-      return await memStorage.getAllAssessments();
+      return await this.memStorage.getAllAssessments();
     }
   }
   
-  // All the other methods with similar implementation pattern
+  // Couple assessment methods
   async saveCoupleAssessment(primaryAssessment: AssessmentResult, spouseEmail: string): Promise<string> {
     try {
       // Implementation of database storage
-      const memStorage = new MemStorage();
-      return await memStorage.saveCoupleAssessment(primaryAssessment, spouseEmail);
+      return await this.memStorage.saveCoupleAssessment(primaryAssessment, spouseEmail);
     } catch (error) {
       console.error('Error saving couple assessment:', error);
-      const memStorage = new MemStorage();
-      return await memStorage.saveCoupleAssessment(primaryAssessment, spouseEmail);
+      return await this.memStorage.saveCoupleAssessment(primaryAssessment, spouseEmail);
     }
   }
   
   async getSpouseAssessment(coupleId: string, role: 'primary' | 'spouse'): Promise<AssessmentResult | null> {
     try {
       // Implementation of database retrieval
-      const memStorage = new MemStorage();
-      return await memStorage.getSpouseAssessment(coupleId, role);
+      return await this.memStorage.getSpouseAssessment(coupleId, role);
     } catch (error) {
       console.error('Error getting spouse assessment:', error);
-      const memStorage = new MemStorage();
-      return await memStorage.getSpouseAssessment(coupleId, role);
+      return await this.memStorage.getSpouseAssessment(coupleId, role);
     }
   }
   
   async getCoupleAssessment(coupleId: string): Promise<CoupleAssessmentReport | null> {
     try {
       // Implementation of database retrieval
-      const memStorage = new MemStorage();
-      return await memStorage.getCoupleAssessment(coupleId);
+      return await this.memStorage.getCoupleAssessment(coupleId);
     } catch (error) {
       console.error('Error getting couple assessment:', error);
-      const memStorage = new MemStorage();
-      return await memStorage.getCoupleAssessment(coupleId);
+      return await this.memStorage.getCoupleAssessment(coupleId);
     }
   }
   
   async getAllCoupleAssessments(): Promise<CoupleAssessmentReport[]> {
     try {
       // Implementation of database retrieval
-      const memStorage = new MemStorage();
-      return await memStorage.getAllCoupleAssessments();
+      return await this.memStorage.getAllCoupleAssessments();
     } catch (error) {
       console.error('Error getting all couple assessments:', error);
-      const memStorage = new MemStorage();
-      return await memStorage.getAllCoupleAssessments();
+      return await this.memStorage.getAllCoupleAssessments();
     }
   }
   
   async saveReferral(referral: ReferralData): Promise<void> {
     try {
       // Implementation of database storage
-      const memStorage = new MemStorage();
-      await memStorage.saveReferral(referral);
+      await this.memStorage.saveReferral(referral);
     } catch (error) {
       console.error('Error saving referral:', error);
-      const memStorage = new MemStorage();
-      await memStorage.saveReferral(referral);
+      await this.memStorage.saveReferral(referral);
     }
   }
   
   async getAllReferrals(): Promise<ReferralData[]> {
     try {
       // Implementation of database retrieval
-      const memStorage = new MemStorage();
-      return await memStorage.getAllReferrals();
+      return await this.memStorage.getAllReferrals();
     } catch (error) {
       console.error('Error getting all referrals:', error);
-      const memStorage = new MemStorage();
-      return await memStorage.getAllReferrals();
+      return await this.memStorage.getAllReferrals();
     }
   }
   
   async updateReferralStatus(id: string, status: 'sent' | 'completed' | 'expired', completedTimestamp?: string): Promise<void> {
     try {
       // Implementation of database update
-      const memStorage = new MemStorage();
-      await memStorage.updateReferralStatus(id, status, completedTimestamp);
+      await this.memStorage.updateReferralStatus(id, status, completedTimestamp);
     } catch (error) {
       console.error('Error updating referral status:', error);
-      const memStorage = new MemStorage();
-      await memStorage.updateReferralStatus(id, status, completedTimestamp);
+      await this.memStorage.updateReferralStatus(id, status, completedTimestamp);
     }
   }
   
   async recordPageView(pageView: PageView): Promise<void> {
     try {
       // Implementation of database storage
-      const memStorage = new MemStorage();
-      await memStorage.recordPageView(pageView);
+      await this.memStorage.recordPageView(pageView);
     } catch (error) {
       console.error('Error recording page view:', error);
-      const memStorage = new MemStorage();
-      await memStorage.recordPageView(pageView);
+      await this.memStorage.recordPageView(pageView);
     }
   }
   
   async createVisitorSession(session: VisitorSession): Promise<void> {
     try {
       // Implementation of database storage
-      const memStorage = new MemStorage();
-      await memStorage.createVisitorSession(session);
+      await this.memStorage.createVisitorSession(session);
     } catch (error) {
       console.error('Error creating visitor session:', error);
-      const memStorage = new MemStorage();
-      await memStorage.createVisitorSession(session);
+      await this.memStorage.createVisitorSession(session);
     }
   }
   
   async updateVisitorSession(sessionId: string, endTime: string, pageCount: number): Promise<void> {
     try {
       // Implementation of database update
-      const memStorage = new MemStorage();
-      await memStorage.updateVisitorSession(sessionId, endTime, pageCount);
+      await this.memStorage.updateVisitorSession(sessionId, endTime, pageCount);
     } catch (error) {
       console.error('Error updating visitor session:', error);
-      const memStorage = new MemStorage();
-      await memStorage.updateVisitorSession(sessionId, endTime, pageCount);
+      await this.memStorage.updateVisitorSession(sessionId, endTime, pageCount);
     }
   }
   
   async getPageViews(startDate?: string, endDate?: string): Promise<PageView[]> {
     try {
       // Implementation of database retrieval
-      const memStorage = new MemStorage();
-      return await memStorage.getPageViews(startDate, endDate);
+      return await this.memStorage.getPageViews(startDate, endDate);
     } catch (error) {
       console.error('Error getting page views:', error);
-      const memStorage = new MemStorage();
-      return await memStorage.getPageViews(startDate, endDate);
+      return await this.memStorage.getPageViews(startDate, endDate);
     }
   }
   
   async getVisitorSessions(startDate?: string, endDate?: string): Promise<VisitorSession[]> {
     try {
       // Implementation of database retrieval
-      const memStorage = new MemStorage();
-      return await memStorage.getVisitorSessions(startDate, endDate);
+      return await this.memStorage.getVisitorSessions(startDate, endDate);
     } catch (error) {
       console.error('Error getting visitor sessions:', error);
-      const memStorage = new MemStorage();
-      return await memStorage.getVisitorSessions(startDate, endDate);
+      return await this.memStorage.getVisitorSessions(startDate, endDate);
     }
   }
   
   async getAnalyticsSummary(period: 'day' | 'week' | 'month' | 'year'): Promise<AnalyticsSummary> {
     try {
       // Implementation of database retrieval and computation
-      const memStorage = new MemStorage();
-      return await memStorage.getAnalyticsSummary(period);
+      return await this.memStorage.getAnalyticsSummary(period);
     } catch (error) {
       console.error('Error getting analytics summary:', error);
-      const memStorage = new MemStorage();
-      return await memStorage.getAnalyticsSummary(period);
+      return await this.memStorage.getAnalyticsSummary(period);
     }
   }
   
   async savePaymentTransaction(transaction: PaymentTransaction): Promise<void> {
     try {
       // Implementation of database storage
-      const memStorage = new MemStorage();
-      await memStorage.savePaymentTransaction(transaction);
+      await this.memStorage.savePaymentTransaction(transaction);
     } catch (error) {
       console.error('Error saving payment transaction:', error);
-      const memStorage = new MemStorage();
-      await memStorage.savePaymentTransaction(transaction);
+      await this.memStorage.savePaymentTransaction(transaction);
     }
   }
   
   async getPaymentTransactions(startDate?: string, endDate?: string): Promise<PaymentTransaction[]> {
     try {
       // Implementation of database retrieval
-      const memStorage = new MemStorage();
-      return await memStorage.getPaymentTransactions(startDate, endDate);
+      return await this.memStorage.getPaymentTransactions(startDate, endDate);
     } catch (error) {
       console.error('Error getting payment transactions:', error);
-      const memStorage = new MemStorage();
-      return await memStorage.getPaymentTransactions(startDate, endDate);
+      return await this.memStorage.getPaymentTransactions(startDate, endDate);
     }
   }
   
   async getPaymentTransactionByStripeId(stripeId: string): Promise<PaymentTransaction | null> {
     try {
       // Implementation of database retrieval
-      const memStorage = new MemStorage();
-      return await memStorage.getPaymentTransactionByStripeId(stripeId);
+      return await this.memStorage.getPaymentTransactionByStripeId(stripeId);
     } catch (error) {
       console.error('Error getting payment transaction by Stripe ID:', error);
-      const memStorage = new MemStorage();
-      return await memStorage.getPaymentTransactionByStripeId(stripeId);
+      return await this.memStorage.getPaymentTransactionByStripeId(stripeId);
     }
   }
   
   async updatePaymentTransactionStatus(stripeId: string, status: string): Promise<void> {
     try {
       // Implementation of database update
-      const memStorage = new MemStorage();
-      await memStorage.updatePaymentTransactionStatus(stripeId, status);
+      await this.memStorage.updatePaymentTransactionStatus(stripeId, status);
     } catch (error) {
       console.error('Error updating payment transaction status:', error);
-      const memStorage = new MemStorage();
-      await memStorage.updatePaymentTransactionStatus(stripeId, status);
+      await this.memStorage.updatePaymentTransactionStatus(stripeId, status);
     }
   }
   
   async recordRefund(stripeId: string, amount: number, reason?: string): Promise<void> {
     try {
       // Implementation of database update
-      const memStorage = new MemStorage();
-      await memStorage.recordRefund(stripeId, amount, reason);
+      await this.memStorage.recordRefund(stripeId, amount, reason);
     } catch (error) {
       console.error('Error recording refund:', error);
-      const memStorage = new MemStorage();
-      await memStorage.recordRefund(stripeId, amount, reason);
+      await this.memStorage.recordRefund(stripeId, amount, reason);
     }
   }
 }
