@@ -5,6 +5,25 @@ import { setupVite, serveStatic, log } from "./vite";
 import { analyticsMiddleware } from "./analytics-middleware";
 
 const app = express();
+
+// Create a raw body buffer for webhook requests
+app.use((req, res, next) => {
+  // Only create raw body for Stripe webhook path
+  if (req.originalUrl === '/api/webhooks/stripe') {
+    let rawBody = '';
+    req.on('data', (chunk) => {
+      rawBody += chunk.toString();
+    });
+    req.on('end', () => {
+      (req as any).rawBody = rawBody;
+      next();
+    });
+  } else {
+    next();
+  }
+});
+
+// Standard middleware for non-webhook endpoints
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

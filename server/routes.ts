@@ -852,7 +852,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Stripe webhook endpoint to receive webhook events from Stripe
-  app.post('/api/webhooks/stripe', express.raw({ type: 'application/json' }), handleStripeWebhook);
+  app.post('/api/webhooks/stripe', (req, res) => {
+    // Use the raw body we captured in the middleware
+    const rawBody = (req as any).rawBody;
+    
+    if (!rawBody) {
+      console.error('No raw body found in webhook request');
+      return res.status(400).send('No raw body found');
+    }
+    
+    // Pass the raw body to the webhook handler
+    req.body = rawBody;
+    return handleStripeWebhook(req, res);
+  });
   
   // Admin API to manually sync Stripe payments
   app.post('/api/admin/stripe/sync-payments', async (req: Request, res: Response) => {

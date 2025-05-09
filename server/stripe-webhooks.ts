@@ -114,8 +114,10 @@ export async function handleStripeWebhook(req: Request, res: Response) {
   try {
     if (sig && process.env.STRIPE_WEBHOOK_SECRET) {
       // Verify the webhook signature if we have the secret
+      // If req.body is a string (raw body), use it directly
+      const payload = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
       event = stripe.webhooks.constructEvent(
-        req.body,
+        payload,
         sig,
         process.env.STRIPE_WEBHOOK_SECRET
       );
@@ -124,7 +126,7 @@ export async function handleStripeWebhook(req: Request, res: Response) {
       // For testing/development, parse the event directly
       // In production, always use signature verification
       console.warn('⚠️ Webhook signature verification skipped - for development only');
-      event = req.body as Stripe.Event;
+      event = typeof req.body === 'string' ? JSON.parse(req.body) : req.body as Stripe.Event;
     }
   } catch (err: any) {
     console.error(`Webhook processing error: ${err.message}`);
