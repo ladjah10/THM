@@ -1,0 +1,89 @@
+Your Foundation: Marriage + Family - What is your faith position?
+Your Foundation: Marriage + Family Accountability - I believe in accountability for my marriage.
+Your Foundation: Marriage & Your Children's Faith - How do you plan to raise your children?
+Your Foundation: Marriage Mindset: Happiness - What is your primary focus in marriage?
+Your Foundation: Marriage Preparation: Legal (Incapacitation) - What is your position on Power of Attorney?
+Your Foundation: Marriage Preparation: Legal (Estate) - What is your position on creating a will?
+Your Foundation: Marriage Mindset: Divorce - What is your position on divorce?
+Your Foundation: Marriage Mindset: Divorce & Law - What is your position on prenuptial agreements?
+Your Foundation: Marriage Mindset: Celebrating our Covenant - How do you plan to celebrate your marriage?
+Your Marriage Life: Order of Priority before God - What is your order of priority?
+Your Faith Life: Church Community - Will you attend the same church as a family?
+Your Faith Life: Worship Life: Marriage (Husband and Wife) - How often do you plan to pray together?
+Your Faith Life: Worship Life: Family - How often do you plan to have family worship?
+Your Faith Life: Worship Life: Serving - How do you plan to volunteer in your community?
+Your Marriage Life: Family Name - What is your position on family names after marriage?
+Your Marriage Life: Communication & Conflict Resolution - I believe we should not fight in front of others.
+Your Marriage Life: Communication & Conflict Resolution (Discuss with others) - I believe we should never discuss issues with others before discussing with spouse.
+Your Marriage Life: Communication & Conflict Resolution:2 (24 hours) - I believe we should not go more than 24 hours without speaking.
+Your Marriage Life: Communication & Conflict Resolution:3 (Text) - I believe we should not discuss serious issues via text.
+Your Marriage Life: Communication & Conflict Resolution:4 (Sleep angry) - I believe we should not sleep angry.
+Your Marriage Life: Communication & Conflict Resolution:5 (Same bed) - I believe we should always sleep in the same bed.
+Your Marriage Life: Communication & Conflict Resolution:6 (Sex as weapon) - I believe we should never withhold sex as punishment.
+Your Marriage Life: Communication & Conflict Resolution:7 (Silence as weapon) - I believe we should never use silence as punishment.
+Your Marriage Life: Communication & Conflict Resolution: Counseling - How often would you attend marriage counseling?
+Your Marriage Life: Decision Making - I believe the husband should be the final authority in decision making.
+Your Marriage Life: Dedicated Time (Fellowship) - How often do you plan to have date nights?
+Your Marriage Life: Marriage: Dedicated Time - How often would you have marriage check-ins?
+Your Marriage Life: Living – Room Boundaries (Electronics) - I believe we should not have electronics in the bedroom.
+Your Marriage Life: Relationship Model (Work/Home) - What is your preferred work arrangement?
+Your Marriage Life: Relationship Model (Travel) - What is your maximum time apart due to travel?
+Your Marriage Life: Relationship Model (Late Night Work) - How many late work nights per week?
+Your Marriage Life: Relationship Model (Work Down Time) - How much daily downtime do you need?
+Your Marriage Life: Marriage: Living – Rooting - What is your preference for where to live?
+Your Marriage Life: Marriage: Living – City Type - What type of area do you prefer to live in?
+Your Marriage Life: Marriage: Living – Home Type - What type of home do you prefer?
+Your Marriage Life: Marriage: Living – Domestic/International - Would you be willing to live internationally?
+Your Parenting Life: Children: Desire - Do you want to have children?
+Your Parenting Life: Children: Timing - When do you want to have children?
+Your Parenting Life: Children: Quantity - How many children do you want?
+Your Parenting Life: Children: Parenting Style - What's your preferred parenting style?
+Your Parenting Life: Children: Discipline - What's your approach to discipline?
+Your Parenting Life: Children: Education - What type of education do you prefer for your children?
+Your Marriage Life: Social Media Boundaries - I believe we should have access to each other's social media accounts.
+Your Marriage Life: Phone Privacy - I believe we should have access to each other's phones.
+Your Marriage Life: Friendship Boundaries - I believe we should limit close friendships with the opposite sex.
+Your Marriage Life: Spiritual Leadership - I believe the husband should be the spiritual leader of the home.
+Your Marriage Life: Financial Decisions - I believe major financial decisions should be made together.
+Your Family/Home Life: Extended Family: Boundaries - Do you agree that your spouse should come before extended family?
+Your Family/Home Life: Extended Family: Living With Parents - Would you be willing to have parents live with you?
+Your Family/Home Life: Extended Family: Money To Parents - Are you willing to financially support parents?
+Your Family/Home Life: Holidays - How do you prefer to spend holidays?
+Your Family/Home Life: Home Management: Chores - How will you divide household responsibilities?
+Your Finances: Financial Philosophy: Combined - Do you agree all finances should be combined?
+Your Finances: Financial Philosophy: Tithing - Do you believe in tithing/giving to charity?
+Your Finances: Financial Philosophy: Emergency Fund - How much emergency savings do you think is necessary?
+Your Finances: Financial Philosophy: Debt - What's your approach to debt?
+Your Finances: Financial Decisions: Large Purchases - At what amount should you consult your spouse before spending?
+Your Health and Wellness: Physical Health: Exercise - What are your expectations for physical fitness?
+Your Health and Wellness: Mental Health: Therapy - Are you open to individual or couples therapy?
+Your Health and Wellness: Substance Use: Alcohol - What are your views on alcohol use?
+Your Health and Wellness: Medical Decisions - How will you approach major medical decisions?
+Your Marriage and Boundaries: Opposite Sex Friendships - What boundaries do you expect for opposite-sex friendships?
+Your Marriage and Boundaries: Social Media Boundaries - What level of social media transparency do you expect?
+Your Marriage and Boundaries: Personal Privacy - What level of personal privacy do you expect in marriage?
+Your Marriage and Boundaries: Sexual Boundaries - Do you agree that sexual intimacy is exclusive to marriage?
+Your Marriage and Boundaries: Sexual Frequency - What are your expectations for sexual frequency?
+Your Faith Life: Bible Study - I believe we should have regular Bible study together.
+Your Faith Life: Faith Mentorship - I believe we should have spiritual mentors for our marriage.
+Your Faith Life: Sabbath Observance - I believe we should set aside a sabbath day for rest and worship.
+Your Parenting Life: Religious Education - I believe our children should attend religious schools.
+Your Parenting Life: Gender Roles - I believe we should raise our children with traditional gender roles.
+Your Parenting Life: Technology Access - I believe we should strictly limit our children's access to technology.
+Your Parenting Life: Allowance - I believe children should earn allowance through chores.
+Your Parenting Life: Extended Family Childcare - I believe extended family should be involved in childcare.
+Your Family/Home Life: Housework Division - I believe housework should be divided based on traditional gender roles.
+Your Family/Home Life: Home Decor Decisions - I believe home decoration decisions should be made together.
+Your Family/Home Life: Pet Ownership - I believe pets are important members of the family.
+Your Family/Home Life: Television Time - I believe we should limit television/screen time in our home.
+Your Finances: Saving Priority - I believe saving for the future should be a top financial priority.
+Your Finances: Financial Transparency - I believe we should have complete transparency about all spending.
+Your Finances: Lending to Family - I believe we should lend money to family members in need.
+Your Finances: Financial Education - I believe we should actively educate ourselves about finances.
+Your Finances: Giving Decisions - I believe charitable giving decisions should be made jointly.
+Your Health and Wellness: Diet Expectations - I believe we should follow the same dietary approach.
+Your Health and Wellness: Medical Approaches - I believe in using alternative/holistic medicine alongside conventional medicine.
+Your Health and Wellness: Regular Checkups - I believe in getting regular preventative medical checkups.
+Your Health and Wellness: Mental Health Openness - I believe in being open about mental health struggles.
+Your Health and Wellness: Health Accountability - I believe spouses should hold each other accountable for health goals.
+Your Marriage and Boundaries: Device-Free Time - I believe we should have regular device-free time together.
