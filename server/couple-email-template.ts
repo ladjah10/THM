@@ -4,11 +4,11 @@ import { CoupleAssessmentReport } from '../shared/schema';
  * Formats a couple assessment report into HTML for email
  */
 export function formatCoupleAssessmentEmail(report: CoupleAssessmentReport): string {
-  const { primaryAssessment, spouseAssessment, differenceAnalysis, overallCompatibility } = report;
+  const { primary, spouse, analysis, compatibility } = report;
   
   // Format names
-  const primaryName = primaryAssessment.demographics.firstName;
-  const spouseName = spouseAssessment.demographics.firstName;
+  const primaryName = primary.demographics.firstName;
+  const spouseName = spouse.demographics.firstName;
   
   // Map compatibility level
   const getCompatibilityLevel = (score: number) => {
@@ -30,8 +30,8 @@ export function formatCoupleAssessmentEmail(report: CoupleAssessmentReport): str
   const getSectionComparisonHtml = () => {
     let sectionsHtml = '';
     
-    Object.entries(primaryAssessment.scores.sections).forEach(([section, { percentage: primaryPercentage }]) => {
-      const spousePercentage = spouseAssessment.scores.sections[section]?.percentage || 0;
+    Object.entries(primary.scores.sections).forEach(([section, { percentage: primaryPercentage }]) => {
+      const spousePercentage = spouse.scores.sections[section]?.percentage || 0;
       const difference = Math.abs(primaryPercentage - spousePercentage);
       
       let differenceColor = '#15803d'; // green

@@ -746,25 +746,21 @@ export async function sendAssessmentReminder(data: AssessmentReminderData): Prom
     if (process.env.SENDGRID_API_KEY) {
       try {
         console.log('Using SendGrid for assessment reminder email');
-        // Import the sendgrid module functions
-        const { MailService } = await import('@sendgrid/mail');
         
-        // Set up SendGrid
-        const mailService = new MailService();
-        mailService.setApiKey(process.env.SENDGRID_API_KEY);
+        // Send mail with SendGrid using the initialized instance
+        const verifiedSender = {
+          email: 'noreply@the100marriage.com',
+          name: 'The 100 Marriage Assessment'
+        };
         
-        // Send mail with SendGrid
         const msg = {
           to: data.to,
-          from: {
-            email: 'reminders@wgodw.com',
-            name: 'The 100 Marriage Assessment'
-          },
+          from: verifiedSender,
           subject: `Don't Miss Out - Complete Your 100 Marriage Assessment`,
           html: emailHtml
         };
         
-        await mailService.send(msg);
+        await sgMail.send(msg);
         console.log(`SendGrid assessment reminder email sent to ${data.to}`);
         
         return { 
@@ -836,36 +832,29 @@ export async function sendCoupleInvitationEmails(
     if (process.env.SENDGRID_API_KEY) {
       try {
         console.log('Using SendGrid for couple invitation emails');
-        // Import the sendgrid module functions
-        const { MailService } = await import('@sendgrid/mail');
         
-        // Set up SendGrid
-        const mailService = new MailService();
-        mailService.setApiKey(process.env.SENDGRID_API_KEY);
+        // Send emails with SendGrid using the initialized instance
+        const verifiedSender = {
+          email: 'noreply@the100marriage.com',
+          name: 'The 100 Marriage Assessment'
+        };
         
-        // Send emails with SendGrid
         const primaryMsg = {
           to: data.primaryEmail,
-          from: {
-            email: 'couples@wgodw.com',
-            name: 'The 100 Marriage Assessment'
-          },
+          from: verifiedSender,
           subject: "Your Couple Assessment Has Been Started",
           html: primaryEmailHtml
         };
         
         const spouseMsg = {
           to: data.spouseEmail,
-          from: {
-            email: 'couples@wgodw.com',
-            name: 'The 100 Marriage Assessment'
-          },
+          from: verifiedSender,
           subject: "You've Been Invited to Take the 100 Marriage Assessment",
           html: spouseEmailHtml
         };
         
-        await mailService.send(primaryMsg);
-        await mailService.send(spouseMsg);
+        await sgMail.send(primaryMsg);
+        await sgMail.send(spouseMsg);
         
         console.log(`SendGrid primary invitation email sent to ${data.primaryEmail}`);
         console.log(`SendGrid spouse invitation email sent to ${data.spouseEmail}`);
@@ -943,31 +932,27 @@ export async function sendCoupleAssessmentEmail(
     const emailHtml = formatCoupleAssessmentEmail(report);
     
     // Get emails from both partners
-    const primaryEmail = report.primaryAssessment.email;
-    const spouseEmail = report.spouseAssessment.email;
+    const primaryEmail = report.primary.email;
+    const spouseEmail = report.spouse.email;
     
     // Format names for the email
-    const primaryName = report.primaryAssessment.demographics.firstName;
-    const spouseName = report.spouseAssessment.demographics.firstName;
+    const primaryName = report.primary.demographics.firstName;
+    const spouseName = report.spouse.demographics.firstName;
     
     // If we have a SendGrid API key, use SendGrid directly
     if (process.env.SENDGRID_API_KEY) {
       try {
         console.log('Using SendGrid for couple assessment email');
-        // Import the sendgrid module functions
-        const { MailService } = await import('@sendgrid/mail');
         
-        // Set up SendGrid
-        const mailService = new MailService();
-        mailService.setApiKey(process.env.SENDGRID_API_KEY);
+        // Send mail with SendGrid using the initialized instance
+        const verifiedSender = {
+          email: 'noreply@the100marriage.com',
+          name: 'The 100 Marriage Assessment'
+        };
         
-        // Send mail with SendGrid
         const msg = {
           to: [primaryEmail, spouseEmail], // Send to both partners
-          from: {
-            email: 'couples@wgodw.com',
-            name: 'The 100 Marriage Assessment'
-          },
+          from: verifiedSender,
           subject: `${primaryName} & ${spouseName} - Couple Assessment Report - The 100 Marriage`,
           html: emailHtml,
           attachments: [
@@ -980,7 +965,7 @@ export async function sendCoupleAssessmentEmail(
           ]
         };
         
-        await mailService.send(msg);
+        await sgMail.send(msg);
         console.log(`SendGrid couple assessment email with PDF attachment sent to ${primaryEmail} and ${spouseEmail}`);
         
         return { 
