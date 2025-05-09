@@ -192,6 +192,41 @@ export default function AdminDashboard() {
     enabled: isAuthenticated,
   });
   
+  // Payment transactions data
+  const [transactionDateRange, setTransactionDateRange] = useState<{start?: string, end?: string}>({});
+  
+  const { data: paymentTransactions, isLoading: isLoadingPaymentTransactions } = useQuery<PaymentTransaction[]>({
+    queryKey: ['/api/admin/analytics/payment-transactions', transactionDateRange],
+    queryFn: async () => {
+      if (!isAuthenticated) return [];
+      
+      let url = "/api/admin/analytics/payment-transactions";
+      const params = new URLSearchParams();
+      
+      if (transactionDateRange.start) {
+        params.append('startDate', transactionDateRange.start);
+      }
+      
+      if (transactionDateRange.end) {
+        params.append('endDate', transactionDateRange.end);
+      }
+      
+      const queryString = params.toString();
+      if (queryString) {
+        url = `${url}?${queryString}`;
+      }
+      
+      const response = await apiRequest("GET", url);
+      
+      if (!response.ok) {
+        throw new Error("Failed to fetch payment transactions");
+      }
+      
+      return response.json();
+    },
+    enabled: isAuthenticated,
+  });
+  
   // Filter assessments by search term
   const filteredAssessments = assessments?.filter(assessment => {
     if (!searchTerm) return true;
@@ -589,6 +624,7 @@ export default function AdminDashboard() {
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="assessments">Assessment Results</TabsTrigger>
             <TabsTrigger value="referrals">Invitations & Referrals</TabsTrigger>
+            <TabsTrigger value="payments">Payment Transactions</TabsTrigger>
             <TabsTrigger value="matching">THM Pool Matching</TabsTrigger>
           </TabsList>
           
