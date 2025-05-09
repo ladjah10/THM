@@ -200,6 +200,59 @@ export default function AdminDashboard() {
   const [emailSearchTerm, setEmailSearchTerm] = useState<string>("");
   const [searchResults, setSearchResults] = useState<AssessmentResult[] | null>(null);
   
+  // State for assessment reminder system
+  const [sendingReminders, setSendingReminders] = useState<boolean>(false);
+  const [reminderDaysAgo, setReminderDaysAgo] = useState<number>(3);
+  
+  // Mutation to send assessment reminders
+  const { mutate: sendAssessmentReminders, isPending: isSendingReminders } = useMutation({
+    mutationFn: async () => {
+      setSendingReminders(true);
+      
+      // Show toast that reminders are being sent
+      toast({
+        title: "Sending Reminders",
+        description: "Processing incomplete assessments and sending reminders...",
+        variant: "default"
+      });
+      
+      const response = await apiRequest("POST", "/api/admin/send-assessment-reminders", {
+        daysAgo: reminderDaysAgo
+      });
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Failed to send assessment reminders: ${errorText}`);
+      }
+      
+      return response.json();
+    },
+    onSuccess: (data) => {
+      const stats = data.stats || {};
+      const emailsSent = stats.emailsSent || 0;
+      const incompleteCount = stats.incompleteAssessments || 0;
+      
+      toast({
+        title: emailsSent > 0 ? "Reminders Sent Successfully" : "Process Complete",
+        description: emailsSent > 0 
+          ? `Sent ${emailsSent} reminder email${emailsSent !== 1 ? 's' : ''} to customers with incomplete assessments.`
+          : "No incomplete assessments found that require reminders.",
+        variant: "default"
+      });
+      
+      setSendingReminders(false);
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Failed to Send Reminders",
+        description: error.message,
+        variant: "destructive"
+      });
+      
+      setSendingReminders(false);
+    }
+  });
+  
   // Sync Stripe payments mutation
   const { mutate: syncStripePayments, isPending: isSyncingPayments } = useMutation({
     mutationFn: async () => {
@@ -1215,20 +1268,37 @@ export default function AdminDashboard() {
                       </Button>
                     </div>
 
-                    <Button 
-                      variant="default"
-                      size="sm" 
-                      onClick={() => syncStripePayments()}
-                      disabled={isSyncingPayments}
-                      className="ml-2 whitespace-nowrap"
-                    >
-                      {isSyncingPayments ? (
-                        <>
-                          <span className="animate-spin mr-2 h-4 w-4 border-2 border-primary-foreground border-t-transparent rounded-full" />
-                          Syncing Transactions...
-                        </>
-                      ) : "Sync Missing Transactions"}
-                    </Button>
+                    <div className="flex space-x-2">
+                      <Button 
+                        variant="default"
+                        size="sm" 
+                        onClick={() => syncStripePayments()}
+                        disabled={isSyncingPayments}
+                        className="whitespace-nowrap"
+                      >
+                        {isSyncingPayments ? (
+                          <>
+                            <span className="animate-spin mr-2 h-4 w-4 border-2 border-primary-foreground border-t-transparent rounded-full" />
+                            Syncing Transactions...
+                          </>
+                        ) : "Sync Missing Transactions"}
+                      </Button>
+                      
+                      <Button 
+                        variant="outline"
+                        size="sm" 
+                        onClick={() => sendAssessmentReminders()}
+                        disabled={isSendingReminders}
+                        className="whitespace-nowrap"
+                      >
+                        {isSendingReminders ? (
+                          <>
+                            <span className="animate-spin mr-2 h-4 w-4 border-2 border-primary border-t-transparent rounded-full" />
+                            Sending Reminders...
+                          </>
+                        ) : "Send Completion Reminders"}
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
