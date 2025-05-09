@@ -519,7 +519,6 @@ export class DatabaseStorage {
     try {
       // Save to database using the coupleAssessments table
       const { db } = await import('./db');
-      const { coupleAssessments } = await import('@shared/schema');
       
       // First, ensure the primary and spouse assessments are saved to the database
       if (report.primary) {
@@ -538,16 +537,35 @@ export class DatabaseStorage {
         throw new Error('Primary or spouse assessment ID is missing');
       }
       
-      // Insert into database
-      await db.insert(coupleAssessments).values({
-        couple_id: report.coupleId,
-        primary_id: primaryId,
-        spouse_id: spouseId,
-        analysis: JSON.stringify(report.analysis),
-        compatibility_score: report.compatibilityScore,
-        recommendations: JSON.stringify(report.recommendations || []),
-        report_sent: report.reportSent || false
-      });
+      // Use a report ID if provided, or generate a new one
+      const reportId = report.id || crypto.randomUUID();
+      
+      // Insert into database using raw SQL to bypass schema mapping issues
+      await db.execute(`
+        INSERT INTO couple_assessments (
+          id, couple_id, primary_id, spouse_id, analysis, 
+          timestamp, compatibility_score, recommendations, report_sent
+        )
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        ON CONFLICT (couple_id) DO UPDATE SET
+          primary_id = $3,
+          spouse_id = $4,
+          analysis = $5,
+          timestamp = $6,
+          compatibility_score = $7,
+          recommendations = $8,
+          report_sent = $9
+      `, [
+        reportId,
+        report.coupleId,
+        primaryId,
+        spouseId,
+        JSON.stringify(report.analysis),
+        new Date(report.timestamp || new Date().toISOString()),
+        report.compatibilityScore,
+        JSON.stringify(report.recommendations || []),
+        report.reportSent || false
+      ]);
       
       console.log(`Couple assessment report saved to database for couple ID: ${report.coupleId}`);
       
@@ -562,23 +580,25 @@ export class DatabaseStorage {
   
   async getCoupleAssessment(coupleId: string): Promise<CoupleAssessmentReport | null> {
     try {
-      // Get from database using the coupleAssessments table
+      // Get from database using raw SQL to avoid schema mapping issues
       const { db } = await import('./db');
-      const { coupleAssessments } = await import('@shared/schema');
-      const { eq } = await import('drizzle-orm');
       
       // Query the database for the couple assessment with the given coupleId
-      const results = await db.select()
-        .from(coupleAssessments)
-        .where(eq(coupleAssessments.couple_id, coupleId));
+      const results = await db.execute(`
+        SELECT id, couple_id as "coupleId", primary_id as "primaryId", spouse_id as "spouseId", 
+               analysis, timestamp, compatibility_score as "compatibilityScore", 
+               recommendations, report_sent as "reportSent"
+        FROM couple_assessments
+        WHERE couple_id = $1
+      `, [coupleId]);
       
-      if (results.length === 0) {
+      if (results.rows.length === 0) {
         console.log(`No couple assessment found in database for couple ID: ${coupleId}`);
         return await this.memStorage.getCoupleAssessment(coupleId);
       }
       
       // Get the primary and spouse assessments
-      const dbResult = results[0];
+      const dbResult = results.rows[0];
       const primaryAssessment = await this.getSpouseAssessment(coupleId, 'primary');
       const spouseAssessment = await this.getSpouseAssessment(coupleId, 'spouse');
       
@@ -590,14 +610,16 @@ export class DatabaseStorage {
       // Convert database record to CoupleAssessmentReport
       const report: CoupleAssessmentReport = {
         id: dbResult.id,
-        coupleId: dbResult.couple_id,
+        coupleId: dbResult.coupleId,
         primary: primaryAssessment,
         spouse: spouseAssessment,
         analysis: JSON.parse(dbResult.analysis),
-        timestamp: dbResult.timestamp.toISOString(),
-        compatibilityScore: Number(dbResult.compatibility_score),
+        timestamp: typeof dbResult.timestamp === 'string' 
+          ? dbResult.timestamp 
+          : dbResult.timestamp.toISOString(),
+        compatibilityScore: Number(dbResult.compatibilityScore),
         recommendations: JSON.parse(dbResult.recommendations),
-        reportSent: dbResult.report_sent
+        reportSent: dbResult.reportSent
       };
       
       console.log(`Couple assessment report retrieved from database for couple ID: ${coupleId}`);
@@ -611,14 +633,19 @@ export class DatabaseStorage {
   
   async getAllCoupleAssessments(): Promise<CoupleAssessmentReport[]> {
     try {
-      // Get from database using the coupleAssessments table
+      // Get from database using raw SQL
       const { db } = await import('./db');
-      const { coupleAssessments } = await import('@shared/schema');
       
       // Query the database for all couple assessments
-      const results = await db.select().from(coupleAssessments);
+      const results = await db.execute(`
+        SELECT id, couple_id as "coupleId", primary_id as "primaryId", spouse_id as "spouseId", 
+               analysis, timestamp, compatibility_score as "compatibilityScore", 
+               recommendations, report_sent as "reportSent"
+        FROM couple_assessments
+        ORDER BY timestamp DESC
+      `);
       
-      if (results.length === 0) {
+      if (!results.rows || results.rows.length === 0) {
         console.log('No couple assessments found in database');
         return await this.memStorage.getAllCoupleAssessments();
       }
@@ -626,26 +653,31 @@ export class DatabaseStorage {
       // Convert database records to CoupleAssessmentReport objects
       const reports: CoupleAssessmentReport[] = [];
       
-      for (const dbResult of results) {
+      for (const dbResult of results.rows) {
         try {
-          const primaryAssessment = await this.getSpouseAssessment(dbResult.couple_id, 'primary');
-          const spouseAssessment = await this.getSpouseAssessment(dbResult.couple_id, 'spouse');
+          const coupleId = dbResult.coupleId;
+          const primaryAssessment = await this.getSpouseAssessment(coupleId, 'primary');
+          const spouseAssessment = await this.getSpouseAssessment(coupleId, 'spouse');
           
           if (primaryAssessment && spouseAssessment) {
             reports.push({
               id: dbResult.id,
-              coupleId: dbResult.couple_id,
+              coupleId: coupleId,
               primary: primaryAssessment,
               spouse: spouseAssessment,
-              analysis: JSON.parse(dbResult.analysis),
-              timestamp: dbResult.timestamp.toISOString(),
-              compatibilityScore: Number(dbResult.compatibility_score),
-              recommendations: JSON.parse(dbResult.recommendations),
-              reportSent: dbResult.report_sent
+              analysis: typeof dbResult.analysis === 'string' ? JSON.parse(dbResult.analysis) : dbResult.analysis,
+              timestamp: typeof dbResult.timestamp === 'string' 
+                ? dbResult.timestamp 
+                : dbResult.timestamp.toISOString(),
+              compatibilityScore: Number(dbResult.compatibilityScore),
+              recommendations: typeof dbResult.recommendations === 'string' 
+                ? JSON.parse(dbResult.recommendations) 
+                : dbResult.recommendations,
+              reportSent: dbResult.reportSent
             });
           }
         } catch (err) {
-          console.error(`Error processing couple assessment ${dbResult.couple_id}:`, err);
+          console.error(`Error processing couple assessment ${dbResult.coupleId}:`, err);
         }
       }
       
@@ -708,15 +740,49 @@ export class DatabaseStorage {
         timestamp = new Date(); // Default to current time if invalid
       }
       
-      // Insert into database
-      await db.insert(pageViews).values({
-        path: pageView.path,
-        timestamp: timestamp,
-        referrer: pageView.referrer,
-        user_agent: pageView.userAgent,
-        ip_address: pageView.ipAddress,
-        session_id: pageView.sessionId
-      });
+      // Check if sessionId is provided, if not create a default one
+      const sessionId = pageView.sessionId || crypto.randomUUID();
+      
+      // First ensure the session exists to satisfy foreign key constraint
+      try {
+        // Check if a session with this ID already exists
+        const { visitorSessions } = await import('@shared/schema');
+        const { eq } = await import('drizzle-orm');
+        
+        const existing = await db.select()
+          .from(visitorSessions)
+          .where(eq(visitorSessions.id, sessionId))
+          .limit(1);
+        
+        // If no session exists, create one
+        if (existing.length === 0) {
+          // Create a default session
+          await db.execute(`
+            INSERT INTO visitor_sessions (id, start_time, page_count) 
+            VALUES ($1, $2, $3)
+            ON CONFLICT (id) DO NOTHING
+          `, [sessionId, new Date(), 1]);
+          
+          console.log(`Created default visitor session for pageView: ${sessionId}`);
+        }
+      } catch (sessionError) {
+        console.error('Error checking/creating session:', sessionError);
+        // Continue anyway, as we want to try to record the page view
+      }
+      
+      // Now insert the page view with raw SQL to handle any schema discrepancies
+      await db.execute(`
+        INSERT INTO page_views (id, path, timestamp, referrer, user_agent, ip_address, session_id)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+      `, [
+        crypto.randomUUID(),
+        pageView.path,
+        timestamp,
+        pageView.referrer || null,
+        pageView.userAgent || null,
+        pageView.ipAddress || null,
+        sessionId
+      ]);
       
       console.log(`Page view recorded in database: ${pageView.path}`);
       
@@ -731,23 +797,47 @@ export class DatabaseStorage {
   
   async createVisitorSession(session: VisitorSession): Promise<void> {
     try {
-      // Store in the database using the visitorSessions table
+      // Store in the database using raw SQL to avoid schema mapping issues
       const { db } = await import('./db');
-      const { visitorSessions } = await import('@shared/schema');
       
-      // Insert into database
-      await db.insert(visitorSessions).values({
-        id: session.id,
-        start_time: session.startTime,
-        end_time: session.endTime,
-        user_agent: session.userAgent,
-        ip_address: session.ipAddress,
-        page_count: session.pageCount,
-        referrer: session.referrer,
-        user_id: session.userId
-      });
+      // Prepare the timestamp for startTime
+      const startTime = typeof session.startTime === 'string' 
+        ? new Date(session.startTime) 
+        : session.startTime;
       
-      console.log(`Visitor session created in database: ${session.id}`);
+      // Prepare endTime if it exists
+      let endTime = null;
+      if (session.endTime) {
+        endTime = typeof session.endTime === 'string' 
+          ? new Date(session.endTime) 
+          : session.endTime;
+      }
+      
+      // Insert into database using raw SQL
+      await db.execute(`
+        INSERT INTO visitor_sessions (
+          id, start_time, end_time, page_count, user_agent, ip_address, referrer, user_id
+        )
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        ON CONFLICT (id) DO UPDATE SET
+          end_time = $3,
+          page_count = $4,
+          user_agent = $5,
+          ip_address = $6,
+          referrer = $7,
+          user_id = $8
+      `, [
+        session.id,
+        startTime,
+        endTime,
+        session.pageCount || 0,
+        session.userAgent || null,
+        session.ipAddress || null,
+        session.referrer || null,
+        session.userId || null
+      ]);
+      
+      console.log(`Visitor session created/updated in database: ${session.id}`);
       
       // Still keep in memory as a fallback
       await this.memStorage.createVisitorSession(session);
@@ -763,15 +853,21 @@ export class DatabaseStorage {
       // Update in the database
       const { db } = await import('./db');
       const { visitorSessions } = await import('@shared/schema');
-      const { eq } = await import('drizzle-orm');
       
-      // Update the session in the database
-      await db.update(visitorSessions)
-        .set({
-          end_time: endTime,
-          page_count: pageCount
-        })
-        .where(eq(visitorSessions.id, sessionId));
+      // Convert endTime to a Date object if it's a string
+      let endTimeDate: Date;
+      if (typeof endTime === 'string') {
+        endTimeDate = new Date(endTime);
+      } else {
+        endTimeDate = new Date(); // Default to current time if invalid
+      }
+      
+      // Update the session in the database using SQL query to avoid drizzle-orm issues
+      await db.execute(`
+        UPDATE visitor_sessions 
+        SET end_time = $1, page_count = $2 
+        WHERE id = $3
+      `, [endTimeDate, pageCount, sessionId]);
       
       console.log(`Visitor session updated in database: ${sessionId}`);
       
@@ -786,42 +882,49 @@ export class DatabaseStorage {
   
   async getPageViews(startDate?: string, endDate?: string): Promise<PageView[]> {
     try {
-      // Retrieve from database
+      // Retrieve from database using raw SQL to avoid schema mapping issues
       const { db } = await import('./db');
-      const { pageViews } = await import('@shared/schema');
-      const { and, gte, lte, desc } = await import('drizzle-orm');
       
-      let query = db.select().from(pageViews);
+      // Build the query with optional date filters
+      let query = `
+        SELECT id, path, timestamp, referrer, user_agent as "userAgent", 
+               ip_address as "ipAddress", session_id as "sessionId"
+        FROM page_views
+        WHERE 1=1
+      `;
       
-      // Apply date filters if provided
-      if (startDate || endDate) {
-        const conditions = [];
-        if (startDate) {
-          conditions.push(gte(pageViews.timestamp, new Date(startDate)));
-        }
-        if (endDate) {
-          conditions.push(lte(pageViews.timestamp, new Date(endDate)));
-        }
-        if (conditions.length > 0) {
-          query = query.where(and(...conditions));
-        }
+      const params: any[] = [];
+      let paramIndex = 1;
+      
+      if (startDate) {
+        query += ` AND timestamp >= $${paramIndex}`;
+        params.push(new Date(startDate));
+        paramIndex++;
+      }
+      
+      if (endDate) {
+        query += ` AND timestamp <= $${paramIndex}`;
+        params.push(new Date(endDate));
+        paramIndex++;
       }
       
       // Order by most recent first
-      query = query.orderBy(desc(pageViews.timestamp));
+      query += ' ORDER BY timestamp DESC';
       
       // Execute query
-      const results = await query;
+      const results = await db.execute(query, params);
       
       // Transform and return
-      return results.map(row => ({
-        id: row.id ?? '',
+      return results.rows.map((row: any) => ({
+        id: row.id || '',
         path: row.path,
-        timestamp: row.timestamp.toISOString(),
-        referrer: row.referrer ?? '',
-        userAgent: row.user_agent ?? '',
-        ipAddress: row.ip_address ?? '',
-        sessionId: row.session_id ?? ''
+        timestamp: typeof row.timestamp === 'string' 
+          ? row.timestamp 
+          : row.timestamp.toISOString(),
+        referrer: row.referrer || '',
+        userAgent: row.userAgent || '',
+        ipAddress: row.ipAddress || '',
+        sessionId: row.sessionId || ''
       }));
     } catch (error) {
       console.error('Error getting page views from database:', error);
@@ -832,43 +935,61 @@ export class DatabaseStorage {
   
   async getVisitorSessions(startDate?: string, endDate?: string): Promise<VisitorSession[]> {
     try {
-      // Retrieve from database
+      // Retrieve from database using raw SQL to avoid schema mapping issues
       const { db } = await import('./db');
-      const { visitorSessions } = await import('@shared/schema');
-      const { and, gte, lte, desc } = await import('drizzle-orm');
       
-      let query = db.select().from(visitorSessions);
+      // Build the query with optional date filters
+      let query = `
+        SELECT 
+          id, 
+          start_time as "startTime", 
+          end_time as "endTime", 
+          page_count as "pageCount", 
+          user_agent as "userAgent", 
+          ip_address as "ipAddress", 
+          referrer, 
+          user_id as "userId"
+        FROM visitor_sessions
+        WHERE 1=1
+      `;
       
-      // Apply date filters if provided
-      if (startDate || endDate) {
-        const conditions = [];
-        if (startDate) {
-          conditions.push(gte(visitorSessions.start_time, new Date(startDate)));
-        }
-        if (endDate) {
-          conditions.push(lte(visitorSessions.start_time, new Date(endDate)));
-        }
-        if (conditions.length > 0) {
-          query = query.where(and(...conditions));
-        }
+      const params: any[] = [];
+      let paramIndex = 1;
+      
+      if (startDate) {
+        query += ` AND start_time >= $${paramIndex}`;
+        params.push(new Date(startDate));
+        paramIndex++;
+      }
+      
+      if (endDate) {
+        query += ` AND start_time <= $${paramIndex}`;
+        params.push(new Date(endDate));
+        paramIndex++;
       }
       
       // Order by most recent first
-      query = query.orderBy(desc(visitorSessions.start_time));
+      query += ' ORDER BY start_time DESC';
       
       // Execute query
-      const results = await query;
+      const results = await db.execute(query, params);
       
       // Transform and return
-      return results.map(row => ({
+      return results.rows.map((row: any) => ({
         id: row.id,
-        startTime: row.start_time.toISOString(),
-        endTime: row.end_time ? row.end_time.toISOString() : undefined,
-        pageCount: row.page_count ?? 0,
-        userAgent: row.user_agent ?? '',
-        ipAddress: row.ip_address ?? '',
-        referrer: row.referrer ?? '',
-        userId: row.user_id
+        startTime: typeof row.startTime === 'string' 
+          ? row.startTime 
+          : row.startTime.toISOString(),
+        endTime: row.endTime 
+          ? (typeof row.endTime === 'string' 
+              ? row.endTime 
+              : row.endTime.toISOString()) 
+          : undefined,
+        pageCount: row.pageCount || 0,
+        userAgent: row.userAgent || '',
+        ipAddress: row.ipAddress || '',
+        referrer: row.referrer || '',
+        userId: row.userId
       }));
     } catch (error) {
       console.error('Error getting visitor sessions from database:', error);
@@ -985,47 +1106,67 @@ export class DatabaseStorage {
   
   async getPaymentTransactions(startDate?: string, endDate?: string): Promise<PaymentTransaction[]> {
     try {
-      // Retrieve from database
+      // Retrieve from database using raw SQL to avoid schema mapping issues
       const { db } = await import('./db');
-      const { payments } = await import('@shared/schema');
-      const { and, gte, lte, desc } = await import('drizzle-orm');
       
-      let query = db.select().from(payments);
+      // Build the query with optional date filters
+      let query = `
+        SELECT 
+          stripe_id as "stripeId", 
+          customer_email as "customerEmail", 
+          amount, 
+          currency, 
+          status, 
+          created, 
+          assessment_type as "assessmentType", 
+          metadata, 
+          is_refunded as "isRefunded", 
+          refund_amount as "refundAmount", 
+          refund_reason as "refundReason", 
+          promo_code as "promoCode"
+        FROM payments
+        WHERE 1=1
+      `;
       
-      // Apply date filters if provided
-      if (startDate || endDate) {
-        const conditions = [];
-        if (startDate) {
-          conditions.push(gte(payments.created, new Date(startDate)));
-        }
-        if (endDate) {
-          conditions.push(lte(payments.created, new Date(endDate)));
-        }
-        if (conditions.length > 0) {
-          query = query.where(and(...conditions));
-        }
+      const params: any[] = [];
+      let paramIndex = 1;
+      
+      if (startDate) {
+        query += ` AND created >= $${paramIndex}`;
+        params.push(new Date(startDate));
+        paramIndex++;
+      }
+      
+      if (endDate) {
+        query += ` AND created <= $${paramIndex}`;
+        params.push(new Date(endDate));
+        paramIndex++;
       }
       
       // Order by most recent first
-      query = query.orderBy(desc(payments.created));
+      query += ' ORDER BY created DESC';
       
       // Execute query
-      const results = await query;
+      const results = await db.execute(query, params);
       
       // Transform and return
-      return results.map(row => ({
-        stripeId: row.stripe_id,
-        customerEmail: row.customer_email,
+      return results.rows.map((row: any) => ({
+        stripeId: row.stripeId,
+        customerEmail: row.customerEmail,
         amount: row.amount,
         currency: row.currency,
         status: row.status,
-        created: row.created.toISOString(),
-        assessmentType: row.assessment_type,
-        metadata: row.metadata ? JSON.parse(row.metadata) : {},
-        isRefunded: row.is_refunded ?? false,
-        refundAmount: row.refund_amount,
-        refundReason: row.refund_reason,
-        promoCode: row.promo_code
+        created: typeof row.created === 'string' 
+          ? row.created 
+          : row.created.toISOString(),
+        assessmentType: row.assessmentType,
+        metadata: typeof row.metadata === 'string' 
+          ? JSON.parse(row.metadata) 
+          : (row.metadata || {}),
+        isRefunded: row.isRefunded || false,
+        refundAmount: row.refundAmount,
+        refundReason: row.refundReason,
+        promoCode: row.promoCode
       }));
     } catch (error) {
       console.error('Error getting payment transactions from database:', error);
@@ -1036,34 +1177,55 @@ export class DatabaseStorage {
   
   async getPaymentTransactionByStripeId(stripeId: string): Promise<PaymentTransaction | null> {
     try {
-      // Retrieve from database
+      // Retrieve from database using raw SQL to avoid schema mapping issues
       const { db } = await import('./db');
-      const { payments } = await import('@shared/schema');
-      const { eq } = await import('drizzle-orm');
       
-      // Find transaction by Stripe ID
-      const [transaction] = await db.select()
-        .from(payments)
-        .where(eq(payments.stripe_id, stripeId));
+      // Build the query to get transaction by Stripe ID
+      const query = `
+        SELECT 
+          stripe_id as "stripeId", 
+          customer_email as "customerEmail", 
+          amount, 
+          currency, 
+          status, 
+          created, 
+          assessment_type as "assessmentType", 
+          metadata, 
+          is_refunded as "isRefunded", 
+          refund_amount as "refundAmount", 
+          refund_reason as "refundReason", 
+          promo_code as "promoCode"
+        FROM payments
+        WHERE stripe_id = $1
+      `;
       
-      if (!transaction) {
+      // Execute query with stripeId parameter
+      const result = await db.execute(query, [stripeId]);
+      
+      if (!result.rows || result.rows.length === 0) {
         return null;
       }
       
+      const row = result.rows[0];
+      
       // Transform and return
       return {
-        stripeId: transaction.stripe_id,
-        customerEmail: transaction.customer_email,
-        amount: transaction.amount,
-        currency: transaction.currency,
-        status: transaction.status,
-        created: transaction.created.toISOString(),
-        assessmentType: transaction.assessment_type,
-        metadata: transaction.metadata ? JSON.parse(transaction.metadata) : {},
-        isRefunded: transaction.is_refunded ?? false,
-        refundAmount: transaction.refund_amount,
-        refundReason: transaction.refund_reason,
-        promoCode: transaction.promo_code
+        stripeId: row.stripeId,
+        customerEmail: row.customerEmail,
+        amount: row.amount,
+        currency: row.currency,
+        status: row.status,
+        created: typeof row.created === 'string' 
+          ? row.created 
+          : row.created.toISOString(),
+        assessmentType: row.assessmentType,
+        metadata: typeof row.metadata === 'string' 
+          ? JSON.parse(row.metadata) 
+          : (row.metadata || {}),
+        isRefunded: row.isRefunded || false,
+        refundAmount: row.refundAmount,
+        refundReason: row.refundReason,
+        promoCode: row.promoCode
       };
     } catch (error) {
       console.error('Error getting payment transaction by Stripe ID from database:', error);
