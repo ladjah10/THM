@@ -1122,18 +1122,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
           currency: intent.currency.toUpperCase(),
           description: charge?.description || '',
           email: intent.receipt_email || 
-                (customerInfo && !Array.isArray(customerInfo) ? customerInfo.email : null) || 
+                (customerInfo && !Array.isArray(customerInfo) ? (customerInfo as any).email : null) || 
                 charge?.billing_details?.email || 
                 intent.metadata?.email || '',
           name: charge?.billing_details?.name || 
-               (customerInfo && !Array.isArray(customerInfo) ? customerInfo.name : null) || 
+               (customerInfo && !Array.isArray(customerInfo) ? (customerInfo as any).name : null) || 
                intent.metadata?.name || 
                `${intent.metadata?.firstName || ''} ${intent.metadata?.lastName || ''}`.trim() || '',
           phone: charge?.billing_details?.phone || 
-                (customerInfo && !Array.isArray(customerInfo) ? customerInfo.phone : null) || 
+                (customerInfo && !Array.isArray(customerInfo) ? (customerInfo as any).phone : null) || 
                 intent.metadata?.phone || '',
           address: charge?.billing_details?.address || 
-                  (customerInfo && !Array.isArray(customerInfo) ? customerInfo.address : null) || {},
+                  (customerInfo && !Array.isArray(customerInfo) ? (customerInfo as any).address : null) || {},
           metadata: intent.metadata || {},
           product_type: charge?.description?.includes('THM Arranged Marriage Pool') ? 'marriage_pool' :
                       charge?.description?.includes('Couple') ? 'couple' : 
@@ -1206,8 +1206,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
           
           // If no assessments or no completed ones, send a reminder
           const hasCompletedAssessment = assessments.some(a => {
-            const demographics = JSON.parse(a.demographics);
-            return demographics?.completedAssessment === true;
+            let demographics;
+            try {
+              demographics = typeof a.demographics === 'string' 
+                ? JSON.parse(a.demographics) 
+                : a.demographics;
+              return demographics?.completedAssessment === true;
+            } catch (err) {
+              console.error(`Error parsing demographics for assessment:`, err);
+              return false;
+            }
           });
           
           if (!hasCompletedAssessment) {

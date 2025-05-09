@@ -4,6 +4,21 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { RefreshCw, FileDown, Search, Loader2, Mail } from "lucide-react";
 import type { AssessmentScores, UserProfile, DemographicData, AssessmentResult, SectionScore } from "@/types/assessment";
 import type { AnalyticsSummary, PageView, VisitorSession, PaymentTransaction } from "@shared/schema";
+
+// Define type for customer recovery data
+interface CustomerRecoveryData {
+  payment_id: string;
+  payment_date: string;
+  amount: number;
+  currency: string;
+  description: string;
+  email: string;
+  name: string;
+  phone: string;
+  address?: any;
+  metadata: any;
+  product_type: string;
+}
 import { useToast } from "@/hooks/use-toast";
 import type { ReferralData } from "@/types/referrals";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
@@ -96,6 +111,174 @@ function calculateMatchScore(candidate: AssessmentResult): number {
   
   // Calculate weighted score
   return (scoreRank * scoreWeight) + (ageRank * ageWeight) + (locationRank * locationWeight);
+}
+
+// Component for customer data recovery from Stripe
+function RecoverySection() {
+  const [isRecoveryLoading, setIsRecoveryLoading] = useState(false);
+  const [recoveryData, setRecoveryData] = useState<CustomerRecoveryData[] | null>(null);
+  const { toast } = useToast();
+
+  const handleRecoverData = async () => {
+    setIsRecoveryLoading(true);
+    
+    try {
+      const response = await apiRequest("GET", "/api/admin/customer-data-recovery");
+      
+      if (!response.ok) {
+        throw new Error(`Error retrieving customer data: ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      setRecoveryData(data);
+      
+      toast({
+        title: "Data Recovery Complete",
+        description: `Retrieved contact information for ${data.length} customers`,
+        variant: "default"
+      });
+    } catch (error) {
+      toast({
+        title: "Data Recovery Failed",
+        description: error instanceof Error ? error.message : String(error),
+        variant: "destructive"
+      });
+    } finally {
+      setIsRecoveryLoading(false);
+    }
+  };
+  
+  const handleDownloadCSV = () => {
+    if (!recoveryData) return;
+    
+    try {
+      // Create CSV data
+      const headers = ["Date", "Email", "Name", "Phone", "Amount", "Product Type", "Description"];
+      
+      const csvRows = [
+        headers.join(','),
+        ...recoveryData.map(customer => [
+          new Date(customer.payment_date).toLocaleDateString(),
+          `"${customer.email || ''}"`,
+          `"${customer.name || ''}"`,
+          `"${customer.phone || ''}"`,
+          customer.amount,
+          customer.product_type,
+          `"${customer.description || ''}"`,
+        ].join(','))
+      ];
+      
+      const csvString = csvRows.join('\n');
+      const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `customer-data-${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      toast({
+        title: "CSV Generated",
+        description: "Customer data has been exported to CSV format",
+        variant: "default"
+      });
+    } catch (error) {
+      toast({
+        title: "CSV Export Failed",
+        description: error instanceof Error ? error.message : String(error),
+        variant: "destructive"
+      });
+    }
+  };
+  
+  return (
+    <>
+      <div className="mb-4">
+        <Button 
+          onClick={handleRecoverData}
+          className="bg-green-600 hover:bg-green-700 text-white"
+          disabled={isRecoveryLoading}
+        >
+          {isRecoveryLoading ? (
+            <>
+              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              Retrieving Data...
+            </>
+          ) : (
+            <>
+              <FileDown className="h-4 w-4 mr-2" />
+              Recover Customer Data from Stripe
+            </>
+          )}
+        </Button>
+      </div>
+      
+      {isRecoveryLoading ? (
+        <div className="flex justify-center items-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
+          <span className="ml-2 text-gray-500">Retrieving customer data from Stripe...</span>
+        </div>
+      ) : recoveryData && recoveryData.length > 0 ? (
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Date</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Phone</TableHead>
+                <TableHead>Amount</TableHead>
+                <TableHead>Product Type</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {recoveryData.map((customer, index) => (
+                <TableRow key={index}>
+                  <TableCell>{new Date(customer.payment_date).toLocaleDateString()}</TableCell>
+                  <TableCell>{customer.email || 'N/A'}</TableCell>
+                  <TableCell>{customer.name || 'N/A'}</TableCell>
+                  <TableCell>{customer.phone || 'N/A'}</TableCell>
+                  <TableCell>${customer.amount}</TableCell>
+                  <TableCell>
+                    <Badge variant={
+                      customer.product_type === 'marriage_pool' ? 'secondary' :
+                      customer.product_type === 'individual' ? 'outline' :
+                      customer.product_type === 'couple' ? 'default' : 'destructive'
+                    }>
+                      {customer.product_type}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          
+          <div className="mt-4 flex justify-between items-center">
+            <div className="text-sm text-gray-500">
+              Total records: {recoveryData.length}
+            </div>
+            <Button 
+              onClick={handleDownloadCSV}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+              size="sm"
+            >
+              Download CSV
+            </Button>
+          </div>
+        </div>
+      ) : recoveryData ? (
+        <div className="text-center py-12 text-gray-500">
+          No customer data found. Try syncing with Stripe first.
+        </div>
+      ) : (
+        <div className="text-center py-12 text-gray-500">
+          Click the button above to recover customer data from Stripe.
+        </div>
+      )}
+    </>
+  );
 }
 
 export default function AdminDashboard() {
@@ -254,6 +437,9 @@ export default function AdminDashboard() {
   const [transactionDateRange, setTransactionDateRange] = useState<{start?: string, end?: string}>({});
   const [emailSearchTerm, setEmailSearchTerm] = useState<string>("");
   const [searchResults, setSearchResults] = useState<AssessmentResult[] | null>(null);
+  
+  // Customer data recovery state
+  const [customerRecoveryData, setCustomerRecoveryData] = useState<CustomerRecoveryData[] | null>(null);
   
   // State for assessment reminder system
   const [sendingReminders, setSendingReminders] = useState<boolean>(false);
@@ -901,127 +1087,7 @@ export default function AdminDashboard() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="mb-4">
-                  <Button 
-                    onClick={() => {
-                      setIsLoading(true);
-                      
-                      apiRequest("GET", "/api/admin/customer-data-recovery")
-                        .then(res => res.json())
-                        .then(data => {
-                          setCustomerRecoveryData(data);
-                          setIsLoading(false);
-                          toast({
-                            title: "Data Recovery Complete",
-                            description: `Retrieved contact information for ${data.length} customers`,
-                            variant: "default"
-                          });
-                        })
-                        .catch(error => {
-                          setIsLoading(false);
-                          toast({
-                            title: "Data Recovery Failed",
-                            description: error.message,
-                            variant: "destructive"
-                          });
-                        });
-                    }}
-                    className="bg-green-600 hover:bg-green-700 text-white"
-                  >
-                    <FileDown className="h-4 w-4 mr-2" />
-                    Recover Customer Data from Stripe
-                  </Button>
-                </div>
-                
-                {isLoading ? (
-                  <div className="flex justify-center items-center py-12">
-                    <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
-                    <span className="ml-2 text-gray-500">Retrieving customer data from Stripe...</span>
-                  </div>
-                ) : customerRecoveryData && customerRecoveryData.length > 0 ? (
-                  <div className="overflow-x-auto">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Date</TableHead>
-                          <TableHead>Email</TableHead>
-                          <TableHead>Name</TableHead>
-                          <TableHead>Phone</TableHead>
-                          <TableHead>Amount</TableHead>
-                          <TableHead>Product Type</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {customerRecoveryData.map((customer, index) => (
-                          <TableRow key={index}>
-                            <TableCell>{new Date(customer.payment_date).toLocaleDateString()}</TableCell>
-                            <TableCell>{customer.email || 'N/A'}</TableCell>
-                            <TableCell>{customer.name || 'N/A'}</TableCell>
-                            <TableCell>{customer.phone || 'N/A'}</TableCell>
-                            <TableCell>${customer.amount}</TableCell>
-                            <TableCell>
-                              <Badge variant={
-                                customer.product_type === 'marriage_pool' ? 'secondary' :
-                                customer.product_type === 'individual' ? 'outline' :
-                                customer.product_type === 'couple' ? 'default' : 'destructive'
-                              }>
-                                {customer.product_type}
-                              </Badge>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                    
-                    <div className="mt-4 flex justify-between items-center">
-                      <div className="text-sm text-gray-500">
-                        Total records: {customerRecoveryData.length}
-                      </div>
-                      <Button 
-                        onClick={() => {
-                          // Create CSV data
-                          const headers = ["Date", "Email", "Name", "Phone", "Amount", "Product Type", "Description"];
-                          
-                          const csvRows = [
-                            headers.join(','),
-                            ...customerRecoveryData.map(customer => [
-                              new Date(customer.payment_date).toLocaleDateString(),
-                              `"${customer.email || ''}"`,
-                              `"${customer.name || ''}"`,
-                              `"${customer.phone || ''}"`,
-                              customer.amount,
-                              customer.product_type,
-                              `"${customer.description || ''}"`,
-                            ].join(','))
-                          ];
-                          
-                          const csvString = csvRows.join('\n');
-                          const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
-                          const url = URL.createObjectURL(blob);
-                          const link = document.createElement('a');
-                          link.setAttribute('href', url);
-                          link.setAttribute('download', `customer-data-${new Date().toISOString().split('T')[0]}.csv`);
-                          link.style.visibility = 'hidden';
-                          document.body.appendChild(link);
-                          link.click();
-                          document.body.removeChild(link);
-                        }}
-                        className="bg-blue-600 hover:bg-blue-700 text-white"
-                        size="sm"
-                      >
-                        Download CSV
-                      </Button>
-                    </div>
-                  </div>
-                ) : customerRecoveryData ? (
-                  <div className="text-center py-12 text-gray-500">
-                    No customer data found. Try syncing with Stripe first.
-                  </div>
-                ) : (
-                  <div className="text-center py-12 text-gray-500">
-                    Click the button above to recover customer data from Stripe.
-                  </div>
-                )}
+                <RecoverySection />
               </CardContent>
             </Card>
           </TabsContent>
