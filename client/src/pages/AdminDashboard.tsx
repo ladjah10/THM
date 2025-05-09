@@ -33,6 +33,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 // Simple admin authentication
 const ADMIN_USERNAME = "admin";
@@ -1284,20 +1291,38 @@ export default function AdminDashboard() {
                         ) : "Sync Missing Transactions"}
                       </Button>
                       
-                      <Button 
-                        variant="outline"
-                        size="sm" 
-                        onClick={() => sendAssessmentReminders()}
-                        disabled={isSendingReminders}
-                        className="whitespace-nowrap"
-                      >
-                        {isSendingReminders ? (
-                          <>
-                            <span className="animate-spin mr-2 h-4 w-4 border-2 border-primary border-t-transparent rounded-full" />
-                            Sending Reminders...
-                          </>
-                        ) : "Send Completion Reminders"}
-                      </Button>
+                      <div className="flex items-center space-x-2">
+                        <Select 
+                          value={reminderDaysAgo.toString()} 
+                          onValueChange={(value) => setReminderDaysAgo(parseInt(value))}
+                        >
+                          <SelectTrigger className="w-[120px]">
+                            <SelectValue placeholder="Reminder Days" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="1">1 day ago</SelectItem>
+                            <SelectItem value="3">3 days ago</SelectItem>
+                            <SelectItem value="7">7 days ago</SelectItem>
+                            <SelectItem value="14">14 days ago</SelectItem>
+                            <SelectItem value="30">30 days ago</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        
+                        <Button 
+                          variant="outline"
+                          size="sm" 
+                          onClick={() => sendAssessmentReminders()}
+                          disabled={isSendingReminders}
+                          className="whitespace-nowrap"
+                        >
+                          {isSendingReminders ? (
+                            <>
+                              <span className="animate-spin mr-2 h-4 w-4 border-2 border-primary border-t-transparent rounded-full" />
+                              Sending Reminders...
+                            </>
+                          ) : "Send Completion Reminders"}
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>

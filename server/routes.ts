@@ -1110,6 +1110,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
             // Send reminder email
             console.log(`Sending assessment reminder to ${transaction.customerEmail}`);
             
+            // Import the sendAssessmentReminder function
+            const { sendAssessmentReminder } = await import('./nodemailer');
+            
             emailPromises.push(
               sendAssessmentReminder({
                 to: transaction.customerEmail,
@@ -1117,14 +1120,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 assessmentType: transaction.productType as 'individual' | 'couple',
                 purchaseDate: transaction.created,
                 transactionId: transaction.id
-              }).then(result => {
+              }).then((result: { success: boolean, previewUrl?: string }) => {
                 if (result.success) {
                   stats.emailsSent++;
                 } else {
                   stats.errors++;
                 }
                 return result;
-              }).catch(err => {
+              }).catch((err: Error) => {
                 stats.errors++;
                 console.error(`Error sending reminder to ${transaction.customerEmail}:`, err);
                 return { success: false, error: err.message };
