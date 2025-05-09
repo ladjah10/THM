@@ -160,12 +160,57 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Admin API to fetch all assessments
+  // Admin API to fetch all assessments with optional date filtering
   app.get('/api/admin/assessments', async (req: Request, res: Response) => {
     try {
-      // In a real application, this endpoint would have proper authentication
-      // For now, we'll just return all assessments from storage
-      const assessments = await storage.getAllAssessments();
+      // Get optional date filtering parameters
+      const startDate = req.query.startDate as string | undefined;
+      const endDate = req.query.endDate as string | undefined;
+      const requirePayment = req.query.requirePayment === 'true';
+      
+      let assessments;
+      
+      // If date filtering is provided, use date filtering
+      if (startDate || endDate) {
+        console.log(`Fetching assessments with date range: ${startDate || 'any'} to ${endDate || 'now'}`);
+        
+        // Get all assessments and filter by date
+        const allAssessments = await storage.getAllAssessments();
+        
+        assessments = allAssessments.filter(assessment => {
+          // Skip assessments without timestamp
+          if (!assessment.timestamp) return false;
+          
+          // Parse timestamp to Date
+          const assessmentDate = new Date(assessment.timestamp);
+          
+          // Check if assessment is within date range
+          let meetsDateCriteria = true;
+          
+          if (startDate) {
+            const startDateObj = new Date(startDate);
+            meetsDateCriteria = meetsDateCriteria && assessmentDate >= startDateObj;
+          }
+          
+          if (endDate) {
+            const endDateObj = new Date(endDate);
+            // Add one day to include the end date fully
+            endDateObj.setDate(endDateObj.getDate() + 1);
+            meetsDateCriteria = meetsDateCriteria && assessmentDate < endDateObj;
+          }
+          
+          // If requirePayment is true, check for transactionId
+          if (requirePayment) {
+            return meetsDateCriteria && !!assessment.transactionId;
+          }
+          
+          return meetsDateCriteria;
+        });
+        
+        console.log(`Found ${assessments.length} assessments within date range`);
+      } else {
+        assessments = await storage.getAllAssessments();
+      }
       
       // Return the assessments
       return res.status(200).json(assessments);

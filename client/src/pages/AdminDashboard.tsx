@@ -111,14 +111,42 @@ export default function AdminDashboard() {
   const [detailModalOpen, setDetailModalOpen] = useState(false);
   const { toast } = useToast();
 
-  // Query to fetch assessments
-  const { data: assessments, isLoading, error } = useQuery<AssessmentResult[]>({
-    queryKey: ['/api/admin/assessments'],
+  // State for assessment date filtering
+  const [assessmentDateRange, setAssessmentDateRange] = useState<{
+    startDate?: string,
+    endDate?: string,
+    requirePayment: boolean
+  }>({
+    startDate: "2025-05-06", // Default to May 6, 2025
+    endDate: undefined,
+    requirePayment: false
+  });
+
+  // Query to fetch assessments with date filtering
+  const { data: assessments, isLoading, error, refetch: refetchAssessments } = useQuery<AssessmentResult[]>({
+    queryKey: ['/api/admin/assessments', assessmentDateRange],
     queryFn: async () => {
       // Only fetch if authenticated
       if (!isAuthenticated) return [];
       
-      const response = await apiRequest("GET", "/api/admin/assessments");
+      const params = new URLSearchParams();
+      
+      if (assessmentDateRange.startDate) {
+        params.append('startDate', assessmentDateRange.startDate);
+      }
+      
+      if (assessmentDateRange.endDate) {
+        params.append('endDate', assessmentDateRange.endDate);
+      }
+      
+      if (assessmentDateRange.requirePayment) {
+        params.append('requirePayment', 'true');
+      }
+      
+      const queryString = params.toString();
+      const url = queryString ? `/api/admin/assessments?${queryString}` : '/api/admin/assessments';
+      
+      const response = await apiRequest("GET", url);
       
       if (!response.ok) {
         throw new Error("Failed to fetch assessments");
