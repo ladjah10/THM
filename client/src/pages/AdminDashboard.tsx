@@ -96,7 +96,12 @@ function calculateMatchScore(candidate: AssessmentResult): number {
 }
 
 export default function AdminDashboard() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // Check localStorage for authentication status on initial load
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    const savedAuth = localStorage.getItem('admin_authenticated');
+    return savedAuth === 'true';
+  });
+  
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
@@ -442,10 +447,35 @@ export default function AdminDashboard() {
     e.preventDefault();
     
     if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+      // Store authentication state in localStorage
+      localStorage.setItem('admin_authenticated', 'true');
       setIsAuthenticated(true);
+      
+      toast({
+        title: "Login Successful",
+        description: "Welcome to the admin dashboard",
+        variant: "default"
+      });
     } else {
-      alert("Invalid credentials");
+      toast({
+        title: "Login Failed",
+        description: "Invalid username or password",
+        variant: "destructive"
+      });
     }
+  };
+  
+  // Handle logout
+  const handleLogout = () => {
+    // Remove authentication state from localStorage
+    localStorage.removeItem('admin_authenticated');
+    setIsAuthenticated(false);
+    
+    toast({
+      title: "Logged Out",
+      description: "You have been logged out successfully",
+      variant: "default"
+    });
   };
   
   // Format date for display
@@ -802,7 +832,7 @@ export default function AdminDashboard() {
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <h1 className="text-xl font-semibold text-gray-900">100 Marriage Assessment - Admin Dashboard</h1>
-          <Button variant="outline" onClick={() => setIsAuthenticated(false)}>Logout</Button>
+          <Button variant="outline" onClick={handleLogout}>Logout</Button>
         </div>
       </header>
 
