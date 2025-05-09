@@ -23,30 +23,34 @@ interface CoupleInvitationData {
   coupleId: string;
 }
 
-// Create a test account using Ethereal Email (for testing purposes)
-async function createTestAccount() {
-  const testAccount = await nodemailer.createTestAccount();
-  return testAccount;
-}
-
 // Create reusable transporter
 async function createTransporter() {
-  // Always use Ethereal Email for testing
-  console.log("Using Ethereal Email for test email delivery");
-  const testAccount = await createTestAccount();
-  
-  // Create a SMTP transporter using Ethereal Email
-  const transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-      user: testAccount.user,
-      pass: testAccount.pass,
-    },
-  });
-  
-  return { transporter, testAccount };
+  // If SendGrid API key is available, use SendGrid
+  if (process.env.SENDGRID_API_KEY) {
+    // We'll use sendgrid.ts instead, which directly uses the SendGrid API
+    // This is just a placeholder to maintain the interface
+    console.log("Using SendGrid for email delivery");
+    const testAccount = null;
+    const transporter = null;
+    return { transporter, testAccount };
+  } else {
+    // Fallback to Ethereal Email for testing
+    console.log("Using Ethereal Email for test email delivery");
+    const testAccount = await nodemailer.createTestAccount();
+    
+    // Create a SMTP transporter using Ethereal Email
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.ethereal.email',
+      port: 587,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: testAccount.user,
+        pass: testAccount.pass,
+      },
+    });
+    
+    return { transporter, testAccount };
+  }
 }
 
 // Format the email HTML
@@ -163,7 +167,8 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
 }
 
 /**
- * Sends an assessment report email with PDF attachment using Nodemailer
+ * Sends an assessment report email with PDF attachment
+ * Uses SendGrid when available, falls back to Nodemailer
  */
 export async function sendAssessmentEmail(assessment: AssessmentResult): Promise<{ success: boolean, previewUrl?: string }> {
   try {
@@ -171,8 +176,60 @@ export async function sendAssessmentEmail(assessment: AssessmentResult): Promise
     console.log('Generating PDF report...');
     const pdfBuffer = await generateIndividualAssessmentPDF(assessment);
     
+    // If we have a SendGrid API key, use SendGrid directly
+    if (process.env.SENDGRID_API_KEY) {
+      try {
+        console.log('Using SendGrid for email delivery');
+        // Import the sendgrid module functions
+        const { MailService } = await import('@sendgrid/mail');
+        
+        // Set up SendGrid
+        const mailService = new MailService();
+        mailService.setApiKey(process.env.SENDGRID_API_KEY);
+        
+        // Format the email HTML content
+        const emailHtml = formatAssessmentEmail(assessment);
+        
+        // Send mail with SendGrid
+        const msg = {
+          to: assessment.email,
+          from: {
+            email: 'lawrence@lawrenceadjah.com',
+            name: 'The 100 Marriage Assessment'
+          },
+          subject: `${assessment.name} - The 100 Marriage Assessment - Series 1 Results`,
+          html: emailHtml,
+          attachments: [
+            {
+              content: pdfBuffer.toString('base64'),
+              filename: 'The-100-Marriage-Assessment-Series-1-Report.pdf',
+              type: 'application/pdf',
+              disposition: 'attachment'
+            }
+          ]
+        };
+        
+        await mailService.send(msg);
+        console.log(`SendGrid email with PDF attachment sent to ${assessment.email}`);
+        
+        return { 
+          success: true
+        };
+      } catch (sendgridError) {
+        console.error('SendGrid email error:', sendgridError);
+        console.log('Falling back to Nodemailer...');
+        // Continue with Nodemailer fallback
+      }
+    }
+    
+    // Fallback to Nodemailer (test emails)
     // Create transporter
     const { transporter, testAccount } = await createTransporter();
+    
+    if (!transporter) {
+      console.error('No email transport available');
+      return { success: false };
+    }
     
     // Format the email HTML content
     const emailHtml = formatAssessmentEmail(assessment);
@@ -323,14 +380,56 @@ function formatPaymentNotificationEmail(transaction: PaymentTransaction): string
 
 /**
  * Sends a payment notification email
+ * Uses SendGrid when available, falls back to Nodemailer
  */
 export async function sendNotificationEmail(transaction: PaymentTransaction): Promise<{ success: boolean, previewUrl?: string }> {
   try {
+    // Format the email HTML content
+    const emailHtml = formatPaymentNotificationEmail(transaction);
+    
+    // If we have a SendGrid API key, use SendGrid directly
+    if (process.env.SENDGRID_API_KEY) {
+      try {
+        console.log('Using SendGrid for notification email');
+        // Import the sendgrid module functions
+        const { MailService } = await import('@sendgrid/mail');
+        
+        // Set up SendGrid
+        const mailService = new MailService();
+        mailService.setApiKey(process.env.SENDGRID_API_KEY);
+        
+        // Send mail with SendGrid
+        const msg = {
+          to: 'lawrence@lawrenceadjah.com', // Always send to Lawrence
+          from: {
+            email: 'notifications@wgodw.com',
+            name: 'The 100 Marriage Assessment'
+          },
+          subject: `New Payment: $${(transaction.amount / 100).toFixed(2)} - ${transaction.productType} Assessment`,
+          html: emailHtml
+        };
+        
+        await mailService.send(msg);
+        console.log(`SendGrid notification email sent to lawrence@lawrenceadjah.com`);
+        
+        return { 
+          success: true
+        };
+      } catch (sendgridError) {
+        console.error('SendGrid notification email error:', sendgridError);
+        console.log('Falling back to Nodemailer...');
+        // Continue with Nodemailer fallback
+      }
+    }
+    
+    // Fallback to Nodemailer (test emails)
     // Create transporter
     const { transporter, testAccount } = await createTransporter();
     
-    // Format the email HTML content
-    const emailHtml = formatPaymentNotificationEmail(transaction);
+    if (!transporter) {
+      console.error('No email transport available');
+      return { success: false };
+    }
     
     // Send mail with defined transport object
     const info = await transporter.sendMail({
@@ -450,14 +549,56 @@ function formatReferralEmail(data: ReferralEmailData): string {
 
 /**
  * Sends a referral invitation email
+ * Uses SendGrid when available, falls back to Nodemailer
  */
 export async function sendReferralEmail(data: ReferralEmailData): Promise<{ success: boolean, previewUrl?: string }> {
   try {
+    // Format the email HTML content
+    const emailHtml = formatReferralEmail(data);
+    
+    // If we have a SendGrid API key, use SendGrid directly
+    if (process.env.SENDGRID_API_KEY) {
+      try {
+        console.log('Using SendGrid for referral email');
+        // Import the sendgrid module functions
+        const { MailService } = await import('@sendgrid/mail');
+        
+        // Set up SendGrid
+        const mailService = new MailService();
+        mailService.setApiKey(process.env.SENDGRID_API_KEY);
+        
+        // Send mail with SendGrid
+        const msg = {
+          to: data.to,
+          from: {
+            email: 'referrals@wgodw.com',
+            name: 'The 100 Marriage Assessment'
+          },
+          subject: `${data.referrerName} invited you to take The 100 Marriage Assessment`,
+          html: emailHtml
+        };
+        
+        await mailService.send(msg);
+        console.log(`SendGrid referral email sent to ${data.to}`);
+        
+        return { 
+          success: true
+        };
+      } catch (sendgridError) {
+        console.error('SendGrid referral email error:', sendgridError);
+        console.log('Falling back to Nodemailer...');
+        // Continue with Nodemailer fallback
+      }
+    }
+    
+    // Fallback to Nodemailer (test emails)
     // Create transporter
     const { transporter, testAccount } = await createTransporter();
     
-    // Format the email HTML content
-    const emailHtml = formatReferralEmail(data);
+    if (!transporter) {
+      console.error('No email transport available');
+      return { success: false };
+    }
     
     // Send mail with defined transport object
     const info = await transporter.sendMail({
@@ -588,14 +729,56 @@ function formatAssessmentReminderEmail(data: AssessmentReminderData): string {
 
 /**
  * Sends an assessment reminder email to users who haven't completed their assessment
+ * Uses SendGrid when available, falls back to Nodemailer
  */
 export async function sendAssessmentReminder(data: AssessmentReminderData): Promise<{ success: boolean, previewUrl?: string }> {
   try {
+    // Format the email HTML content
+    const emailHtml = formatAssessmentReminderEmail(data);
+    
+    // If we have a SendGrid API key, use SendGrid directly
+    if (process.env.SENDGRID_API_KEY) {
+      try {
+        console.log('Using SendGrid for assessment reminder email');
+        // Import the sendgrid module functions
+        const { MailService } = await import('@sendgrid/mail');
+        
+        // Set up SendGrid
+        const mailService = new MailService();
+        mailService.setApiKey(process.env.SENDGRID_API_KEY);
+        
+        // Send mail with SendGrid
+        const msg = {
+          to: data.to,
+          from: {
+            email: 'reminders@wgodw.com',
+            name: 'The 100 Marriage Assessment'
+          },
+          subject: `Don't Miss Out - Complete Your 100 Marriage Assessment`,
+          html: emailHtml
+        };
+        
+        await mailService.send(msg);
+        console.log(`SendGrid assessment reminder email sent to ${data.to}`);
+        
+        return { 
+          success: true
+        };
+      } catch (sendgridError) {
+        console.error('SendGrid assessment reminder email error:', sendgridError);
+        console.log('Falling back to Nodemailer...');
+        // Continue with Nodemailer fallback
+      }
+    }
+    
+    // Fallback to Nodemailer (test emails)
     // Create transporter
     const { transporter, testAccount } = await createTransporter();
     
-    // Format the email HTML content
-    const emailHtml = formatAssessmentReminderEmail(data);
+    if (!transporter) {
+      console.error('No email transport available');
+      return { success: false };
+    }
     
     // Send mail with defined transport object
     const info = await transporter.sendMail({
@@ -619,13 +802,14 @@ export async function sendAssessmentReminder(data: AssessmentReminderData): Prom
   }
 }
 
+/**
+ * Sends invitation emails to both partners for a couple assessment
+ * Uses SendGrid when available, falls back to Nodemailer
+ */
 export async function sendCoupleInvitationEmails(
   data: CoupleInvitationData
 ): Promise<{ success: boolean, previewUrls?: string[] }> {
   try {
-    // Create transporter
-    const { transporter, testAccount } = await createTransporter();
-    
     // Format email content for primary partner
     const primaryEmailHtml = formatCoupleInvitationEmail(
       data.primaryName || "Primary Partner",
@@ -641,6 +825,63 @@ export async function sendCoupleInvitationEmails(
       data.coupleId,
       false // isForPrimary = false
     );
+    
+    // If we have a SendGrid API key, use SendGrid directly
+    if (process.env.SENDGRID_API_KEY) {
+      try {
+        console.log('Using SendGrid for couple invitation emails');
+        // Import the sendgrid module functions
+        const { MailService } = await import('@sendgrid/mail');
+        
+        // Set up SendGrid
+        const mailService = new MailService();
+        mailService.setApiKey(process.env.SENDGRID_API_KEY);
+        
+        // Send emails with SendGrid
+        const primaryMsg = {
+          to: data.primaryEmail,
+          from: {
+            email: 'couples@wgodw.com',
+            name: 'The 100 Marriage Assessment'
+          },
+          subject: "Your Couple Assessment Has Been Started",
+          html: primaryEmailHtml
+        };
+        
+        const spouseMsg = {
+          to: data.spouseEmail,
+          from: {
+            email: 'couples@wgodw.com',
+            name: 'The 100 Marriage Assessment'
+          },
+          subject: "You've Been Invited to Take the 100 Marriage Assessment",
+          html: spouseEmailHtml
+        };
+        
+        await mailService.send(primaryMsg);
+        await mailService.send(spouseMsg);
+        
+        console.log(`SendGrid primary invitation email sent to ${data.primaryEmail}`);
+        console.log(`SendGrid spouse invitation email sent to ${data.spouseEmail}`);
+        
+        return { 
+          success: true
+        };
+      } catch (sendgridError) {
+        console.error('SendGrid couple invitation email error:', sendgridError);
+        console.log('Falling back to Nodemailer...');
+        // Continue with Nodemailer fallback
+      }
+    }
+    
+    // Fallback to Nodemailer (test emails)
+    // Create transporter
+    const { transporter, testAccount } = await createTransporter();
+    
+    if (!transporter) {
+      console.error('No email transport available');
+      return { success: false };
+    }
     
     // Send email to primary partner
     const primaryInfo = await transporter.sendMail({
@@ -682,6 +923,7 @@ export async function sendCoupleInvitationEmails(
 
 /**
  * Sends a couple assessment report email with PDF attachment
+ * Uses SendGrid when available, falls back to Nodemailer
  */
 export async function sendCoupleAssessmentEmail(
   report: CoupleAssessmentReport
@@ -702,8 +944,57 @@ export async function sendCoupleAssessmentEmail(
     const primaryName = report.primaryAssessment.demographics.firstName;
     const spouseName = report.spouseAssessment.demographics.firstName;
     
+    // If we have a SendGrid API key, use SendGrid directly
+    if (process.env.SENDGRID_API_KEY) {
+      try {
+        console.log('Using SendGrid for couple assessment email');
+        // Import the sendgrid module functions
+        const { MailService } = await import('@sendgrid/mail');
+        
+        // Set up SendGrid
+        const mailService = new MailService();
+        mailService.setApiKey(process.env.SENDGRID_API_KEY);
+        
+        // Send mail with SendGrid
+        const msg = {
+          to: [primaryEmail, spouseEmail], // Send to both partners
+          from: {
+            email: 'couples@wgodw.com',
+            name: 'The 100 Marriage Assessment'
+          },
+          subject: `${primaryName} & ${spouseName} - Couple Assessment Report - The 100 Marriage`,
+          html: emailHtml,
+          attachments: [
+            {
+              content: pdfBuffer.toString('base64'),
+              filename: 'The-100-Marriage-Couple-Assessment-Report.pdf',
+              type: 'application/pdf',
+              disposition: 'attachment'
+            }
+          ]
+        };
+        
+        await mailService.send(msg);
+        console.log(`SendGrid couple assessment email with PDF attachment sent to ${primaryEmail} and ${spouseEmail}`);
+        
+        return { 
+          success: true
+        };
+      } catch (sendgridError) {
+        console.error('SendGrid couple assessment email error:', sendgridError);
+        console.log('Falling back to Nodemailer...');
+        // Continue with Nodemailer fallback
+      }
+    }
+    
+    // Fallback to Nodemailer (test emails)
     // Create transporter
     const { transporter, testAccount } = await createTransporter();
+    
+    if (!transporter) {
+      console.error('No email transport available');
+      return { success: false };
+    }
     
     // Send mail with defined transport object to both partners
     const info = await transporter.sendMail({
