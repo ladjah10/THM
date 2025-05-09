@@ -673,6 +673,47 @@ export const questions: Question[] = [
     weight: 5
   },
   {
+    id: 50,
+    section: "Your Parenting Life",
+    subsection: "Children Decision: Naming of Children (Model)",
+    type: "M",
+    text: "Your Parenting Life: Children Decision: Naming of Children (Model)",
+    options: [
+      "We commit to naming our children with first names that are from the Bible.",
+      "We commit to naming our children with first names that honor a family member from either side of the family.",
+      "We commit to naming our children with first names that are gender neutral.",
+      "Other: Please detail"
+    ],
+    weight: 2
+  },
+  {
+    id: 51,
+    section: "Your Parenting Life", 
+    subsection: "Children Decision: Naming of Children (Jr's)",
+    type: "M",
+    text: "Your Parenting Life: Children Decision: Naming of Children (Jr's)",
+    options: [
+      "We agree that it's an option to name one of our children after a parent.",
+      "We agree that's not an option name one of our children after a parent.",
+      "Not Applicable"
+    ],
+    weight: 2
+  },
+  {
+    id: 52,
+    section: "Your Parenting Life",
+    subsection: "Pregnancy Announcement",
+    type: "M",
+    text: "Your Parenting Life: Pregnancy Announcement",
+    options: [
+      "We commit to keeping the news of our pregnancy private until the end of the 1st trimester.",
+      "We commit to keeping the news of our pregnancy private until the end of the 2nd trimester.",
+      "We do not have a specific guideline around if and when we will share news of a pregnancy.",
+      "Not Applicable"
+    ],
+    weight: 2
+  },
+  {
     id: 53,
     section: "Your Health and Wellness",
     subsection: "Physical Health: Exercise",
@@ -701,6 +742,33 @@ export const questions: Question[] = [
     weight: 5
   },
   {
+    id: 55,
+    section: "Your Parenting Life",
+    subsection: "Communication & Conflict Resolution",
+    type: "M",
+    text: "Your Parenting Life: Communication & Conflict Resolution",
+    options: [
+      "We commit to not fighting or having serious arguments in front of the children, rather, we'd wait for time alone and away from the children, either in our check-in time or immediately after to discuss things away from them.",
+      "We commit to fighting respectfully, even if it's a serious disagreement, in front of the children, because we believe it's healthy and constructive to model positive conflict resolution and to set realistic expectations for them in a marriage."
+    ],
+    weight: 4
+  },
+  {
+    id: 56,
+    section: "Your Parenting Life",
+    subsection: "Communication: Sex",
+    type: "M",
+    text: "Your Parenting Life: Communication: Sex",
+    options: [
+      "We commit to discussing sex with our children together at no later than 5 years old, specifically, discussing appropriate/inappropriate touch and expectations of communication if it happens.",
+      "We commit to discussing sex with our children one on one (each parent has their own talk) at no later than 5 years old specifically, discussing appropriate/inappropriate touch and expectations of communication if it happens and talking through anatomy and what sex is.",
+      "We commit to discussing sex with our children together at no later than 5 years old; however, we'll discuss appropriate/inappropriate touch and expectations of communication if it happens, between by age 7 and we'll talk through anatomy, what sex is and its purpose, by puberty (10-13).",
+      "We commit to discussing sex with our children one on one (each parent has their own talk) at no later than 5 years old; however, we'll discuss appropriate/inappropriate touch and expectations of communication if it happens, between by age 7 and we'll talk through anatomy, what sex is and its purpose, by puberty (10-13).",
+      "Other: Please detail"
+    ],
+    weight: 4
+  },
+  {
     id: 57,
     section: "Your Marriage and Boundaries",
     subsection: "Opposite Sex Friendships",
@@ -713,6 +781,20 @@ export const questions: Question[] = [
       "No special restrictions for opposite sex friendships"
     ],
     weight: 12
+  },
+  {
+    id: 58,
+    section: "Your Parenting Life",
+    subsection: "Social Media (Exposure)",
+    type: "M",
+    text: "Your Parenting Life: Social Media (Exposure)",
+    options: [
+      "We're committed to guarding the psychological development and physical safety of our children while allowing them to be socially connected and technologically adept, with that said, we do not believe it is appropriate for our children to be on any form of social media until they become high school age",
+      "We're committed to guarding the psychological development and physical safety of our children while allowing them to be socially connected and technologically adept, with that said, we do not believe it is appropriate for our children to be on any form of social media until they become middle school age",
+      "We're committed to guarding the psychological development and physical safety of our children while allowing them to be socially connected and technologically adept, with that said, we will allow closely monitored social media use from middle school age on",
+      "Other: Please detail"
+    ],
+    weight: 3
   },
   {
     id: 59,
@@ -753,6 +835,61 @@ export const questions: Question[] = [
       "No specific expectations"
     ],
     weight: 5
+  },
+  {
+    id: 62,
+    section: "Your Parenting Life",
+    subsection: "Communication: Race / Racial Dynamics",
+    type: "M",
+    text: "Your Parenting Life: Communication: Race / Racial Dynamics",
+    options: [
+      "We recognize the reality of race as well as its role and history still we don't believe we should have an explicit discussion about race / racial dynamics in the world and in our country with our children",
+      "We commit to discussing race with our children together at no later than 10 years old, specifically, discussing the history of race / racial dynamics, where it stems from a biblical perspective (Genesis 3), and expectations you have of them around their approach to engaging the issue in this world",
+      "We commit to discussing race with our children one on one (each parent has their own talk) at no later than 10 years old, specifically, discussing the history of race / racial dynamics, where it stems from a biblical perspective (Genesis 3), and expectations you have of them around their approach to engaging the issue in this world",
+      "Other: Please detail"
+    ],
+    weight: 3
+  },
+  {
+    id: 63,
+    section: "Your Parenting Life",
+    subsection: "Education (Institution)",
+    type: "M",
+    text: "Your Parenting Life: Education (Institution)",
+    options: [
+      "We are committed to educating our children in the public school system.",
+      "We are committed to educating our children in private school.",
+      "We are committed to homeschooling our children.",
+      "We are committed to a flexible learning experience where we're committed to the best local educational environment which could vary between all school types based on location, outcomes, pricing and more."
+    ],
+    weight: 4
+  },
+  {
+    id: 64,
+    section: "Your Family/Home Life",
+    subsection: "Traditions: Family Dinner [Excludes Date Night]",
+    type: "M",
+    text: "Your Family/Home Life: Traditions: Family Dinner [Excludes Date Night]",
+    options: [
+      "We are committed to eating dinner as a family every single day, outside of unique and rare circumstances",
+      "We are committed to eating dinner as a family at least once weekly",
+      "We are committed to eating dinner as a family at least once monthly",
+      "Other: Please detail"
+    ],
+    weight: 3
+  },
+  {
+    id: 65,
+    section: "Your Family/Home Life",
+    subsection: "Traditions: Family Vacations",
+    type: "M",
+    text: "Your Family/Home Life: Traditions: Family Vacations",
+    options: [
+      "We are committed to budgeting, planning and going on at least one family vacation per year",
+      "We are committed to budgeting, planning and going on at least two family vacations per year",
+      "Other: Please detail"
+    ],
+    weight: 2
   },
   
   // Add additional declaration questions (67-99) to reach 99 total
