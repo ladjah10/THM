@@ -20,7 +20,7 @@ if (process.env.SENDGRID_API_KEY) {
 // Make constants available for export/testing
 export const SENDER_EMAIL = 'hello@wgodw.com';
 export const SENDER_NAME = 'The 100 Marriage Assessment';
-export const ADMIN_EMAIL = 'la@lawrenceadjah.com'; // Admin email for notifications
+export const ADMIN_EMAIL = 'lawrence@lawrenceadjah.com'; // Admin email for notifications
 
 /**
  * Formats the HTML email content for an individual assessment
