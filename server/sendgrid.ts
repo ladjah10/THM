@@ -496,18 +496,30 @@ export async function sendCoupleAssessmentEmail(report: CoupleAssessmentReport, 
     const pdfContent = fs.readFileSync(pdfPath);
     const pdfFilename = path.basename(pdfPath);
     
-    // Get emails from both partners
-    const primaryEmail = report.primary.email;
-    const spouseEmail = report.spouse.email;
+    // Get emails from both partners - handle both old and new property paths
+    const primary = report.primaryAssessment || report.primary;
+    const spouse = report.spouseAssessment || report.spouse;
     
-    // Format names for the email
-    const primaryName = report.primary.demographics.firstName;
-    const spouseName = report.spouse.demographics.firstName;
+    // Get emails with fallbacks
+    const primaryEmail = primary?.email || primary?.demographics?.email;
+    const spouseEmail = spouse?.email || spouse?.demographics?.email;
+    
+    // Safe access to names
+    const primaryName = primary?.demographics?.firstName || primary?.name?.split(' ')[0] || 'Partner 1';
+    const spouseName = spouse?.demographics?.firstName || spouse?.name?.split(' ')[0] || 'Partner 2';
     
     const htmlContent = formatCoupleAssessmentEmail(report);
     
+    // Filter out undefined emails
+    const recipients = [primaryEmail, spouseEmail].filter(email => email);
+    
+    // Make sure we have at least one recipient
+    if (recipients.length === 0) {
+      throw new Error('No valid email addresses found for sending couple assessment report');
+    }
+    
     const msg = {
-      to: [primaryEmail, spouseEmail], // Send to both partners
+      to: recipients, // Send to both partners (or at least one if only one has an email)
       from: {
         email: SENDER_EMAIL,
         name: SENDER_NAME

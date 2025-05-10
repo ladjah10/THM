@@ -985,10 +985,19 @@ export async function sendCoupleAssessmentEmail(
       return { success: false };
     }
     
-    // Send mail with defined transport object to both partners
+    // Filter out undefined emails
+    const recipients = [primaryEmail, spouseEmail].filter(Boolean);
+    
+    // Make sure we have at least one recipient
+    if (recipients.length === 0) {
+      console.error('No valid email addresses found for sending couple assessment report');
+      return { success: false, error: 'No valid recipients' };
+    }
+    
+    // Send mail with defined transport object to both partners or at least one
     const info = await transporter.sendMail({
       from: `"The 100 Marriage Assessment" <hello@wgodw.com>`,
-      to: [primaryEmail, spouseEmail].join(', '), // Send to both partners
+      to: recipients.join(', '), // Send to both partners or at least one
       subject: `${primaryName} & ${spouseName} - Couple Assessment Report - The 100 Marriage`,
       html: emailHtml,
       attachments: [
