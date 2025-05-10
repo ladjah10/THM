@@ -181,11 +181,39 @@ export async function sendAssessmentEmail(assessment: AssessmentResult): Promise
     const pdfBuffer = await generateIndividualAssessmentPDF(assessment);
     console.log('PDF generation successful, size: ', pdfBuffer.length);
     
-    // Comment: We've removed the SendGrid integration from here
-    // It should be used separately via the sendgrid.ts module
+    // Save PDF to a temporary file
+    const tempDir = path.join(os.tmpdir(), 'the100marriage');
+    if (!fs.existsSync(tempDir)) {
+      fs.mkdirSync(tempDir, { recursive: true });
+    }
+    const pdfPath = path.join(tempDir, `${assessment.id || uuidv4()}-assessment.pdf`);
+    fs.writeFileSync(pdfPath, pdfBuffer);
+    console.log(`PDF saved to temporary file: ${pdfPath}`);
     
-    // Fallback to Nodemailer (test emails)
-    // Create transporter
+    // Use SendGrid for sending email
+    if (process.env.SENDGRID_API_KEY) {
+      console.log('Using SendGrid for assessment email');
+      
+      // Import and use the SendGrid module
+      const sendGridResult = await import('./sendgrid').then(module => 
+        module.sendAssessmentEmail(assessment, pdfPath)
+      );
+      
+      // Clean up temporary file
+      try {
+        fs.unlinkSync(pdfPath);
+      } catch (e) {
+        console.warn('Could not remove temporary PDF file:', e);
+      }
+      
+      return { 
+        success: sendGridResult.success,
+        messageId: sendGridResult.messageId
+      };
+    }
+    
+    // Fallback to Nodemailer (test emails) ONLY if SendGrid is not available
+    console.warn('SENDGRID_API_KEY not set, falling back to Nodemailer (test only)');
     const { transporter, testAccount } = await createTransporter();
     
     if (!transporter) {
@@ -198,7 +226,7 @@ export async function sendAssessmentEmail(assessment: AssessmentResult): Promise
     
     // Send mail with defined transport object
     const info = await transporter.sendMail({
-      from: `"The 100 Marriage Assessment" <hello@the100marriage.com>`,
+      from: `"The 100 Marriage Assessment" <hello@wgodw.com>`,
       to: assessment.email,
       subject: `${assessment.name} - The 100 Marriage Assessment - Series 1 Results`,
       html: emailHtml,
@@ -214,6 +242,13 @@ export async function sendAssessmentEmail(assessment: AssessmentResult): Promise
     console.log(`Email with PDF attachment sent: ${info.messageId}`);
     const previewUrl = nodemailer.getTestMessageUrl(info);
     console.log(`Preview URL: ${previewUrl}`);
+    
+    // Clean up temporary file
+    try {
+      fs.unlinkSync(pdfPath);
+    } catch (e) {
+      console.warn('Could not remove temporary PDF file:', e);
+    }
     
     return { 
       success: true,
