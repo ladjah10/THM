@@ -17,8 +17,9 @@ if (process.env.SENDGRID_API_KEY) {
   mailService.setApiKey(process.env.SENDGRID_API_KEY);
 }
 
-const SENDER_EMAIL = 'hello@wgodw.com';
-const SENDER_NAME = 'The 100 Marriage Assessment';
+// Make constants available for export/testing
+export const SENDER_EMAIL = 'hello@wgodw.com';
+export const SENDER_NAME = 'The 100 Marriage Assessment';
 
 /**
  * Formats the HTML email content for an individual assessment
