@@ -182,6 +182,7 @@ export async function sendAssessmentEmail(assessment: AssessmentResult): Promise
     // Generate PDF report
     console.log('Generating PDF report...');
     const pdfBuffer = await generateIndividualAssessmentPDF(assessment);
+    console.log('PDF generation successful, size: ', pdfBuffer.length);
     
     // If we have a SendGrid API key, use SendGrid directly
     if (process.env.SENDGRID_API_KEY) {
@@ -223,16 +224,16 @@ export async function sendAssessmentEmail(assessment: AssessmentResult): Promise
           ]
         };
         
-        await sgMail.default.send(msg);
+        const result = await sgMail.default.send(msg);
         console.log(`SendGrid email with PDF attachment sent to ${assessment.email}`);
         
         return { 
           success: true
         };
       } catch (sendgridError) {
-        console.error('SendGrid email error:', sendgridError);
-        console.log('Falling back to Nodemailer...');
-        // Continue with Nodemailer fallback
+        console.error('SendGrid specific error:', sendgridError);
+        // Don't throw, but continue to the Nodemailer fallback
+        console.log('Falling back to Nodemailer due to SendGrid error...');
       }
     }
     
@@ -250,7 +251,7 @@ export async function sendAssessmentEmail(assessment: AssessmentResult): Promise
     
     // Send mail with defined transport object
     const info = await transporter.sendMail({
-      from: `"The 100 Marriage Assessment" <hello@wgodw.com>`,
+      from: `"The 100 Marriage Assessment" <hello@the100marriage.com>`,
       to: assessment.email,
       subject: `${assessment.name} - The 100 Marriage Assessment - Series 1 Results`,
       html: emailHtml,
