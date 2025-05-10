@@ -88,7 +88,7 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         .font('Helvetica-Bold')
         .fontSize(28);
       
-      const scoreText = `${Math.round(overallCompatibility)}%`;
+      const scoreText = `${overallCompatibility.toFixed(1).replace('.0', '')}%`;
       const textWidth = doc.widthOfString(scoreText);
       const textHeight = doc.currentLineHeight();
       
@@ -232,13 +232,13 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           });
         
         doc.fillColor('#3182ce')
-          .text(`${Math.round(primaryScore)}%`, 60 + colWidth, textY);
+          .text(`${primaryScore.toFixed(1).replace('.0', '')}%`, 60 + colWidth, textY);
         
         doc.fillColor('#805ad5')
-          .text(`${Math.round(spouseScore)}%`, 60 + colWidth * 2, textY);
+          .text(`${spouseScore.toFixed(1).replace('.0', '')}%`, 60 + colWidth * 2, textY);
         
         doc.fillColor('#4a5568')
-          .text(`${diff}%`, 60 + colWidth * 3, textY);
+          .text(`${Math.abs(primaryScore - spouseScore).toFixed(1).replace('.0', '')}%`, 60 + colWidth * 3, textY);
         
         return rowY + rowHeight;
       };
@@ -254,9 +254,10 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       doc.rect(50, currentRowY, doc.page.width - 100, rowHeight)
         .fillAndStroke('#f8fafc', '#e2e8f0');
       
-      const primaryOverall = Math.round(primary.scores.overallPercentage);
-      const spouseOverall = Math.round(spouse.scores.overallPercentage);
-      const overallDiff = Math.abs(primaryOverall - spouseOverall);
+      // Format scores consistently with 1 decimal place
+      const primaryOverall = primary.scores.overallPercentage.toFixed(1).replace('.0', '');
+      const spouseOverall = spouse.scores.overallPercentage.toFixed(1).replace('.0', '');
+      const overallDiff = Math.abs(primary.scores.overallPercentage - spouse.scores.overallPercentage).toFixed(1).replace('.0', '');
       
       doc.fontSize(12)
         .font('Helvetica-Bold')
