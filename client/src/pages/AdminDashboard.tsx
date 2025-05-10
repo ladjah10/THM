@@ -1885,7 +1885,7 @@ export default function AdminDashboard() {
                           ${paymentTransactions 
                             ? paymentTransactions
                                 .filter(t => !t.isRefunded)
-                                .reduce((sum, t) => sum + Number(t.amount), 0)
+                                .reduce((sum, t) => sum + Number(t.amount)/100, 0)
                                 .toFixed(2)
                             : '0.00'
                           }
@@ -1921,7 +1921,7 @@ export default function AdminDashboard() {
                               ${paymentTransactions 
                                 ? paymentTransactions
                                     .filter(t => t.productType === 'individual' && !t.isRefunded)
-                                    .reduce((sum, t) => sum + Number(t.amount), 0)
+                                    .reduce((sum, t) => sum + Number(t.amount)/100, 0)
                                     .toFixed(2)
                                 : '0.00'
                               }
@@ -1933,7 +1933,7 @@ export default function AdminDashboard() {
                               ${paymentTransactions 
                                 ? paymentTransactions
                                     .filter(t => t.productType === 'couple' && !t.isRefunded)
-                                    .reduce((sum, t) => sum + Number(t.amount), 0)
+                                    .reduce((sum, t) => sum + Number(t.amount)/100, 0)
                                     .toFixed(2)
                                 : '0.00'
                               }
@@ -2007,13 +2007,13 @@ export default function AdminDashboard() {
                                   name: 'Individual Assessments', 
                                   value: paymentTransactions
                                     .filter(t => t.productType === 'individual' && !t.isRefunded)
-                                    .reduce((sum, t) => sum + Number(t.amount), 0)
+                                    .reduce((sum, t) => sum + Number(t.amount)/100, 0)
                                 },
                                 { 
                                   name: 'Couple Assessments', 
                                   value: paymentTransactions
                                     .filter(t => t.productType === 'couple' && !t.isRefunded)
-                                    .reduce((sum, t) => sum + Number(t.amount), 0)
+                                    .reduce((sum, t) => sum + Number(t.amount)/100, 0)
                                 }
                               ]}
                               cx="50%"
