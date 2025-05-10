@@ -938,13 +938,17 @@ export async function sendCoupleAssessmentEmail(
     // Format couple email
     const emailHtml = formatCoupleAssessmentEmail(report);
     
-    // Get emails from both partners
-    const primaryEmail = report.primary.email;
-    const spouseEmail = report.spouse.email;
+    // Get emails from both partners - handle both old and new property paths
+    const primary = report.primaryAssessment || report.primary;
+    const spouse = report.spouseAssessment || report.spouse;
     
-    // Format names for the email
-    const primaryName = report.primary.demographics.firstName;
-    const spouseName = report.spouse.demographics.firstName;
+    // Get emails with fallbacks
+    const primaryEmail = primary?.email || primary?.demographics?.email;
+    const spouseEmail = spouse?.email || spouse?.demographics?.email;
+    
+    // Safe access to names
+    const primaryName = primary?.demographics?.firstName || primary?.name?.split(' ')[0] || 'Partner 1';
+    const spouseName = spouse?.demographics?.firstName || spouse?.name?.split(' ')[0] || 'Partner 2';
     
     // Use SendGrid for sending email (primary method)
     if (process.env.SENDGRID_API_KEY) {

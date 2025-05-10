@@ -229,21 +229,24 @@ export function formatCoupleAssessmentEmail(report: CoupleAssessmentReport): str
             
             <!-- Top Different Questions -->
             <div style="margin-bottom: 20px;">
-              ${differenceAnalysis.majorDifferences.slice(0, 5).map((diff, idx) => `
-                <div style="background-color: ${idx % 2 === 0 ? '#f5f3ff' : '#faf5ff'}; border: 1px solid #e9d5ff; border-radius: 6px; padding: 15px; margin-bottom: 10px;">
-                  <h3 style="margin-top: 0; font-size: 16px; color: #6b21a8; margin-bottom: 10px;">Question ${diff.questionId}: ${diff.questionText}</h3>
-                  <div style="display: flex; flex-wrap: wrap; gap: 12px;">
-                    <div style="flex: 1; min-width: 250px; background-color: white; padding: 12px; border-radius: 6px; border: 1px solid #ddd6fe;">
-                      <p style="margin-top: 0; margin-bottom: 5px; font-weight: 500; color: #7e22ce; font-size: 14px;">${primaryName}'s Response:</p>
-                      <p style="margin: 0; color: #4b5563; font-size: 14px;">${diff.primaryResponse}</p>
+              ${analysis?.majorDifferences && analysis.majorDifferences.length > 0 
+                ? analysis.majorDifferences.slice(0, 5).map((diff, idx) => `
+                    <div style="background-color: ${idx % 2 === 0 ? '#f5f3ff' : '#faf5ff'}; border: 1px solid #e9d5ff; border-radius: 6px; padding: 15px; margin-bottom: 10px;">
+                      <h3 style="margin-top: 0; font-size: 16px; color: #6b21a8; margin-bottom: 10px;">Question ${diff?.questionId || 'N/A'}: ${diff?.questionText || 'Question text unavailable'}</h3>
+                      <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                        <div style="flex: 1; min-width: 250px; background-color: white; padding: 12px; border-radius: 6px; border: 1px solid #ddd6fe;">
+                          <p style="margin-top: 0; margin-bottom: 5px; font-weight: 500; color: #7e22ce; font-size: 14px;">${primaryName}'s Response:</p>
+                          <p style="margin: 0; color: #4b5563; font-size: 14px;">${diff?.primaryResponse || 'Response unavailable'}</p>
+                        </div>
+                        <div style="flex: 1; min-width: 250px; background-color: white; padding: 12px; border-radius: 6px; border: 1px solid #ddd6fe;">
+                          <p style="margin-top: 0; margin-bottom: 5px; font-weight: 500; color: #7e22ce; font-size: 14px;">${spouseName}'s Response:</p>
+                          <p style="margin: 0; color: #4b5563; font-size: 14px;">${diff?.spouseResponse || 'Response unavailable'}</p>
+                        </div>
+                      </div>
                     </div>
-                    <div style="flex: 1; min-width: 250px; background-color: white; padding: 12px; border-radius: 6px; border: 1px solid #ddd6fe;">
-                      <p style="margin-top: 0; margin-bottom: 5px; font-weight: 500; color: #7e22ce; font-size: 14px;">${spouseName}'s Response:</p>
-                      <p style="margin: 0; color: #4b5563; font-size: 14px;">${diff.spouseResponse}</p>
-                    </div>
-                  </div>
-                </div>
-              `).join('')}
+                  `).join('')
+                : '<div style="text-align: center; padding: 15px; background-color: #f5f3ff; border: 1px solid #e9d5ff; border-radius: 6px; color: #6b7280;">No significant differences found</div>'
+              }
             </div>
             
             <!-- Book and Discussion Guide -->
@@ -265,12 +268,15 @@ export function formatCoupleAssessmentEmail(report: CoupleAssessmentReport): str
             <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 15px; margin-bottom: 20px;">
               <h3 style="margin-top: 0; font-size: 16px; color: #0f172a;">Key Sections for Additional Discussion:</h3>
               <ul style="list-style-type: none; padding-left: 0; margin-bottom: 0;">
-                ${differenceAnalysis.vulnerabilityAreas.map(area => `
-                  <li style="padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
-                    <span style="color: #7e22ce; font-weight: 500;">Section: ${area}</span><br>
-                    <span style="font-size: 13px; color: #64748b;">Walk through the questions in this section together with the book as your companion.</span>
-                  </li>
-                `).join('')}
+                ${analysis?.vulnerabilityAreas && analysis.vulnerabilityAreas.length > 0 
+                  ? analysis.vulnerabilityAreas.map(area => `
+                      <li style="padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
+                        <span style="color: #7e22ce; font-weight: 500;">Section: ${area || 'Untitled Section'}</span><br>
+                        <span style="font-size: 13px; color: #64748b;">Walk through the questions in this section together with the book as your companion.</span>
+                      </li>
+                    `).join('')
+                  : `<li style="padding: 8px 0; text-align: center; color: #64748b;">No specific vulnerability areas identified</li>`
+                }
               </ul>
             </div>
             
