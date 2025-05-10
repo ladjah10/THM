@@ -424,20 +424,97 @@ export class DatabaseStorage {
   
   async getAssessments(email: string): Promise<AssessmentResult[]> {
     try {
-      // Implementation of database retrieval
-      return await this.memStorage.getAssessments(email);
+      // Get assessments from the database for a specific email
+      const { pool } = await import('./db');
+      
+      const results = await pool.query(`
+        SELECT id, email, name, scores, profile, gender_profile, responses, 
+               demographics, timestamp, transaction_id, couple_id, couple_role, report_sent
+        FROM assessment_results
+        WHERE email = $1
+        ORDER BY timestamp DESC
+      `, [email]);
+      
+      // Transform DB results into AssessmentResult objects
+      const assessments: AssessmentResult[] = results.rows.map((row: any) => {
+        const scores = JSON.parse(row.scores);
+        const profile = JSON.parse(row.profile);
+        const responses = JSON.parse(row.responses);
+        const demographics = JSON.parse(row.demographics);
+        
+        // Parse gender profile if it exists
+        const genderProfile = row.gender_profile ? JSON.parse(row.gender_profile) : null;
+        
+        return {
+          id: row.id,
+          email: row.email,
+          name: row.name,
+          scores: scores,
+          profile: profile,
+          genderProfile: genderProfile,
+          responses: responses,
+          demographics: demographics,
+          timestamp: row.timestamp.toISOString(),
+          transactionId: row.transaction_id,
+          coupleId: row.couple_id,
+          coupleRole: row.couple_role,
+          reportSent: row.report_sent
+        };
+      });
+      
+      console.log(`Retrieved ${assessments.length} assessments from database for email: ${email}`);
+      return assessments;
     } catch (error) {
-      console.error('Error getting assessments:', error);
+      console.error(`Error getting assessments from database for email ${email}:`, error);
+      // Only fall back to memory storage if database query fails
       return await this.memStorage.getAssessments(email);
     }
   }
   
   async getAllAssessments(): Promise<AssessmentResult[]> {
     try {
-      // Implementation of database retrieval
-      return await this.memStorage.getAllAssessments();
+      // Get all assessments from the database
+      const { pool } = await import('./db');
+      
+      const results = await pool.query(`
+        SELECT id, email, name, scores, profile, gender_profile, responses, 
+               demographics, timestamp, transaction_id, couple_id, couple_role, report_sent
+        FROM assessment_results
+        ORDER BY timestamp DESC
+      `);
+      
+      // Transform DB results into AssessmentResult objects
+      const assessments: AssessmentResult[] = results.rows.map((row: any) => {
+        const scores = JSON.parse(row.scores);
+        const profile = JSON.parse(row.profile);
+        const responses = JSON.parse(row.responses);
+        const demographics = JSON.parse(row.demographics);
+        
+        // Parse gender profile if it exists
+        const genderProfile = row.gender_profile ? JSON.parse(row.gender_profile) : null;
+        
+        return {
+          id: row.id,
+          email: row.email,
+          name: row.name,
+          scores: scores,
+          profile: profile,
+          genderProfile: genderProfile,
+          responses: responses,
+          demographics: demographics,
+          timestamp: row.timestamp.toISOString(),
+          transactionId: row.transaction_id,
+          coupleId: row.couple_id,
+          coupleRole: row.couple_role,
+          reportSent: row.report_sent
+        };
+      });
+      
+      console.log(`Retrieved ${assessments.length} assessments from database`);
+      return assessments;
     } catch (error) {
-      console.error('Error getting all assessments:', error);
+      console.error('Error getting all assessments from database:', error);
+      // Only fall back to memory storage if database query fails
       return await this.memStorage.getAllAssessments();
     }
   }
@@ -1018,41 +1095,77 @@ export class DatabaseStorage {
           break;
       }
       
-      // Get page views and sessions for the period directly from database
-      const pageViews = await this.getPageViews(startDate.toISOString(), now.toISOString());
-      const sessions = await this.getVisitorSessions(startDate.toISOString(), now.toISOString());
+      // Use direct SQL queries for better performance
+      const { pool } = await import('./db');
       
-      // Calculate metrics
-      const totalPageViews = pageViews.length;
-      const uniqueVisitors = new Set(sessions.map(s => s.id)).size;
+      // Get total page views for the period
+      const pageViewsResult = await pool.query(
+        'SELECT COUNT(*) as "totalPageViews" FROM page_views WHERE timestamp >= $1 AND timestamp <= $2',
+        [startDate, now]
+      );
+      const totalPageViews = parseInt(pageViewsResult.rows[0].totalPageViews);
       
-      // Calculate average session duration
-      let totalDuration = 0;
-      let countedSessions = 0;
+      // Get unique visitors count (distinct session IDs) 
+      const uniqueVisitorsResult = await pool.query(
+        'SELECT COUNT(DISTINCT session_id) as "uniqueVisitors" FROM page_views WHERE timestamp >= $1 AND timestamp <= $2',
+        [startDate, now]
+      );
+      const uniqueVisitors = parseInt(uniqueVisitorsResult.rows[0].uniqueVisitors);
       
-      for (const session of sessions) {
-        if (session.endTime) {
-          const duration = new Date(session.endTime).getTime() - new Date(session.startTime).getTime();
-          if (duration > 0) {
-            totalDuration += duration;
-            countedSessions++;
-          }
-        }
-      }
+      // Calculate average session duration for completed sessions
+      const durationResult = await pool.query(`
+        SELECT AVG(EXTRACT(EPOCH FROM (end_time - start_time))) * 1000 as "avgDuration"
+        FROM visitor_sessions
+        WHERE start_time >= $1 AND start_time <= $2 AND end_time IS NOT NULL
+      `, [startDate, now]);
+      const averageSessionDuration = durationResult.rows[0].avgDuration || 0;
       
-      const averageSessionDuration = countedSessions > 0 ? totalDuration / countedSessions : 0;
+      // Get popular pages (top 5)
+      const popularPagesResult = await pool.query(`
+        SELECT path, COUNT(*) as "count"
+        FROM page_views
+        WHERE timestamp >= $1 AND timestamp <= $2
+        GROUP BY path
+        ORDER BY "count" DESC
+        LIMIT 5
+      `, [startDate, now]);
       
-      // Count page views by path
-      const pathCounts: Record<string, number> = {};
-      for (const view of pageViews) {
-        pathCounts[view.path] = (pathCounts[view.path] || 0) + 1;
-      }
+      const popularPages = popularPagesResult.rows.map((row: any) => ({
+        path: row.path,
+        count: parseInt(row.count)
+      }));
       
-      // Sort paths by view count and get top 5
-      const popularPages = Object.entries(pathCounts)
-        .sort(([, countA], [, countB]) => countB - countA)
-        .slice(0, 5)
-        .map(([path, count]) => ({ path, count }));
+      // Get daily visitors data for charts
+      const dailyVisitorsResult = await pool.query(`
+        SELECT DATE(timestamp) as "date", COUNT(DISTINCT session_id) as "visitors"
+        FROM page_views
+        WHERE timestamp >= $1 AND timestamp <= $2
+        GROUP BY DATE(timestamp)
+        ORDER BY "date"
+      `, [startDate, now]);
+      
+      const dailyVisitors = dailyVisitorsResult.rows.map((row: any) => ({
+        date: row.date.toISOString().split('T')[0],
+        count: parseInt(row.visitors)
+      }));
+      
+      // Get conversion rate (users who completed an assessment)
+      // First get total visitors
+      const totalVisitorsResult = await pool.query(
+        'SELECT COUNT(DISTINCT id) as "totalVisitors" FROM visitor_sessions WHERE start_time >= $1 AND start_time <= $2',
+        [startDate, now]
+      );
+      const totalVisitors = parseInt(totalVisitorsResult.rows[0].totalVisitors);
+      
+      // Get completed assessments in the period
+      const completedAssessmentsResult = await pool.query(
+        'SELECT COUNT(*) as "completedAssessments" FROM assessment_results WHERE timestamp >= $1 AND timestamp <= $2',
+        [startDate, now]
+      );
+      const completedAssessments = parseInt(completedAssessmentsResult.rows[0].completedAssessments);
+      
+      // Calculate conversion rate
+      const conversionRate = totalVisitors > 0 ? (completedAssessments / totalVisitors) * 100 : 0;
       
       return {
         period,
@@ -1060,8 +1173,12 @@ export class DatabaseStorage {
         endDate: now.toISOString(),
         totalPageViews,
         uniqueVisitors,
+        totalVisitors,
         averageSessionDuration,
-        popularPages
+        popularPages,
+        topPages: popularPages, // Alias for backwards compatibility
+        dailyVisitors,
+        conversionRate
       };
     } catch (error) {
       console.error('Error getting analytics summary from database:', error);
