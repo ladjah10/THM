@@ -112,6 +112,116 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Email sending endpoint
+  // API to save assessment data without sending email
+  app.post('/api/assessment/save', async (req, res) => {
+    try {
+      // Validate the request body - using the same schema as email endpoint
+      const saveSchema = z.object({
+        to: z.string().email(),
+        name: z.string(),
+        scores: z.object({
+          sections: z.record(z.object({
+            earned: z.number(),
+            possible: z.number(),
+            percentage: z.number()
+          })),
+          overallPercentage: z.number(),
+          strengths: z.array(z.string()),
+          improvementAreas: z.array(z.string()),
+          totalEarned: z.number(),
+          totalPossible: z.number()
+        }),
+        profile: z.object({
+          id: z.number(),
+          name: z.string(),
+          description: z.string(),
+          genderSpecific: z.string().nullable(),
+          criteria: z.array(z.object({
+            section: z.string(),
+            min: z.number().optional(),
+            max: z.number().optional()
+          }))
+        }),
+        genderProfile: z.object({
+          id: z.number(),
+          name: z.string(),
+          description: z.string(),
+          genderSpecific: z.string().nullable(),
+          criteria: z.array(z.object({
+            section: z.string(),
+            min: z.number().optional(),
+            max: z.number().optional()
+          }))
+        }).nullable().optional(),
+        responses: z.record(z.object({
+          option: z.string(),
+          value: z.number()
+        })),
+        demographics: z.object({
+          firstName: z.string(),
+          lastName: z.string(),
+          email: z.string().email(),
+          phone: z.string().optional(),
+          gender: z.string(),
+          marriageStatus: z.string(),
+          desireChildren: z.string(),
+          ethnicity: z.string(),
+          hasPurchasedBook: z.string().optional(),
+          purchaseDate: z.string().optional(),
+          lifeStage: z.string().default("Not specified"),
+          birthday: z.string().default("Not specified"),
+          city: z.string().default("Not specified"),
+          state: z.string().default("Not specified"),
+          zipCode: z.string().default("Not specified"),
+          promoCode: z.string().optional(),
+          interestedInArrangedMarriage: z.boolean().default(false),
+          thmPoolApplied: z.boolean().default(false)
+        })
+      });
+      
+      const validatedData = saveSchema.parse(req.body);
+      
+      // Create assessment result object
+      const assessmentResult: AssessmentResult = {
+        email: validatedData.to,
+        name: validatedData.name,
+        scores: validatedData.scores,
+        profile: validatedData.profile,
+        genderProfile: validatedData.genderProfile || null,
+        responses: validatedData.responses,
+        demographics: {
+          ...validatedData.demographics,
+          hasPurchasedBook: validatedData.demographics.hasPurchasedBook || "No"
+        },
+        timestamp: new Date().toISOString()
+      };
+      
+      // Store assessment result in storage
+      await storage.saveAssessment(assessmentResult);
+      
+      // Log promo code if used
+      if (validatedData.demographics.promoCode) {
+        console.log(`Assessment saved with promo code: ${validatedData.demographics.promoCode}`);
+        await storage.recordPromoCodeUsage({
+          promoCode: validatedData.demographics.promoCode,
+          assessmentType: 'individual',
+          timestamp: new Date().toISOString()
+        });
+      }
+      
+      return res.status(200).json({
+        success: true,
+        message: "Assessment data saved successfully"
+      });
+    } catch (error) {
+      console.error("Error saving assessment data:", error);
+      return res.status(500).json({
+        success: false,
+        message: error instanceof Error ? error.message : "Failed to save assessment data"
+      });
+    }
+  });
+
   app.post('/api/email/send', async (req, res) => {
     try {
       // Validate the request body

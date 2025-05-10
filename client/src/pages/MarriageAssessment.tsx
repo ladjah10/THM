@@ -144,13 +144,32 @@ export default function MarriageAssessment() {
   };
 
   // Calculate scores and determine profiles
-  const calculateAssessmentResults = () => {
+  const calculateAssessmentResults = async () => {
     const calculatedScores = calculateScores(questions, userResponses);
     const { primaryProfile, genderProfile } = determineProfiles(calculatedScores, demographicData.gender);
     
     setScores(calculatedScores);
     setPrimaryProfile(primaryProfile);
     setGenderProfile(genderProfile);
+    
+    // Save assessment data to the database right away when results are calculated
+    if (demographicData.email) {
+      try {
+        // Send data to server to save assessment even without sending email
+        await apiRequest('POST', '/api/assessment/save', {
+          to: demographicData.email,
+          name: `${demographicData.firstName} ${demographicData.lastName}`,
+          scores: calculatedScores,
+          profile: primaryProfile,
+          genderProfile: genderProfile,
+          responses: userResponses,
+          demographics: demographicData
+        });
+        console.log('Assessment data saved to database');
+      } catch (error) {
+        console.error('Error saving assessment data:', error);
+      }
+    }
   };
 
   // Handle sending email report
