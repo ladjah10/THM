@@ -584,6 +584,43 @@ export default function AdminDashboard() {
     }
   });
   
+  // Resend assessment results mutation
+  const { mutate: resendAssessmentResults, isPending: isResendingResults } = useMutation({
+    mutationFn: async ({ email, assessmentType }: { email: string, assessmentType?: 'individual' | 'couple' }) => {
+      toast({
+        title: "Sending Assessment Results",
+        description: `Resending results to ${email}...`,
+        variant: "default"
+      });
+      
+      const response = await apiRequest("POST", "/api/admin/resend-assessment-results", { 
+        email, 
+        assessmentType
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to resend assessment results');
+      }
+      
+      return await response.json();
+    },
+    onSuccess: (data) => {
+      toast({
+        title: "Success",
+        description: data.message || "Assessment results resent successfully",
+      });
+    },
+    onError: (error) => {
+      console.error("Error resending assessment results:", error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to resend assessment results",
+        variant: "destructive",
+      });
+    }
+  });
+  
   // Sync Stripe payments mutation
   const { mutate: syncStripePayments, isPending: isSyncingPayments } = useMutation({
     mutationFn: async () => {
@@ -1642,16 +1679,32 @@ export default function AdminDashboard() {
                               {assessment.scores.overallPercentage.toFixed(1)}%
                             </TableCell>
                             <TableCell>
-                              <Button 
-                                variant="ghost" 
-                                size="icon"
-                                onClick={() => {
-                                  setSelectedAssessment(assessment);
-                                  setDetailModalOpen(true);
-                                }}
-                              >
-                                <Search className="h-4 w-4" />
-                              </Button>
+                              <div className="flex gap-1">
+                                <Button 
+                                  variant="ghost" 
+                                  size="icon"
+                                  onClick={() => {
+                                    setSelectedAssessment(assessment);
+                                    setDetailModalOpen(true);
+                                  }}
+                                >
+                                  <Search className="h-4 w-4" />
+                                </Button>
+                                <Button 
+                                  variant="ghost" 
+                                  size="icon"
+                                  disabled={isResendingResults}
+                                  onClick={() => {
+                                    resendAssessmentResults({
+                                      email: assessment.email,
+                                      assessmentType: 'individual'
+                                    });
+                                  }}
+                                  title="Resend results to this email"
+                                >
+                                  <Mail className="h-4 w-4" />
+                                </Button>
+                              </div>
                             </TableCell>
                           </TableRow>
                       ))
