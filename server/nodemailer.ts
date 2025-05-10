@@ -70,7 +70,7 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
       <tr>
         <td style="padding: 8px; border: 1px solid #ddd;">${section}</td>
         <td style="padding: 8px; border: 1px solid #ddd;">${score.earned}/${score.possible}</td>
-        <td style="padding: 8px; border: 1px solid #ddd;">${Math.round(score.percentage)}%</td>
+        <td style="padding: 8px; border: 1px solid #ddd;">${score.percentage.toFixed(1).replace('.0', '')}%</td>
       </tr>
     `).join('');
 
@@ -108,7 +108,7 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
         
         <div class="section">
           <h2>Your Overall Assessment Score</h2>
-          <p class="overall-score">${Math.round(scores.overallPercentage)}%</p>
+          <p class="overall-score">${scores.overallPercentage.toFixed(1).replace('.0', '')}%</p>
           <p>Total Score: ${scores.totalEarned}/${scores.totalPossible}</p>
           <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin-top: 10px; font-size: 14px; color: #555;">
             <strong>Understanding Your Score:</strong> Your score reflects your perspectives on marriage, not a judgment of readiness.

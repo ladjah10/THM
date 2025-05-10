@@ -38,10 +38,10 @@ export function formatCoupleAssessmentEmail(report: CoupleAssessmentReport): str
       if (difference > 20) differenceColor = '#dc2626'; // red
       else if (difference > 10) differenceColor = '#d97706'; // amber
       
-      // Round all percentages to whole numbers
-      const roundedPrimaryPercentage = Math.round(primaryPercentage);
-      const roundedSpousePercentage = Math.round(spousePercentage);
-      const roundedDifference = Math.round(difference);
+      // Format all percentages with 1 decimal place, removing trailing zeros
+      const roundedPrimaryPercentage = primaryPercentage.toFixed(1).replace('.0', '');
+      const roundedSpousePercentage = spousePercentage.toFixed(1).replace('.0', '');
+      const roundedDifference = difference.toFixed(1).replace('.0', '');
       
       sectionsHtml += `
         <tr>
@@ -149,7 +149,7 @@ export function formatCoupleAssessmentEmail(report: CoupleAssessmentReport): str
           <div style="text-align: center; margin-bottom: 30px;">
             <div style="font-size: 18px; font-weight: 600; color: #1f2937; margin-bottom: 15px;">Your Couple Compatibility Score</div>
             <div style="width: 150px; height: 150px; border-radius: 50%; background-color: white; border: 8px solid ${getCompatibilityColor(compatibility)}; margin: 0 auto; display: flex; align-items: center; justify-content: center; flex-direction: column; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-              <div style="font-size: 36px; font-weight: 700; color: ${getCompatibilityColor(compatibility)};">${Math.round(compatibility)}%</div>
+              <div style="font-size: 36px; font-weight: 700; color: ${getCompatibilityColor(compatibility)};">${compatibility.toFixed(1).replace('.0', '')}%</div>
               <div style="font-size: 14px; color: #4b5563;">${getCompatibilityLevel(compatibility)} Compatibility</div>
             </div>
             <p style="margin-top: 15px; font-size: 15px; color: #4b5563;">
@@ -171,13 +171,13 @@ export function formatCoupleAssessmentEmail(report: CoupleAssessmentReport): str
               <div style="text-align: center;">
                 <div style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">${primaryName}'s Score</div>
                 <div style="width: 100px; height: 100px; border-radius: 50%; background-color: #eff6ff; border: 4px solid #3b82f6; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
-                  <div style="font-size: 24px; font-weight: 700; color: #2563eb;">${Math.round(primaryAssessment.scores.overallPercentage)}%</div>
+                  <div style="font-size: 24px; font-weight: 700; color: #2563eb;">${primary.scores.overallPercentage.toFixed(1).replace('.0', '')}%</div>
                 </div>
               </div>
               <div style="text-align: center;">
                 <div style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">${spouseName}'s Score</div>
                 <div style="width: 100px; height: 100px; border-radius: 50%; background-color: #f5f3ff; border: 4px solid #8b5cf6; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
-                  <div style="font-size: 24px; font-weight: 700; color: #7c3aed;">${Math.round(spouseAssessment.scores.overallPercentage)}%</div>
+                  <div style="font-size: 24px; font-weight: 700; color: #7c3aed;">${spouse.scores.overallPercentage.toFixed(1).replace('.0', '')}%</div>
                 </div>
               </div>
             </div>
