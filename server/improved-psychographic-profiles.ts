@@ -326,7 +326,8 @@ function addProfileWithBetterFormatting(doc: PDFKit.PDFDocument, profile: UserPr
     // Add ideal match
     doc.text(`Ideal match: ${matchingInfo.idealMatch || profile.name}`, textX, doc.y, {
       width: textWidth,
-      align: 'left'
+      align: 'left',
+      lineGap: 2 // Added line gap to prevent text overlap
     });
     
     // Add next best matches if available
@@ -334,7 +335,8 @@ function addProfileWithBetterFormatting(doc: PDFKit.PDFDocument, profile: UserPr
       doc.moveDown(0.2)
          .text(`Next best matches: ${matchingInfo.nextBestMatches.slice(0, 2).join(', ')}`, textX, doc.y, {
            width: textWidth,
-           align: 'left'
+           align: 'left',
+           lineGap: 2 // Added line gap to prevent text overlap
          });
     }
   }
