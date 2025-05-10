@@ -6,8 +6,12 @@ import { z } from "zod";
 import { sendAssessmentEmail, sendReferralEmail, sendCoupleInvitationEmails } from "./nodemailer";
 import { sendFormInitiationNotification } from "./sendgrid";
 import { generateShareImage } from "./shareImage";
-import { AssessmentResult, DemographicData } from "../shared/schema";
+import { AssessmentResult, DemographicData, CoupleAssessmentReport } from "../shared/schema";
 import { handleStripeWebhook, syncStripePayments } from "./stripe-webhooks";
+import fs from 'fs';
+import path from 'path';
+import os from 'os';
+import { v4 as uuidv4 } from 'uuid';
 
 // Initialize Stripe with the secret key
 if (!process.env.STRIPE_SECRET_KEY) {
@@ -1600,6 +1604,124 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({
         success: false,
         message: `Failed to send assessment reminders: ${error instanceof Error ? error.message : String(error)}`
+      });
+    }
+  });
+
+  // API endpoint to resend assessment results to a user
+  app.post('/api/admin/resend-assessment-results', async (req: Request, res: Response) => {
+    try {
+      // Validate admin access
+      if (!req.session || !req.session.user || req.session.user.role !== 'admin') {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+      
+      const schema = z.object({
+        email: z.string().email(),
+        assessmentType: z.enum(['individual', 'couple']).optional()
+      });
+      
+      const { email, assessmentType } = schema.parse(req.body);
+      
+      // Fetch the assessment from storage
+      let assessment: AssessmentResult | null = null;
+      let coupleAssessment: CoupleAssessmentReport | null = null;
+      
+      if (assessmentType === 'couple') {
+        // Fetch couple assessment data
+        const coupleData = await storage.getCoupleAssessmentByEmail(email);
+        
+        if (!coupleData) {
+          return res.status(404).json({ 
+            success: false, 
+            message: 'Couple assessment not found for this email' 
+          });
+        }
+        
+        coupleAssessment = coupleData;
+      } else {
+        // Fetch individual assessment
+        assessment = await storage.getCompletedAssessment(email);
+        
+        if (!assessment) {
+          return res.status(404).json({ 
+            success: false, 
+            message: 'Individual assessment not found for this email' 
+          });
+        }
+      }
+      
+      // Generate PDF and send email with results
+      try {
+        if (assessment) {
+          // Generate individual assessment PDF
+          const { generateIndividualPDF } = await import('./updated-individual-pdf');
+          const pdfBuffer = await generateIndividualPDF(assessment);
+          
+          // Create temporary file for the PDF
+          const tempFilePath = path.join(os.tmpdir(), `${uuidv4()}-individual-assessment.pdf`);
+          fs.writeFileSync(tempFilePath, pdfBuffer);
+          
+          // Send email
+          const { sendAssessmentEmail } = await import('./sendgrid');
+          const emailResult = await sendAssessmentEmail(assessment, tempFilePath);
+          
+          // Clean up the temporary file
+          try {
+            fs.unlinkSync(tempFilePath);
+          } catch (err) {
+            console.warn('Failed to clean up temporary PDF file:', err);
+          }
+          
+          if (!emailResult.success) {
+            throw new Error(emailResult.error || 'Failed to send email');
+          }
+          
+          return res.status(200).json({ 
+            success: true, 
+            message: `Assessment results resent successfully to ${email}` 
+          });
+        } else if (coupleAssessment) {
+          // Generate couple assessment PDF
+          const { generateCouplePDF } = await import('./updated-couple-pdf');
+          const pdfBuffer = await generateCouplePDF(coupleAssessment);
+          
+          // Create temporary file for the PDF
+          const tempFilePath = path.join(os.tmpdir(), `${uuidv4()}-couple-assessment.pdf`);
+          fs.writeFileSync(tempFilePath, pdfBuffer);
+          
+          // Send email
+          const { sendCoupleAssessmentEmail } = await import('./sendgrid');
+          const emailResult = await sendCoupleAssessmentEmail(coupleAssessment, tempFilePath);
+          
+          // Clean up the temporary file
+          try {
+            fs.unlinkSync(tempFilePath);
+          } catch (err) {
+            console.warn('Failed to clean up temporary PDF file:', err);
+          }
+          
+          if (!emailResult.success) {
+            throw new Error('Failed to send couple assessment email');
+          }
+          
+          return res.status(200).json({ 
+            success: true, 
+            message: `Couple assessment results resent successfully to ${email}` 
+          });
+        }
+      } catch (error) {
+        console.error('Error generating or sending assessment email:', error);
+        return res.status(500).json({ 
+          success: false, 
+          message: error instanceof Error ? error.message : 'Failed to generate or send assessment email' 
+        });
+      }
+    } catch (error) {
+      console.error("Error resending assessment results:", error);
+      return res.status(400).json({ 
+        success: false, 
+        message: error instanceof Error ? error.message : "Failed to resend assessment results" 
       });
     }
   });
