@@ -50,7 +50,7 @@ export default function ResultsView({
         <h4 className="text-xl font-medium text-blue-900 mb-5 text-center">Overall Assessment Score</h4>
         <div className="flex items-center justify-center">
           <div className="w-52 h-52 rounded-full flex flex-col items-center justify-center border-8 border-blue-500 relative shadow-lg">
-            <div className="text-5xl font-bold text-blue-600">{scores.overallPercentage}%</div>
+            <div className="text-5xl font-bold text-blue-600">{scores.overallPercentage.toFixed(1).replace('.0', '')}%</div>
             <div className="text-base font-medium text-gray-700 mt-1">
               {scores.overallPercentage >= 80 
                 ? "Traditional Approach" 
@@ -158,7 +158,7 @@ export default function ResultsView({
             <div key={section}>
               <div className="flex justify-between mb-2">
                 <span className="font-medium text-gray-800">{section}</span>
-                <span className="font-medium text-blue-700">{percentage}%</span>
+                <span className="font-medium text-blue-700">{Number(percentage).toFixed(1).replace('.0', '')}%</span>
               </div>
               <Progress value={percentage} className="h-3" />
             </div>
