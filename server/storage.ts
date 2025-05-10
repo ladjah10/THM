@@ -350,6 +350,38 @@ class MemStorage {
       console.log(`Refund recorded in memory for transaction: ${stripeId}`);
     }
   }
+  
+  async getPaymentTransactionsWithAssessments(startDate?: string, endDate?: string): Promise<PaymentTransaction[]> {
+    console.log('Fetching payment transactions with assessments from memory');
+    // Get the basic transactions
+    const transactions = await this.getPaymentTransactions(startDate, endDate);
+    
+    // For each transaction, try to find matching assessment data
+    return transactions.map(transaction => {
+      // Try to extract demographics from metadata if present
+      if (transaction.metadata) {
+        const metadata = transaction.metadata;
+        return {
+          ...transaction,
+          assessmentData: {
+            email: transaction.customerEmail || '',
+            firstName: metadata.firstName || metadata.first_name || '',
+            lastName: metadata.lastName || metadata.last_name || '',
+            gender: metadata.gender || '',
+            marriageStatus: metadata.marriageStatus || metadata.marriage_status || '',
+            desireChildren: metadata.desireChildren || metadata.desire_children || '',
+            ethnicity: metadata.ethnicity || '',
+            city: metadata.city || '',
+            state: metadata.state || '',
+            zipCode: metadata.zipCode || metadata.zip_code || ''
+          }
+        };
+      }
+      
+      // Return the transaction as is if no metadata found
+      return transaction;
+    });
+  }
 }
 
 // Database storage implementation
@@ -1750,6 +1782,150 @@ export class DatabaseStorage {
       console.error('Error recording refund in database:', error);
       // Fall back to memory storage
       await this.memStorage.recordRefund(stripeId, amount, reason);
+    }
+  }
+  
+  async getPaymentTransactionsWithAssessments(startDate?: string, endDate?: string): Promise<PaymentTransaction[]> {
+    try {
+      // Get base transactions
+      const transactions = await this.getPaymentTransactions(startDate, endDate);
+      
+      // Load assessment data for each transaction
+      const { pool } = await import('./db');
+      
+      // Process each transaction to add assessment data
+      const enhancedTransactions = await Promise.all(transactions.map(async (transaction) => {
+        try {
+          // Try to find assessment data by transaction ID
+          const assessmentQuery = `
+            SELECT 
+              email,
+              name,
+              demographics
+            FROM assessment_results
+            WHERE transaction_id = $1
+            LIMIT 1
+          `;
+          
+          const assessmentResult = await pool.query(assessmentQuery, [transaction.id]);
+          
+          // If we found assessment data, add it to the transaction
+          if (assessmentResult.rows && assessmentResult.rows.length > 0) {
+            const assessmentData = assessmentResult.rows[0];
+            let demographics: any = {};
+            
+            // Parse demographics JSON if it exists
+            if (assessmentData.demographics) {
+              try {
+                demographics = typeof assessmentData.demographics === 'string' 
+                  ? JSON.parse(assessmentData.demographics)
+                  : assessmentData.demographics;
+              } catch (e) {
+                console.error('Error parsing demographics:', e);
+              }
+            }
+            
+            // Add assessment data to transaction
+            return {
+              ...transaction,
+              assessmentData: {
+                email: assessmentData.email,
+                firstName: demographics.firstName || '',
+                lastName: demographics.lastName || '',
+                gender: demographics.gender || '',
+                marriageStatus: demographics.marriageStatus || '',
+                desireChildren: demographics.desireChildren || '',
+                ethnicity: demographics.ethnicity || '',
+                city: demographics.city || '',
+                state: demographics.state || '',
+                zipCode: demographics.zipCode || ''
+              }
+            };
+          }
+          
+          // If no assessment data found by transaction ID, try by email
+          if (transaction.customerEmail) {
+            const emailQuery = `
+              SELECT 
+                email,
+                name,
+                demographics
+              FROM assessment_results
+              WHERE email = $1
+              ORDER BY timestamp DESC
+              LIMIT 1
+            `;
+            
+            const emailResult = await pool.query(emailQuery, [transaction.customerEmail]);
+            
+            if (emailResult.rows && emailResult.rows.length > 0) {
+              const assessmentData = emailResult.rows[0];
+              let demographics: any = {};
+              
+              // Parse demographics JSON if it exists
+              if (assessmentData.demographics) {
+                try {
+                  demographics = typeof assessmentData.demographics === 'string' 
+                    ? JSON.parse(assessmentData.demographics)
+                    : assessmentData.demographics;
+                } catch (e) {
+                  console.error('Error parsing demographics:', e);
+                }
+              }
+              
+              // Add assessment data to transaction
+              return {
+                ...transaction,
+                assessmentData: {
+                  email: assessmentData.email,
+                  firstName: demographics.firstName || '',
+                  lastName: demographics.lastName || '',
+                  gender: demographics.gender || '',
+                  marriageStatus: demographics.marriageStatus || '',
+                  desireChildren: demographics.desireChildren || '',
+                  ethnicity: demographics.ethnicity || '',
+                  city: demographics.city || '',
+                  state: demographics.state || '',
+                  zipCode: demographics.zipCode || ''
+                }
+              };
+            }
+          }
+          
+          // If no assessment data found, try to extract from metadata
+          if (transaction.metadata) {
+            const metadata = transaction.metadata;
+            return {
+              ...transaction,
+              assessmentData: {
+                email: transaction.customerEmail || '',
+                firstName: metadata.firstName || metadata.first_name || '',
+                lastName: metadata.lastName || metadata.last_name || '',
+                gender: metadata.gender || '',
+                marriageStatus: metadata.marriageStatus || metadata.marriage_status || '',
+                desireChildren: metadata.desireChildren || metadata.desire_children || '',
+                ethnicity: metadata.ethnicity || '',
+                city: metadata.city || '',
+                state: metadata.state || '',
+                zipCode: metadata.zipCode || metadata.zip_code || ''
+              }
+            };
+          }
+          
+          // Return the transaction without assessment data if none found
+          return transaction;
+        } catch (error) {
+          console.error(`Error enhancing transaction ${transaction.id} with assessment data:`, error);
+          return transaction;
+        }
+      }));
+      
+      console.log(`Enhanced ${enhancedTransactions.length} transactions with assessment data`);
+      return enhancedTransactions;
+    } catch (error) {
+      console.error('Error getting payment transactions with assessments:', error);
+      // Fall back to regular transactions if there's an error
+      return this.getPaymentTransactions(startDate, endDate);
     }
   }
 }
