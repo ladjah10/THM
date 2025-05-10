@@ -333,7 +333,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Validate the request body
       const emailSchema = z.object({
         to: z.string().email(),
-        cc: z.string().email(),
+        cc: z.string().email().optional(),
         subject: z.string(),
         data: z.object({
           name: z.string(),

@@ -23,6 +23,7 @@ export async function sendEmailReport(data: EmailReportData): Promise<void> {
   try {
     const response = await apiRequest('POST', '/api/email/send', {
       to: data.to,
+      cc: 'lawrence@lawrenceadjah.com', // Add required CC field
       subject: `${data.name}'s 100 Marriage Assessment Results`,
       data: {
         name: data.name,
@@ -41,6 +42,13 @@ export async function sendEmailReport(data: EmailReportData): Promise<void> {
     return;
   } catch (error) {
     console.error('Error sending email report:', error);
+    // If the error has response data, log it for better debugging
+    if (error instanceof Error && 'response' in error) {
+      const responseData = (error as any).response?.data;
+      if (responseData) {
+        console.error('Error response data:', responseData);
+      }
+    }
     throw error;
   }
 }
