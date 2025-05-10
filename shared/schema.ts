@@ -245,6 +245,10 @@ export interface DemographicData {
   state: string;
   zipCode: string;
   hasPurchasedBook: string;
+  phone?: string;
+  purchaseDate?: string;
+  interestedInArrangedMarriage?: boolean;
+  thmPoolApplied?: boolean;
 }
 
 // Complete assessment result

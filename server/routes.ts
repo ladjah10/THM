@@ -86,23 +86,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Generate tempId if email is not provided yet
       const tempId = validatedData.email || `temp-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
       
-      // Create a minimal assessment result for storing progress
-      const minimalAssessment: Partial<AssessmentResult> = {
-        email: validatedData.email,
+      // Store partial assessment with the format expected by storage.saveAssessmentProgress
+      await storage.saveAssessmentProgress({
+        email: validatedData.email || tempId,
+        demographicData: validatedData.demographicData || {},
         responses: validatedData.responses || {},
+        assessmentType: validatedData.assessmentType || 'individual',
         timestamp: validatedData.timestamp || new Date().toISOString(),
-        isPartial: true // Flag to indicate this is a partial save
-      };
-      
-      // If demographic data exists and is properly structured, add it
-      if (validatedData.demographicData && 
-          typeof validatedData.demographicData === 'object' &&
-          validatedData.demographicData.firstName) {
-        minimalAssessment.demographics = validatedData.demographicData as DemographicData;
-      }
-      
-      // Store partial assessment
-      await storage.saveAssessmentProgress(tempId);
+        completed: false
+      });
       
       // Send form initiation notification to admin if demographic data is provided
       // Only send the notification when demographic data contains substantial information
@@ -391,6 +383,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             desireChildren: z.string(),
             ethnicity: z.string(),
             purchaseDate: z.string().optional(),
+            hasPurchasedBook: z.string().default("No"),
             lifeStage: z.string().default("Not specified"),
             birthday: z.string().default("Not specified"),
             city: z.string().default("Not specified"),
@@ -406,23 +399,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Create assessment result object
       // Ensure all required demographic fields are present
-      const demographics: DemographicData = {
-        ...validatedData.data.demographics,
-        hasPurchasedBook: validatedData.data.demographics.hasPurchasedBook as string || "No",
-        // Ensure all required fields have default values if missing
-        firstName: validatedData.data.demographics.firstName,
-        lastName: validatedData.data.demographics.lastName,
-        email: validatedData.data.demographics.email,
-        gender: validatedData.data.demographics.gender,
-        marriageStatus: validatedData.data.demographics.marriageStatus,
-        desireChildren: validatedData.data.demographics.desireChildren,
-        ethnicity: validatedData.data.demographics.ethnicity,
-        birthday: validatedData.data.demographics.birthday || "Not specified",
-        lifeStage: validatedData.data.demographics.lifeStage || "Not specified",
-        city: validatedData.data.demographics.city || "Not specified",
-        state: validatedData.data.demographics.state || "Not specified",
-        zipCode: validatedData.data.demographics.zipCode || "Not specified",
-      };
+      // Use the validated data directly since we added hasPurchasedBook to the schema
+      const demographics: DemographicData = validatedData.data.demographics;
       
       const assessmentResult: AssessmentResult = {
         email: validatedData.to,
@@ -439,14 +417,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.saveAssessment(assessmentResult);
       
       // Send email with Nodemailer - admin email is now CC'd by default
+      console.log("Attempting to send assessment email for", assessmentResult.email);
       const emailResult = await sendAssessmentEmail(assessmentResult);
       
       if (!emailResult.success) {
+        console.error("Email sending failed:", emailResult);
         return res.status(500).json({
           success: false,
           message: "Failed to send email. Assessment data was saved."
         });
       }
+      
+      console.log("Email sending successful for", assessmentResult.email);
       
       // For testing purposes, log the email preview URL
       if (emailResult.previewUrl) {
