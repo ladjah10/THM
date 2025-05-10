@@ -1,4 +1,4 @@
-// Import the necessary modules
+// Import the sendAssessmentEmail function from nodemailer (not sendgrid)
 import { sendAssessmentEmail } from './server/nodemailer';
 import { DemographicData, UserProfile, AssessmentScores, UserResponse, AssessmentResult } from './shared/schema';
 
@@ -49,7 +49,7 @@ const testAssessment: AssessmentResult = {
     improvementAreas: ['Finances', 'Conflict Resolution']
   },
   responses: {
-    '1': { option: 'Strongly Agree', value: 36 },
+    '1': { option: 'Strongly Agree', value: 5 },
     '2': { option: 'Agree', value: 4 },
     '3': { option: 'Somewhat Agree', value: 3 },
     '4': { option: 'Strongly Agree', value: 5 },
@@ -58,11 +58,10 @@ const testAssessment: AssessmentResult = {
   }
 };
 
-async function sendTestEmail() {
+async function sendSimpleTestEmail() {
+  console.log('Sending test assessment email...');
   try {
-    console.log('Sending test assessment email...');
-    
-    // Send the email using nodemailer version - generates PDF internally
+    // Send the email - nodemailer version generates PDF internally
     const result = await sendAssessmentEmail(testAssessment);
     
     if (result.success) {
@@ -79,4 +78,4 @@ async function sendTestEmail() {
 }
 
 // Run the test
-sendTestEmail();
+sendSimpleTestEmail();

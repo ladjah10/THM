@@ -181,58 +181,8 @@ export async function sendAssessmentEmail(assessment: AssessmentResult): Promise
     const pdfBuffer = await generateIndividualAssessmentPDF(assessment);
     console.log('PDF generation successful, size: ', pdfBuffer.length);
     
-    // If we have a SendGrid API key, use SendGrid directly
-    if (process.env.SENDGRID_API_KEY) {
-      try {
-        console.log('Using SendGrid for email delivery');
-        // Import the sendgrid module
-        const sgMail = await import('@sendgrid/mail');
-        
-        // Set up SendGrid
-        sgMail.default.setApiKey(process.env.SENDGRID_API_KEY);
-        
-        // Format the email HTML content
-        const emailHtml = formatAssessmentEmail(assessment);
-        
-        // Send mail with SendGrid
-        // Log email details for debugging
-        console.log(`Sending email to: ${assessment.email}`);
-        
-        // Use a verified sender email that is configured in SendGrid
-        const verifiedSender = {
-          email: 'noreply@the100marriage.com',
-          name: 'The 100 Marriage Assessment'
-        };
-        
-        console.log(`Using verified sender: ${verifiedSender.email}`);
-        
-        const msg = {
-          to: assessment.email,
-          from: verifiedSender,
-          subject: `${assessment.name} - The 100 Marriage Assessment - Series 1 Results`,
-          html: emailHtml,
-          attachments: [
-            {
-              content: pdfBuffer.toString('base64'),
-              filename: 'The-100-Marriage-Assessment-Series-1-Report.pdf',
-              type: 'application/pdf',
-              disposition: 'attachment'
-            }
-          ]
-        };
-        
-        const result = await sgMail.default.send(msg);
-        console.log(`SendGrid email with PDF attachment sent to ${assessment.email}`);
-        
-        return { 
-          success: true
-        };
-      } catch (sendgridError) {
-        console.error('SendGrid specific error:', sendgridError);
-        // Don't throw, but continue to the Nodemailer fallback
-        console.log('Falling back to Nodemailer due to SendGrid error...');
-      }
-    }
+    // Comment: We've removed the SendGrid integration from here
+    // It should be used separately via the sendgrid.ts module
     
     // Fallback to Nodemailer (test emails)
     // Create transporter
@@ -399,36 +349,8 @@ export async function sendNotificationEmail(transaction: PaymentTransaction): Pr
     // Format the email HTML content
     const emailHtml = formatPaymentNotificationEmail(transaction);
     
-    // If we have a SendGrid API key, use SendGrid directly
-    if (process.env.SENDGRID_API_KEY) {
-      try {
-        console.log('Using SendGrid for notification email');
-        
-        // Send mail with SendGrid using the initialized instance
-        const verifiedSender = {
-          email: 'noreply@the100marriage.com',
-          name: 'The 100 Marriage Assessment'
-        };
-        
-        const msg = {
-          to: 'lawrence@lawrenceadjah.com', // Always send to Lawrence
-          from: verifiedSender,
-          subject: `New Payment: $${(transaction.amount / 100).toFixed(2)} - ${transaction.productType} Assessment`,
-          html: emailHtml
-        };
-        
-        await sgMail.send(msg);
-        console.log(`SendGrid notification email sent to lawrence@lawrenceadjah.com`);
-        
-        return { 
-          success: true
-        };
-      } catch (sendgridError) {
-        console.error('SendGrid notification email error:', sendgridError);
-        console.log('Falling back to Nodemailer...');
-        // Continue with Nodemailer fallback
-      }
-    }
+    // We should use the dedicated SendGrid module for production emails
+    // This is only a fallback for test environments
     
     // Fallback to Nodemailer (test emails)
     // Create transporter
