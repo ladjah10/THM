@@ -1627,7 +1627,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // API endpoint to resend assessment results to a user
-  app.post('/api/admin/resend-assessment-results', async (req: Request, res: Response) => {
+  app.post('/api/admin/resend-assessment-results', async (req: RequestWithSession, res: Response) => {
     try {
       // Validate admin access
       if (!req.session || !req.session.user || req.session.user.role !== 'admin') {
