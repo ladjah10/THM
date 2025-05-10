@@ -316,12 +316,12 @@ export const CoupleAssessmentView: React.FC<CoupleAssessmentViewProps> = ({
                     <div key={section} className="space-y-1">
                       <div className="flex justify-between">
                         <span className="text-sm font-medium text-gray-700">{section}</span>
-                        <span className="text-sm font-medium text-blue-600">{score.percentage}%</span>
+                        <span className="text-sm font-medium text-blue-600">{(score as any).percentage.toFixed(1).replace('.0', '')}%</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div 
                           className="bg-blue-600 h-2 rounded-full" 
-                          style={{ width: `${score.percentage}%` }}
+                          style={{ width: `${(score as any).percentage}%` }}
                         ></div>
                       </div>
                     </div>
@@ -341,7 +341,7 @@ export const CoupleAssessmentView: React.FC<CoupleAssessmentViewProps> = ({
               <div className="space-y-4">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-24 h-24 rounded-full flex items-center justify-center bg-purple-100 border-4 border-purple-300">
-                    <span className="text-2xl font-bold text-purple-600">{spouseAssessment.scores.overallPercentage}%</span>
+                    <span className="text-2xl font-bold text-purple-600">{spouseAssessment.scores.overallPercentage.toFixed(1).replace('.0', '')}%</span>
                   </div>
                   <div>
                     <h3 className="text-lg font-medium text-purple-800">Overall Score</h3>
@@ -384,12 +384,12 @@ export const CoupleAssessmentView: React.FC<CoupleAssessmentViewProps> = ({
                     <div key={section} className="space-y-1">
                       <div className="flex justify-between">
                         <span className="text-sm font-medium text-gray-700">{section}</span>
-                        <span className="text-sm font-medium text-purple-600">{score.percentage}%</span>
+                        <span className="text-sm font-medium text-purple-600">{(score as any).percentage.toFixed(1).replace('.0', '')}%</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div 
                           className="bg-purple-600 h-2 rounded-full" 
-                          style={{ width: `${score.percentage}%` }}
+                          style={{ width: `${(score as any).percentage}%` }}
                         ></div>
                       </div>
                     </div>
