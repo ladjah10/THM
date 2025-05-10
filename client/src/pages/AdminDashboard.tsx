@@ -279,7 +279,7 @@ export default function AdminDashboard() {
     promoCodeUsed: boolean,
     completedOnly: boolean
   }>({
-    startDate: "2025-05-06", // Default to May 6, 2025
+    startDate: "2023-01-01", // Default to January 1, 2023 to ensure we capture historical data
     endDate: undefined,
     requirePayment: false,
     promoCodeUsed: false,
@@ -1538,10 +1538,10 @@ export default function AdminDashboard() {
                   <Input
                     type="date"
                     id="startDate"
-                    value={assessmentDateRange.startDate || "2025-05-06"}
+                    value={assessmentDateRange.startDate || "2023-01-01"}
                     onChange={(e) => setAssessmentDateRange({
                       ...assessmentDateRange,
-                      startDate: e.target.value || "2025-05-06"
+                      startDate: e.target.value || "2023-01-01"
                     })}
                     className="mt-1"
                   />
@@ -1584,7 +1584,7 @@ export default function AdminDashboard() {
               
               {/* Results Summary */}
               <div className="text-sm text-muted-foreground mb-4">
-                Found {filteredAssessments?.length || 0} assessments from {assessmentDateRange.startDate || "May 6, 2025"} 
+                Found {filteredAssessments?.length || 0} assessments from {assessmentDateRange.startDate || "January 1, 2023"} 
                 {assessmentDateRange.endDate ? ` to ${assessmentDateRange.endDate}` : " to present"}
                 {assessmentDateRange.requirePayment ? " (paid assessments only)" : ""}
               </div>
