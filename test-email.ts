@@ -1,4 +1,5 @@
-import { sendAssessmentEmail } from './server/sendgrid';
+// Import from nodemailer instead of sendgrid since nodemailer doesn't require PDF path
+import { sendAssessmentEmail } from './server/nodemailer';
 import { MailService } from '@sendgrid/mail';
 import { DemographicData, UserProfile, AssessmentScores, UserResponse, AssessmentResult } from './shared/schema';
 
@@ -56,9 +57,12 @@ const testAssessment: AssessmentResult = {
 // Send test email
 console.log('Sending test assessment email...');
 sendAssessmentEmail(testAssessment)
-  .then(success => {
-    if (success) {
+  .then(result => {
+    if (result.success) {
       console.log('Test assessment email sent successfully!');
+      if (result.previewUrl) {
+        console.log('Preview URL:', result.previewUrl);
+      }
     } else {
       console.error('Failed to send test assessment email.');
     }

@@ -1,5 +1,5 @@
 import { AssessmentResult } from './shared/schema';
-import { sendAssessmentEmail } from './server/sendgrid';
+import { sendAssessmentEmail } from './server/nodemailer'; // Use nodemailer version that generates PDF automatically
 import { Question } from './temp/questions'; // Import the actual question structure
 import { questions as realQuestions } from './temp/questions'; // Import the real questions
 
@@ -209,11 +209,14 @@ async function runRealAssessmentE2ETest() {
   console.log("Improvement Areas:", improvementAreas.join(", "));
   
   // Send the assessment email
-  console.log("\n📧 Sending real assessment email with SendGrid...");
+  console.log("\n📧 Sending real assessment email...");
   const sendResult = await sendAssessmentEmail(testAssessment);
   
-  if (sendResult) {
+  if (sendResult.success) {
     console.log("✅ Email sent successfully!");
+    if (sendResult.previewUrl) {
+      console.log("Preview URL:", sendResult.previewUrl);
+    }
     console.log("Check your inbox for the real assessment report");
   } else {
     console.error("❌ Failed to send email");
