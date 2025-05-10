@@ -141,6 +141,25 @@ class MemStorage {
   async getAllAssessments(): Promise<AssessmentResult[]> {
     return Array.from(this.assessments.values());
   }
+  
+  // Get a completed assessment by email
+  async getCompletedAssessment(email: string): Promise<AssessmentResult | null> {
+    // Check if assessment exists with this email
+    const assessment = this.assessments.get(email);
+    return assessment || null;
+  }
+  
+  // Get a couple assessment by email (checks both primary and spouse emails)
+  async getCoupleAssessmentByEmail(email: string): Promise<CoupleAssessmentReport | null> {
+    // Look through all couple assessments
+    for (const coupleAssessment of this.coupleAssessments.values()) {
+      if (coupleAssessment.primaryAssessment.email === email || 
+          coupleAssessment.spouseAssessment?.email === email) {
+        return coupleAssessment;
+      }
+    }
+    return null;
+  }
 
   // Couple assessment methods
   async saveCoupleAssessment(primaryAssessment: AssessmentResult, spouseEmail: string): Promise<string> {
