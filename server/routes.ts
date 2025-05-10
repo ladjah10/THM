@@ -12,6 +12,24 @@ import fs from 'fs';
 import path from 'path';
 import os from 'os';
 import { v4 as uuidv4 } from 'uuid';
+import session from 'express-session';
+
+// Extend Express.Request with session type
+declare module 'express-session' {
+  interface SessionData {
+    user?: {
+      role: string;
+      id?: number;
+      username?: string;
+    };
+    tempId?: string;
+  }
+}
+
+// Define custom Request type with session
+interface RequestWithSession extends Request {
+  session: session.Session & Partial<session.SessionData>;
+}
 
 // Initialize Stripe with the secret key
 if (!process.env.STRIPE_SECRET_KEY) {
@@ -1656,7 +1674,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         if (assessment) {
           // Generate individual assessment PDF
           const { generateIndividualAssessmentPDF } = await import('./updated-individual-pdf');
-          const pdfBuffer = await generateIndividualPDF(assessment);
+          const pdfBuffer = await generateIndividualAssessmentPDF(assessment);
           
           // Create temporary file for the PDF
           const tempFilePath = path.join(os.tmpdir(), `${uuidv4()}-individual-assessment.pdf`);
@@ -1683,8 +1701,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           });
         } else if (coupleAssessment) {
           // Generate couple assessment PDF
-          const { generateCouplePDF } = await import('./updated-couple-pdf');
-          const pdfBuffer = await generateCouplePDF(coupleAssessment);
+          const { generateCoupleAssessmentPDF } = await import('./updated-couple-pdf');
+          const pdfBuffer = await generateCoupleAssessmentPDF(coupleAssessment);
           
           // Create temporary file for the PDF
           const tempFilePath = path.join(os.tmpdir(), `${uuidv4()}-couple-assessment.pdf`);
