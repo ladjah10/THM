@@ -17,7 +17,7 @@ interface SocialShareProps {
 
 export function SocialShareButtons({ profile, genderProfile, scores, name, gender }: SocialShareProps) {
   const firstName = name.split(' ')[0];
-  const baseUrl = "https://100marriage-assessment.replit.app";
+  const baseUrl = "https://the100marriage.lawrenceadjah.com";
   const shareUrl = `${baseUrl}`;
 
   // Generate short description based on profiles

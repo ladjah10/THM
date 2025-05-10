@@ -117,7 +117,7 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
         <p>Your complete assessment report is attached to this email. In it, you'll find detailed insights about your preferences, compatibility with other profiles, and personalized recommendations.</p>
         
         <p style="text-align: center;">
-          <a href="https://www.the100marriage.com" class="button">Learn More</a>
+          <a href="https://www.the100marriage.lawrenceadjah.com" class="button">Learn More</a>
         </p>
         
         <div class="footer">

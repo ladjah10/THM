@@ -387,7 +387,7 @@ function addRecommendationsPage(doc: PDFKit.PDFDocument, assessment: AssessmentR
      .list([
        'Purchase "The 100 Marriage" book for a comprehensive guide to relationship compatibility and psychographic profiles.',
        'Consider taking the Couple Assessment with a current or potential partner for deeper insights.',
-       'Visit www.the100marriage.com for additional resources and relationship tools.'
+       'Visit www.the100marriage.lawrenceadjah.com for additional resources and relationship tools.'
      ], {
        bulletRadius: 2,
        textIndent: 20,
