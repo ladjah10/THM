@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 import sgMail from '@sendgrid/mail';
 import { AssessmentResult, CoupleAssessmentReport, PaymentTransaction } from '../shared/schema';
+import * as sendgrid from './sendgrid';
 import { generateIndividualAssessmentPDF } from './updated-individual-pdf';
 import { generateCoupleAssessmentPDF } from './updated-couple-pdf';
 import { formatCoupleAssessmentEmail } from './couple-email-template';
@@ -198,17 +199,10 @@ export async function sendAssessmentEmail(assessment: AssessmentResult): Promise
     if (process.env.SENDGRID_API_KEY) {
       console.log('Using SendGrid for assessment email');
       
-      // Import and use the SendGrid module
-      const sendGridResult = await import('./sendgrid').then(module => 
-        module.sendAssessmentEmail(assessment, pdfPath)
-      );
+      // Use our dedicated SendGrid function for individual assessment emails
+      const sendGridResult = await sendgrid.sendAssessmentEmail(assessment, pdfPath);
       
-      // Clean up temporary file
-      try {
-        fs.unlinkSync(pdfPath);
-      } catch (e) {
-        console.warn('Could not remove temporary PDF file:', e);
-      }
+      // Clean up temporary file is handled by the SendGrid function
       
       return { 
         success: sendGridResult.success,
@@ -946,47 +940,17 @@ export async function sendCoupleAssessmentEmail(
       console.log('Using SendGrid for couple assessment email');
       
       try {
-        // Send mail with SendGrid using the initialized instance
-        const verifiedSender = {
-          email: 'hello@wgodw.com',
-          name: 'The 100 Marriage Assessment'
-        };
+        // Use our dedicated SendGrid function for couple assessment emails
+        const sendGridResult = await sendgrid.sendCoupleAssessmentEmail(report, pdfPath);
         
-        // Read the PDF from the file
-        const pdfContent = fs.readFileSync(pdfPath);
-        
-        const msg = {
-          to: [primaryEmail, spouseEmail], // Send to both partners
-          from: verifiedSender,
-          subject: `${primaryName} & ${spouseName} - Couple Assessment Report - The 100 Marriage`,
-          html: emailHtml,
-          attachments: [
-            {
-              content: pdfContent.toString('base64'),
-              filename: 'The-100-Marriage-Couple-Assessment-Report.pdf',
-              type: 'application/pdf',
-              disposition: 'attachment'
-            }
-          ]
-        };
-        
-        const response = await sgMail.send(msg);
-        
-        // Clean up temporary file
-        try {
-          fs.unlinkSync(pdfPath);
-        } catch (e) {
-          console.warn('Could not remove temporary couple PDF file:', e);
-        }
-        
-        if (response && response[0] && response[0].statusCode >= 200 && response[0].statusCode < 300) {
+        if (sendGridResult.success) {
           console.log(`SendGrid couple assessment email sent successfully to ${primaryEmail} and ${spouseEmail}`);
           return { 
             success: true,
-            messageId: response[0].headers['x-message-id'] as string
+            messageId: sendGridResult.messageId
           };
         } else {
-          console.error('Error sending couple assessment email with SendGrid:', response);
+          console.error('Error sending couple assessment email with SendGrid');
           // Fall through to nodemailer fallback
         }
       } catch (sendGridError) {
