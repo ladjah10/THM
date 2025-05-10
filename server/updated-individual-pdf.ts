@@ -241,7 +241,7 @@ export async function generateIndividualAssessmentPDF(assessment: AssessmentResu
         
         // Then draw the score right-aligned
         doc.fillColor('#3182ce')
-          .text(`${Math.round(score.percentage)}%`, 250, doc.y - doc.currentLineHeight(), {
+          .text(`${score.percentage.toFixed(1).replace('.0', '')}%`, 250, doc.y - doc.currentLineHeight(), {
             align: 'left'
           });
         
@@ -288,7 +288,7 @@ export async function generateIndividualAssessmentPDF(assessment: AssessmentResu
           });
       
       // Calculate percentile for overall score
-      const overallScore = Math.round(assessment.scores.overallPercentage);
+      const overallScore = assessment.scores.overallPercentage;
       const { mean, standardDeviation } = baselineStatistics.overall.byGender[genderKey];
       
       // Simplified z-score to percentile calculation
@@ -318,7 +318,7 @@ export async function generateIndividualAssessmentPDF(assessment: AssessmentResu
       doc.fontSize(22)
         .font('Helvetica-Bold')
         .fillColor('#3182ce')
-        .text(`${Math.round(overallScore)}%`, 85, overallBoxY + 30);
+        .text(`${overallScore.toFixed(1).replace('.0', '')}%`, 85, overallBoxY + 30);
       
       // Average score info box
       doc.rect(250, overallBoxY, 150, 60).fillAndStroke('#f8fafc', '#e2e8f0');
@@ -372,7 +372,7 @@ export async function generateIndividualAssessmentPDF(assessment: AssessmentResu
       doc.fontSize(11)
         .font('Helvetica')
         .fillColor('#4a5568')
-        .text(`Your overall score of ${Math.round(overallScore)}% is ${percentileDesc} compared to other ${genderText}.`, 70, overallBoxY + 125);
+        .text(`Your overall score of ${overallScore.toFixed(1).replace('.0', '')}% is ${percentileDesc} compared to other ${genderText}.`, 70, overallBoxY + 125);
         
       // Book promotion
       doc.moveDown(2)
