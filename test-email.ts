@@ -1,5 +1,8 @@
-// Import from nodemailer instead of sendgrid since nodemailer doesn't require PDF path
-import { sendAssessmentEmail } from './server/nodemailer';
+// Import the necessary modules
+import { sendAssessmentEmail } from './server/sendgrid';
+import { generateIndividualAssessmentPDF } from './server/updated-individual-pdf';
+import * as fs from 'fs';
+import * as path from 'path';
 import { MailService } from '@sendgrid/mail';
 import { DemographicData, UserProfile, AssessmentScores, UserResponse, AssessmentResult } from './shared/schema';
 
@@ -54,22 +57,42 @@ const testAssessment: AssessmentResult = {
   }
 };
 
-// Send test email
-console.log('Sending test assessment email...');
-sendAssessmentEmail(testAssessment)
-  .then(result => {
+async function sendTestEmail() {
+  try {
+    console.log('Generating PDF for test assessment...');
+    const pdfBuffer = await generateIndividualAssessmentPDF(testAssessment);
+    
+    // Save the PDF to a temporary file
+    const tempPdfPath = './temp/test-assessment.pdf';
+    const tempDir = path.dirname(tempPdfPath);
+    
+    // Create temp directory if it doesn't exist
+    if (!fs.existsSync(tempDir)) {
+      fs.mkdirSync(tempDir, { recursive: true });
+    }
+    
+    fs.writeFileSync(tempPdfPath, pdfBuffer);
+    console.log(`PDF saved to ${tempPdfPath}`);
+    
+    // Send the email with the PDF attachment
+    console.log('Sending test assessment email with PDF attachment...');
+    const result = await sendAssessmentEmail(testAssessment, tempPdfPath);
+    
     if (result.success) {
       console.log('Test assessment email sent successfully!');
-      if (result.previewUrl) {
-        console.log('Preview URL:', result.previewUrl);
+      if (result.messageId) {
+        console.log('Message ID:', result.messageId);
       }
     } else {
       console.error('Failed to send test assessment email.');
     }
-  })
-  .catch(error => {
-    console.error('Error sending test assessment email:', error);
+  } catch (error) {
+    console.error('Error in test email process:', error);
     if (error.response && error.response.body) {
       console.error('Error details:', JSON.stringify(error.response.body, null, 2));
     }
-  });
+  }
+}
+
+// Run the test
+sendTestEmail();

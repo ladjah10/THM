@@ -32,32 +32,29 @@ interface CoupleInvitationData {
 
 // Create reusable transporter
 async function createTransporter() {
-  // If SendGrid API key is available, use SendGrid
+  // Always create a fallback Ethereal Email account for testing
+  console.log("Setting up email transport...");
+  const testAccount = await nodemailer.createTestAccount();
+  
+  // Create a SMTP transporter using Ethereal Email
+  const transporter = nodemailer.createTransport({
+    host: 'smtp.ethereal.email',
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: testAccount.user,
+      pass: testAccount.pass,
+    },
+  });
+  
   if (process.env.SENDGRID_API_KEY) {
-    // We'll use sendgrid.ts instead, which directly uses the SendGrid API
-    // This is just a placeholder to maintain the interface
-    console.log("Using SendGrid for email delivery");
-    const testAccount = null;
-    const transporter = null;
-    return { transporter, testAccount };
+    // We'll still prefer SendGrid when available, but we have a backup transporter
+    console.log("SendGrid API key found - will attempt to use SendGrid first");
   } else {
-    // Fallback to Ethereal Email for testing
-    console.log("Using Ethereal Email for test email delivery");
-    const testAccount = await nodemailer.createTestAccount();
-    
-    // Create a SMTP transporter using Ethereal Email
-    const transporter = nodemailer.createTransport({
-      host: 'smtp.ethereal.email',
-      port: 587,
-      secure: false, // true for 465, false for other ports
-      auth: {
-        user: testAccount.user,
-        pass: testAccount.pass,
-      },
-    });
-    
-    return { transporter, testAccount };
+    console.log("Using Ethereal Email for test email delivery (no SendGrid API key found)");
   }
+  
+  return { transporter, testAccount };
 }
 
 // Format the email HTML

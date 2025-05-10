@@ -56,15 +56,17 @@ async function processHistoricalResponses() {
           continue;
         }
         
-        // Generate PDF
-        console.log(`Generating PDF for ${assessmentResult.name}...`);
-        const pdfPath = await generateIndividualPDF(assessmentResult);
+        // PDF will be generated automatically by the nodemailer function
+        console.log(`Processing assessment for ${assessmentResult.name}...`);
         
         if (global.SEND_EMAILS) {
-          // Send email with PDF
+          // Send email with PDF - using nodemailer which generates PDF internally
           console.log(`Sending email to ${assessmentResult.email}...`);
-          const result = await sendAssessmentEmail(assessmentResult, pdfPath);
+          const result = await sendAssessmentEmail(assessmentResult);
           console.log(`Email sent: ${result.success ? 'Success' : 'Failed'}`);
+          if (result.previewUrl) {
+            console.log(`Preview URL: ${result.previewUrl}`);
+          }
         } else {
           console.log(`Email simulation (not actually sent) to ${assessmentResult.email}`);
         }
