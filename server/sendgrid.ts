@@ -213,12 +213,16 @@ export async function sendAssessmentEmail(assessment: AssessmentResult, pdfPath:
  * Formats the HTML email content for a couple assessment
  */
 function formatCoupleAssessmentEmail(report: CoupleAssessmentReport): string {
-  // Get names for email
-  const primaryName = report.primary.demographics.firstName;
-  const spouseName = report.spouse.demographics.firstName;
+  // Handle both old and new property paths
+  const primary = report.primaryAssessment || report.primary;
+  const spouse = report.spouseAssessment || report.spouse;
   
-  // Extract compatibility
-  const compatibility = report.compatibilityScore || 0;
+  // Safe access to names
+  const primaryName = primary?.demographics?.firstName || primary?.name?.split(' ')[0] || 'Partner 1';
+  const spouseName = spouse?.demographics?.firstName || spouse?.name?.split(' ')[0] || 'Partner 2';
+  
+  // Extract compatibility with fallback
+  const compatibility = report.overallCompatibility || report.compatibilityScore || 0;
   const compatibilityDisplay = compatibility.toFixed(1);
   
   return `
