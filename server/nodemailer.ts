@@ -5,6 +5,10 @@ import { generateIndividualAssessmentPDF } from './updated-individual-pdf';
 import { generateCoupleAssessmentPDF } from './updated-couple-pdf';
 import { formatCoupleAssessmentEmail } from './couple-email-template';
 import { formatCoupleInvitationEmail } from './couple-invitation-template';
+import { v4 as uuidv4 } from 'uuid';
+import path from 'path';
+import fs from 'fs';
+import os from 'os';
 
 // Initialize SendGrid if API key is available
 if (process.env.SENDGRID_API_KEY) {
@@ -384,11 +388,43 @@ export async function sendNotificationEmail(transaction: PaymentTransaction): Pr
     // Format the email HTML content
     const emailHtml = formatPaymentNotificationEmail(transaction);
     
-    // We should use the dedicated SendGrid module for production emails
-    // This is only a fallback for test environments
+    // Use SendGrid for sending email (primary method)
+    if (process.env.SENDGRID_API_KEY) {
+      console.log('Using SendGrid for payment notification email');
+      
+      // Create and send message directly with SendGrid
+      const msg = {
+        to: 'lawrence@lawrenceadjah.com', // Always send to Lawrence
+        from: {
+          email: 'hello@wgodw.com',
+          name: 'The 100 Marriage Assessment'
+        },
+        subject: `New Payment: $${(transaction.amount / 100).toFixed(2)} - ${transaction.productType} Assessment`,
+        html: emailHtml,
+      };
+      
+      try {
+        const response = await sgMail.send(msg);
+        
+        if (response && response[0] && response[0].statusCode >= 200 && response[0].statusCode < 300) {
+          console.log(`Payment notification email sent successfully to Lawrence`);
+          return { 
+            success: true,
+            messageId: response[0].headers['x-message-id'] as string
+          };
+        } else {
+          console.error('Error sending payment notification email with SendGrid:', response);
+          // Fall through to nodemailer fallback
+        }
+      } catch (sendGridError) {
+        console.error('SendGrid payment notification email error:', sendGridError);
+        // Fall through to nodemailer fallback
+      }
+    }
+    
+    console.warn('SENDGRID_API_KEY not set or SendGrid failed, falling back to Nodemailer (test only)');
     
     // Fallback to Nodemailer (test emails)
-    // Create transporter
     const { transporter, testAccount } = await createTransporter();
     
     if (!transporter) {
@@ -398,7 +434,7 @@ export async function sendNotificationEmail(transaction: PaymentTransaction): Pr
     
     // Send mail with defined transport object
     const info = await transporter.sendMail({
-      from: `"The 100 Marriage Assessment" <notifications@wgodw.com>`,
+      from: `"The 100 Marriage Assessment" <hello@wgodw.com>`,
       to: 'lawrence@lawrenceadjah.com', // Always send to Lawrence
       subject: `New Payment: $${(transaction.amount / 100).toFixed(2)} - ${transaction.productType} Assessment`,
       html: emailHtml,
@@ -528,7 +564,7 @@ export async function sendReferralEmail(data: ReferralEmailData): Promise<{ succ
         
         // Send mail with SendGrid using the initialized instance
         const verifiedSender = {
-          email: 'noreply@the100marriage.com',
+          email: 'hello@wgodw.com',
           name: 'The 100 Marriage Assessment'
         };
         
@@ -704,7 +740,7 @@ export async function sendAssessmentReminder(data: AssessmentReminderData): Prom
         
         // Send mail with SendGrid using the initialized instance
         const verifiedSender = {
-          email: 'noreply@the100marriage.com',
+          email: 'hello@wgodw.com',
           name: 'The 100 Marriage Assessment'
         };
         
@@ -790,7 +826,7 @@ export async function sendCoupleInvitationEmails(
         
         // Send emails with SendGrid using the initialized instance
         const verifiedSender = {
-          email: 'noreply@the100marriage.com',
+          email: 'hello@wgodw.com',
           name: 'The 100 Marriage Assessment'
         };
         
@@ -901,7 +937,7 @@ export async function sendCoupleAssessmentEmail(
         
         // Send mail with SendGrid using the initialized instance
         const verifiedSender = {
-          email: 'noreply@the100marriage.com',
+          email: 'hello@wgodw.com',
           name: 'The 100 Marriage Assessment'
         };
         
