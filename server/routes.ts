@@ -6,7 +6,7 @@ import { z } from "zod";
 import { sendAssessmentEmail, sendReferralEmail, sendCoupleInvitationEmails } from "./nodemailer";
 import { sendFormInitiationNotification } from "./sendgrid";
 import { generateShareImage } from "./shareImage";
-import { AssessmentResult } from "../shared/schema";
+import { AssessmentResult, DemographicData } from "../shared/schema";
 import { handleStripeWebhook, syncStripePayments } from "./stripe-webhooks";
 
 // Initialize Stripe with the secret key
@@ -89,14 +89,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create a minimal assessment result for storing progress
       const minimalAssessment: Partial<AssessmentResult> = {
         email: validatedData.email,
-        demographics: validatedData.demographicData,
         responses: validatedData.responses || {},
         timestamp: validatedData.timestamp || new Date().toISOString(),
         isPartial: true // Flag to indicate this is a partial save
       };
       
+      // If demographic data exists and is properly structured, add it
+      if (validatedData.demographicData && 
+          typeof validatedData.demographicData === 'object' &&
+          validatedData.demographicData.firstName) {
+        minimalAssessment.demographics = validatedData.demographicData as DemographicData;
+      }
+      
       // Store partial assessment
-      await storage.saveAssessmentProgress(tempId, minimalAssessment);
+      await storage.saveAssessmentProgress(tempId);
       
       // Send form initiation notification to admin if demographic data is provided
       // Only send the notification when demographic data contains substantial information
@@ -399,6 +405,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validatedData = emailSchema.parse(req.body);
       
       // Create assessment result object
+      // Ensure all required demographic fields are present
+      const demographics: DemographicData = {
+        ...validatedData.data.demographics,
+        hasPurchasedBook: validatedData.data.demographics.hasPurchasedBook as string || "No",
+        // Ensure all required fields have default values if missing
+        firstName: validatedData.data.demographics.firstName,
+        lastName: validatedData.data.demographics.lastName,
+        email: validatedData.data.demographics.email,
+        gender: validatedData.data.demographics.gender,
+        marriageStatus: validatedData.data.demographics.marriageStatus,
+        desireChildren: validatedData.data.demographics.desireChildren,
+        ethnicity: validatedData.data.demographics.ethnicity,
+        birthday: validatedData.data.demographics.birthday || "Not specified",
+        lifeStage: validatedData.data.demographics.lifeStage || "Not specified",
+        city: validatedData.data.demographics.city || "Not specified",
+        state: validatedData.data.demographics.state || "Not specified",
+        zipCode: validatedData.data.demographics.zipCode || "Not specified",
+      };
+      
       const assessmentResult: AssessmentResult = {
         email: validatedData.to,
         name: validatedData.data.name,
@@ -406,10 +431,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         profile: validatedData.data.profile,
         genderProfile: validatedData.data.genderProfile || null,
         responses: validatedData.data.responses,
-        demographics: {
-          ...validatedData.data.demographics,
-          hasPurchasedBook: validatedData.data.demographics.hasPurchasedBook || "No"
-        },
+        demographics,
         timestamp: new Date().toISOString()
       };
       
