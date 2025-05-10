@@ -178,7 +178,7 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
  * Sends an assessment report email with PDF attachment
  * Uses SendGrid when available, falls back to Nodemailer
  */
-export async function sendAssessmentEmail(assessment: AssessmentResult): Promise<{ success: boolean, previewUrl?: string }> {
+export async function sendAssessmentEmail(assessment: AssessmentResult): Promise<{ success: boolean, previewUrl?: string, messageId?: string }> {
   try {
     // Generate PDF report
     console.log('Generating PDF report...');
@@ -383,7 +383,7 @@ function formatPaymentNotificationEmail(transaction: PaymentTransaction): string
  * Sends a payment notification email
  * Uses SendGrid when available, falls back to Nodemailer
  */
-export async function sendNotificationEmail(transaction: PaymentTransaction): Promise<{ success: boolean, previewUrl?: string }> {
+export async function sendNotificationEmail(transaction: PaymentTransaction): Promise<{ success: boolean, previewUrl?: string, messageId?: string }> {
   try {
     // Format the email HTML content
     const emailHtml = formatPaymentNotificationEmail(transaction);
@@ -552,7 +552,7 @@ function formatReferralEmail(data: ReferralEmailData): string {
  * Sends a referral invitation email
  * Uses SendGrid when available, falls back to Nodemailer
  */
-export async function sendReferralEmail(data: ReferralEmailData): Promise<{ success: boolean, previewUrl?: string }> {
+export async function sendReferralEmail(data: ReferralEmailData): Promise<{ success: boolean, previewUrl?: string, messageId?: string }> {
   try {
     // Format the email HTML content
     const emailHtml = formatReferralEmail(data);
@@ -728,7 +728,7 @@ function formatAssessmentReminderEmail(data: AssessmentReminderData): string {
  * Sends an assessment reminder email to users who haven't completed their assessment
  * Uses SendGrid when available, falls back to Nodemailer
  */
-export async function sendAssessmentReminder(data: AssessmentReminderData): Promise<{ success: boolean, previewUrl?: string }> {
+export async function sendAssessmentReminder(data: AssessmentReminderData): Promise<{ success: boolean, previewUrl?: string, messageId?: string }> {
   try {
     // Format the email HTML content
     const emailHtml = formatAssessmentReminderEmail(data);
@@ -913,11 +913,22 @@ export async function sendCoupleInvitationEmails(
  */
 export async function sendCoupleAssessmentEmail(
   report: CoupleAssessmentReport
-): Promise<{ success: boolean, previewUrl?: string }> {
+): Promise<{ success: boolean, previewUrl?: string, messageId?: string }> {
   try {
     // Generate PDF report
     console.log('Generating couple assessment PDF report...');
     const pdfBuffer = await generateCoupleAssessmentPDF(report);
+    console.log('Couple PDF generation successful, size: ', pdfBuffer.length);
+    
+    // Save PDF to a temporary file
+    const tempDir = path.join(os.tmpdir(), 'the100marriage');
+    if (!fs.existsSync(tempDir)) {
+      fs.mkdirSync(tempDir, { recursive: true });
+    }
+    const coupleId = report.coupleId || uuidv4();
+    const pdfPath = path.join(tempDir, `${coupleId}-couple-assessment.pdf`);
+    fs.writeFileSync(pdfPath, pdfBuffer);
+    console.log(`Couple PDF saved to temporary file: ${pdfPath}`);
     
     // Format couple email
     const emailHtml = formatCoupleAssessmentEmail(report);
@@ -930,16 +941,19 @@ export async function sendCoupleAssessmentEmail(
     const primaryName = report.primary.demographics.firstName;
     const spouseName = report.spouse.demographics.firstName;
     
-    // If we have a SendGrid API key, use SendGrid directly
+    // Use SendGrid for sending email (primary method)
     if (process.env.SENDGRID_API_KEY) {
+      console.log('Using SendGrid for couple assessment email');
+      
       try {
-        console.log('Using SendGrid for couple assessment email');
-        
         // Send mail with SendGrid using the initialized instance
         const verifiedSender = {
           email: 'hello@wgodw.com',
           name: 'The 100 Marriage Assessment'
         };
+        
+        // Read the PDF from the file
+        const pdfContent = fs.readFileSync(pdfPath);
         
         const msg = {
           to: [primaryEmail, spouseEmail], // Send to both partners
@@ -948,7 +962,7 @@ export async function sendCoupleAssessmentEmail(
           html: emailHtml,
           attachments: [
             {
-              content: pdfBuffer.toString('base64'),
+              content: pdfContent.toString('base64'),
               filename: 'The-100-Marriage-Couple-Assessment-Report.pdf',
               type: 'application/pdf',
               disposition: 'attachment'
@@ -956,21 +970,35 @@ export async function sendCoupleAssessmentEmail(
           ]
         };
         
-        await sgMail.send(msg);
-        console.log(`SendGrid couple assessment email with PDF attachment sent to ${primaryEmail} and ${spouseEmail}`);
+        const response = await sgMail.send(msg);
         
-        return { 
-          success: true
-        };
-      } catch (sendgridError) {
-        console.error('SendGrid couple assessment email error:', sendgridError);
+        // Clean up temporary file
+        try {
+          fs.unlinkSync(pdfPath);
+        } catch (e) {
+          console.warn('Could not remove temporary couple PDF file:', e);
+        }
+        
+        if (response && response[0] && response[0].statusCode >= 200 && response[0].statusCode < 300) {
+          console.log(`SendGrid couple assessment email sent successfully to ${primaryEmail} and ${spouseEmail}`);
+          return { 
+            success: true,
+            messageId: response[0].headers['x-message-id'] as string
+          };
+        } else {
+          console.error('Error sending couple assessment email with SendGrid:', response);
+          // Fall through to nodemailer fallback
+        }
+      } catch (sendGridError) {
+        console.error('SendGrid couple assessment email error:', sendGridError);
         console.log('Falling back to Nodemailer...');
         // Continue with Nodemailer fallback
       }
     }
     
+    console.warn('SENDGRID_API_KEY not set or SendGrid failed, falling back to Nodemailer (test only)');
+    
     // Fallback to Nodemailer (test emails)
-    // Create transporter
     const { transporter, testAccount } = await createTransporter();
     
     if (!transporter) {
@@ -996,6 +1024,13 @@ export async function sendCoupleAssessmentEmail(
     console.log(`Couple assessment email with PDF attachment sent: ${info.messageId}`);
     const previewUrl = nodemailer.getTestMessageUrl(info);
     console.log(`Preview URL: ${previewUrl}`);
+    
+    // Clean up temporary file
+    try {
+      fs.unlinkSync(pdfPath);
+    } catch (e) {
+      console.warn('Could not remove temporary couple PDF file:', e);
+    }
     
     return { 
       success: true,

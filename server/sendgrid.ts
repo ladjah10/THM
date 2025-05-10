@@ -131,7 +131,10 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
 }
 
 /**
- * Sends an assessment report email with PDF attachment
+ * Sends an individual assessment report email with PDF attachment
+ * @param assessment The assessment result to send
+ * @param pdfPath The path to the PDF file to attach
+ * @returns Object containing success status and messageId if successful
  */
 export async function sendAssessmentEmail(assessment: AssessmentResult, pdfPath: string): Promise<{ success: boolean, messageId?: string }> {
   if (!process.env.SENDGRID_API_KEY) {
