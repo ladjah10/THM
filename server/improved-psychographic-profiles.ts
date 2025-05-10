@@ -145,7 +145,8 @@ export function addImprovedProfilesReferenceSection(doc: PDFKit.PDFDocument): vo
      .fillColor('#555')
      .text('This guide provides information about all psychographic profiles in the 100 Marriage Assessment system. Use it to better understand your own profile and potential compatibility with others.', {
        align: 'center',
-       width: doc.page.width - 100 // Narrower width to prevent text overrun
+       width: doc.page.width - 150, // Increased margin to prevent text overrun
+       lineGap: 3 // Added line gap to prevent text overlap
      })
      .moveDown(1);
 
@@ -296,7 +297,8 @@ function addProfileWithBetterFormatting(doc: PDFKit.PDFDocument, profile: UserPr
      .fillColor('#555')
      .text(profile.description, textX, doc.y, { 
        width: textWidth,
-       align: 'left'
+       align: 'left',
+       lineGap: 2 // Added line gap to prevent text overlap
      });
   
   // Add compatibility info based on criteria
@@ -306,7 +308,8 @@ function addProfileWithBetterFormatting(doc: PDFKit.PDFDocument, profile: UserPr
        .fillColor('#555')
        .text(`Compatible with profiles that emphasize: ${profile.criteria.map(c => c.section).join(', ')}`, {
          width: textWidth,
-         align: 'left'
+         align: 'left',
+         lineGap: 2 // Added line gap to prevent text overlap
        });
   }
   
