@@ -126,31 +126,34 @@ export async function generateIndividualAssessmentPDF(assessment: AssessmentResu
         .font('Helvetica')
         .fillColor('#4a5568')
         .text('Understanding Your Score: Your assessment score reflects your perspectives on marriage, not a judgment of readiness. Higher percentages indicate alignment with traditional marriage values, while lower percentages suggest less traditional approaches. Neither is inherently better—just different expectations.', {
-          width: doc.page.width - 100,
-          align: 'left'
+          width: doc.page.width - 150, // Increased margin to prevent text overrun
+          align: 'left',
+          lineGap: 3 // Added line gap to prevent text overlap
         });
         
-      doc.moveDown(0.5);
+      doc.moveDown(1); // Increased spacing between paragraphs
       
       // Add comparison explanation in bullet points
       doc.fontSize(12)
         .font('Helvetica')
         .fillColor('#4a5568')
         .text('• The most important consideration is how your assessment and approach compares with someone you are married to or discerning marriage with.', {
-          width: doc.page.width - 120,
+          width: doc.page.width - 170, // Increased margin to prevent text overrun
           indent: 10,
-          align: 'left'
+          align: 'left',
+          lineGap: 3 // Added line gap to prevent text overlap
         });
         
-      doc.moveDown(0.3);
+      doc.moveDown(0.8); // Increased spacing between bullet points
         
       doc.fontSize(12)
         .font('Helvetica')
         .fillColor('#4a5568')
         .text('• The closer the percentage (with your spouse), overall, the more aligned and successful you will be.', {
-          width: doc.page.width - 120,
+          width: doc.page.width - 170, // Increased margin to prevent text overrun
           indent: 10,
-          align: 'left'
+          align: 'left',
+          lineGap: 3 // Added line gap to prevent text overlap
         });
         
       doc.moveDown(1.5);
@@ -175,7 +178,8 @@ export async function generateIndividualAssessmentPDF(assessment: AssessmentResu
         .font('Helvetica')
         .text(assessment.profile.description, {
           align: 'left',
-          width: doc.page.width - 100,
+          width: doc.page.width - 150, // Increased margin to prevent text overrun
+          lineGap: 3 // Added line gap to prevent text overlap
         });
       
       // ---------- PAGE 2 ----------
@@ -202,7 +206,8 @@ export async function generateIndividualAssessmentPDF(assessment: AssessmentResu
           .font('Helvetica')
           .text(assessment.genderProfile.description, {
             align: 'left',
-            width: doc.page.width - 100,
+            width: doc.page.width - 150, // Increased margin to prevent text overrun
+            lineGap: 3 // Added line gap to prevent text overlap
           });
         
         doc.moveDown(1.5);
@@ -218,8 +223,9 @@ export async function generateIndividualAssessmentPDF(assessment: AssessmentResu
         .fontSize(12)
         .fillColor('#4a5568')
         .text('Each section score represents your perspective in a specific relationship area. These scores determine your psychographic profiles. Higher percentages typically indicate more traditional views, while lower percentages suggest less traditional approaches.', {
-          width: doc.page.width - 100,
-          align: 'left'
+          width: doc.page.width - 150, // Increased margin to prevent text overrun
+          align: 'left',
+          lineGap: 3 // Added line gap to prevent text overlap
         });
         
       doc.moveDown(1);
