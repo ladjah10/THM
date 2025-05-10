@@ -5,7 +5,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { MailService } from '@sendgrid/mail';
-import type { AssessmentResult, CoupleAssessmentReport } from '../shared/schema';
+import type { AssessmentResult, CoupleAssessmentReport, DemographicData } from '../shared/schema';
 
 // Set up SendGrid
 if (!process.env.SENDGRID_API_KEY) {
@@ -20,6 +20,7 @@ if (process.env.SENDGRID_API_KEY) {
 // Make constants available for export/testing
 export const SENDER_EMAIL = 'hello@wgodw.com';
 export const SENDER_NAME = 'The 100 Marriage Assessment';
+export const ADMIN_EMAIL = 'la@lawrenceadjah.com'; // Admin email for notifications
 
 /**
  * Formats the HTML email content for an individual assessment
@@ -304,6 +305,164 @@ function formatCoupleAssessmentEmail(report: CoupleAssessmentReport): string {
  * @param pdfPath The path to the PDF file to attach
  * @returns Object containing success status and messageId if successful
  */
+
+/**
+ * Sends a notification email to admin when a user starts filling out the assessment form
+ * @param demographicData The demographic data entered by the user
+ * @param ipAddress Optional IP address of the user
+ * @returns Object containing success status and messageId if successful
+ */
+export async function sendFormInitiationNotification(
+  demographicData: Partial<DemographicData>, 
+  ipAddress?: string
+): Promise<{ success: boolean, messageId?: string }> {
+  if (!process.env.SENDGRID_API_KEY) {
+    console.error('Cannot send email: SENDGRID_API_KEY environment variable is not set.');
+    return { success: false };
+  }
+  
+  try {
+    // Format date for display
+    const date = new Date();
+    const formattedDate = date.toLocaleString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      timeZoneName: 'short'
+    });
+    
+    // Create a string to display the demographic data that's been filled in
+    const demographicDetails = Object.entries(demographicData)
+      .filter(([_, value]) => value !== undefined && value !== '')
+      .map(([key, value]) => {
+        // Format the key for better readability
+        const formattedKey = key
+          .replace(/([A-Z])/g, ' $1')  // Add spaces before capital letters
+          .replace(/^./, str => str.toUpperCase()); // Capitalize first letter
+        
+        // Handle boolean values
+        if (typeof value === 'boolean') {
+          return `<tr><td><strong>${formattedKey}</strong></td><td>${value ? 'Yes' : 'No'}</td></tr>`;
+        }
+        
+        return `<tr><td><strong>${formattedKey}</strong></td><td>${value}</td></tr>`;
+      })
+      .join('');
+    
+    // HTML content for the notification email
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+          }
+          .header {
+            background-color: #3b82f6;
+            color: white;
+            padding: 15px;
+            text-align: center;
+          }
+          .content {
+            padding: 20px;
+          }
+          h1 {
+            margin: 0;
+            font-size: 20px;
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+          }
+          th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+          }
+          th {
+            background-color: #f2f2f2;
+          }
+          .footer {
+            font-size: 12px;
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <h1>New Assessment Form Initiated</h1>
+        </div>
+        
+        <div class="content">
+          <p>A user has started filling out an assessment form on The 100 Marriage website:</p>
+          
+          <p><strong>Date and Time:</strong> ${formattedDate}</p>
+          ${ipAddress ? `<p><strong>IP Address:</strong> ${ipAddress}</p>` : ''}
+          
+          <h3>Demographic Information Provided:</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${demographicDetails || '<tr><td colspan="2">No data entered yet</td></tr>'}
+            </tbody>
+          </table>
+          
+          <div class="footer">
+            <p>This is an automated notification from The 100 Marriage Assessment System.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+    
+    // Prepare the email
+    const msg = {
+      to: ADMIN_EMAIL,
+      from: {
+        email: SENDER_EMAIL,
+        name: SENDER_NAME
+      },
+      subject: 'New Assessment Form Initiated - The 100 Marriage',
+      html: htmlContent
+    };
+    
+    // Send the email
+    const response = await mailService.send(msg);
+    
+    if (response && response[0] && response[0].statusCode >= 200 && response[0].statusCode < 300) {
+      console.log(`Form initiation notification email sent successfully to admin`);
+      return { 
+        success: true,
+        messageId: response[0].headers['x-message-id'] as string
+      };
+    } else {
+      console.error('Error sending form initiation notification:', response);
+      return { success: false };
+    }
+  } catch (error) {
+    console.error('Error sending form initiation notification:', error);
+    return { success: false };
+  }
+}
+
 export async function sendCoupleAssessmentEmail(report: CoupleAssessmentReport, pdfPath: string): Promise<{ success: boolean, messageId?: string }> {
   if (!process.env.SENDGRID_API_KEY) {
     console.error('Cannot send email: SENDGRID_API_KEY environment variable is not set.');
