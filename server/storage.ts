@@ -49,21 +49,69 @@ class MemStorage {
   }
   
   // Save assessment progress during assessment (for auto-save functionality)
-  async saveAssessmentProgress(tempId: string, assessment: Partial<AssessmentResult>): Promise<void> {
-    console.log(`Saving partial assessment progress for tempId: ${tempId}`);
-    // If assessment has an existing tempId, merge with existing data
-    if (this.partialAssessments.has(tempId)) {
-      const existingAssessment = this.partialAssessments.get(tempId) || {};
-      const updatedAssessment = { ...existingAssessment, ...assessment };
-      updatedAssessment.isPartial = true;
-      updatedAssessment.tempId = tempId;
-      this.partialAssessments.set(tempId, updatedAssessment);
-    } else {
-      // Otherwise, create a new entry
-      const newAssessment = { ...assessment };
-      newAssessment.isPartial = true;
-      newAssessment.tempId = tempId;
-      this.partialAssessments.set(tempId, newAssessment);
+  async saveAssessmentProgress(data: {
+    email: string;
+    demographicData: any;
+    responses?: Record<string, { option: string; value: number }>;
+    assessmentType: string;
+    timestamp: string;
+    completed: boolean;
+  }): Promise<void> {
+    console.log(`Saving assessment progress for email: ${data.email}`);
+    
+    try {
+      // Use email as the identifier
+      const tempId = data.email;
+      
+      // Create progress record with the data we have so far
+      const progressData = {
+        email: data.email,
+        demographics: data.demographicData,
+        responses: data.responses || {},
+        timestamp: data.timestamp,
+        isPartial: true,
+        assessmentType: data.assessmentType,
+        tempId
+      };
+      
+      // Save in memory
+      this.partialAssessments.set(tempId, progressData);
+      
+      // Also save to database for persistence
+      // Connect to database pool
+      try {
+        // Save to database for persistence
+        const query = `
+          INSERT INTO assessment_progress 
+          (email, demographic_data, responses, assessment_type, timestamp, completed) 
+          VALUES ($1, $2, $3, $4, $5, $6)
+          ON CONFLICT (email) 
+          DO UPDATE SET 
+            demographic_data = $2,
+            responses = $3,
+            assessment_type = $4,
+            timestamp = $5,
+            completed = $6
+        `;
+        
+        const values = [
+          data.email,
+          JSON.stringify(data.demographicData),
+          JSON.stringify(data.responses || {}),
+          data.assessmentType,
+          data.timestamp,
+          data.completed
+        ];
+        
+        await this.pool.query(query, values);
+        console.log(`Assessment progress saved to database for ${data.email}`);
+      } catch (dbError) {
+        console.error('Error saving progress to database:', dbError);
+        // Continue with memory storage even if database fails
+      }
+    } catch (error) {
+      console.error('Error in saveAssessmentProgress:', error);
+      throw error;
     }
   }
 
@@ -305,6 +353,9 @@ class MemStorage {
 }
 
 // Database storage implementation
+// Import the pool from db
+import { pool } from './db';
+
 export class DatabaseStorage {
   // Shared memory storage for fallback
   private memStorage: MemStorage;
@@ -331,24 +382,191 @@ export class DatabaseStorage {
   }
   
   // Method to record promo code usage
-  async recordPromoCodeUsage(data: {promoCode: string, assessmentType: string, timestamp: string}): Promise<void> {
+  async recordPromoCodeUsage(data: {promoCode: string, email?: string, assessmentType: string, timestamp: string}): Promise<void> {
     console.log(`Recording promo code usage in database: ${data.promoCode} for ${data.assessmentType} assessment`);
-    // Record in memory storage
+    
+    try {
+      // Save to database
+      const query = `
+        INSERT INTO promo_code_usage
+        (promo_code, email, assessment_type, timestamp)
+        VALUES ($1, $2, $3, $4)
+      `;
+      
+      const values = [
+        data.promoCode,
+        data.email || null,
+        data.assessmentType,
+        data.timestamp
+      ];
+      
+      await pool.query(query, values);
+      console.log(`Promo code usage recorded in database: ${data.promoCode}`);
+    } catch (dbError) {
+      console.error('Error recording promo code usage to database:', dbError);
+      
+      // Try to create table if it doesn't exist
+      try {
+        await pool.query(`
+          CREATE TABLE IF NOT EXISTS promo_code_usage (
+            id SERIAL PRIMARY KEY,
+            promo_code TEXT NOT NULL,
+            email TEXT,
+            assessment_type TEXT NOT NULL,
+            timestamp TEXT NOT NULL
+          )
+        `);
+        
+        // Retry the insert
+        const query = `
+          INSERT INTO promo_code_usage
+          (promo_code, email, assessment_type, timestamp)
+          VALUES ($1, $2, $3, $4)
+        `;
+        
+        const values = [
+          data.promoCode,
+          data.email || null,
+          data.assessmentType,
+          data.timestamp
+        ];
+        
+        await pool.query(query, values);
+        console.log(`Created table and recorded promo code usage: ${data.promoCode}`);
+      } catch (createError) {
+        console.error('Error creating promo code usage table:', createError);
+      }
+    }
+    
+    // Record in memory storage as fallback
     await this.memStorage.recordPromoCodeUsage(data);
   }
   
+  // Method to check if a promo code is valid
+  async isValidPromoCode(promoCode: string, assessmentType: string): Promise<boolean> {
+    // List of valid promo codes
+    const validPromoCodes = {
+      individual: ['FREE100', 'LA2025', 'MARRIAGE100', 'INVITED10'],
+      couple: ['FREE100', 'LA2025', 'MARRIAGE100', 'INVITED10', 'COUPLETEST']
+    };
+    
+    // Check if the promo code is in the valid list for the assessment type
+    const isValid = validPromoCodes[assessmentType as keyof typeof validPromoCodes]?.includes(promoCode) || false;
+    
+    console.log(`Promo code ${promoCode} is ${isValid ? 'valid' : 'invalid'} for ${assessmentType} assessment`);
+    return isValid;
+  }
+  
   // Save assessment progress during assessment (for auto-save functionality)
-  async saveAssessmentProgress(tempId: string, assessment: Partial<AssessmentResult>): Promise<void> {
+  async saveAssessmentProgress(data: {
+    email: string;
+    demographicData: any;
+    responses?: Record<string, { option: string; value: number }>;
+    assessmentType: string;
+    timestamp: string;
+    completed: boolean;
+  }): Promise<void> {
     try {
-      console.log(`Saving partial assessment progress for tempId: ${tempId}`);
-      // Implement database storage logic
+      console.log(`Saving assessment progress for email: ${data.email}`);
       
-      // Use the shared memory storage instance
-      await this.memStorage.saveAssessmentProgress(tempId, assessment);
+      try {
+        // First, try to save to the database
+        const query = `
+          INSERT INTO assessment_progress 
+          (email, demographic_data, responses, assessment_type, timestamp, completed) 
+          VALUES ($1, $2, $3, $4, $5, $6)
+          ON CONFLICT (email) 
+          DO UPDATE SET 
+            demographic_data = EXCLUDED.demographic_data,
+            responses = EXCLUDED.responses,
+            assessment_type = EXCLUDED.assessment_type,
+            timestamp = EXCLUDED.timestamp,
+            completed = EXCLUDED.completed
+        `;
+        
+        const values = [
+          data.email,
+          JSON.stringify(data.demographicData),
+          JSON.stringify(data.responses || {}),
+          data.assessmentType,
+          data.timestamp,
+          data.completed
+        ];
+        
+        await pool.query(query, values);
+        console.log(`Assessment progress saved to database for ${data.email}`);
+      } catch (dbError) {
+        console.error('Error saving progress to database:', dbError);
+        
+        // Create table if it doesn't exist yet
+        try {
+          await pool.query(`
+            CREATE TABLE IF NOT EXISTS assessment_progress (
+              email TEXT PRIMARY KEY,
+              demographic_data JSONB NOT NULL,
+              responses JSONB NOT NULL DEFAULT '{}'::jsonb,
+              assessment_type TEXT NOT NULL,
+              timestamp TEXT NOT NULL,
+              completed BOOLEAN NOT NULL DEFAULT FALSE
+            )
+          `);
+          
+          // Try the save operation again
+          const query = `
+            INSERT INTO assessment_progress 
+            (email, demographic_data, responses, assessment_type, timestamp, completed) 
+            VALUES ($1, $2, $3, $4, $5, $6)
+            ON CONFLICT (email) 
+            DO UPDATE SET 
+              demographic_data = EXCLUDED.demographic_data,
+              responses = EXCLUDED.responses,
+              assessment_type = EXCLUDED.assessment_type,
+              timestamp = EXCLUDED.timestamp,
+              completed = EXCLUDED.completed
+          `;
+          
+          const values = [
+            data.email,
+            JSON.stringify(data.demographicData),
+            JSON.stringify(data.responses || {}),
+            data.assessmentType,
+            data.timestamp,
+            data.completed
+          ];
+          
+          await pool.query(query, values);
+          console.log(`Created table and saved assessment progress to database for ${data.email}`);
+        } catch (createError) {
+          console.error('Error creating table and retrying save:', createError);
+        }
+      }
+      
+      // Create a temporary MemStorage method to save the progress as fallback
+      // Using a function instead of direct property access since partialAssessments is private
+      const tempId = data.email;
+      const progressData = {
+        email: data.email,
+        demographics: data.demographicData,
+        responses: data.responses || {},
+        timestamp: data.timestamp,
+        isPartial: true,
+        assessmentType: data.assessmentType,
+        tempId
+      };
+      
+      // Use the shared memory storage instance with a workaround
+      // Instead of accessing private property, use the method that already exists
+      await this.memStorage.saveAssessmentProgress({
+        email: data.email,
+        demographicData: data.demographicData,
+        responses: data.responses || {},
+        assessmentType: data.assessmentType,
+        timestamp: data.timestamp,
+        completed: data.completed
+      });
     } catch (error) {
-      console.error('Error saving assessment progress:', error);
-      // Still use the shared memory storage instance even in the error case
-      await this.memStorage.saveAssessmentProgress(tempId, assessment);
+      console.error('Error in saveAssessmentProgress:', error);
+      throw error;
     }
   }
   
