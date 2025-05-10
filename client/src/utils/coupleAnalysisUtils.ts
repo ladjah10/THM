@@ -71,8 +71,8 @@ function calculateOverallCompatibility(
     (averageSectionSimilarity * 0.4) + 
     (majorDifferenceScore * 0.2);
   
-  // Round to nearest integer
-  return Math.round(weightedScore);
+  // Round to 1 decimal place for consistency with other percentage displays
+  return Math.round(weightedScore * 10) / 10;
 }
 
 /**

@@ -221,7 +221,7 @@ export const CoupleAssessmentView: React.FC<CoupleAssessmentViewProps> = ({
                 
                 <h3 className="text-lg font-medium mt-6">What Your Compatibility Score Means</h3>
                 <p className="text-gray-700">
-                  Your compatibility score of <span className="font-medium">{Math.round(report.overallCompatibility)}%</span> indicates 
+                  Your compatibility score of <span className="font-medium">{report.overallCompatibility.toFixed(1).replace('.0', '')}%</span> indicates 
                   {report.overallCompatibility >= 80 ? (
                     " a very high level of alignment in your marriage expectations. You share many of the same values and perspectives on important relationship areas."
                   ) : report.overallCompatibility >= 60 ? (
@@ -273,7 +273,7 @@ export const CoupleAssessmentView: React.FC<CoupleAssessmentViewProps> = ({
               <div className="space-y-4">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-24 h-24 rounded-full flex items-center justify-center bg-blue-100 border-4 border-blue-300">
-                    <span className="text-2xl font-bold text-blue-600">{primaryAssessment.scores.overallPercentage}%</span>
+                    <span className="text-2xl font-bold text-blue-600">{primaryAssessment.scores.overallPercentage.toFixed(1).replace('.0', '')}%</span>
                   </div>
                   <div>
                     <h3 className="text-lg font-medium text-blue-800">Overall Score</h3>
