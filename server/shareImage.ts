@@ -133,7 +133,7 @@ export async function generateShareImage(req: Request, res: Response) {
           
           <div class="footer">
             Take the assessment yourself
-            <span>100marriage-assessment.replit.app</span>
+            <span>the100marriage.lawrenceadjah.com</span>
           </div>
         </div>
       </body>

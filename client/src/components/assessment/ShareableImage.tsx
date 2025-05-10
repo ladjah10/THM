@@ -100,7 +100,7 @@ export function ShareableImage({ profile, genderProfile, scores, name }: Shareab
                     Take the assessment yourself
                   </div>
                   <div className="text-[18px] text-gray-500 mt-[5px]">
-                    100marriage-assessment.replit.app
+                    the100marriage.lawrenceadjah.com
                   </div>
                 </div>
               </div>
