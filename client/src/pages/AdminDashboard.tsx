@@ -286,6 +286,17 @@ export default function AdminDashboard() {
     completedOnly: true
   });
 
+  // Initialize assessments from localStorage if available
+  const [cachedAssessments, setCachedAssessments] = useState<AssessmentResult[]>(() => {
+    try {
+      const saved = localStorage.getItem('admin_assessments');
+      return saved ? JSON.parse(saved) : [];
+    } catch (err) {
+      console.error("Error loading cached assessments:", err);
+      return [];
+    }
+  });
+  
   // Query to fetch assessments with date filtering
   const { data: assessments, isLoading, error, refetch: refetchAssessments } = useQuery<AssessmentResult[]>({
     queryKey: ['/api/admin/assessments', assessmentDateRange],
@@ -324,9 +335,31 @@ export default function AdminDashboard() {
         throw new Error("Failed to fetch assessments");
       }
       
-      return response.json();
+      const data = await response.json();
+      
+      // Save to localStorage when new data arrives
+      try {
+        localStorage.setItem('admin_assessments', JSON.stringify(data));
+        setCachedAssessments(data);
+      } catch (err) {
+        console.error("Error caching assessments:", err);
+      }
+      
+      return data;
     },
     enabled: isAuthenticated,
+    initialData: cachedAssessments.length > 0 ? cachedAssessments : undefined,
+  });
+  
+  // Initialize referrals from localStorage if available
+  const [cachedReferrals, setCachedReferrals] = useState<ReferralData[]>(() => {
+    try {
+      const saved = localStorage.getItem('admin_referrals');
+      return saved ? JSON.parse(saved) : [];
+    } catch (err) {
+      console.error("Error loading cached referrals:", err);
+      return [];
+    }
   });
   
   // Query to fetch referrals
@@ -342,18 +375,30 @@ export default function AdminDashboard() {
         throw new Error("Failed to fetch referrals");
       }
       
-      return response.json();
+      const data = await response.json();
+      
+      // Save to localStorage when new data arrives
+      try {
+        localStorage.setItem('admin_referrals', JSON.stringify(data));
+        setCachedReferrals(data);
+      } catch (err) {
+        console.error("Error caching referrals:", err);
+      }
+      
+      return data;
     },
     enabled: isAuthenticated,
+    initialData: cachedReferrals.length > 0 ? cachedReferrals : undefined,
   });
   
   // Website Analytics - summary data
   const [analyticsPeriod, setAnalyticsPeriod] = useState<'day' | 'week' | 'month' | 'year'>('week');
   
-  const { data: analyticsSummary, isLoading: isLoadingAnalytics } = useQuery<AnalyticsSummary>({
-    queryKey: ['/api/admin/analytics/summary', analyticsPeriod],
-    queryFn: async () => {
-      if (!isAuthenticated) return {
+  // Initialize analytics summary from localStorage if available
+  const [cachedAnalyticsSummary, setCachedAnalyticsSummary] = useState<AnalyticsSummary>(() => {
+    try {
+      const saved = localStorage.getItem('admin_analytics_summary');
+      return saved ? JSON.parse(saved) : {
         totalVisitors: 0,
         totalPageViews: 0,
         topPages: [],
@@ -361,6 +406,23 @@ export default function AdminDashboard() {
         conversionRate: 0,
         averageSessionDuration: 0
       };
+    } catch (err) {
+      console.error("Error loading cached analytics summary:", err);
+      return {
+        totalVisitors: 0,
+        totalPageViews: 0,
+        topPages: [],
+        dailyVisitors: [],
+        conversionRate: 0,
+        averageSessionDuration: 0
+      };
+    }
+  });
+  
+  const { data: analyticsSummary, isLoading: isLoadingAnalytics } = useQuery<AnalyticsSummary>({
+    queryKey: ['/api/admin/analytics/summary', analyticsPeriod],
+    queryFn: async () => {
+      if (!isAuthenticated) return cachedAnalyticsSummary;
       
       const response = await apiRequest("GET", `/api/admin/analytics/summary?period=${analyticsPeriod}`);
       
@@ -368,9 +430,31 @@ export default function AdminDashboard() {
         throw new Error("Failed to fetch analytics summary");
       }
       
-      return response.json();
+      const data = await response.json();
+      
+      // Save to localStorage when new data arrives
+      try {
+        localStorage.setItem('admin_analytics_summary', JSON.stringify(data));
+        setCachedAnalyticsSummary(data);
+      } catch (err) {
+        console.error("Error caching analytics summary:", err);
+      }
+      
+      return data;
     },
     enabled: isAuthenticated,
+    initialData: cachedAnalyticsSummary,
+  });
+  
+  // Initialize page views from localStorage if available
+  const [cachedPageViews, setCachedPageViews] = useState<PageView[]>(() => {
+    try {
+      const saved = localStorage.getItem('admin_page_views');
+      return saved ? JSON.parse(saved) : [];
+    } catch (err) {
+      console.error("Error loading cached page views:", err);
+      return [];
+    }
   });
   
   // Website Analytics - page views data
@@ -385,9 +469,31 @@ export default function AdminDashboard() {
         throw new Error("Failed to fetch page views");
       }
       
-      return response.json();
+      const data = await response.json();
+      
+      // Save to localStorage when new data arrives
+      try {
+        localStorage.setItem('admin_page_views', JSON.stringify(data));
+        setCachedPageViews(data);
+      } catch (err) {
+        console.error("Error caching page views:", err);
+      }
+      
+      return data;
     },
     enabled: isAuthenticated,
+    initialData: cachedPageViews.length > 0 ? cachedPageViews : undefined,
+  });
+  
+  // Initialize visitor sessions from localStorage if available
+  const [cachedVisitorSessions, setCachedVisitorSessions] = useState<VisitorSession[]>(() => {
+    try {
+      const saved = localStorage.getItem('admin_visitor_sessions');
+      return saved ? JSON.parse(saved) : [];
+    } catch (err) {
+      console.error("Error loading cached visitor sessions:", err);
+      return [];
+    }
   });
   
   // Website Analytics - visitor sessions data
@@ -402,9 +508,20 @@ export default function AdminDashboard() {
         throw new Error("Failed to fetch visitor sessions");
       }
       
-      return response.json();
+      const data = await response.json();
+      
+      // Save to localStorage when new data arrives
+      try {
+        localStorage.setItem('admin_visitor_sessions', JSON.stringify(data));
+        setCachedVisitorSessions(data);
+      } catch (err) {
+        console.error("Error caching visitor sessions:", err);
+      }
+      
+      return data;
     },
     enabled: isAuthenticated,
+    initialData: cachedVisitorSessions.length > 0 ? cachedVisitorSessions : undefined,
   });
   
   // Payment transactions data
@@ -535,6 +652,17 @@ export default function AdminDashboard() {
     }
   };
   
+  // Initialize paymentTransactions from localStorage if available
+  const [cachedTransactions, setCachedTransactions] = useState<EnhancedTransaction[]>(() => {
+    try {
+      const saved = localStorage.getItem('admin_payment_transactions');
+      return saved ? JSON.parse(saved) : [];
+    } catch (err) {
+      console.error("Error loading cached transactions:", err);
+      return [];
+    }
+  });
+  
   const { data: paymentTransactions, isLoading: isLoadingPaymentTransactions } = useQuery<EnhancedTransaction[]>({
     queryKey: ['/api/admin/analytics/payment-transactions', transactionDateRange],
     queryFn: async () => {
@@ -565,9 +693,20 @@ export default function AdminDashboard() {
         throw new Error("Failed to fetch payment transactions");
       }
       
-      return response.json();
+      const data = await response.json();
+      
+      // Save to localStorage when new data arrives
+      try {
+        localStorage.setItem('admin_payment_transactions', JSON.stringify(data));
+        setCachedTransactions(data);
+      } catch (err) {
+        console.error("Error caching transactions:", err);
+      }
+      
+      return data;
     },
     enabled: isAuthenticated,
+    initialData: cachedTransactions.length > 0 ? cachedTransactions : undefined,
   });
   
   // Filter assessments by search term
