@@ -179,7 +179,7 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
  * Sends an assessment report email with PDF attachment
  * Uses SendGrid when available, falls back to Nodemailer
  */
-export async function sendAssessmentEmail(assessment: AssessmentResult): Promise<{ success: boolean, previewUrl?: string, messageId?: string }> {
+export async function sendAssessmentEmail(assessment: AssessmentResult): Promise<{ success: boolean, previewUrl?: string, messageId?: string, error?: string }> {
   try {
     // Generate PDF report
     console.log('Generating PDF report...');
@@ -254,7 +254,18 @@ export async function sendAssessmentEmail(assessment: AssessmentResult): Promise
     };
   } catch (error) {
     console.error('Email error:', error);
-    return { success: false };
+    
+    // Add more detailed error information
+    const errorMessage = error instanceof Error 
+      ? error.message 
+      : 'Unknown error occurred';
+    
+    console.error('Error details:', errorMessage);
+    
+    return { 
+      success: false,
+      error: errorMessage
+    };
   }
 }
 

@@ -424,7 +424,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.error("Email sending failed:", emailResult);
         return res.status(500).json({
           success: false,
-          message: "Failed to send email. Assessment data was saved."
+          message: `Failed to send email. Assessment data was saved. ${emailResult.error ? 'Error: ' + emailResult.error : ''}`,
+          errorDetails: emailResult.error
         });
       }
       
@@ -442,9 +443,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       console.error("Error sending email:", error);
+      
+      // Provide more detailed error information for debugging
+      const errorMessage = error instanceof Error 
+        ? error.message
+        : "Unknown error occurred";
+        
+      console.error("Error details:", errorMessage);
+      
       return res.status(400).json({ 
         success: false,
-        message: "Failed to send assessment report"
+        message: "Failed to send assessment report: " + errorMessage
       });
     }
   });

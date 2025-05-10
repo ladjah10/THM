@@ -138,7 +138,7 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
  * @param pdfPath The path to the PDF file to attach
  * @returns Object containing success status and messageId if successful
  */
-export async function sendAssessmentEmail(assessment: AssessmentResult, pdfPath: string): Promise<{ success: boolean, messageId?: string }> {
+export async function sendAssessmentEmail(assessment: AssessmentResult, pdfPath: string): Promise<{ success: boolean, messageId?: string, error?: string }> {
   if (!process.env.SENDGRID_API_KEY) {
     console.error('Cannot send email: SENDGRID_API_KEY environment variable is not set.');
     return { success: false };
@@ -182,7 +182,30 @@ export async function sendAssessmentEmail(assessment: AssessmentResult, pdfPath:
     }
   } catch (error) {
     console.error('Error sending email:', error);
-    return { success: false };
+    
+    // Add more detailed error information
+    if (error instanceof Error) {
+      console.error('Error details:', error.message);
+      if ('response' in error) {
+        const responseData = (error as any).response?.body;
+        if (responseData) {
+          console.error('SendGrid error response:', responseData);
+        }
+      }
+    }
+    
+    // Clean up temporary file if it exists
+    try {
+      fs.unlinkSync(pdfPath);
+      console.log('Temporary PDF file cleaned up:', pdfPath);
+    } catch (cleanupError) {
+      console.warn('Could not clean up temporary PDF file:', cleanupError);
+    }
+    
+    return { 
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error'
+    };
   }
 }
 
