@@ -4,11 +4,15 @@ import { CoupleAssessmentReport } from '../shared/schema';
  * Formats a couple assessment report into HTML for email
  */
 export function formatCoupleAssessmentEmail(report: CoupleAssessmentReport): string {
-  const { primary, spouse, analysis, compatibility } = report;
+  // Extract assessment data
+  const primary = report.primaryAssessment || report.primary;
+  const spouse = report.spouseAssessment || report.spouse;
+  const analysis = report.differenceAnalysis || report.analysis;
+  const compatibility = report.overallCompatibility || report.compatibilityScore;
   
-  // Format names
-  const primaryName = primary.demographics.firstName;
-  const spouseName = spouse.demographics.firstName;
+  // Format names using appropriate property paths
+  const primaryName = primary?.demographics?.firstName || primary?.name?.split(' ')[0] || 'Partner 1';
+  const spouseName = spouse?.demographics?.firstName || spouse?.name?.split(' ')[0] || 'Partner 2';
   
   // Map compatibility level
   const getCompatibilityLevel = (score: number) => {
@@ -30,7 +34,14 @@ export function formatCoupleAssessmentEmail(report: CoupleAssessmentReport): str
   const getSectionComparisonHtml = () => {
     let sectionsHtml = '';
     
-    Object.entries(primary.scores.sections).forEach(([section, { percentage: primaryPercentage }]) => {
+    // Make sure primary and spouse objects and their scores exist
+    if (!primary?.scores?.sections || !spouse?.scores?.sections) {
+      return '<tr><td colspan="4" style="padding: 10px; text-align: center; color: #6b7280;">Section data not available</td></tr>';
+    }
+    
+    Object.entries(primary.scores.sections).forEach(([section, sectionData]) => {
+      // Safely access percentage values
+      const primaryPercentage = sectionData?.percentage || 0;
       const spousePercentage = spouse.scores.sections[section]?.percentage || 0;
       const difference = Math.abs(primaryPercentage - spousePercentage);
       
@@ -148,9 +159,9 @@ export function formatCoupleAssessmentEmail(report: CoupleAssessmentReport): str
           <!-- Couple Compatibility Score -->
           <div style="text-align: center; margin-bottom: 30px;">
             <div style="font-size: 18px; font-weight: 600; color: #1f2937; margin-bottom: 15px;">Your Couple Compatibility Score</div>
-            <div style="width: 150px; height: 150px; border-radius: 50%; background-color: white; border: 8px solid ${getCompatibilityColor(compatibility)}; margin: 0 auto; display: flex; align-items: center; justify-content: center; flex-direction: column; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-              <div style="font-size: 36px; font-weight: 700; color: ${getCompatibilityColor(compatibility)};">${compatibility.toFixed(1).replace('.0', '')}%</div>
-              <div style="font-size: 14px; color: #4b5563;">${getCompatibilityLevel(compatibility)} Compatibility</div>
+            <div style="width: 150px; height: 150px; border-radius: 50%; background-color: white; border: 8px solid ${getCompatibilityColor(compatibility || 0)}; margin: 0 auto; display: flex; align-items: center; justify-content: center; flex-direction: column; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+              <div style="font-size: 36px; font-weight: 700; color: ${getCompatibilityColor(compatibility || 0)};">${(compatibility || 0).toFixed(1).replace('.0', '')}%</div>
+              <div style="font-size: 14px; color: #4b5563;">${getCompatibilityLevel(compatibility || 0)} Compatibility</div>
             </div>
             <p style="margin-top: 15px; font-size: 15px; color: #4b5563;">
               This score represents how well aligned your marriage expectations are. A higher score means you have more similar views on marriage.
