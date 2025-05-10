@@ -201,9 +201,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Log promo code if used
       if (validatedData.demographics.promoCode) {
-        console.log(`Assessment saved with promo code: ${validatedData.demographics.promoCode}`);
+        console.log(`Assessment saved with promo code: ${validatedData.demographics.promoCode} for ${validatedData.demographics.email}`);
         await storage.recordPromoCodeUsage({
           promoCode: validatedData.demographics.promoCode,
+          email: validatedData.demographics.email,
           assessmentType: 'individual',
           timestamp: new Date().toISOString()
         });
@@ -937,27 +938,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Verify promo code validity
   app.post('/api/verify-promo-code', async (req, res) => {
     try {
-      const { promoCode, assessmentType = 'individual' } = req.body;
+      const { promoCode, assessmentType = 'individual', email } = req.body;
       
-      // Valid promo codes (in a real app, these would be stored in a database)
-      // For now, these promo codes work for both individual and couple assessments
-      const validPromoCodes = ["FREE100", "LA2025", "MARRIAGE100", "INVITED10"];
+      if (!promoCode) {
+        return res.status(400).json({
+          valid: false,
+          message: "Promo code is required"
+        });
+      }
       
-      // Future implementation could have type-specific promo codes
-      // const individualPromoCodes = [...];
-      // const couplePromoCodes = [...];
+      // Use our new database-backed promo code validation
+      const isValid = await storage.isValidPromoCode(promoCode, assessmentType);
       
-      // Check if the promo code is valid
-      const isValid = validPromoCodes.includes(promoCode);
-      
-      // If valid, record promo code usage (in a real app, this would be stored)
+      // If valid, record promo code usage in the database with email if available
       if (isValid) {
-        console.log(`Promo code ${promoCode} used successfully for ${assessmentType} assessment`);
+        console.log(`Promo code ${promoCode} used successfully for ${assessmentType} assessment ${email ? `by ${email}` : ''}`);
         
-        // Track usage in database if needed
         try {
           await storage.recordPromoCodeUsage({
             promoCode,
+            email, // Include email if available
             assessmentType,
             timestamp: new Date().toISOString()
           });
