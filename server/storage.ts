@@ -1947,6 +1947,90 @@ export class DatabaseStorage {
       return this.getPaymentTransactions(startDate, endDate);
     }
   }
+  
+  // Get a completed assessment by email
+  async getCompletedAssessment(email: string): Promise<AssessmentResult | null> {
+    try {
+      // Import pool only when needed
+      const { pool } = await import('./db');
+      
+      const query = `
+        SELECT id, email, name, scores, profile, gender_profile, responses, 
+               demographics, timestamp, transaction_id, couple_id, couple_role, report_sent
+        FROM assessment_results
+        WHERE email = $1 AND completed = true
+        LIMIT 1
+      `;
+      
+      const result = await pool.query(query, [email]);
+      
+      if (result.rows.length === 0) {
+        // No result in database, fall back to memory storage
+        return this.memStorage.getCompletedAssessment(email);
+      }
+      
+      // Transform DB result into AssessmentResult object
+      const row = result.rows[0];
+      const scores = JSON.parse(row.scores);
+      const profile = JSON.parse(row.profile);
+      const responses = JSON.parse(row.responses);
+      const demographics = JSON.parse(row.demographics);
+      
+      // Parse gender profile if it exists
+      const genderProfile = row.gender_profile ? JSON.parse(row.gender_profile) : null;
+      
+      return {
+        id: row.id,
+        email: row.email,
+        name: row.name,
+        scores: scores,
+        profile: profile,
+        genderProfile: genderProfile,
+        responses: responses,
+        demographics: demographics,
+        timestamp: row.timestamp.toISOString(),
+        transactionId: row.transaction_id,
+        coupleId: row.couple_id,
+        coupleRole: row.couple_role,
+        reportSent: row.report_sent
+      };
+    } catch (error) {
+      console.error(`Error getting completed assessment from database for email ${email}:`, error);
+      // Fall back to memory storage on error
+      return this.memStorage.getCompletedAssessment(email);
+    }
+  }
+  
+  // Get a couple assessment by email (checks both primary and spouse emails)
+  async getCoupleAssessmentByEmail(email: string): Promise<CoupleAssessmentReport | null> {
+    try {
+      // Import pool only when needed
+      const { pool } = await import('./db');
+      
+      // First find assessment with this email
+      const assessmentQuery = `
+        SELECT couple_id, couple_role
+        FROM assessment_results
+        WHERE email = $1 AND couple_id IS NOT NULL
+        LIMIT 1
+      `;
+      
+      const assessmentResult = await pool.query(assessmentQuery, [email]);
+      
+      if (assessmentResult.rows.length === 0) {
+        // No result in database, fall back to memory storage
+        return this.memStorage.getCoupleAssessmentByEmail(email);
+      }
+      
+      // Now get the couple assessment with this ID
+      const coupleId = assessmentResult.rows[0].couple_id;
+      return await this.getCoupleAssessment(coupleId);
+    } catch (error) {
+      console.error(`Error getting couple assessment from database for email ${email}:`, error);
+      // Fall back to memory storage on error
+      return this.memStorage.getCoupleAssessmentByEmail(email);
+    }
+  }
 }
 
 // Export the storage instance 

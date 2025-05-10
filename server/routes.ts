@@ -1655,7 +1655,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       try {
         if (assessment) {
           // Generate individual assessment PDF
-          const { generateIndividualPDF } = await import('./updated-individual-pdf');
+          const { generateIndividualAssessmentPDF } = await import('./updated-individual-pdf');
           const pdfBuffer = await generateIndividualPDF(assessment);
           
           // Create temporary file for the PDF
