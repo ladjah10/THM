@@ -153,7 +153,8 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       // Position explanation text at left margin
       doc.text('Your compatibility score reflects the alignment of your perspectives across all assessment sections. A higher score indicates greater similarity in your views on key marriage dimensions, while a lower score highlights areas where your expectations differ. This is not a judgment of relationship quality, but rather a tool to identify areas for meaningful discussion.', 
         leftMargin, doc.y, {
-          width: doc.page.width - 150 // Narrower width to prevent text overrun
+          width: doc.page.width - 150, // Narrower width to prevent text overrun
+          lineGap: 3 // Added line gap to prevent text overlap
         });
       
       // ---------- PAGE 2 (Score Comparison) ----------
@@ -179,8 +180,9 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         .fillColor('#4a5568')
         .font('Helvetica')
         .text('The scores below reflect how each of you answered the assessment, with your individual percentages showing your unique perspective in each section, based on the specific weight of your responses. These aren\'t "good" or "bad" scores—they\'re simply a mirror of your personal expectations and priorities. What matters most is the "Difference" column, which highlights how closely your responses and expectations align in each section and overall. Why does this matter? We believe that the more aligned your expectations are, the stronger foundation you\'ll build for a thriving, healthy marriage.', {
-          width: doc.page.width - 100,
-          align: 'left'
+          width: doc.page.width - 150, // Increased margin to prevent text overrun
+          align: 'left',
+          lineGap: 3 // Added line gap to prevent text overlap
         });
         
       doc.moveDown(1);
@@ -519,7 +521,10 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         .font('Helvetica')
         .fillColor('#4a5568')
         .text("Alternatively, you can follow the path of many couples who complete The 100 Marriage and decide they would like to walk through their points of misaligned with counsel.", 
-          70, doc.y, { width: doc.page.width - 140 }); // Full width without book cover
+          70, doc.y, { 
+            width: doc.page.width - 150, // Increased margin to prevent text overrun
+            lineGap: 3 // Added line gap to prevent text overlap
+          }); // Full width without book cover
       
       // Consultation link
       doc.moveDown(2)
