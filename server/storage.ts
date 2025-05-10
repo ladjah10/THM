@@ -775,30 +775,132 @@ export class DatabaseStorage {
   
   async saveReferral(referral: ReferralData): Promise<void> {
     try {
-      // Implementation of database storage
-      await this.memStorage.saveReferral(referral);
+      // Save referral to database
+      const { pool } = await import('./db');
+      
+      // Generate an ID if not provided
+      const id = referral.id || crypto.randomUUID();
+      
+      // Insert into database using raw SQL with proper parameter binding
+      await pool.query(`
+        INSERT INTO referrals (
+          id, referrer_email, referrer_name, recipient_email, recipient_name,
+          status, sent_timestamp, completed_timestamp, promo_code, product_type, custom_message
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        ON CONFLICT (id) DO UPDATE SET
+          referrer_email = $2,
+          referrer_name = $3,
+          recipient_email = $4,
+          recipient_name = $5,
+          status = $6,
+          sent_timestamp = $7,
+          completed_timestamp = $8,
+          promo_code = $9,
+          product_type = $10,
+          custom_message = $11
+      `, [
+        id,
+        referral.referrerEmail || '',
+        referral.referrerName || '',
+        referral.recipientEmail || '',
+        referral.recipientName || '',
+        referral.status || 'sent',
+        new Date(referral.sentTimestamp || new Date().toISOString()),
+        referral.completedTimestamp ? new Date(referral.completedTimestamp) : null,
+        referral.promoCode || null,
+        referral.productType || 'individual',
+        referral.customMessage || null
+      ]);
+      
+      console.log(`Referral saved to database: ${id}`);
+      
+      // Still keep in memory as a fallback
+      await this.memStorage.saveReferral({
+        ...referral,
+        id: id
+      });
     } catch (error) {
-      console.error('Error saving referral:', error);
+      console.error('Error saving referral to database:', error);
+      // Fall back to memory storage if database operation fails
       await this.memStorage.saveReferral(referral);
     }
   }
   
   async getAllReferrals(): Promise<ReferralData[]> {
     try {
-      // Implementation of database retrieval
-      return await this.memStorage.getAllReferrals();
+      // Retrieve all referrals from the database
+      const { pool } = await import('./db');
+      
+      const results = await pool.query(`
+        SELECT 
+          id, referrer_email as "referrerEmail", referrer_name as "referrerName", 
+          recipient_email as "recipientEmail", recipient_name as "recipientName",
+          status, sent_timestamp as "sentTimestamp", completed_timestamp as "completedTimestamp", 
+          promo_code as "promoCode", product_type as "productType", custom_message as "customMessage"
+        FROM referrals
+        ORDER BY sent_timestamp DESC
+      `);
+      
+      // Transform DB results into ReferralData objects
+      const referrals: ReferralData[] = results.rows.map((row: any) => ({
+        id: row.id,
+        referrerEmail: row.referrerEmail,
+        referrerName: row.referrerName,
+        recipientEmail: row.recipientEmail,
+        recipientName: row.recipientName,
+        status: row.status || 'sent',
+        sentTimestamp: row.sentTimestamp ? (
+          typeof row.sentTimestamp === 'string' 
+            ? row.sentTimestamp 
+            : row.sentTimestamp.toISOString()
+        ) : new Date().toISOString(),
+        completedTimestamp: row.completedTimestamp ? (
+          typeof row.completedTimestamp === 'string' 
+            ? row.completedTimestamp 
+            : row.completedTimestamp.toISOString()
+        ) : undefined,
+        promoCode: row.promoCode,
+        productType: row.productType || 'individual',
+        customMessage: row.customMessage
+      }));
+      
+      console.log(`Retrieved ${referrals.length} referrals from database`);
+      return referrals;
     } catch (error) {
-      console.error('Error getting all referrals:', error);
+      console.error('Error getting all referrals from database:', error);
+      // Only fall back to memory storage if database query fails
       return await this.memStorage.getAllReferrals();
     }
   }
   
   async updateReferralStatus(id: string, status: 'sent' | 'completed' | 'expired', completedTimestamp?: string): Promise<void> {
     try {
-      // Implementation of database update
+      // Update referral status in the database
+      const { pool } = await import('./db');
+      
+      // Prepare the parameters for the update
+      const params: any[] = [status, id];
+      let query = 'UPDATE referrals SET status = $1';
+      
+      // If completedTimestamp is provided, add it to the update
+      if (completedTimestamp && status === 'completed') {
+        query += ', completed_timestamp = $3';
+        params.push(new Date(completedTimestamp));
+      }
+      
+      // Complete the query with the WHERE clause
+      query += ' WHERE id = $2';
+      
+      // Execute the update
+      await pool.query(query, params);
+      
+      console.log(`Referral status updated in database: ${id} => ${status}`);
+      
+      // Still update memory storage as a fallback
       await this.memStorage.updateReferralStatus(id, status, completedTimestamp);
     } catch (error) {
-      console.error('Error updating referral status:', error);
+      console.error('Error updating referral status in database:', error);
+      // Fall back to memory storage if database operation fails
       await this.memStorage.updateReferralStatus(id, status, completedTimestamp);
     }
   }
