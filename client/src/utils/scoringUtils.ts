@@ -70,12 +70,20 @@ export function calculateScores(
   // Top 3 sections are strengths
   const strengths = sectionEntries
     .slice(0, 3)
-    .map(([section, score]) => `Strong ${section} compatibility (${score.percentage}%)`);
+    .map(([section, score]) => {
+      // Ensure percentage is displayed correctly with up to 1 decimal place
+      const formattedPercentage = score.percentage.toFixed(1).replace('.0', '');
+      return `Strong ${section} compatibility (${formattedPercentage}%)`;
+    });
   
   // Bottom 2 sections are improvement areas
   const improvementAreas = sectionEntries
     .slice(-2)
-    .map(([section, score]) => `${section} alignment can be improved (${score.percentage}%)`);
+    .map(([section, score]) => {
+      // Ensure percentage is displayed correctly with up to 1 decimal place
+      const formattedPercentage = score.percentage.toFixed(1).replace('.0', '');
+      return `${section} alignment can be improved (${formattedPercentage}%)`;
+    });
   
   return {
     sections: sectionScores,
