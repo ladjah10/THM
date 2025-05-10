@@ -102,7 +102,7 @@ export async function generateIndividualAssessmentPDF(assessment: AssessmentResu
       const scoreRadius = 45;
       const centerX = doc.page.width / 2;
       const circleY = doc.y + 50;
-      const scoreText = `${Math.round(assessment.scores.overallPercentage)}%`;
+      const scoreText = `${assessment.scores.overallPercentage.toFixed(1).replace('.0', '')}%`;
       
       doc.circle(centerX, circleY, scoreRadius)
         .fillAndStroke('#3182ce', '#3182ce');
@@ -330,7 +330,7 @@ export async function generateIndividualAssessmentPDF(assessment: AssessmentResu
       doc.fontSize(22)
         .font('Helvetica-Bold')
         .fillColor('#718096')
-        .text(`${Math.round(mean)}%`, 265, overallBoxY + 30);
+        .text(`${mean.toFixed(1).replace('.0', '')}%`, 265, overallBoxY + 30);
       
       // Percentile visualization
       doc.rect(70, overallBoxY + 70, 330, 10).fillAndStroke('#f0f5fa', '#e2e8f0');

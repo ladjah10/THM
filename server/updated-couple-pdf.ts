@@ -213,7 +213,7 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       
       // Helper to draw a single row
       const drawRow = (section: string, primaryScore: number, spouseScore: number, rowY: number) => {
-        const diff = Math.abs(Math.round(primaryScore) - Math.round(spouseScore));
+        const diff = Math.abs(primaryScore - spouseScore);
         
         // Draw the row background
         doc.rect(50, rowY, doc.page.width - 100, rowHeight)
