@@ -319,12 +319,26 @@ export default function MarriageAssessment() {
       
       setCurrentView("emailSent");
     } catch (error) {
+      console.error("Email sending error:", error);
+      
+      // Extract more detailed error message if available
+      let errorMessage = "There was a problem sending your report. Please try again.";
+      
+      if (error instanceof Error) {
+        // If we have a more specific error message, use it
+        errorMessage = error.message;
+        
+        // If the error has response data, try to extract detailed error
+        if ('response' in error && (error as any).response?.data?.errorDetails) {
+          errorMessage = (error as any).response.data.errorDetails;
+        }
+      }
+      
       toast({
         title: "Error Sending Email",
-        description: "There was a problem sending your report. Please try again.",
+        description: errorMessage,
         variant: "destructive"
       });
-      console.error("Email sending error:", error);
     } finally {
       setEmailSending(false);
     }

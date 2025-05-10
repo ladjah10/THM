@@ -218,7 +218,7 @@ function formatCoupleAssessmentEmail(report: CoupleAssessmentReport): string {
   const spouseName = report.spouse.demographics.firstName;
   
   // Extract compatibility
-  const compatibility = report.compatibility || 0;
+  const compatibility = report.compatibilityScore || 0;
   const compatibilityDisplay = compatibility.toFixed(1);
   
   return `

@@ -36,7 +36,18 @@ export async function sendEmailReport(data: EmailReportData): Promise<void> {
     });
     
     if (!response.ok) {
-      throw new Error('Failed to send email report');
+      // Try to extract detailed error information if available
+      let errorMessage = 'Failed to send email report';
+      try {
+        const errorData = await response.json();
+        if (errorData && errorData.message) {
+          errorMessage = errorData.message;
+        }
+      } catch (jsonError) {
+        console.warn('Could not parse error response JSON');
+      }
+      
+      throw new Error(errorMessage);
     }
     
     return;
