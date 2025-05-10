@@ -1939,6 +1939,18 @@ export default function AdminDashboard() {
                               }
                             </span>
                           </div>
+                          <div className="flex justify-between items-center">
+                            <span>THM Marriage Pool:</span>
+                            <span className="font-medium">
+                              ${paymentTransactions 
+                                ? paymentTransactions
+                                    .filter(t => t.productType === 'marriage_pool' && !t.isRefunded)
+                                    .reduce((sum, t) => sum + Number(t.amount)/100, 0)
+                                    .toFixed(2)
+                                : '0.00'
+                              }
+                            </span>
+                          </div>
                         </div>
                       </CardContent>
                     </Card>
@@ -2014,6 +2026,12 @@ export default function AdminDashboard() {
                                   value: paymentTransactions
                                     .filter(t => t.productType === 'couple' && !t.isRefunded)
                                     .reduce((sum, t) => sum + Number(t.amount)/100, 0)
+                                },
+                                { 
+                                  name: 'THM Marriage Pool', 
+                                  value: paymentTransactions
+                                    .filter(t => t.productType === 'marriage_pool' && !t.isRefunded)
+                                    .reduce((sum, t) => sum + Number(t.amount)/100, 0)
                                 }
                               ]}
                               cx="50%"
@@ -2028,6 +2046,7 @@ export default function AdminDashboard() {
                             >
                               <Cell key="individual" fill="#8884d8" />
                               <Cell key="couple" fill="#82ca9d" />
+                              <Cell key="marriage_pool" fill="#ffc658" />
                             </Pie>
                             <Tooltip formatter={(value) => [`$${Number(value).toFixed(2)}`, 'Revenue']} />
                           </PieChart>
