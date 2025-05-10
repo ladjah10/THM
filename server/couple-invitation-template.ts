@@ -13,7 +13,7 @@ export function formatCoupleInvitationEmail(
   isForPrimary: boolean = false
 ): string {
   // Generate a link that the spouse can use to start their assessment
-  const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
+  const baseUrl = process.env.BASE_URL || 'https://the100marriage.lawrenceadjah.com';
   const invitationLink = `${baseUrl}/couple-assessment/invite/${coupleId}`;
   
   // Format names with defaults if not provided

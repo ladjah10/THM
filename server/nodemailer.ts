@@ -159,7 +159,7 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
           <h2 style="margin-top: 0; color: #2980b9;">Get Personalized Guidance</h2>
           <p>Would you like expert help interpreting your results? Schedule a one-on-one consultation with Lawrence E. Adjah to discuss your assessment in detail and get personalized insights about your relationship expectations.</p>
           <div style="text-align: center; margin-top: 15px;">
-            <a href="https://lawrence-adjah.clientsecure.me/request/service" style="display: inline-block; background-color: #3498db; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">Book Your Consultation Now</a>
+            <a href="https://the100marriage.lawrenceadjah.com/consultation" style="display: inline-block; background-color: #3498db; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">Book Your Consultation Now</a>
           </div>
         </div>
         
@@ -378,7 +378,7 @@ function formatPaymentNotificationEmail(transaction: PaymentTransaction): string
         <div class="section">
           <p>
             You can view the full transaction details in your admin dashboard at
-            <a href="https://100marriage.com/admin">https://100marriage.com/admin</a>
+            <a href="https://the100marriage.lawrenceadjah.com/admin">https://the100marriage.lawrenceadjah.com/admin</a>
           </p>
         </div>
         
@@ -532,7 +532,7 @@ function formatReferralEmail(data: ReferralEmailData): string {
           <p>The assessment normally costs $49, but as an invited guest, you'll receive a special discount:</p>
           <h3 style="color: #e67e22; font-size: 24px;">Your Special Invitation Price: $39</h3>
           <p>Use code <strong>${data.promoCode || 'INVITED10'}</strong> at checkout</p>
-          <a href="https://100marriage.com/assessment" class="cta-button">Take The Assessment Now</a>
+          <a href="https://the100marriage.lawrenceadjah.com/assessment" class="cta-button">Take The Assessment Now</a>
           <p style="font-size: 14px; color: #7f8c8d; margin-top: 15px;">
             <strong>Couples Tip:</strong> Both you and your significant other can take your individual assessments and compare results to strengthen your relationship. Higher matching percentages indicate better alignment in your expectations!
           </p>
@@ -713,12 +713,12 @@ function formatAssessmentReminderEmail(data: AssessmentReminderData): string {
         </div>
         
         <div class="section" style="text-align: center;">
-          <a href="https://100marriage.com/assessment" class="cta-button">Complete My Assessment Now</a>
+          <a href="https://the100marriage.lawrenceadjah.com/assessment" class="cta-button">Complete My Assessment Now</a>
           <p style="font-size: 14px; color: #7f8c8d; margin-top: 5px;">Takes just 15-20 minutes to complete</p>
         </div>
         
         <div class="section">
-          <p>If you have any questions or need assistance, please reply to this email or contact us at <a href="mailto:support@100marriage.com">support@100marriage.com</a>.</p>
+          <p>If you have any questions or need assistance, please reply to this email or contact us at <a href="mailto:support@the100marriage.lawrenceadjah.com">support@the100marriage.lawrenceadjah.com</a>.</p>
           <p>We're looking forward to providing you with valuable insights about your relationship expectations!</p>
           <p>Warmly,<br>The 100 Marriage Assessment Team</p>
         </div>
