@@ -4,6 +4,7 @@ import Stripe from "stripe";
 import { storage } from "./storage";
 import { z } from "zod";
 import { sendAssessmentEmail, sendReferralEmail, sendCoupleInvitationEmails } from "./nodemailer";
+import { sendFormInitiationNotification } from "./sendgrid";
 import { generateShareImage } from "./shareImage";
 import { AssessmentResult } from "../shared/schema";
 import { handleStripeWebhook, syncStripePayments } from "./stripe-webhooks";
@@ -96,6 +97,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Store partial assessment
       await storage.saveAssessmentProgress(tempId, minimalAssessment);
+      
+      // Send form initiation notification to admin if demographic data is provided
+      // Only send the notification when demographic data contains substantial information
+      if (validatedData.demographicData && 
+          (validatedData.demographicData.firstName || validatedData.demographicData.email)) {
+        try {
+          // Get IP address from request if available
+          const ipAddress = req.headers['x-forwarded-for'] || 
+                           req.socket.remoteAddress || 
+                           'Unknown';
+          
+          // Send notification email in the background (don't await)
+          sendFormInitiationNotification(validatedData.demographicData, ipAddress as string)
+            .then(result => {
+              if (result.success) {
+                console.log('Form initiation notification sent successfully');
+              } else {
+                console.warn('Failed to send form initiation notification');
+              }
+            })
+            .catch(err => {
+              console.error('Error sending form initiation notification:', err);
+            });
+        } catch (error) {
+          // Log error but don't fail the request if notification fails
+          console.error('Error sending form initiation notification:', error);
+        }
+      }
       
       return res.status(200).json({ 
         success: true,
