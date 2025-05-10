@@ -222,6 +222,82 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Endpoint for autosaving assessment progress
+  app.post('/api/assessment/save-progress', async (req, res) => {
+    try {
+      const progressSchema = z.object({
+        email: z.string().email(),
+        demographicData: z.object({
+          firstName: z.string().optional(),
+          lastName: z.string().optional(),
+          email: z.string().email(),
+          // Other demographic fields are optional during progress save
+          gender: z.string().optional(),
+          birthday: z.string().optional(),
+          promoCode: z.string().optional(),
+          marriageStatus: z.string().optional(),
+          desireChildren: z.string().optional(),
+          ethnicity: z.string().optional(),
+          lifeStage: z.string().optional(),
+          city: z.string().optional(),
+          state: z.string().optional(),
+          zipCode: z.string().optional(),
+          phone: z.string().optional(),
+          interestedInArrangedMarriage: z.boolean().optional(),
+          thmPoolApplied: z.boolean().optional()
+        }),
+        responses: z.record(z.object({
+          option: z.string(),
+          value: z.number()
+        })).optional(),
+        assessmentType: z.enum(['individual', 'couple']).optional(),
+        timestamp: z.string()
+      });
+      
+      // Validate the request body
+      const validatedData = progressSchema.parse(req.body);
+      
+      // Save progress to database
+      await storage.saveAssessmentProgress({
+        email: validatedData.email,
+        demographicData: validatedData.demographicData,
+        responses: validatedData.responses || {},
+        assessmentType: validatedData.assessmentType || 'individual',
+        timestamp: validatedData.timestamp,
+        completed: false
+      });
+      
+      // If promo code is present and valid, record it
+      if (validatedData.demographicData.promoCode) {
+        // Check if it's a valid promo code
+        const isValidPromo = await storage.isValidPromoCode(
+          validatedData.demographicData.promoCode, 
+          validatedData.assessmentType || 'individual'
+        );
+        
+        if (isValidPromo) {
+          await storage.recordPromoCodeUsage({
+            promoCode: validatedData.demographicData.promoCode,
+            email: validatedData.email,
+            assessmentType: validatedData.assessmentType || 'individual',
+            timestamp: validatedData.timestamp
+          });
+        }
+      }
+      
+      return res.status(200).json({
+        success: true,
+        message: "Progress saved successfully"
+      });
+    } catch (error) {
+      console.error("Error saving assessment progress:", error);
+      return res.status(500).json({
+        success: false,
+        message: error instanceof Error ? error.message : "Failed to save progress"
+      });
+    }
+  });
+
   app.post('/api/email/send', async (req, res) => {
     try {
       // Validate the request body

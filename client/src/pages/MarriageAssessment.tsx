@@ -74,6 +74,50 @@ export default function MarriageAssessment() {
       setAssessmentType(state.assessmentType);
     }
   }, []);
+  
+  // Set up autosave timer for every 2 minutes
+  useEffect(() => {
+    // Only start autosave if we have an email and we're in questionnaire view
+    if (!demographicData.email || currentView !== "questionnaire") {
+      return;
+    }
+    
+    console.log('Starting autosave timer for assessment progress');
+    
+    // Create autosave function
+    const autoSaveProgress = async () => {
+      try {
+        // Don't save if we don't have an email or responses
+        if (!demographicData.email || Object.keys(userResponses).length === 0) {
+          return;
+        }
+        
+        console.log('Auto-saving assessment progress...');
+        
+        // Save current progress
+        await apiRequest('POST', '/api/assessment/save-progress', {
+          email: demographicData.email,
+          demographicData,
+          responses: userResponses,
+          assessmentType,
+          timestamp: new Date().toISOString()
+        });
+        
+        console.log('Assessment progress auto-saved');
+      } catch (error) {
+        console.error('Error auto-saving assessment progress:', error);
+      }
+    };
+    
+    // Set up interval for every 2 minutes (120000 ms)
+    const autoSaveInterval = setInterval(autoSaveProgress, 120000);
+    
+    // Clean up interval on component unmount or when view changes
+    return () => {
+      clearInterval(autoSaveInterval);
+      console.log('Autosave timer cleared');
+    };
+  }, [currentView, demographicData.email, userResponses, assessmentType]);
 
   // Filter questions by current section
   const sectionQuestions = questions.filter(q => q.section === currentSection);
@@ -89,11 +133,37 @@ export default function MarriageAssessment() {
   };
 
   // Handle selection of an answer option
-  const handleOptionSelect = (questionId: number, option: string, value: number) => {
+  const handleOptionSelect = async (questionId: number, option: string, value: number) => {
+    // Update state with the new response
     setUserResponses(prev => ({
       ...prev,
       [questionId]: { option, value }
     }));
+    
+    // If we have demographic data with email, save progress after each response
+    if (demographicData.email) {
+      try {
+        // Create updated responses with the new selection
+        const updatedResponses = {
+          ...userResponses,
+          [questionId]: { option, value }
+        };
+        
+        // Save progress immediately after each response
+        await apiRequest('POST', '/api/assessment/save-progress', {
+          email: demographicData.email,
+          demographicData,
+          responses: updatedResponses,
+          assessmentType,
+          timestamp: new Date().toISOString()
+        });
+        
+        console.log(`Response saved for question ${questionId}`);
+      } catch (error) {
+        console.error('Error saving response:', error);
+        // Continue even if save fails - don't block the user
+      }
+    }
   };
 
   // Navigate to next question or section
@@ -136,10 +206,61 @@ export default function MarriageAssessment() {
       ...prev,
       [field]: value
     }));
+    
+    // Special handling for promo code - record it immediately when entered
+    if (field === 'promoCode' && typeof value === 'string' && value.trim() !== '') {
+      try {
+        // Verify promo code validity
+        apiRequest('POST', '/api/verify-promo-code', {
+          promoCode: value,
+          assessmentType
+        }).then(res => res.json())
+          .then(data => {
+            if (data.valid) {
+              console.log(`Valid promo code entered: ${value}`);
+              
+              // Save demographic data with promo code
+              if (demographicData.email) {
+                apiRequest('POST', '/api/assessment/save-progress', {
+                  email: demographicData.email,
+                  demographicData: {
+                    ...demographicData,
+                    promoCode: value
+                  },
+                  timestamp: new Date().toISOString()
+                }).catch(error => {
+                  console.error('Error saving promo code data:', error);
+                });
+              }
+            } else {
+              console.log(`Invalid promo code attempted: ${value}`);
+            }
+          }).catch(error => {
+            console.error('Error verifying promo code:', error);
+          });
+      } catch (error) {
+        console.error('Error handling promo code:', error);
+      }
+    }
   };
 
   // Handle demographic form submission
-  const handleDemographicSubmit = () => {
+  const handleDemographicSubmit = async () => {
+    // Save initial demographic data to database
+    if (demographicData.email) {
+      try {
+        // Save initial data
+        await apiRequest('POST', '/api/assessment/save-progress', {
+          email: demographicData.email,
+          demographicData,
+          timestamp: new Date().toISOString()
+        });
+        console.log('Initial demographic data saved to database');
+      } catch (error) {
+        console.error('Error saving initial demographic data:', error);
+      }
+    }
+    
     setCurrentView("questionnaire");
   };
 
