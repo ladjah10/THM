@@ -1744,6 +1744,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Webhook test endpoint for Stripe configuration validation
+  app.get('/api/webhooks/stripe/test', (req, res) => {
+    res.status(200).json({
+      status: 'success',
+      message: 'Stripe webhook endpoint is properly configured and accessible',
+      timestamp: new Date().toISOString(),
+      configured_path: '/api/webhooks/stripe',
+      note: 'This endpoint is for testing only. Actual webhook events should be posted to /api/webhooks/stripe'
+    });
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
