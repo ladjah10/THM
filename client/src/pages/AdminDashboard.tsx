@@ -692,7 +692,8 @@ export default function AdminDashboard() {
   });
   
   // Define a type for enhanced transactions including assessment data
-  type EnhancedTransaction = PaymentTransaction & { 
+  interface EnhancedTransaction extends Omit<PaymentTransaction, 'metadata'> { 
+    metadata: string | Record<string, any>;
     assessmentData?: { 
       firstName?: string;
       lastName?: string; 
@@ -909,7 +910,8 @@ export default function AdminDashboard() {
       // Create authentication header with admin credentials
       const adminUsername = 'admin';
       const adminPassword = '100marriage';
-      const adminAuth = Buffer.from(`${adminUsername}:${adminPassword}`).toString('base64');
+      // Browser-safe base64 encoding (Buffer is not available in the browser)
+      const adminAuth = btoa(`${adminUsername}:${adminPassword}`);
       
       // Fetch data with auth header
       const response = await fetch(endpoint, {
