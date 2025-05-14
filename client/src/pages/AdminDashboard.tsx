@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { RefreshCw, FileDown, Search, Loader2, Mail, Info, Download } from "lucide-react";
+import { RefreshCw, FileDown, Search, Loader2, Mail, Info, Download, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
@@ -16,8 +16,28 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import type { AssessmentScores, UserProfile, DemographicData, AssessmentResult, SectionScore } from "@/types/assessment";
-import type { AnalyticsSummary, PageView, VisitorSession, PaymentTransaction } from "@shared/schema";
+import type { AnalyticsSummary, PageView, VisitorSession } from "@shared/schema";
 import type { ReferralData } from "@/types/referrals";
+
+// Define PaymentTransaction interface
+interface PaymentTransaction {
+  id: string;
+  stripeId: string;
+  customerEmail?: string;
+  amount: number;
+  currency: string;
+  status: string;
+  created: string;
+  productType: string;
+  assessmentType?: string;
+  productName?: string; // Added missing property
+  metadata: string | Record<string, any>;
+  isRefunded: boolean;
+  refundAmount?: number;
+  refundReason?: string;
+  promoCode?: string;
+  customerId?: string; // Added missing property
+}
 
 // Define enhanced transaction type with assessment data
 interface EnhancedTransaction extends PaymentTransaction {
@@ -692,8 +712,7 @@ export default function AdminDashboard() {
   });
   
   // Define a type for enhanced transactions including assessment data
-  interface EnhancedTransaction extends Omit<PaymentTransaction, 'metadata'> { 
-    metadata: string | Record<string, any>;
+  interface EnhancedTransaction extends PaymentTransaction { 
     assessmentData?: { 
       firstName?: string;
       lastName?: string; 
@@ -2218,6 +2237,25 @@ export default function AdminDashboard() {
                 <div className="flex justify-center py-8">
                   <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
                 </div>
+              ) : paymentTransactions === undefined || paymentTransactions === null ? (
+                <div className="flex flex-col items-center justify-center py-8 px-4 bg-red-50 rounded-lg">
+                  <AlertCircle className="h-8 w-8 text-red-500 mb-2" />
+                  <h3 className="text-lg font-medium text-red-700">Error Loading Transactions</h3>
+                  <p className="text-sm text-center text-red-600 max-w-md">
+                    There was a problem loading payment transactions. Please try refreshing the page
+                    or contact support if the issue persists.
+                  </p>
+                  <Button 
+                    className="mt-4" 
+                    variant="outline" 
+                    onClick={() => {
+                      queryClient.invalidateQueries({ queryKey: ['/api/admin/analytics/payment-transactions'] })
+                    }}
+                  >
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    Retry Loading Transactions
+                  </Button>
+                </div>
               ) : (
                 <>
                   {/* Revenue Summary */}
@@ -2424,10 +2462,17 @@ export default function AdminDashboard() {
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {paymentTransactions && paymentTransactions.length > 0 ? (
+                          {paymentTransactions && Array.isArray(paymentTransactions) && paymentTransactions.length > 0 ? (
                             paymentTransactions
-                              .sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime())
-                              .map((transaction) => (
+                              .sort((a, b) => {
+                                try {
+                                  return new Date(b.created).getTime() - new Date(a.created).getTime();
+                                } catch (e) {
+                                  console.error("Error sorting transactions", e);
+                                  return 0;
+                                }
+                              })
+                              .map((transaction, index) => (
                                 <TableRow key={transaction.id} className={transaction.isRefunded ? "bg-red-50" : ""}>
                                   <TableCell>{formatDate(transaction.created)}</TableCell>
                                   <TableCell>
