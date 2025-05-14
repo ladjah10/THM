@@ -106,8 +106,8 @@ export function determineProfiles(scores: AssessmentScores, gender?: string) {
   const unisexProfiles = psychographicProfiles.filter(profile => !profile.genderSpecific);
   console.log(`Found ${unisexProfiles.length} unisex profiles`);
   
-  // Filter gender-specific profiles - ensure case consistency for gender values
-  const normalizedGender = gender ? gender.toLowerCase() : undefined;
+  // Filter gender-specific profiles - ensure case consistency for gender values and trim whitespace
+  const normalizedGender = gender ? gender.toLowerCase().trim() : undefined;
   
   const genderProfiles = psychographicProfiles.filter(profile => {
     if (profile.genderSpecific === 'male' && normalizedGender === 'male') return true;

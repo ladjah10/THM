@@ -96,12 +96,10 @@ function testGenderProfileFix() {
 }
 
 // Run the test
-testGenderProfileFix()
-  .then(() => {
-    console.log('Test finished successfully.');
-    process.exit(0);
-  })
-  .catch(error => {
-    console.error('Test failed with error:', error);
-    process.exit(1);
-  });
+try {
+  testGenderProfileFix();
+  console.log('Test finished successfully.');
+} catch (error) {
+  console.error('Test failed with error:', error);
+  process.exit(1);
+}

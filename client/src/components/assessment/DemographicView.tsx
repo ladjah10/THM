@@ -362,7 +362,12 @@ export default function DemographicView({
           </Label>
           <Select
             value={demographicData.gender}
-            onValueChange={(value) => onChange("gender", value)}
+            onValueChange={(value) => {
+              // Normalize gender value for consistent processing
+              const normalizedGender = value.toLowerCase().trim();
+              console.log(`Gender selected: original="${value}", normalized="${normalizedGender}"`);
+              onChange("gender", normalizedGender);
+            }}
           >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select your gender" />

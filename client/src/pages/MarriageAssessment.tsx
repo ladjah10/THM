@@ -267,7 +267,12 @@ export default function MarriageAssessment() {
   // Calculate scores and determine profiles
   const calculateAssessmentResults = async () => {
     const calculatedScores = calculateScores(questions, userResponses);
-    const { primaryProfile, genderProfile } = determineProfiles(calculatedScores, demographicData.gender);
+    
+    // Normalize gender for consistent profile determination
+    const normalizedGender = demographicData.gender ? demographicData.gender.toLowerCase().trim() : undefined;
+    console.log(`Original gender value: "${demographicData.gender}", normalized to: "${normalizedGender}"`);
+    
+    const { primaryProfile, genderProfile } = determineProfiles(calculatedScores, normalizedGender);
     
     setScores(calculatedScores);
     setPrimaryProfile(primaryProfile);
