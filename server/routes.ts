@@ -1921,8 +1921,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Admin API for downloading full assessment data as JSON
   app.get('/api/admin/download-assessment/:email', async (req: RequestWithSession, res: Response) => {
     try {
-      // Validate admin access
-      if (!req.session || !req.session.user || req.session.user.role !== 'admin') {
+      // Validate admin access - check both session and admin header for credentials
+      const adminUsername = 'admin';
+      const adminPassword = '100marriage';
+      const adminHeader = req.headers['x-admin-auth'];
+      
+      // Check either session-based auth or header-based auth
+      const isSessionAuth = req.session && req.session.user && req.session.user.role === 'admin';
+      const isHeaderAuth = adminHeader === Buffer.from(`${adminUsername}:${adminPassword}`).toString('base64');
+      
+      if (!isSessionAuth && !isHeaderAuth) {
+        console.log('Admin authorization failed for download-assessment:', {
+          hasSession: !!req.session,
+          hasSessionUser: req.session && !!req.session.user,
+          sessionRole: req.session?.user?.role || 'none',
+          headerProvided: !!adminHeader
+        });
         return res.status(401).json({ success: false, message: 'Unauthorized' });
       }
       
@@ -1957,8 +1971,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Admin API for downloading couple assessment data as JSON
   app.get('/api/admin/download-couple-assessment/:email', async (req: RequestWithSession, res: Response) => {
     try {
-      // Validate admin access
-      if (!req.session || !req.session.user || req.session.user.role !== 'admin') {
+      // Validate admin access - check both session and admin header for credentials
+      const adminUsername = 'admin';
+      const adminPassword = '100marriage';
+      const adminHeader = req.headers['x-admin-auth'];
+      
+      // Check either session-based auth or header-based auth
+      const isSessionAuth = req.session && req.session.user && req.session.user.role === 'admin';
+      const isHeaderAuth = adminHeader === Buffer.from(`${adminUsername}:${adminPassword}`).toString('base64');
+      
+      if (!isSessionAuth && !isHeaderAuth) {
+        console.log('Admin authorization failed for download-couple-assessment:', {
+          hasSession: !!req.session,
+          hasSessionUser: req.session && !!req.session.user,
+          sessionRole: req.session?.user?.role || 'none',
+          headerProvided: !!adminHeader
+        });
         return res.status(401).json({ success: false, message: 'Unauthorized' });
       }
       

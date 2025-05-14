@@ -906,12 +906,25 @@ export default function AdminDashboard() {
         ? `/api/admin/download-couple-assessment/${encodeURIComponent(email)}`
         : `/api/admin/download-assessment/${encodeURIComponent(email)}`;
       
-      // Fetch data
-      const response = await apiRequest("GET", endpoint);
+      // Create authentication header with admin credentials
+      const adminUsername = 'admin';
+      const adminPassword = '100marriage';
+      const adminAuth = Buffer.from(`${adminUsername}:${adminPassword}`).toString('base64');
+      
+      // Fetch data with auth header
+      const response = await fetch(endpoint, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Admin-Auth": adminAuth
+        },
+        credentials: "include"
+      });
       
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to download assessment data");
+        console.error("Download failed with status:", response.status, errorData);
+        throw new Error(errorData.message || `Failed to download assessment data (${response.status})`);
       }
       
       // Get the assessment data
