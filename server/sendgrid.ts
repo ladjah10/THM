@@ -317,7 +317,7 @@ const notificationTracker: Record<string, number> = {};
 
 /**
  * Sends a notification email to admin when a user starts filling out the assessment form
- * Includes deduplication to prevent multiple notifications for the same user within 24 hours
+ * Includes deduplication to prevent multiple notifications for the same user within 1 hour
  * 
  * @param demographicData The demographic data entered by the user
  * @param ipAddress Optional IP address of the user
@@ -341,14 +341,14 @@ export async function sendFormInitiationNotification(
     const maritalStatus = demographicData.maritalStatus || 'Not provided';
     const timestamp = new Date().toISOString();
     
-    // Skip notification if we've already sent one for this email in the last 24 hours
+    // Skip notification if we've already sent one for this email in the last hour
     // Only do this check if we have a valid email to track
     if (email !== 'Not provided') {
       const lastNotificationTime = notificationTracker[email];
       const currentTime = Date.now();
       
-      // Check if we've already sent a notification in the last 24 hours (86400000 ms)
-      if (lastNotificationTime && (currentTime - lastNotificationTime) < 86400000) {
+      // Check if we've already sent a notification in the last hour (3600000 ms)
+      if (lastNotificationTime && (currentTime - lastNotificationTime) < 3600000) {
         console.log(`Skipping duplicate notification for ${email} - last sent ${new Date(lastNotificationTime).toISOString()}`);
         return { success: true, skipped: true };
       }
