@@ -34,6 +34,7 @@ export default function MarriageAssessment() {
   const [currentView, setCurrentView] = useState<View>("paywall");
   const [currentSection, setCurrentSection] = useState(sections[0]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [isLastQuestion, setIsLastQuestion] = useState(false);
   const [userResponses, setUserResponses] = useState<Record<number, UserResponse>>({});
   const [demographicData, setDemographicData] = useState<DemographicData>({
     firstName: "",
@@ -159,9 +160,9 @@ export default function MarriageAssessment() {
         setCurrentSection(sections[nextSectionIndex]);
         setCurrentQuestionIndex(0);
       } else {
-        // If we've gone through all sections, move to results
-        calculateAssessmentResults();
-        setCurrentView("results");
+        // If we've gone through all sections, show a final submission page
+        // We'll set a flag to indicate we're at the end of all questions
+        setIsLastQuestion(true);
       }
     }
   };
@@ -220,6 +221,56 @@ export default function MarriageAssessment() {
       toast({
         title: "Save Failed",
         description: "There was a problem saving your progress. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
+  
+  // Handle final submission of the assessment
+  const handleSubmitAssessment = async () => {
+    if (!demographicData.email) {
+      toast({
+        title: "Email Required",
+        description: "Please complete the demographic information with your email before submitting.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    try {
+      toast({
+        title: "Submitting Assessment",
+        description: "Please wait while we finalize your assessment...",
+      });
+      
+      // First, mark the assessment as complete in progress table
+      await apiRequest('POST', '/api/assessment/save-progress', {
+        email: demographicData.email,
+        demographicData,
+        responses: userResponses,
+        assessmentType,
+        timestamp: new Date().toISOString(),
+        completed: true
+      });
+      
+      // Calculate the final results
+      await calculateAssessmentResults();
+      
+      // Show success toast
+      toast({
+        title: "Assessment Completed",
+        description: "Your assessment has been successfully submitted and saved.",
+      });
+      
+      // Reset the last question flag and move to results
+      setIsLastQuestion(false);
+      setCurrentView("results");
+      
+    } catch (error) {
+      console.error('Error submitting assessment:', error);
+      toast({
+        title: "Submission Failed",
+        description: "There was a problem submitting your assessment. Please try again.",
         variant: "destructive"
       });
     }
