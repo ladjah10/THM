@@ -1075,22 +1075,31 @@ export default function AdminDashboard() {
       "Ethnicity",
       "Profile",
       "Overall Score",
+      "True Assessment Score",
+      "THM Match Score",
       "Book Purchased"
     ];
     
     // Convert assessment data to CSV rows
-    const rows = assessments.map(assessment => [
-      assessment.name,
-      assessment.email,
-      assessment.timestamp ? new Date(assessment.timestamp).toISOString().split('T')[0] : '',
-      assessment.demographics.gender,
-      assessment.demographics.marriageStatus,
-      assessment.demographics.desireChildren,
-      assessment.demographics.ethnicity,
-      assessment.profile.name,
-      assessment.scores.overallPercentage.toFixed(1) + '%',
-      assessment.demographics.hasPurchasedBook
-    ]);
+    const rows = assessments.map(assessment => {
+      // Calculate the weighted THM match score
+      const matchScore = calculateMatchScore(assessment);
+      
+      return [
+        assessment.name,
+        assessment.email,
+        assessment.timestamp ? new Date(assessment.timestamp).toISOString().split('T')[0] : '',
+        assessment.demographics.gender,
+        assessment.demographics.marriageStatus,
+        assessment.demographics.desireChildren,
+        assessment.demographics.ethnicity,
+        assessment.profile.name,
+        assessment.scores.overallPercentage.toFixed(1) + '%',
+        assessment.scores.overallPercentage.toFixed(1) + '%', // True unweighted score
+        matchScore.toFixed(1) + '%', // THM match score with age/location weighting
+        assessment.demographics.hasPurchasedBook
+      ];
+    });
     
     // Add headers to beginning of rows
     rows.unshift(headers);

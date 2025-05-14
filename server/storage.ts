@@ -754,7 +754,53 @@ export class DatabaseStorage {
       
       // Transform DB results into AssessmentResult objects
       const assessments: AssessmentResult[] = results.rows.map((row: any) => {
-        const scores = JSON.parse(row.scores);
+        // Carefully parse the scores to ensure numeric values are properly handled
+        let scores;
+        try {
+          scores = JSON.parse(row.scores);
+          
+          // Fix/validate overallPercentage as a number
+          if (typeof scores.overallPercentage === 'string') {
+            scores.overallPercentage = parseFloat(scores.overallPercentage);
+          }
+          
+          // Fix/validate section percentages
+          if (scores.sections) {
+            Object.keys(scores.sections).forEach(sectionKey => {
+              const section = scores.sections[sectionKey];
+              if (section) {
+                if (typeof section.percentage === 'string') {
+                  section.percentage = parseFloat(section.percentage);
+                }
+                if (typeof section.earned === 'string') {
+                  section.earned = parseFloat(section.earned);
+                }
+                if (typeof section.possible === 'string') {
+                  section.possible = parseFloat(section.possible);
+                }
+              }
+            });
+          }
+          
+          // Fix/validate totalEarned and totalPossible
+          if (typeof scores.totalEarned === 'string') {
+            scores.totalEarned = parseFloat(scores.totalEarned);
+          }
+          if (typeof scores.totalPossible === 'string') {
+            scores.totalPossible = parseFloat(scores.totalPossible);
+          }
+        } catch (error) {
+          console.error('Error parsing scores JSON:', error);
+          scores = { 
+            overallPercentage: 0, 
+            sections: {}, 
+            strengths: [], 
+            improvementAreas: [],
+            totalEarned: 0,
+            totalPossible: 0
+          };
+        }
+        
         const profile = JSON.parse(row.profile);
         const responses = JSON.parse(row.responses);
         const demographics = JSON.parse(row.demographics);
