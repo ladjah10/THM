@@ -1378,17 +1378,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Stripe webhook endpoint to receive webhook events from Stripe
   app.post('/api/webhooks/stripe', (req, res) => {
-    // Use the raw body we captured in the middleware
-    const rawBody = (req as any).rawBody;
-    
-    if (!rawBody) {
-      console.error('No raw body found in webhook request');
-      return res.status(400).send('No raw body found');
+    try {
+      // Log request headers for debugging
+      console.log('📌 Webhook request headers:', {
+        'content-type': req.headers['content-type'],
+        'stripe-signature': req.headers['stripe-signature'] ? '✓ Present' : '✗ Missing'
+      });
+      
+      // Use the raw body we captured in the middleware
+      const rawBody = (req as any).rawBody;
+      
+      if (!rawBody) {
+        console.error('❌ No raw body found in webhook request');
+        return res.status(400).json({ 
+          error: 'No raw body found',
+          message: 'Make sure the request is properly formatted and sent directly to this endpoint'
+        });
+      }
+      
+      console.log(`✓ Raw body captured (${rawBody.length} bytes)`);
+      
+      // Pass the raw body to the webhook handler
+      req.body = rawBody;
+      return handleStripeWebhook(req, res);
+    } catch (error) {
+      console.error('❌ Unexpected error processing webhook:', error);
+      return res.status(500).json({ 
+        error: 'Unexpected error',
+        message: error instanceof Error ? error.message : 'Unknown error processing webhook'
+      });
     }
-    
-    // Pass the raw body to the webhook handler
-    req.body = rawBody;
-    return handleStripeWebhook(req, res);
   });
   
   // Admin API to manually sync Stripe payments

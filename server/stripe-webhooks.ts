@@ -148,51 +148,89 @@ export async function syncStripePayments(startDate?: string, endDate?: string): 
 export async function handleStripeWebhook(req: Request, res: Response) {
   let event: Stripe.Event;
   
-  // Log the incoming webhook for debugging
+  // Log the incoming webhook for debugging with improved detail
   const requestTimestamp = new Date().toISOString();
   console.log('📌 Received Stripe webhook:', {
     timestamp: requestTimestamp,
     headers: {
       'stripe-signature': req.headers['stripe-signature'] ? '✓ Present' : '✗ Missing',
-      'content-type': req.headers['content-type']
-    }
+      'content-type': req.headers['content-type'],
+      'content-length': req.headers['content-length'] || 'not specified'
+    },
+    url: req.originalUrl,
+    method: req.method
   });
   
-  // Log additional details for deeper debugging
+  // More detailed logging of the request body
   const bodyType = typeof req.body;
-  console.log(`Webhook body type: ${bodyType}`);
+  console.log(`Webhook body type: ${bodyType}, content available: ${req.body ? 'Yes' : 'No'}`);
   
-  // Check if body is parseable (if string) and log the event type
+  // Check if body is parseable (if string) and log the event type with better error handling
   try {
+    if (!req.body) {
+      console.error('❌ Webhook body is empty or undefined');
+      throw new Error('Webhook body is missing');
+    }
+    
     const parsedBody = bodyType === 'string' ? JSON.parse(req.body) : req.body;
-    console.log(`Webhook event type from body: ${parsedBody.type || 'unknown'}`);
-    console.log(`Webhook event ID from body: ${parsedBody.id || 'unknown'}`);
+    console.log(`Webhook event details:`, {
+      type: parsedBody.type || 'unknown',
+      id: parsedBody.id || 'unknown',
+      apiVersion: parsedBody.api_version || 'unknown',
+      created: parsedBody.created ? new Date(parsedBody.created * 1000).toISOString() : 'unknown'
+    });
   } catch (error) {
-    console.error('Could not parse webhook body for logging:', error);
+    console.error('❌ Could not parse webhook body for logging:', error);
+    // Continue processing - this is just diagnostic logging
   }
   
   const sig = req.headers['stripe-signature'];
   
   try {
+    if (!req.body) {
+      throw new Error('Webhook body is empty or missing');
+    }
+    
     if (sig && process.env.STRIPE_WEBHOOK_SECRET) {
       // Verify the webhook signature if we have the secret
+      console.log(`Attempting signature verification with secret key ending in ...${process.env.STRIPE_WEBHOOK_SECRET.slice(-4)}`);
+      
       // If req.body is a string (raw body), use it directly
       const payload = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
+      
+      if (payload.length === 0) {
+        throw new Error('Webhook payload is empty');
+      }
+      
       event = stripe.webhooks.constructEvent(
         payload,
         sig,
         process.env.STRIPE_WEBHOOK_SECRET
       );
-      console.log('✓ Webhook signature verified');
+      console.log('✓ Webhook signature verified successfully');
     } else {
       // For testing/development, parse the event directly
       // In production, always use signature verification
-      console.warn('⚠️ Webhook signature verification skipped - for development only');
+      console.warn('⚠️ Webhook signature verification skipped - not recommended for production');
+      
+      if (!sig) {
+        console.warn('Missing stripe-signature header');
+      }
+      
+      if (!process.env.STRIPE_WEBHOOK_SECRET) {
+        console.warn('Missing STRIPE_WEBHOOK_SECRET environment variable');
+      }
+      
       event = typeof req.body === 'string' ? JSON.parse(req.body) : req.body as Stripe.Event;
     }
   } catch (err: any) {
-    console.error(`Webhook processing error: ${err.message}`);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
+    console.error(`❌ Webhook processing error: ${err.message}`);
+    // Send more detailed error response
+    return res.status(400).json({
+      error: 'Webhook validation failed',
+      message: err.message,
+      timestamp: new Date().toISOString()
+    });
   }
   
   // Handle specific event types
