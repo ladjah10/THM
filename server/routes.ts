@@ -322,6 +322,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Validate the request body
       const validatedData = progressSchema.parse(req.body);
       
+      // Check if this is a final submission 
+      const isFinalSubmission = validatedData.completed === true;
+      
+      if (isFinalSubmission) {
+        console.log(`Received final submission for assessment: ${validatedData.email}`);
+      }
+      
       // Save progress to database
       await storage.saveAssessmentProgress({
         email: validatedData.email,
@@ -350,9 +357,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
       
+      // For completed assessments, trigger the transfer to results
+      if (isFinalSubmission) {
+        try {
+          // Process in the background so we don't delay the response
+          setTimeout(async () => {
+            try {
+              console.log(`Triggering assessment transfer for ${validatedData.email}`);
+              await storage.transferCompletedAssessments();
+            } catch (transferError) {
+              console.error('Error during background transfer:', transferError);
+            }
+          }, 100); 
+        } catch (triggerError) {
+          console.error('Error setting up background transfer:', triggerError);
+          // Don't fail the API call if this errors
+        }
+      }
+      
       return res.status(200).json({
         success: true,
-        message: "Progress saved successfully"
+        message: isFinalSubmission ? 
+          "Assessment completed and submitted successfully" : 
+          "Progress saved successfully"
       });
     } catch (error) {
       console.error("Error saving assessment progress:", error);
