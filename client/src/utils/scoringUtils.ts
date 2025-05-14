@@ -106,14 +106,20 @@ export function determineProfiles(scores: AssessmentScores, gender?: string) {
   const unisexProfiles = psychographicProfiles.filter(profile => !profile.genderSpecific);
   console.log(`Found ${unisexProfiles.length} unisex profiles`);
   
-  // Filter gender-specific profiles
+  // Filter gender-specific profiles - ensure case consistency for gender values
+  const normalizedGender = gender ? gender.toLowerCase() : undefined;
+  
   const genderProfiles = psychographicProfiles.filter(profile => {
-    if (profile.genderSpecific === 'male' && gender === 'male') return true;
-    if (profile.genderSpecific === 'female' && gender === 'female') return true;
+    if (profile.genderSpecific === 'male' && normalizedGender === 'male') return true;
+    if (profile.genderSpecific === 'female' && normalizedGender === 'female') return true;
     return false;
   });
-  console.log(`Found ${genderProfiles.length} gender-specific profiles for "${gender}"`);
-  console.log("Gender profiles IDs:", genderProfiles.map(p => p.id));
+  
+  // Log what's happening for debugging
+  console.log(`Found ${genderProfiles.length} gender-specific profiles for "${normalizedGender}" (original value: "${gender}")`);
+  if (genderProfiles.length > 0) {
+    console.log(`Gender profile IDs: ${genderProfiles.map(p => p.id).join(', ')}`);
+  }
   
   // Function to find best matching profile from a list
   const findBestMatch = (profiles: UserProfile[]) => {

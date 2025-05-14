@@ -661,6 +661,16 @@ export class DatabaseStorage {
       const { assessmentResults } = await import('@shared/schema');
       const { pool } = await import('./db');
       
+      // Add enhanced logging to track gender profile information
+      console.log(`Saving assessment for ${assessment.name} with gender: ${assessment.demographics.gender}`);
+      console.log(`Gender profile present: ${!!assessment.genderProfile}`);
+      
+      if (assessment.genderProfile) {
+        console.log(`Gender profile details: ID=${assessment.genderProfile.id}, Name=${assessment.genderProfile.name}`);
+      } else {
+        console.log('WARNING: Gender profile is missing even though gender is specified');
+      }
+      
       const jsonScores = JSON.stringify(assessment.scores);
       const jsonProfile = JSON.stringify(assessment.profile);
       const jsonGenderProfile = assessment.genderProfile ? JSON.stringify(assessment.genderProfile) : null;
@@ -733,8 +743,18 @@ export class DatabaseStorage {
         const responses = JSON.parse(row.responses);
         const demographics = JSON.parse(row.demographics);
         
-        // Parse gender profile if it exists
-        const genderProfile = row.gender_profile ? JSON.parse(row.gender_profile) : null;
+        // Parse gender profile if it exists - handle both snake_case and camelCase property names
+        // This fix handles a critical issue where male profiles weren't being properly retrieved
+        let genderProfile = null;
+        if (row.gender_profile) {
+          console.log(`Found gender_profile in database row for ${row.email}`);
+          genderProfile = JSON.parse(row.gender_profile);
+        } else if (row.genderProfile) {
+          console.log(`Found genderProfile in database row for ${row.email}`);
+          genderProfile = JSON.parse(row.genderProfile);
+        } else {
+          console.log(`WARNING: No gender profile found for ${row.email}`);
+        }
         
         return {
           id: row.id,
@@ -911,7 +931,8 @@ export class DatabaseStorage {
         name: dbResult.name,
         scores: JSON.parse(dbResult.scores),
         profile: JSON.parse(dbResult.profile),
-        genderProfile: dbResult.gender_profile ? JSON.parse(dbResult.gender_profile) : null,
+        genderProfile: dbResult.gender_profile ? JSON.parse(dbResult.gender_profile) : 
+                  (dbResult.genderProfile ? JSON.parse(dbResult.genderProfile) : null),
         responses: JSON.parse(dbResult.responses),
         demographics: JSON.parse(dbResult.demographics),
         timestamp: dbResult.timestamp.toISOString(),
