@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { RefreshCw, FileDown, Search, Loader2, Mail, Info } from "lucide-react";
+import { RefreshCw, FileDown, Search, Loader2, Mail, Info, Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
@@ -875,6 +875,59 @@ export default function AdminDashboard() {
   const handleViewDetails = (assessment: AssessmentResult) => {
     setSelectedAssessment(assessment);
     setDetailModalOpen(true);
+  };
+  
+  // Handle downloading full assessment data as JSON
+  const handleDownloadAssessmentData = async (email: string, isCoupleAssessment: boolean = false) => {
+    try {
+      // Show loading toast
+      toast({
+        title: "Downloading...",
+        description: `Downloading assessment data for ${email}`,
+      });
+      
+      const endpoint = isCoupleAssessment 
+        ? `/api/admin/download-couple-assessment/${encodeURIComponent(email)}`
+        : `/api/admin/download-assessment/${encodeURIComponent(email)}`;
+      
+      // Fetch data
+      const response = await apiRequest("GET", endpoint);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to download assessment data");
+      }
+      
+      // Get the assessment data
+      const assessmentData = await response.json();
+      
+      // Create blob and trigger download
+      const blob = new Blob([JSON.stringify(assessmentData, null, 2)], { type: 'application/json' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = isCoupleAssessment 
+        ? `couple-assessment-${email}-${Date.now()}.json` 
+        : `assessment-${email}-${Date.now()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      
+      // Cleanup
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      
+      toast({
+        title: "Success",
+        description: "Assessment data downloaded successfully",
+      });
+    } catch (error) {
+      console.error("Error downloading assessment data:", error);
+      toast({
+        title: "Download Failed",
+        description: error instanceof Error ? error.message : "Failed to download assessment data",
+        variant: "destructive",
+      });
+    }
   };
   
   // Handle searching for assessments by email
@@ -1753,6 +1806,7 @@ export default function AdminDashboard() {
                                     setSelectedAssessment(assessment);
                                     setDetailModalOpen(true);
                                   }}
+                                  title="View details"
                                 >
                                   <Search className="h-4 w-4" />
                                 </Button>
@@ -1769,6 +1823,14 @@ export default function AdminDashboard() {
                                   title="Resend results to this email"
                                 >
                                   <Mail className="h-4 w-4" />
+                                </Button>
+                                <Button 
+                                  variant="ghost" 
+                                  size="icon"
+                                  onClick={() => handleDownloadAssessmentData(assessment.email)}
+                                  title="Download full assessment data"
+                                >
+                                  <Download className="h-4 w-4" />
                                 </Button>
                               </div>
                             </TableCell>
@@ -2489,7 +2551,14 @@ export default function AdminDashboard() {
                 </Card>
               </div>
               
-              <DialogFooter>
+              <DialogFooter className="flex justify-between sm:justify-between">
+                <Button 
+                  variant="secondary"
+                  onClick={() => handleDownloadAssessmentData(selectedAssessment.email)}
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Download Full Data
+                </Button>
                 <Button variant="outline" onClick={() => setDetailModalOpen(false)}>
                   Close
                 </Button>
