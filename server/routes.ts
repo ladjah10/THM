@@ -4,7 +4,7 @@ import Stripe from "stripe";
 import { storage } from "./storage";
 import { z } from "zod";
 import { sendAssessmentEmail, sendReferralEmail, sendCoupleInvitationEmails } from "./nodemailer";
-import { sendFormInitiationNotification } from "./sendgrid";
+import { sendFormInitiationNotification, sendAssessmentBackup } from "./sendgrid";
 import { generateShareImage } from "./shareImage";
 import { AssessmentResult, DemographicData, CoupleAssessmentReport } from "../shared/schema";
 import { handleStripeWebhook, syncStripePayments } from "./stripe-webhooks";
@@ -247,6 +247,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Store assessment result in storage
       await storage.saveAssessment(assessmentResult);
+      
+      // Send a backup of all assessment data to admin
+      try {
+        console.log("Sending assessment backup email to admin...");
+        const backupResult = await sendAssessmentBackup(assessmentResult);
+        if (backupResult.success) {
+          console.log("Assessment backup email sent successfully to admin");
+        } else {
+          console.warn("Failed to send assessment backup email, but continuing anyway");
+        }
+      } catch (backupError) {
+        // Don't fail the API call if backup email fails
+        console.error("Error sending assessment backup email:", backupError);
+      }
       
       // Log promo code if used
       if (validatedData.demographics.promoCode) {
@@ -1900,6 +1914,78 @@ export async function registerRoutes(app: Express): Promise<Server> {
         status: 'error',
         message: error instanceof Error ? error.message : 'Unknown error in webhook simulation',
         timestamp: new Date().toISOString()
+      });
+    }
+  });
+
+  // Admin API for downloading full assessment data as JSON
+  app.get('/api/admin/download-assessment/:email', async (req: RequestWithSession, res: Response) => {
+    try {
+      // Validate admin access
+      if (!req.session || !req.session.user || req.session.user.role !== 'admin') {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+      
+      const { email } = req.params;
+      
+      if (!email) {
+        return res.status(400).json({ success: false, message: 'Email parameter is required' });
+      }
+      
+      // Get the assessment data
+      const assessment = await storage.getCompletedAssessment(email);
+      
+      if (!assessment) {
+        return res.status(404).json({ success: false, message: 'Assessment not found' });
+      }
+      
+      // Set appropriate headers for file download
+      res.setHeader('Content-Type', 'application/json');
+      res.setHeader('Content-Disposition', `attachment; filename="assessment-${email}-${Date.now()}.json"`);
+      
+      // Return the full assessment data as JSON
+      return res.status(200).json(assessment);
+    } catch (error) {
+      console.error('Error downloading assessment data:', error);
+      return res.status(500).json({ 
+        success: false, 
+        message: error instanceof Error ? error.message : 'Failed to download assessment data' 
+      });
+    }
+  });
+  
+  // Admin API for downloading couple assessment data as JSON
+  app.get('/api/admin/download-couple-assessment/:email', async (req: RequestWithSession, res: Response) => {
+    try {
+      // Validate admin access
+      if (!req.session || !req.session.user || req.session.user.role !== 'admin') {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+      
+      const { email } = req.params;
+      
+      if (!email) {
+        return res.status(400).json({ success: false, message: 'Email parameter is required' });
+      }
+      
+      // Get the couple assessment data
+      const coupleAssessment = await storage.getCoupleAssessmentByEmail(email);
+      
+      if (!coupleAssessment) {
+        return res.status(404).json({ success: false, message: 'Couple assessment not found' });
+      }
+      
+      // Set appropriate headers for file download
+      res.setHeader('Content-Type', 'application/json');
+      res.setHeader('Content-Disposition', `attachment; filename="couple-assessment-${email}-${Date.now()}.json"`);
+      
+      // Return the full couple assessment data as JSON
+      return res.status(200).json(coupleAssessment);
+    } catch (error) {
+      console.error('Error downloading couple assessment data:', error);
+      return res.status(500).json({ 
+        success: false, 
+        message: error instanceof Error ? error.message : 'Failed to download couple assessment data' 
       });
     }
   });
