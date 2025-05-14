@@ -31,6 +31,12 @@ function getProfileIconPath(relativePath: string | undefined): string | null {
 
 // Function to create a PDF buffer from an assessment result that matches our sample visualization
 export async function generateIndividualAssessmentPDF(assessment: AssessmentResult): Promise<Buffer> {
+  console.log("Generating PDF for", assessment.name, "gender:", assessment.demographics.gender);
+  console.log("Has gender profile:", !!assessment.genderProfile);
+  if (assessment.genderProfile) {
+    console.log("Gender profile name:", assessment.genderProfile.name);
+  }
+
   return new Promise((resolve, reject) => {
     try {
       // Create a PDF document
@@ -271,6 +277,9 @@ export async function generateIndividualAssessmentPDF(assessment: AssessmentResu
       
       const genderKey = assessment.demographics.gender === 'male' ? 'male' : 'female';
       const genderText = assessment.demographics.gender === 'male' ? 'men' : 'women';
+      
+      console.log("Gender key for statistics:", genderKey);
+      console.log("Baseline statistics available:", Object.keys(baselineStatistics.overall.byGender));
       
       // Add gender-specific header with background
       doc.rect(0, 0, doc.page.width, 80).fill('#f0f7ff');
