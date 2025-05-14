@@ -545,13 +545,30 @@ export default function MarriageAssessment() {
               percent={progress} 
             />
             
-            <QuestionnaireNavigation 
-              sections={sections} 
-              currentSection={currentSection}
-              onSectionChange={handleSectionChange}
-            />
+            {!isLastQuestion && (
+              <QuestionnaireNavigation 
+                sections={sections} 
+                currentSection={currentSection}
+                onSectionChange={handleSectionChange}
+              />
+            )}
             
-            {currentQuestion && (
+            {isLastQuestion ? (
+              <QuestionnaireView 
+                question={questions[questions.length - 1]} /* Use the last question for reference */
+                onOptionSelect={handleOptionSelect}
+                onNextQuestion={handleNextQuestion}
+                onPreviousQuestion={handlePreviousQuestion}
+                onSaveProgress={handleSaveProgress}
+                onSubmitAssessment={handleSubmitAssessment}
+                selectedOption={""} /* Not applicable for final submit screen */
+                isFirstQuestion={false}
+                questionIndex={totalQuestions - 1}
+                totalQuestions={totalQuestions}
+                showSaveButton={true}
+                isLastQuestion={true}
+              />
+            ) : currentQuestion && (
               <QuestionnaireView 
                 question={currentQuestion}
                 onOptionSelect={handleOptionSelect}

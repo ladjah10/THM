@@ -680,6 +680,82 @@ export class DatabaseStorage {
     }
   }
   
+  // Check for assessments marked as completed and transfer them to results
+  async transferCompletedAssessments(): Promise<void> {
+    try {
+      console.log('Checking for completed assessments to transfer to results...');
+      const { pool } = await import('./db');
+      const { calculateAssessmentWithResponses } = await import('./assessmentUtils');
+      
+      // Find all completed assessments
+      const findCompletedQuery = `
+        SELECT email, demographic_data, responses, assessment_type, timestamp, completed
+        FROM assessment_progress
+        WHERE completed = true
+        AND (transfer_complete IS NULL OR transfer_complete = false)
+      `;
+      
+      const completedResults = await pool.query(findCompletedQuery);
+      console.log(`Found ${completedResults.rows.length} completed assessments to transfer`);
+      
+      // Process each completed assessment
+      for (const row of completedResults.rows) {
+        try {
+          const email = row.email;
+          const demographicData = row.demographic_data;
+          const responses = row.responses;
+          
+          console.log(`Processing completed assessment for ${email}`);
+          
+          // Calculate scores and profiles for the assessment
+          const assessmentData = await calculateAssessmentWithResponses(
+            email,
+            demographicData,
+            responses
+          );
+          
+          if (assessmentData) {
+            // Save the processed assessment to results
+            await this.saveAssessment(assessmentData);
+            console.log(`Successfully transferred assessment for ${email} to results`);
+            
+            // Mark as transferred in the progress table
+            try {
+              const updateQuery = `
+                UPDATE assessment_progress
+                SET transfer_complete = true
+                WHERE email = $1
+              `;
+              await pool.query(updateQuery, [email]);
+            } catch (updateError) {
+              // If the update fails, try to create the column first
+              try {
+                await pool.query(`
+                  ALTER TABLE assessment_progress 
+                  ADD COLUMN IF NOT EXISTS transfer_complete BOOLEAN DEFAULT false
+                `);
+                
+                // Try update again
+                await pool.query(`
+                  UPDATE assessment_progress
+                  SET transfer_complete = true
+                  WHERE email = $1
+                `, [email]);
+              } catch (alterError) {
+                console.error('Error updating transfer status:', alterError);
+              }
+            }
+          }
+        } catch (processError) {
+          console.error(`Error processing assessment for ${row.email}:`, processError);
+          // Continue with next assessment
+        }
+      }
+    } catch (error) {
+      console.error('Error transferring completed assessments:', error);
+    }
+  }
+
   async saveAssessment(assessment: AssessmentResult): Promise<void> {
     try {
       // Store in the database using the assessmentResults table
