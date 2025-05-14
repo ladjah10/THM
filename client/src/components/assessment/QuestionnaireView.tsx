@@ -9,9 +9,11 @@ interface QuestionnaireViewProps {
   onOptionSelect: (questionId: number, option: string, value: number) => void;
   onNextQuestion: () => void;
   onPreviousQuestion: () => void;
+  onSaveProgress?: () => void; // New prop for saving progress
   isFirstQuestion: boolean;
   questionIndex: number;
   totalQuestions: number;
+  showSaveButton?: boolean; // Whether to show the save progress button
 }
 
 export default function QuestionnaireView({
@@ -20,9 +22,11 @@ export default function QuestionnaireView({
   onOptionSelect,
   onNextQuestion,
   onPreviousQuestion,
+  onSaveProgress,
   isFirstQuestion,
   questionIndex,
-  totalQuestions
+  totalQuestions,
+  showSaveButton = false
 }: QuestionnaireViewProps) {
   // Handle option selection
   const handleOptionChange = (option: string) => {
@@ -80,6 +84,18 @@ export default function QuestionnaireView({
         >
           ← Previous
         </Button>
+        
+        {/* Save Progress Button */}
+        {showSaveButton && onSaveProgress && (
+          <Button
+            variant="outline"
+            onClick={onSaveProgress}
+            className="px-5 py-2 text-sm font-medium border-green-200 text-green-700 mx-2"
+          >
+            💾 Save Progress
+          </Button>
+        )}
+        
         <Button
           onClick={onNextQuestion}
           disabled={!selectedOption}

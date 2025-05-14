@@ -143,30 +143,9 @@ export default function MarriageAssessment() {
       [questionId]: { option, value }
     }));
     
-    // If we have demographic data with email, save progress after each response
-    if (demographicData.email) {
-      try {
-        // Create updated responses with the new selection
-        const updatedResponses = {
-          ...userResponses,
-          [questionId]: { option, value }
-        };
-        
-        // Save progress immediately after each response
-        await apiRequest('POST', '/api/assessment/save-progress', {
-          email: demographicData.email,
-          demographicData,
-          responses: updatedResponses,
-          assessmentType,
-          timestamp: new Date().toISOString()
-        });
-        
-        console.log(`Response saved for question ${questionId}`);
-      } catch (error) {
-        console.error('Error saving response:', error);
-        // Continue even if save fails - don't block the user
-      }
-    }
+    // AUTOSAVE DISABLED: We no longer save after each response to avoid overwriting issues
+    // Instead, user can manually save progress using the Save Progress button
+    console.log(`Response recorded for question ${questionId}`);
   };
 
   // Navigate to next question or section
