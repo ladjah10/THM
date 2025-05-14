@@ -3,16 +3,7 @@
  * It resolves the issue where many assessments incorrectly show the same 67.3% score
  */
 
-import { Pool } from 'pg';
-import { config } from 'dotenv';
-
-// Load environment variables
-config();
-
-// Connect to database
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
+import { pool } from './server/db';
 
 interface UserResponse {
   option: string;
