@@ -921,64 +921,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
       
-      // If this was a THM pool application and the transaction doesn't have an email,
-      // create a partial assessment record to show in the admin dashboard
-      if (customerInfo.thmPoolApplied && transaction && (!transaction.customerEmail || transaction.productType === 'marriage_pool')) {
-        // Import uuid
-        const { v4: uuidv4 } = await import('uuid');
-        
-        // Create a minimal assessment result with just the THM pool information
-        const minimalAssessment: AssessmentResult = {
-          email: customerInfo.email,
-          name: `${customerInfo.firstName} ${customerInfo.lastName}`,
-          scores: {
-            overallPercentage: 0,
-            totalEarned: 0,
-            totalPossible: 0,
-            sections: {},
-            strengths: [],
-            improvementAreas: []
-          },
-          profile: {
-            id: 0,
-            name: "THM Pool Applicant",
-            description: "Applied to THM Arranged Marriage Pool but has not completed assessment",
-            genderSpecific: null,
-            criteria: []
-          },
-          genderProfile: null, // Adding missing required field
-          responses: {},
-          demographics: {
-            firstName: customerInfo.firstName,
-            lastName: customerInfo.lastName,
-            email: customerInfo.email,
-            gender: 'Not specified', // Required field
-            birthday: 'Not specified', // Required field
-            lifeStage: 'Not specified', // Required field
-            marriageStatus: 'Not specified', // Required field
-            desireChildren: 'Not specified', // Required field
-            ethnicity: 'Not specified', // Required field
-            city: 'Not specified', // Required field
-            state: 'Not specified', // Required field
-            zipCode: 'Not specified', // Required field
-            hasPurchasedBook: 'No', // Required field
-          },
-          timestamp: new Date().toISOString(),
-          transactionId: transaction ? transaction.id : paymentIntentId, // Use transaction ID if available, otherwise use payment intent ID
-          reportSent: false
-        };
-        
-        // Check if an assessment already exists for this email
-        const existingAssessments = await storage.getAssessments(customerInfo.email);
-        
-        if (existingAssessments.length === 0) {
-          // Only save if there's no existing assessment for this email
-          await storage.saveAssessment(minimalAssessment);
-          console.log(`Created partial assessment record for THM Pool applicant: ${customerInfo.email}`);
-        }
-      }
+      // Send a success response with the metadata that was updated
+      res.status(200).json({
+        success: true,
+        message: 'Payment metadata updated successfully',
+        customerEmail: customerInfo.email,
+        paymentIntentId
+      });
+      return;
       
-      res.status(200).json({ success: true });
+      // Note: This code is unreachable because of the early return above
+      // The THM pool handling is now done via the Stripe webhook handler
+      // which has confirmed payment information
     } catch (error) {
       console.error('Error updating payment metadata:', error);
       res.status(500).json({ error: 'Failed to update payment metadata' });
