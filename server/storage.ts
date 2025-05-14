@@ -699,18 +699,27 @@ export class DatabaseStorage {
       
       // If no duplicate found, insert into database using column names directly from schema
       // Important: Use column names that match database schema (snake_case) but map from our camelCase properties
-      await db.insert(assessmentResults).values({
+      // To fix the gender profile issue, we're storing it in both potential column names
+      const insertValues: any = {
         email: assessment.demographics.email,
         name: `${assessment.demographics.firstName} ${assessment.demographics.lastName}`,
         scores: jsonScores,
         profile: jsonProfile,
-        gender_profile: jsonGenderProfile, // This matches the database column name (snake_case)
         responses: jsonResponses,
         demographics: jsonDemographics,
         couple_id: assessment.coupleId,
         couple_role: assessment.coupleRole
         // transaction_id will be linked when a payment is made
-      });
+      };
+      
+      // Store the gender profile using both potential column names to ensure compatibility
+      if (jsonGenderProfile) {
+        insertValues.gender_profile = jsonGenderProfile;
+        insertValues.genderProfile = jsonGenderProfile;
+        console.log(`Storing gender profile for ${assessment.demographics.email} under both column names`);
+      }
+      
+      await db.insert(assessmentResults).values(insertValues);
       
       console.log(`Assessment saved to database for ${assessment.demographics.email}`);
       
@@ -847,8 +856,18 @@ export class DatabaseStorage {
         const responses = JSON.parse(row.responses);
         const demographics = JSON.parse(row.demographics);
         
-        // Parse gender profile if it exists
-        const genderProfile = row.gender_profile ? JSON.parse(row.gender_profile) : null;
+        // Parse gender profile if it exists - handle both snake_case and camelCase property names
+        // This fix ensures both male and female profiles are properly retrieved
+        let genderProfile = null;
+        if (row.gender_profile) {
+          console.log(`Found gender_profile in database row for ${row.email}`);
+          genderProfile = JSON.parse(row.gender_profile);
+        } else if (row.genderProfile) {
+          console.log(`Found genderProfile in database row for ${row.email}`);
+          genderProfile = JSON.parse(row.genderProfile);
+        } else {
+          console.log(`WARNING: No gender profile found for ${row.email}`);
+        }
         
         return {
           id: row.id,
