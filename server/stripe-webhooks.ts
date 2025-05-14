@@ -195,10 +195,25 @@ export async function handleStripeWebhook(req: Request, res: Response) {
       // Verify the webhook signature if we have the secret
       console.log(`Attempting signature verification with secret key ending in ...${process.env.STRIPE_WEBHOOK_SECRET.slice(-4)}`);
       
-      // If req.body is a string (raw body), use it directly
-      const payload = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
+      // Get the payload in the correct format for Stripe
+      let payload: string | Buffer;
       
-      if (payload.length === 0) {
+      // Handle different payload formats
+      if (Buffer.isBuffer(req.body)) {
+        // If it's already a buffer, use it directly
+        payload = req.body;
+        console.log('Using Buffer payload for signature verification');
+      } else if (typeof req.body === 'string') {
+        // If it's a string, use it directly
+        payload = req.body;
+        console.log('Using string payload for signature verification');
+      } else {
+        // Otherwise, stringify the object
+        payload = JSON.stringify(req.body);
+        console.log('Using stringified object payload for signature verification');
+      }
+      
+      if (!payload || (typeof payload === 'string' && payload.length === 0)) {
         throw new Error('Webhook payload is empty');
       }
       

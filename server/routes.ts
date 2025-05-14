@@ -1382,30 +1382,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Log request headers for debugging
       console.log('📌 Webhook request headers:', {
         'content-type': req.headers['content-type'],
-        'stripe-signature': req.headers['stripe-signature'] ? '✓ Present' : '✗ Missing'
+        'stripe-signature': req.headers['stripe-signature'] ? '✓ Present' : '✗ Missing',
+        'content-length': req.headers['content-length'] || 'not specified'
       });
       
-      // Use the raw body we captured in the middleware
+      // First try to get rawBodyBuffer (preferred) then fall back to rawBody
+      const rawBodyBuffer = (req as any).rawBodyBuffer;
       const rawBody = (req as any).rawBody;
       
-      if (!rawBody) {
-        console.error('❌ No raw body found in webhook request');
+      if (!rawBodyBuffer && !rawBody) {
+        console.error('❌ No raw body or buffer found in webhook request');
         return res.status(400).json({ 
           error: 'No raw body found',
           message: 'Make sure the request is properly formatted and sent directly to this endpoint'
         });
       }
       
-      console.log(`✓ Raw body captured (${rawBody.length} bytes)`);
+      // Log which format we're using
+      if (rawBodyBuffer) {
+        console.log(`✓ Using raw body buffer (${rawBodyBuffer.length} bytes)`);
+        // Convert buffer back to string if we need to use it
+        const bodyContent = rawBodyBuffer.toString('utf8');
+        req.body = bodyContent;
+      } else {
+        console.log(`✓ Using raw body string (${rawBody.length} bytes)`);
+        req.body = rawBody;
+      }
       
-      // Pass the raw body to the webhook handler
-      req.body = rawBody;
+      // Pass control to the webhook handler
       return handleStripeWebhook(req, res);
     } catch (error) {
       console.error('❌ Unexpected error processing webhook:', error);
       return res.status(500).json({ 
         error: 'Unexpected error',
-        message: error instanceof Error ? error.message : 'Unknown error processing webhook'
+        message: error instanceof Error ? error.message : 'Unknown error processing webhook',
+        stack: process.env.NODE_ENV !== 'production' ? (error as Error).stack : undefined
       });
     }
   });

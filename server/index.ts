@@ -6,30 +6,56 @@ import { analyticsMiddleware } from "./analytics-middleware";
 
 const app = express();
 
-// Create a raw body buffer for webhook requests - improve with proper error handling
-app.use((req, res, next) => {
+// Create a raw body buffer for webhook requests with specific fix for stream readable errors
+app.use(async (req, res, next) => {
   // Only create raw body for Stripe webhook path
   if (req.originalUrl === '/api/webhooks/stripe') {
-    let rawBody = '';
-    let hasError = false;
+    console.log('📥 Stripe webhook received, capturing raw body');
     
-    req.on('data', (chunk) => {
-      rawBody += chunk.toString();
-    });
-    
-    req.on('error', (err) => {
-      console.error('Error reading webhook request body:', err);
-      hasError = true;
-      res.status(400).send(`Webhook Error: ${err.message}`);
-    });
-    
-    req.on('end', () => {
-      if (!hasError) {
-        (req as any).rawBody = rawBody;
-        console.log('Stripe webhook raw body captured:', rawBody.length > 0 ? 'Yes' : 'No (empty)');
-        next();
-      }
-    });
+    // For stream not readable errors, we need a complete buffering solution
+    try {
+      // Use a promise-based approach to collect the entire stream
+      const chunks: Buffer[] = [];
+      
+      // Handle data chunks
+      req.on('data', (chunk: Buffer) => {
+        chunks.push(chunk);
+      });
+      
+      // Create a promise that resolves when the stream ends or rejects on error
+      await new Promise<void>((resolve, reject) => {
+        req.on('end', () => {
+          try {
+            // Combine all chunks into a single buffer and convert to string
+            const rawBodyBuffer = Buffer.concat(chunks);
+            const rawBody = rawBodyBuffer.toString('utf8');
+            
+            // Store both the string and buffer versions for flexibility
+            (req as any).rawBody = rawBody;
+            (req as any).rawBodyBuffer = rawBodyBuffer;
+            
+            console.log(`✅ Webhook body captured successfully (${rawBody.length} bytes)`);
+            resolve();
+          } catch (err) {
+            reject(err);
+          }
+        });
+        
+        req.on('error', (err) => {
+          console.error('❌ Error reading webhook request body:', err);
+          reject(err);
+        });
+      });
+      
+      // If we get here, the raw body was successfully captured
+      next();
+    } catch (err: any) {
+      console.error('❌ Fatal error processing webhook body:', err);
+      res.status(500).json({ 
+        error: 'Failed to process webhook body',
+        message: err.message
+      });
+    }
   } else {
     next();
   }
