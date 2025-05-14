@@ -1670,14 +1670,15 @@ export default function AdminDashboard() {
                       <TableHead className="font-medium">Location</TableHead>
                       <TableHead className="font-medium">Marriage Status</TableHead>
                       <TableHead className="font-medium">Profile</TableHead>
-                      <TableHead className="font-medium">Score</TableHead>
+                      <TableHead className="font-medium">Assessment</TableHead>
+                      <TableHead className="font-medium">THM Score</TableHead>
                       <TableHead className="font-medium"></TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {isLoading ? (
                       <TableRow>
-                        <TableCell colSpan={9} className="h-24 text-center">
+                        <TableCell colSpan={10} className="h-24 text-center">
                           <div className="flex justify-center">
                             <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
                           </div>
@@ -1711,6 +1712,21 @@ export default function AdminDashboard() {
                               {assessment.scores.overallPercentage.toFixed(1)}%
                             </TableCell>
                             <TableCell>
+                              <div className="flex items-center gap-1">
+                                {calculateMatchScore(assessment).toFixed(1)}%
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                                    </TooltipTrigger>
+                                    <TooltipContent className="max-w-xs">
+                                      <p className="text-xs">Combined match score: 50% assessment, 30% age factors, 20% location</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                              </div>
+                            </TableCell>
+                            <TableCell>
                               <div className="flex gap-1">
                                 <Button 
                                   variant="ghost" 
@@ -1742,7 +1758,7 @@ export default function AdminDashboard() {
                       ))
                     ) : (
                       <TableRow>
-                        <TableCell colSpan={9} className="h-24 text-center">
+                        <TableCell colSpan={10} className="h-24 text-center">
                           No assessment results found in this date range.
                         </TableCell>
                       </TableRow>
@@ -2396,11 +2412,31 @@ export default function AdminDashboard() {
                   <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-4">
-                        <div className="text-center py-4">
-                          <span className="text-4xl font-bold">
-                            {selectedAssessment.scores.overallPercentage.toFixed(1)}%
-                          </span>
-                          <p className="text-sm text-gray-500">Overall Score</p>
+                        <div className="flex justify-between">
+                          <div className="text-center py-4">
+                            <span className="text-4xl font-bold">
+                              {selectedAssessment.scores.overallPercentage.toFixed(1)}%
+                            </span>
+                            <p className="text-sm text-gray-500">Assessment Score</p>
+                          </div>
+                          
+                          <div className="text-center py-4">
+                            <span className="text-4xl font-bold text-primary">
+                              {calculateMatchScore(selectedAssessment).toFixed(1)}%
+                            </span>
+                            <p className="text-sm text-gray-500">THM Match Score
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Info className="h-3.5 w-3.5 text-muted-foreground ml-1 inline cursor-help" />
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-xs">
+                                    <p className="text-xs">Combined match score: 50% assessment, 30% age factors, 20% location</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </p>
+                          </div>
                         </div>
                         <div className="space-y-2">
                           <div className="text-sm font-medium">Total Earned: {selectedAssessment.scores.totalEarned}</div>
