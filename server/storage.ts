@@ -1759,6 +1759,97 @@ export class DatabaseStorage {
     }
   }
   
+  async getPaymentTransactionsWithAssessments(startDate?: string, endDate?: string): Promise<PaymentTransaction[]> {
+    try {
+      console.log('Fetching payment transactions with assessments from database');
+      
+      // First get the basic transactions
+      const transactions = await this.getPaymentTransactions(startDate, endDate);
+      
+      // Connect to the database
+      const { pool } = await import('./db');
+      
+      // Create an array to store the enhanced transactions
+      const enhancedTransactions: PaymentTransaction[] = [];
+      
+      // Process each transaction one by one to add assessment data
+      for (const transaction of transactions) {
+        try {
+          // First check if transaction has metadata
+          if (transaction.metadata) {
+            const metadata = transaction.metadata;
+            
+            // Create a basic enhanced transaction with metadata
+            const enhancedTransaction = {
+              ...transaction,
+              assessmentData: {
+                email: transaction.customerEmail || '',
+                firstName: metadata.firstName || metadata.first_name || '',
+                lastName: metadata.lastName || metadata.last_name || '',
+                gender: metadata.gender || '',
+                marriageStatus: metadata.marriageStatus || metadata.marriage_status || '',
+                desireChildren: metadata.desireChildren || metadata.desire_children || '',
+                ethnicity: metadata.ethnicity || '',
+                city: metadata.city || '',
+                state: metadata.state || '',
+                zipCode: metadata.zipCode || metadata.zip_code || '',
+              }
+            };
+            
+            enhancedTransactions.push(enhancedTransaction);
+          } else {
+            // Try to find an assessment with this transaction ID
+            const query = `
+              SELECT email, name, demographics
+              FROM assessment_results
+              WHERE transaction_id = $1
+              LIMIT 1
+            `;
+            
+            const result = await pool.query(query, [transaction.id]);
+            
+            if (result.rows.length > 0) {
+              const assessment = result.rows[0];
+              const demographics = typeof assessment.demographics === 'string' 
+                ? JSON.parse(assessment.demographics) 
+                : assessment.demographics;
+              
+              // Create enhanced transaction with assessment data
+              enhancedTransactions.push({
+                ...transaction,
+                assessmentData: {
+                  email: assessment.email || transaction.customerEmail || '',
+                  firstName: demographics.firstName || '',
+                  lastName: demographics.lastName || '',
+                  gender: demographics.gender || '',
+                  marriageStatus: demographics.marriageStatus || '',
+                  desireChildren: demographics.desireChildren || '',
+                  ethnicity: demographics.ethnicity || '',
+                  city: demographics.city || '',
+                  state: demographics.state || '',
+                  zipCode: demographics.zipCode || '',
+                }
+              });
+            } else {
+              // No assessment found, just add the transaction as is
+              enhancedTransactions.push(transaction);
+            }
+          }
+        } catch (error) {
+          console.error(`Error enhancing transaction ${transaction.id} with assessment data:`, error);
+          enhancedTransactions.push(transaction);
+        }
+      }
+      
+      console.log(`Enhanced ${enhancedTransactions.length} transactions with assessment data`);
+      return enhancedTransactions;
+    } catch (error) {
+      console.error('Error getting payment transactions with assessments:', error);
+      // Fall back to memory storage
+      return await this.memStorage.getPaymentTransactionsWithAssessments(startDate, endDate);
+    }
+  }
+  
   async getPaymentTransactionByStripeId(stripeId: string): Promise<PaymentTransaction | null> {
     try {
       // Retrieve from database using raw SQL to avoid schema mapping issues
