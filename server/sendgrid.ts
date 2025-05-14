@@ -239,7 +239,7 @@ function formatAssessmentEmail(assessment: AssessmentResult): string {
   // Safe access to first name
   const firstName = assessment.demographics?.firstName || name.split(' ')[0] || 'there';
   
-  const overallScore = assessment.overallScore || 0;
+  const overallScore = assessment.scores?.overallPercentage || 0;
   const formattedScore = overallScore.toFixed(1);
   
   return `

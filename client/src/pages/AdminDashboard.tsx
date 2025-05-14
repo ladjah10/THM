@@ -19,6 +19,22 @@ import type { AssessmentScores, UserProfile, DemographicData, AssessmentResult, 
 import type { AnalyticsSummary, PageView, VisitorSession, PaymentTransaction } from "@shared/schema";
 import type { ReferralData } from "@/types/referrals";
 
+// Define enhanced transaction type with assessment data
+interface EnhancedTransaction extends PaymentTransaction {
+  assessmentData?: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    gender: string;
+    marriageStatus: string;
+    desireChildren: string;
+    ethnicity: string;
+    city: string;
+    state: string;
+    zipCode: string;
+  };
+}
+
 // Define type for customer recovery data
 interface CustomerRecoveryData {
   payment_id: string;
