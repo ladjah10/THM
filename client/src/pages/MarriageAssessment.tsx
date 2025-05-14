@@ -181,6 +181,49 @@ export default function MarriageAssessment() {
       }
     }
   };
+  
+  // Handle manual saving of progress
+  const handleSaveProgress = async () => {
+    if (!demographicData.email) {
+      toast({
+        title: "Email Required",
+        description: "Please complete the demographic information with your email before saving progress.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    try {
+      // Show saving toast
+      toast({
+        title: "Saving Progress",
+        description: "Please wait while we save your responses...",
+      });
+      
+      // Save progress to the server
+      await apiRequest('POST', '/api/assessment/save-progress', {
+        email: demographicData.email,
+        demographicData,
+        responses: userResponses,
+        assessmentType,
+        timestamp: new Date().toISOString()
+      });
+      
+      // Show success toast
+      toast({
+        title: "Progress Saved",
+        description: "Your responses have been saved successfully.",
+      });
+      
+    } catch (error) {
+      console.error('Error saving progress:', error);
+      toast({
+        title: "Save Failed",
+        description: "There was a problem saving your progress. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
 
   // Handle demographic data changes
   const handleDemographicChange = (field: keyof DemographicData, value: string | boolean) => {
@@ -463,10 +506,12 @@ export default function MarriageAssessment() {
                 onOptionSelect={handleOptionSelect}
                 onNextQuestion={handleNextQuestion}
                 onPreviousQuestion={handlePreviousQuestion}
+                onSaveProgress={handleSaveProgress}
                 selectedOption={userResponses[currentQuestion.id]?.option}
                 isFirstQuestion={currentQuestionIndex === 0 && sections.indexOf(currentSection) === 0}
                 questionIndex={questions.findIndex(q => q.id === currentQuestion.id)}
                 totalQuestions={totalQuestions}
+                showSaveButton={true}
               />
             )}
           </>
