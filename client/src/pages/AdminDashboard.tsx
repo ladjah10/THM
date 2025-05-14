@@ -1,9 +1,9 @@
 import { useState, useEffect, useMemo } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { RefreshCw, FileDown, Search, Loader2, Mail } from "lucide-react";
+import { RefreshCw, FileDown, Search, Loader2, Mail, Info } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import type { AssessmentScores, UserProfile, DemographicData, AssessmentResult, SectionScore } from "@/types/assessment";
 import type { AnalyticsSummary, PageView, VisitorSession, PaymentTransaction } from "@shared/schema";
 import type { ReferralData } from "@/types/referrals";
@@ -995,7 +996,8 @@ export default function AdminDashboard() {
               <TableHead>Age</TableHead>
               <TableHead>Gender</TableHead>
               <TableHead>Location</TableHead>
-              <TableHead>Score</TableHead>
+              <TableHead className="text-nowrap">Assessment</TableHead>
+              <TableHead className="text-nowrap">Match Score</TableHead>
               <TableHead>Profile</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
@@ -1023,13 +1025,34 @@ export default function AdminDashboard() {
                     <TableCell>{location}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <div className="h-2 w-16 bg-gray-200 rounded-full overflow-hidden">
+                        <div className="h-2 w-12 bg-gray-200 rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-blue-600" 
+                            style={{ width: `${candidate.scores.overallPercentage}%` }}
+                          />
+                        </div>
+                        <span className="text-sm">{candidate.scores.overallPercentage.toFixed(1)}%</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <div className="h-2 w-12 bg-gray-200 rounded-full overflow-hidden">
                           <div 
                             className="h-full bg-primary" 
                             style={{ width: `${matchScore}%` }}
                           />
                         </div>
-                        <span className="text-sm">{matchScore.toFixed(0)}</span>
+                        <span className="text-sm">{matchScore.toFixed(1)}%</span>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-xs">
+                              <p className="text-xs">Combined score: 50% assessment, 30% age factors, 20% location</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                       </div>
                     </TableCell>
                     <TableCell>
