@@ -6,17 +6,29 @@ import { analyticsMiddleware } from "./analytics-middleware";
 
 const app = express();
 
-// Create a raw body buffer for webhook requests
+// Create a raw body buffer for webhook requests - improve with proper error handling
 app.use((req, res, next) => {
   // Only create raw body for Stripe webhook path
   if (req.originalUrl === '/api/webhooks/stripe') {
     let rawBody = '';
+    let hasError = false;
+    
     req.on('data', (chunk) => {
       rawBody += chunk.toString();
     });
+    
+    req.on('error', (err) => {
+      console.error('Error reading webhook request body:', err);
+      hasError = true;
+      res.status(400).send(`Webhook Error: ${err.message}`);
+    });
+    
     req.on('end', () => {
-      (req as any).rawBody = rawBody;
-      next();
+      if (!hasError) {
+        (req as any).rawBody = rawBody;
+        console.log('Stripe webhook raw body captured:', rawBody.length > 0 ? 'Yes' : 'No (empty)');
+        next();
+      }
     });
   } else {
     next();
