@@ -237,6 +237,9 @@ export async function handleStripeWebhook(req: Request, res: Response) {
   try {
     console.log(`📦 Processing Stripe event: ${event.type} (id: ${event.id})`);
     
+    // Record event handling start time for performance tracking
+    const eventHandlingStart = Date.now();
+    
     switch (event.type) {
       // When a payment intent succeeds
       case 'payment_intent.succeeded':
@@ -258,15 +261,50 @@ export async function handleStripeWebhook(req: Request, res: Response) {
         await handleCheckoutSessionCompleted(event.data.object as Stripe.Checkout.Session);
         break;
         
+      // Add support for more events that might be relevant
+      case 'customer.subscription.created':
+      case 'customer.subscription.updated':
+      case 'customer.subscription.deleted':
+        console.log(`Subscription event received (${event.type}). No handler implemented yet.`);
+        break;
+        
       default:
-        console.log(`⚠️ Unhandled event type: ${event.type}`);
+        console.log(`Event received but not handled: ${event.type}. This is normal for events we don't process.`);
     }
-    
-    // Return a 200 response to acknowledge receipt of the event
-    res.json({ received: true });
+
+    // Calculate and log processing time
+    const processingTime = Date.now() - eventHandlingStart;
+    console.log(`✅ Successfully processed webhook event in ${processingTime}ms (event type: ${event.type}, id: ${event.id})`);
+
+    // Return a 200 response with more detailed information
+    res.status(200).json({ 
+      received: true, 
+      event_type: event.type,
+      event_id: event.id,
+      processing_time_ms: processingTime,
+      timestamp: new Date().toISOString(),
+      message: 'Webhook processed successfully'
+    });
   } catch (err: any) {
-    console.error(`Error processing webhook: ${err.message}`);
-    res.status(500).send(`Webhook processing error: ${err.message}`);
+    console.error(`❌ Error handling webhook event:`, err);
+    
+    // Log detailed error information for debugging
+    const errorDetails = {
+      message: err.message,
+      stack: err.stack,
+      event_type: event?.type || 'unknown',
+      event_id: event?.id || 'unknown',
+      timestamp: new Date().toISOString()
+    };
+    console.error('Error details:', errorDetails);
+    
+    // Return a more informative error response
+    return res.status(500).json({ 
+      error: 'Webhook processing failed',
+      message: err.message,
+      event_type: event?.type || 'unknown',
+      timestamp: new Date().toISOString()
+    });
   }
 }
 
