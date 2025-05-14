@@ -75,7 +75,9 @@ export default function MarriageAssessment() {
     }
   }, []);
   
-  // Set up autosave timer for every 2 minutes
+  // AUTOSAVE DISABLED: Previously caused problems overwriting unique user responses with default data
+  // For reference, the autosave code has been commented out but preserved
+  /*
   useEffect(() => {
     // Only start autosave if we have an email and we're in questionnaire view
     if (!demographicData.email || currentView !== "questionnaire") {
@@ -118,6 +120,7 @@ export default function MarriageAssessment() {
       console.log('Autosave timer cleared');
     };
   }, [currentView, demographicData.email, userResponses, assessmentType]);
+  */
 
   // Filter questions by current section
   const sectionQuestions = questions.filter(q => q.section === currentSection);
