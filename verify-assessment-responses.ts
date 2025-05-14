@@ -6,6 +6,11 @@
 import { pool } from './server/db';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+// Get the directory name equivalent to __dirname in CommonJS
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Run the verification script
 async function verifyAssessmentResponses() {
