@@ -1656,15 +1656,26 @@ export default function AdminDashboard() {
             <div className="bg-white p-4 rounded-lg shadow-sm">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
                 <h2 className="text-lg font-medium">Historical Assessment Data (Since May 6)</h2>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleExportAssessmentsCSV}
-                  disabled={!assessments?.length}
-                  className="whitespace-nowrap"
-                >
-                  Export CSV
-                </Button>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleExportAssessmentsCSV}
+                    disabled={!assessments?.length}
+                    className="whitespace-nowrap"
+                  >
+                    Export Summary CSV
+                  </Button>
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={handleExportDetailedResponsesCSV}
+                    disabled={!assessments?.length}
+                    className="whitespace-nowrap"
+                  >
+                    Export Detailed Responses CSV
+                  </Button>
+                </div>
               </div>
               
               {/* Date Filter Controls */}
