@@ -1097,9 +1097,8 @@ export default function AdminDashboard() {
       "Desire Children",
       "Ethnicity",
       "Profile",
-      "Overall Score",
-      "True Assessment Score",
-      "THM Match Score",
+      "Raw Assessment Score (0-100%)",
+      "THM Match Score (Weighted)",
       "Book Purchased"
     ];
     
@@ -1117,8 +1116,7 @@ export default function AdminDashboard() {
         assessment.demographics.desireChildren,
         assessment.demographics.ethnicity,
         assessment.profile.name,
-        assessment.scores.overallPercentage.toFixed(1) + '%',
-        assessment.scores.overallPercentage.toFixed(1) + '%', // True unweighted score
+        assessment.scores.overallPercentage.toFixed(1) + '%', // Raw assessment score
         matchScore.toFixed(1) + '%', // THM match score with age/location weighting
         assessment.demographics.hasPurchasedBook
       ];
@@ -1649,6 +1647,18 @@ export default function AdminDashboard() {
                     Apply Filters
                   </Button>
                 </div>
+              </div>
+              
+              {/* Scoring Info */}
+              <div className="bg-muted/30 p-3 rounded-md mb-4">
+                <h4 className="text-sm font-medium mb-1 flex items-center">
+                  <Info className="h-4 w-4 mr-1 text-muted-foreground" />
+                  About Assessment Scores
+                </h4>
+                <p className="text-xs text-muted-foreground">
+                  <strong>Assessment Score:</strong> Raw percentage from the questionnaire (0-100%).<br/>
+                  <strong>THM Match Score:</strong> Compatibility score used in the THM pool (50% assessment + 30% age factors + 20% location).
+                </p>
               </div>
               
               {/* Results Summary */}
