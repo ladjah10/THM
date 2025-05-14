@@ -877,29 +877,53 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: 'Missing required parameters' });
       }
       
+      console.log('Updating payment metadata for:', paymentIntentId, 'Customer info:', customerInfo);
+      
       // Get the payment transaction from the database
       const transaction = await storage.getPaymentTransactionByStripeId(paymentIntentId);
       
       if (!transaction) {
-        return res.status(404).json({ error: 'Payment transaction not found' });
+        console.log(`Payment transaction not found in database for ID: ${paymentIntentId}, creating new record in webhook handler`);
+        // Continue with the update even if transaction isn't in our DB yet
+        // The webhook will create it when processed
+      } else {
+        console.log(`Found existing transaction in database: ${transaction.id}`);
       }
       
-      // Update transaction with customer information
+      // Update Stripe payment intent with customer information
       await stripe.paymentIntents.update(paymentIntentId, {
         metadata: {
-          ...transaction.metadata ? JSON.parse(transaction.metadata) : {},
+          ...(transaction?.metadata ? JSON.parse(transaction.metadata) : {}),
           firstName: customerInfo.firstName,
           lastName: customerInfo.lastName,
-          email: customerInfo.email,
+          email: customerInfo.email, 
           phone: customerInfo.phone || '',
           assessmentType: customerInfo.assessmentType || 'individual',
-          thmPoolApplied: customerInfo.thmPoolApplied ? 'true' : 'false'
+          thmPoolApplied: customerInfo.thmPoolApplied ? 'true' : 'false',
+          customerName: `${customerInfo.firstName} ${customerInfo.lastName}`.trim(),
+          // Add timestamp to help with debugging/tracking
+          updatedAt: new Date().toISOString()
         }
       });
       
+      // If transaction exists in our database, update its customer_email field directly
+      if (transaction) {
+        // Update transaction in our database with customer email
+        try {
+          await storage.updatePaymentTransactionEmail(
+            paymentIntentId, 
+            customerInfo.email
+          );
+          console.log(`Updated transaction ${paymentIntentId} with email: ${customerInfo.email}`);
+        } catch (dbError) {
+          console.error('Error updating transaction in database:', dbError);
+          // Continue - we've already updated Stripe metadata
+        }
+      }
+      
       // If this was a THM pool application and the transaction doesn't have an email,
       // create a partial assessment record to show in the admin dashboard
-      if (customerInfo.thmPoolApplied && (!transaction.customerEmail || transaction.productType === 'marriage_pool')) {
+      if (customerInfo.thmPoolApplied && transaction && (!transaction.customerEmail || transaction.productType === 'marriage_pool')) {
         // Import uuid
         const { v4: uuidv4 } = await import('uuid');
         
@@ -940,7 +964,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             hasPurchasedBook: 'No', // Required field
           },
           timestamp: new Date().toISOString(),
-          transactionId: transaction.id,
+          transactionId: transaction ? transaction.id : paymentIntentId, // Use transaction ID if available, otherwise use payment intent ID
           reportSent: false
         };
         

@@ -73,14 +73,26 @@ function PaymentForm({
   const [cardError, setCardError] = useState<string | null>(null);
   const [step, setStep] = useState<'info' | 'payment'>('info');
 
-  // Initialize form for customer information
+  // Check for pre-filled demographic data to use as defaults
+  const savedDemographicData = localStorage.getItem('demographicData');
+  let parsedDemographics = {};
+  
+  if (savedDemographicData) {
+    try {
+      parsedDemographics = JSON.parse(savedDemographicData);
+    } catch (error) {
+      console.error('Error parsing saved demographic data:', error);
+    }
+  }
+  
+  // Initialize form for customer information with pre-filled data if available
   const form = useForm<CustomerInfo>({
     resolver: zodResolver(customerInfoSchema),
     defaultValues: {
-      email: '',
-      firstName: '',
-      lastName: '',
-      phone: ''
+      email: (parsedDemographics as any)?.email || '',
+      firstName: (parsedDemographics as any)?.firstName || '',
+      lastName: (parsedDemographics as any)?.lastName || '',
+      phone: (parsedDemographics as any)?.phone || ''
     }
   });
 

@@ -356,6 +356,32 @@ class MemStorage {
       console.log(`Payment transaction status updated in memory: ${stripeId} -> ${status}`);
     }
   }
+  
+  async updatePaymentTransactionEmail(stripeId: string, email: string): Promise<void> {
+    const transaction = this.payments.get(stripeId);
+    if (transaction) {
+      transaction.customerEmail = email;
+      
+      // Also update the metadata if it exists
+      if (transaction.metadata) {
+        try {
+          const metadataObj = typeof transaction.metadata === 'string' 
+            ? JSON.parse(transaction.metadata) 
+            : transaction.metadata;
+          
+          metadataObj.email = email;
+          transaction.metadata = JSON.stringify(metadataObj);
+        } catch (err) {
+          console.error('Error updating email in memory transaction metadata:', err);
+        }
+      }
+      
+      this.payments.set(stripeId, transaction);
+      console.log(`Payment transaction email updated in memory: ${stripeId} -> ${email}`);
+    } else {
+      console.log(`No payment transaction found in memory for ${stripeId} when updating email`);
+    }
+  }
 
   async recordRefund(stripeId: string, amount: number, reason?: string): Promise<void> {
     const transaction = this.payments.get(stripeId);
@@ -1973,6 +1999,70 @@ export class DatabaseStorage {
       console.error('Error updating payment transaction status in database:', error);
       // Fall back to memory storage
       await this.memStorage.updatePaymentTransactionStatus(stripeId, status);
+    }
+  }
+  
+  // Update payment transaction customer email
+  async updatePaymentTransactionEmail(stripeId: string, email: string): Promise<void> {
+    try {
+      // Update in the database using raw SQL
+      const { pool } = await import('./db');
+      
+      // Update both customer_email and metadata JSON to ensure consistency
+      const query = `
+        UPDATE payment_transactions 
+        SET 
+          customer_email = $1,
+          metadata = COALESCE(
+            jsonb_set(
+              CASE 
+                WHEN metadata IS NULL THEN '{}'::jsonb
+                WHEN jsonb_typeof(metadata) = 'string' THEN metadata::jsonb
+                ELSE metadata
+              END, 
+              '{email}', 
+              $2::jsonb
+            ),
+            '{}'::jsonb
+          )
+        WHERE stripe_id = $3
+        RETURNING id
+      `;
+      
+      const result = await pool.query(query, [email, JSON.stringify(email), stripeId]);
+      
+      if (result.rows && result.rows.length > 0) {
+        console.log(`Updated payment transaction email for ${stripeId}: ${email}`);
+      } else {
+        console.log(`No payment transaction found for ${stripeId} when updating email`);
+      }
+      
+      // Also update in memory storage if needed
+      const memTransaction = await this.memStorage.getPaymentTransactionByStripeId(stripeId);
+      if (memTransaction) {
+        memTransaction.customerEmail = email;
+        // Update metadata too if it exists
+        if (memTransaction.metadata) {
+          try {
+            const metadataObj = typeof memTransaction.metadata === 'string' 
+              ? JSON.parse(memTransaction.metadata) 
+              : memTransaction.metadata;
+            
+            metadataObj.email = email;
+            memTransaction.metadata = JSON.stringify(metadataObj);
+          } catch (err) {
+            console.error('Error updating email in memory transaction metadata:', err);
+          }
+        }
+      }
+    } catch (error) {
+      console.error(`Error updating payment transaction email for ${stripeId}:`, error);
+      // Fall back to simple memory update
+      const memTransaction = await this.memStorage.getPaymentTransactionByStripeId(stripeId);
+      if (memTransaction) {
+        memTransaction.customerEmail = email;
+        console.log(`Updated payment transaction email in memory: ${stripeId} -> ${email}`);
+      }
     }
   }
   
