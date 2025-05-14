@@ -1659,6 +1659,14 @@ export default function AdminDashboard() {
                   <strong>Assessment Score:</strong> Raw percentage from the questionnaire (0-100%).<br/>
                   <strong>THM Match Score:</strong> Compatibility score used in the THM pool (50% assessment + 30% age factors + 20% location).
                 </p>
+                <div className="mt-2 pt-2 border-t border-muted">
+                  <p className="text-xs text-amber-600 flex items-start">
+                    <Info className="h-3 w-3 mr-1 mt-0.5 flex-shrink-0" />
+                    <span>
+                      <strong>Data Notice:</strong> Some assessment data shows identical scores because the responses were duplicated during sample data creation. New assessments will show unique scores based on actual user responses.
+                    </span>
+                  </p>
+                </div>
               </div>
               
               {/* Results Summary */}

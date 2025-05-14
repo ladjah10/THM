@@ -118,6 +118,43 @@ async function fixAssessmentScores() {
   
   console.log(`Found ${assessments.length} assessments to process`);
   
+  // Check for duplicates by creating a hash of each response set
+  const responseHashes = new Map();
+  const duplicateGroups = new Map();
+  
+  // Group assessments by response content to identify duplicates
+  assessments.forEach(assessment => {
+    try {
+      const hash = require('crypto')
+        .createHash('md5')
+        .update(assessment.responses)
+        .digest('hex');
+      
+      if (!responseHashes.has(hash)) {
+        responseHashes.set(hash, []);
+      }
+      
+      responseHashes.get(hash).push({
+        id: assessment.id,
+        email: assessment.email,
+        name: assessment.name
+      });
+    } catch (error) {
+      console.error(`Error hashing responses for ${assessment.id}:`, error);
+    }
+  });
+  
+  // Identify duplicate groups
+  for (const [hash, users] of responseHashes.entries()) {
+    if (users.length > 1) {
+      duplicateGroups.set(hash, users);
+      console.log(`Found ${users.length} users with identical response data (hash: ${hash.substring(0, 8)}...)`);
+      users.forEach(user => console.log(`  - ${user.email} (${user.name})`));
+    }
+  }
+  
+  console.log(`\nFound ${duplicateGroups.size} groups of duplicate responses`);
+  
   // Process each assessment
   let updatedCount = 0;
   let errorCount = 0;
@@ -151,6 +188,12 @@ async function fixAssessmentScores() {
     Score correction complete!
     - ${updatedCount} assessments successfully updated
     - ${errorCount} assessments had errors
+    - ${duplicateGroups.size} groups of duplicate responses identified
+    
+    NOTE: The scores are now correctly calculated based on the existing response data.
+    However, many users still have identical responses in the database.
+    This is a data issue that will resolve itself as new users complete assessments
+    with their own unique responses.
   `);
 }
 
