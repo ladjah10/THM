@@ -10,10 +10,12 @@ interface QuestionnaireViewProps {
   onNextQuestion: () => void;
   onPreviousQuestion: () => void;
   onSaveProgress?: () => void; // New prop for saving progress
+  onSubmitAssessment?: () => void; // New prop for final submission
   isFirstQuestion: boolean;
   questionIndex: number;
   totalQuestions: number;
   showSaveButton?: boolean; // Whether to show the save progress button
+  isLastQuestion?: boolean; // Whether this is the last section/question
 }
 
 export default function QuestionnaireView({
@@ -23,10 +25,12 @@ export default function QuestionnaireView({
   onNextQuestion,
   onPreviousQuestion,
   onSaveProgress,
+  onSubmitAssessment,
   isFirstQuestion,
   questionIndex,
   totalQuestions,
-  showSaveButton = false
+  showSaveButton = false,
+  isLastQuestion = false
 }: QuestionnaireViewProps) {
   // Handle option selection
   const handleOptionChange = (option: string) => {
@@ -36,6 +40,74 @@ export default function QuestionnaireView({
     onOptionSelect(question.id, option, value);
   };
 
+  // If this is the final submission screen
+  if (isLastQuestion) {
+    return (
+      <div className="bg-white shadow-md rounded-lg p-6 mb-6 border border-gray-100">
+        <div className="mb-6 pb-4 border-b border-gray-100">
+          <h3 className="text-xl font-semibold text-blue-900">
+            Assessment Complete!
+          </h3>
+          <div className="flex items-center justify-between mt-2">
+            <p className="text-sm text-gray-600">You've answered all {totalQuestions} questions</p>
+            <div className="text-xs px-3 py-1 bg-green-50 text-green-700 rounded-full">
+              Ready to Submit
+            </div>
+          </div>
+        </div>
+
+        <div className="mb-8">
+          <p className="text-lg mb-6 text-gray-800 leading-relaxed">
+            Congratulations! You've completed the 100 Marriage Assessment.
+          </p>
+          
+          <div className="bg-blue-50 p-4 rounded-lg border border-blue-100 mb-6">
+            <h4 className="font-semibold text-blue-800 mb-2">Next Steps:</h4>
+            <ol className="list-decimal ml-5 text-gray-700 space-y-2">
+              <li>Click the "Submit Assessment" button below to finalize your assessment</li>
+              <li>We'll process your responses and generate your personalized report</li>
+              <li>You'll receive your results immediately on screen</li>
+              <li>A copy of your results will also be emailed to you for future reference</li>
+            </ol>
+          </div>
+          
+          <p className="text-sm text-gray-600 italic">
+            This is your final opportunity to review your answers. You can click "Previous" to go back and modify any responses before submitting.
+          </p>
+        </div>
+
+        <div className="flex justify-between pt-2">
+          <Button
+            variant="outline"
+            onClick={onPreviousQuestion}
+            className="px-5 py-2 text-sm font-medium border-blue-200 text-blue-700"
+          >
+            ← Previous
+          </Button>
+          
+          {/* Save Progress Button */}
+          {showSaveButton && onSaveProgress && (
+            <Button
+              variant="outline"
+              onClick={onSaveProgress}
+              className="px-5 py-2 text-sm font-medium border-green-200 text-green-700 mx-2"
+            >
+              💾 Save Progress
+            </Button>
+          )}
+          
+          <Button
+            onClick={onSubmitAssessment}
+            className="px-5 py-2 text-sm font-medium bg-green-600 hover:bg-green-500 text-white"
+          >
+            Submit Assessment ✓
+          </Button>
+        </div>
+      </div>
+    );
+  }
+  
+  // Normal question view
   return (
     <div className="bg-white shadow-md rounded-lg p-6 mb-6 border border-gray-100">
       <div className="mb-6 pb-4 border-b border-gray-100">

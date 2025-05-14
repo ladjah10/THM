@@ -315,7 +315,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           value: z.number()
         })).optional(),
         assessmentType: z.enum(['individual', 'couple']).optional(),
-        timestamp: z.string()
+        timestamp: z.string(),
+        completed: z.boolean().optional()
       });
       
       // Validate the request body
@@ -328,7 +329,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         responses: validatedData.responses || {},
         assessmentType: validatedData.assessmentType || 'individual',
         timestamp: validatedData.timestamp,
-        completed: false
+        completed: validatedData.completed || false
       });
       
       // If promo code is present and valid, record it
