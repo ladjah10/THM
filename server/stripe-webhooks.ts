@@ -9,8 +9,11 @@ if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('Missing STRIPE_SECRET_KEY environment variable');
 }
 
-// Initialize Stripe with the latest available API version
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+// Initialize Stripe with a specific API version that matches the webhook
+// Your webhook is configured with API version 2020-08-27 according to the payload
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: '2020-08-27', // Match the version from your webhook configuration
+});
 
 /**
  * Sync historical payments from Stripe to our database
