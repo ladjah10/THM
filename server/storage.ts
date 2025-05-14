@@ -688,12 +688,13 @@ export class DatabaseStorage {
       }
       
       // If no duplicate found, insert into database using column names directly from schema
+      // Important: Use column names that match database schema (snake_case) but map from our camelCase properties
       await db.insert(assessmentResults).values({
         email: assessment.demographics.email,
         name: `${assessment.demographics.firstName} ${assessment.demographics.lastName}`,
         scores: jsonScores,
         profile: jsonProfile,
-        gender_profile: jsonGenderProfile,
+        gender_profile: jsonGenderProfile, // This matches the database column name (snake_case)
         responses: jsonResponses,
         demographics: jsonDemographics,
         couple_id: assessment.coupleId,
