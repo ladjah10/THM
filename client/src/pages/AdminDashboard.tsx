@@ -1214,6 +1214,129 @@ export default function AdminDashboard() {
     document.body.removeChild(link);
   };
   
+  // Export detailed responses with questions for all assessments
+  const handleExportDetailedResponsesCSV = async () => {
+    if (!assessments?.length) return;
+    
+    try {
+      toast({
+        title: "Preparing Export",
+        description: "Generating detailed responses export for all assessments. This may take a moment..."
+      });
+      
+      // Import questions data for mapping
+      const { questions } = await import('@/data/questionsData');
+      
+      // First, create column headers with all question IDs
+      const basicHeaders = [
+        "Name", "Email", "Date", "Gender", "Marriage Status", "Profile", "Overall Score"
+      ];
+      
+      // Add a column for each question
+      const questionHeaders = questions.map(q => 
+        `Q${q.id} (${q.section}): ${q.text.substring(0, 30)}...`
+      );
+      
+      // Create final headers array
+      const headers = [...basicHeaders, ...questionHeaders];
+      
+      // Process each assessment
+      const rows = await Promise.all(assessments.map(async (assessment) => {
+        // Get the detailed responses for this assessment
+        // First try to parse the responses field if it exists
+        let detailedResponses = {};
+        try {
+          if (typeof assessment.responses === 'string') {
+            detailedResponses = JSON.parse(assessment.responses);
+          } else if (assessment.responses) {
+            detailedResponses = assessment.responses;
+          }
+        } catch (error) {
+          console.error(`Failed to parse responses for ${assessment.email}:`, error);
+        }
+        
+        // Get demographics
+        let demographics = {};
+        try {
+          if (typeof assessment.demographics === 'string') {
+            demographics = JSON.parse(assessment.demographics);
+          } else if (assessment.demographics) {
+            demographics = assessment.demographics;
+          }
+        } catch (error) {
+          console.error(`Failed to parse demographics for ${assessment.email}:`, error);
+        }
+        
+        // Get scores
+        let scores = { overallPercentage: 0 };
+        try {
+          if (typeof assessment.scores === 'string') {
+            scores = JSON.parse(assessment.scores);
+          } else if (assessment.scores) {
+            scores = assessment.scores;
+          }
+        } catch (error) {
+          console.error(`Failed to parse scores for ${assessment.email}:`, error);
+        }
+        
+        // Basic assessment data
+        const basicData = [
+          assessment.name,
+          assessment.email,
+          assessment.timestamp ? new Date(assessment.timestamp).toISOString().split('T')[0] : '',
+          demographics.gender || '',
+          demographics.marriageStatus || '',
+          typeof assessment.profile === 'string'
+            ? JSON.parse(assessment.profile).name
+            : assessment.profile?.name || '',
+          scores.overallPercentage.toFixed(1) + '%'
+        ];
+        
+        // Create an array of responses matching question order
+        const responseData = questions.map(question => {
+          const response = detailedResponses[question.id];
+          if (!response) return "No answer";
+          return `${response.option} (${response.value})`;
+        });
+        
+        return [...basicData, ...responseData];
+      }));
+      
+      // Add headers to beginning of rows
+      rows.unshift(headers);
+      
+      // Convert to CSV content
+      const csvContent = rows.map(row => row.map(cell => 
+        // Escape quotes and wrap in quotes if contains comma or quote
+        typeof cell === 'string' && (cell.includes(',') || cell.includes('"')) 
+          ? `"${cell.replace(/"/g, '""')}"` 
+          : cell
+      ).join(',')).join('\n');
+      
+      // Create and trigger download
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `detailed-assessment-responses-${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      toast({
+        title: "Export Complete",
+        description: "Detailed assessment responses have been exported successfully!"
+      });
+    } catch (error) {
+      console.error("Error exporting detailed responses:", error);
+      toast({
+        title: "Export Failed",
+        description: error instanceof Error ? error.message : "Failed to export detailed responses",
+        variant: "destructive"
+      });
+    }
+  };
+  
   // Handle Referrals CSV export
   const handleExportReferralsCSV = () => {
     if (!referrals?.length) return;
