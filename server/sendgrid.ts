@@ -18,6 +18,25 @@ if (process.env.SENDGRID_API_KEY) {
   mailService.setApiKey(process.env.SENDGRID_API_KEY);
 }
 
+// Helper function to calculate age from birthday
+function getAgeFromBirthday(birthday: string): string {
+  try {
+    const birthDate = new Date(birthday);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    
+    return age.toString();
+  } catch (error) {
+    console.error('Error calculating age from birthday:', error);
+    return 'Not provided';
+  }
+}
+
 // Make constants available for export/testing
 export const SENDER_EMAIL = 'hello@wgodw.com';
 export const SENDER_NAME = 'The 100 Marriage Assessment';
@@ -323,16 +342,16 @@ function formatCoupleAssessmentEmail(report: CoupleAssessmentReport): string {
   } catch (error) {
     console.error('Error using shared email template, falling back to basic template:', error);
     
-    // Handle both old and new property paths
-    const primary = report.primaryAssessment || report.primary;
-    const spouse = report.spouseAssessment || report.spouse;
+    // Use consistent property names based on the schema
+    const primary = report.primary;
+    const spouse = report.spouse;
     
     // Safe access to names
     const primaryName = primary?.demographics?.firstName || primary?.name?.split(' ')[0] || 'Partner 1';
     const spouseName = spouse?.demographics?.firstName || spouse?.name?.split(' ')[0] || 'Partner 2';
     
     // Extract compatibility with fallback
-    const compatibility = report.overallCompatibility || report.compatibilityScore || 0;
+    const compatibility = report.compatibilityScore || 0;
     const compatibilityDisplay = compatibility.toFixed(1);
     
     // Fallback basic template
@@ -453,8 +472,8 @@ export async function sendFormInitiationNotification(
     const name = (demographicData.firstName || '') + ' ' + (demographicData.lastName || '');
     const email = demographicData.email || 'Not provided';
     const gender = demographicData.gender || 'Not provided';
-    const age = demographicData.age || 'Not provided';
-    const maritalStatus = demographicData.maritalStatus || 'Not provided';
+    const age = demographicData.birthday ? getAgeFromBirthday(demographicData.birthday) : 'Not provided';
+    const maritalStatus = demographicData.marriageStatus || 'Not provided';
     const timestamp = new Date().toISOString();
     
     // Skip notification if we've already sent one for this email in the last hour
