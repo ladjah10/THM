@@ -24,6 +24,122 @@ export const SENDER_NAME = 'The 100 Marriage Assessment';
 export const ADMIN_EMAIL = 'lawrence@lawrenceadjah.com'; // Admin email for notifications
 
 /**
+ * Sends a detailed backup of all assessment responses to the admin
+ * This ensures we always have a record of all responses via email
+ * 
+ * @param assessment The complete assessment result with all responses
+ * @returns Object containing success status and messageId if successful
+ */
+export async function sendAssessmentBackup(assessment: AssessmentResult): Promise<{ success: boolean, messageId?: string }> {
+  if (!process.env.SENDGRID_API_KEY) {
+    console.error('Cannot send assessment backup: SENDGRID_API_KEY environment variable is not set.');
+    return { success: false };
+  }
+  
+  try {
+    // Format user-friendly details
+    const name = (assessment.demographics?.firstName || '') + ' ' + (assessment.demographics?.lastName || '');
+    const email = assessment.demographics?.email || 'Not provided';
+    const timestamp = new Date().toISOString();
+    
+    // Format all responses in a readable table
+    let responsesHtml = '<table border="1" cellpadding="5" style="border-collapse: collapse; width: 100%;">';
+    responsesHtml += '<tr><th>Question #</th><th>Response</th><th>Value</th></tr>';
+    
+    if (assessment.responses) {
+      const sortedQuestions = Object.keys(assessment.responses).sort((a, b) => parseInt(a) - parseInt(b));
+      
+      for (const questionNum of sortedQuestions) {
+        const response = assessment.responses[questionNum];
+        responsesHtml += `<tr>
+          <td>${questionNum}</td>
+          <td>${response.option}</td>
+          <td>${response.value}</td>
+        </tr>`;
+      }
+    }
+    
+    responsesHtml += '</table>';
+    
+    // Format demographic data in a readable format
+    let demographicHtml = '<table border="1" cellpadding="5" style="border-collapse: collapse; width: 100%;">';
+    demographicHtml += '<tr><th>Field</th><th>Value</th></tr>';
+    
+    if (assessment.demographics) {
+      for (const [key, value] of Object.entries(assessment.demographics)) {
+        demographicHtml += `<tr>
+          <td>${key}</td>
+          <td>${value !== null && value !== undefined ? value : 'Not provided'}</td>
+        </tr>`;
+      }
+    }
+    
+    demographicHtml += '</table>';
+    
+    // Create HTML content for the backup email
+    const htmlContent = `
+      <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto;">
+        <h2 style="color: #4A86E8;">Assessment Backup - Full Response Record</h2>
+        <p>This is a backup of all responses from a completed assessment.</p>
+        
+        <h3>User Information:</h3>
+        <p>
+          <strong>Name:</strong> ${name.trim() || 'Not provided'}<br>
+          <strong>Email:</strong> ${email}<br>
+          <strong>Timestamp:</strong> ${timestamp}<br>
+          <strong>Assessment ID:</strong> ${assessment.id || 'Not provided'}<br>
+          <strong>Overall Score:</strong> ${assessment.scores?.overallPercentage?.toFixed(1) || 0}%
+        </p>
+        
+        <h3>Profile Information:</h3>
+        <p>
+          <strong>Primary Profile:</strong> ${assessment.profile?.name || 'Not determined'}<br>
+          ${assessment.genderProfile ? `<strong>Gender Profile:</strong> ${assessment.genderProfile.name || 'Not determined'}<br>` : ''}
+        </p>
+        
+        <h3>Demographics:</h3>
+        ${demographicHtml}
+        
+        <h3>All Responses:</h3>
+        ${responsesHtml}
+        
+        <p style="font-size: 12px; color: #666; margin-top: 30px;">
+          This is an automated backup email sent by The 100 Marriage Assessment system.
+        </p>
+      </div>
+    `;
+    
+    // Configure the message
+    const msg = {
+      to: ADMIN_EMAIL,
+      from: {
+        email: SENDER_EMAIL,
+        name: SENDER_NAME
+      },
+      subject: `Assessment Backup - ${name.trim() || email || 'Anonymous User'} - ${timestamp}`,
+      html: htmlContent
+    };
+    
+    // Send the email
+    const response = await mailService.send(msg);
+    
+    if (response && response[0] && response[0].statusCode >= 200 && response[0].statusCode < 300) {
+      console.log(`Assessment backup email sent successfully to admin`);
+      return { 
+        success: true,
+        messageId: response[0].headers['x-message-id'] as string
+      };
+    } else {
+      console.error('Error sending assessment backup email:', response);
+      return { success: false };
+    }
+  } catch (error) {
+    console.error('Error sending assessment backup email:', error);
+    return { success: false };
+  }
+}
+
+/**
  * Sends an individual assessment report email with PDF attachment
  * @param assessment The assessment result to send
  * @param pdfPath The path to the PDF file to attach
