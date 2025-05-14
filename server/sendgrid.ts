@@ -559,9 +559,9 @@ export async function sendCoupleAssessmentEmail(report: CoupleAssessmentReport, 
     const pdfContent = fs.readFileSync(pdfPath);
     const pdfFilename = path.basename(pdfPath);
     
-    // Get emails from both partners - handle both old and new property paths
-    const primary = report.primaryAssessment || report.primary;
-    const spouse = report.spouseAssessment || report.spouse;
+    // Get partners from the report using the correct property names from schema
+    const primary = report.primary;
+    const spouse = report.spouse;
     
     // Get emails with fallbacks
     const primaryEmail = primary?.email || primary?.demographics?.email;
