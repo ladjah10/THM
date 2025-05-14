@@ -311,8 +311,14 @@ function formatCoupleAssessmentEmail(report: CoupleAssessmentReport): string {
   }
 }
 
+// In-memory cache to track when notifications were sent for each email address
+// This prevents duplicate notifications in a short time window
+const notificationTracker: Record<string, number> = {};
+
 /**
  * Sends a notification email to admin when a user starts filling out the assessment form
+ * Includes deduplication to prevent multiple notifications for the same user within 24 hours
+ * 
  * @param demographicData The demographic data entered by the user
  * @param ipAddress Optional IP address of the user
  * @returns Object containing success status and messageId if successful
@@ -320,7 +326,7 @@ function formatCoupleAssessmentEmail(report: CoupleAssessmentReport): string {
 export async function sendFormInitiationNotification(
   demographicData: Partial<DemographicData>, 
   ipAddress?: string
-): Promise<{ success: boolean, messageId?: string }> {
+): Promise<{ success: boolean, messageId?: string, skipped?: boolean }> {
   if (!process.env.SENDGRID_API_KEY) {
     console.error('Cannot send email: SENDGRID_API_KEY environment variable is not set.');
     return { success: false };
@@ -334,6 +340,22 @@ export async function sendFormInitiationNotification(
     const age = demographicData.age || 'Not provided';
     const maritalStatus = demographicData.maritalStatus || 'Not provided';
     const timestamp = new Date().toISOString();
+    
+    // Skip notification if we've already sent one for this email in the last 24 hours
+    // Only do this check if we have a valid email to track
+    if (email !== 'Not provided') {
+      const lastNotificationTime = notificationTracker[email];
+      const currentTime = Date.now();
+      
+      // Check if we've already sent a notification in the last 24 hours (86400000 ms)
+      if (lastNotificationTime && (currentTime - lastNotificationTime) < 86400000) {
+        console.log(`Skipping duplicate notification for ${email} - last sent ${new Date(lastNotificationTime).toISOString()}`);
+        return { success: true, skipped: true };
+      }
+      
+      // Update notification tracker with current time
+      notificationTracker[email] = currentTime;
+    }
     
     // Create HTML content for the notification email
     const htmlContent = `
@@ -371,7 +393,7 @@ export async function sendFormInitiationNotification(
     const response = await mailService.send(msg);
     
     if (response && response[0] && response[0].statusCode >= 200 && response[0].statusCode < 300) {
-      console.log(`Form initiation notification email sent successfully to admin`);
+      console.log(`Form initiation notification email sent successfully to admin for ${email}`);
       return { 
         success: true,
         messageId: response[0].headers['x-message-id'] as string
