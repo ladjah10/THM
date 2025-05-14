@@ -659,6 +659,7 @@ export class DatabaseStorage {
       // Store in the database using the assessmentResults table
       const { db } = await import('./db');
       const { assessmentResults } = await import('@shared/schema');
+      const { pool } = await import('./db');
       
       const jsonScores = JSON.stringify(assessment.scores);
       const jsonProfile = JSON.stringify(assessment.profile);
@@ -666,7 +667,27 @@ export class DatabaseStorage {
       const jsonResponses = JSON.stringify(assessment.responses);
       const jsonDemographics = JSON.stringify(assessment.demographics);
       
-      // Insert into database using column names directly from schema
+      // Check for duplicate submission in the last 5 minutes
+      const responseHash = require('crypto').createHash('md5').update(jsonResponses).digest('hex');
+      const checkDuplicateQuery = `
+        SELECT id FROM assessment_results 
+        WHERE email = $1 
+        AND md5(responses::text) = $2
+        AND timestamp > NOW() - INTERVAL '5 minutes'
+        LIMIT 1
+      `;
+      
+      const duplicateResult = await pool.query(checkDuplicateQuery, [
+        assessment.demographics.email,
+        responseHash
+      ]);
+      
+      if (duplicateResult.rows.length > 0) {
+        console.log(`Duplicate assessment detected for ${assessment.demographics.email} - skipping save`);
+        return; // Skip saving duplicate assessments
+      }
+      
+      // If no duplicate found, insert into database using column names directly from schema
       await db.insert(assessmentResults).values({
         email: assessment.demographics.email,
         name: `${assessment.demographics.firstName} ${assessment.demographics.lastName}`,
