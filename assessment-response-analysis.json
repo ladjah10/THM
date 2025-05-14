@@ -1,0 +1,845 @@
+{
+  "totalAssessments": 10,
+  "uniqueResponsePatterns": 5,
+  "patternDistribution": [
+    {
+      "count": 3,
+      "percentage": 30,
+      "emails": [
+        "deborah.metts@gmail.com",
+        "deborah.metts@gmail.com",
+        "deborah.metts@gmail.com"
+      ],
+      "score": 28.2
+    },
+    {
+      "count": 2,
+      "percentage": 20,
+      "emails": [
+        "sbangudu.b@gmail.com",
+        "sbangudu.b@gmail.com"
+      ],
+      "score": 28.2
+    },
+    {
+      "count": 2,
+      "percentage": 20,
+      "emails": [
+        "harmon.jere@gmail.com",
+        "harmon.jere@gmail.com"
+      ],
+      "score": 28.2
+    },
+    {
+      "count": 2,
+      "percentage": 20,
+      "emails": [
+        "la@lawrenceadjah.com",
+        "la@lawrenceadjah.com"
+      ],
+      "score": 28.2
+    },
+    {
+      "count": 1,
+      "percentage": 10,
+      "emails": [
+        "cmcbrady@gmail.com"
+      ],
+      "score": 36
+    }
+  ],
+  "scoreDistribution": [
+    {
+      "score": "28.2",
+      "count": 9,
+      "percentage": 90
+    },
+    {
+      "score": "36.0",
+      "count": 1,
+      "percentage": 10
+    }
+  ],
+  "sampleResponses": [
+    {
+      "id": "64a90075-1c81-4605-adc6-344d3f185cd2",
+      "email": "sbangudu.b@gmail.com",
+      "name": "Seke Bangudu",
+      "score": 28.2,
+      "responses": [
+        [
+          "1",
+          {
+            "option": "We each already believe in and (have) receive(d) Jesus Christ as our Lord and Savior and this reality will be the active foundation and guiding lens through which we see and operate in our marriage and family",
+            "value": 1
+          }
+        ],
+        [
+          "2",
+          {
+            "option": "In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this 'life covenant' process, unless mutually revisited and discussed at a later time.",
+            "value": 12
+          }
+        ],
+        [
+          "3",
+          {
+            "option": "We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ",
+            "value": 12
+          }
+        ],
+        [
+          "4",
+          {
+            "option": "We're committed to the belief: While a marriage relationship can yield happiness, we believe happiness is neither a stable emotion nor a stable foundation to build a marriage upon, as such, we believe each spouse is ultimately responsible for their own happiness.",
+            "value": 1
+          }
+        ],
+        [
+          "5",
+          {
+            "option": "We do not believe it's necessary to establish Power of Attorney before marriage and prefer to address this matter later if and when it becomes relevant",
+            "value": 5
+          }
+        ],
+        [
+          "6",
+          {
+            "option": "We do not believe creating a will is necessary before marriage and prefer to address estate planning at a later stage in our relationship",
+            "value": 5
+          }
+        ],
+        [
+          "7",
+          {
+            "option": "We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, 'Falling Out of Love', 'Growing Apart', 'Irreconcilable Differences'",
+            "value": 12
+          }
+        ],
+        [
+          "8",
+          {
+            "option": "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), still, we'd like to be more informed about what prenuptial agreements entail before deciding whether to consider it before our marriage.",
+            "value": 1
+          }
+        ],
+        [
+          "9",
+          {
+            "option": "We're committed to celebrating the anniversary of our wedding day each and every year.",
+            "value": 1
+          }
+        ],
+        [
+          "10",
+          {
+            "option": "God, Spouse, Children, Work, Extended Family, Friends, Church, Ministry, Hobbies",
+            "value": 1
+          }
+        ]
+      ]
+    },
+    {
+      "id": "c30a5b19-ff33-4c7c-aecc-abb94e4c8a14",
+      "email": "sbangudu.b@gmail.com",
+      "name": "Seke Bangudu",
+      "score": 28.2,
+      "responses": [
+        [
+          "1",
+          {
+            "option": "We each already believe in and (have) receive(d) Jesus Christ as our Lord and Savior and this reality will be the active foundation and guiding lens through which we see and operate in our marriage and family",
+            "value": 1
+          }
+        ],
+        [
+          "2",
+          {
+            "option": "In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this 'life covenant' process, unless mutually revisited and discussed at a later time.",
+            "value": 12
+          }
+        ],
+        [
+          "3",
+          {
+            "option": "We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ",
+            "value": 12
+          }
+        ],
+        [
+          "4",
+          {
+            "option": "We're committed to the belief: While a marriage relationship can yield happiness, we believe happiness is neither a stable emotion nor a stable foundation to build a marriage upon, as such, we believe each spouse is ultimately responsible for their own happiness.",
+            "value": 1
+          }
+        ],
+        [
+          "5",
+          {
+            "option": "We do not believe it's necessary to establish Power of Attorney before marriage and prefer to address this matter later if and when it becomes relevant",
+            "value": 5
+          }
+        ],
+        [
+          "6",
+          {
+            "option": "We do not believe creating a will is necessary before marriage and prefer to address estate planning at a later stage in our relationship",
+            "value": 5
+          }
+        ],
+        [
+          "7",
+          {
+            "option": "We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, 'Falling Out of Love', 'Growing Apart', 'Irreconcilable Differences'",
+            "value": 12
+          }
+        ],
+        [
+          "8",
+          {
+            "option": "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), still, we'd like to be more informed about what prenuptial agreements entail before deciding whether to consider it before our marriage.",
+            "value": 1
+          }
+        ],
+        [
+          "9",
+          {
+            "option": "We're committed to celebrating the anniversary of our wedding day each and every year.",
+            "value": 1
+          }
+        ],
+        [
+          "10",
+          {
+            "option": "God, Spouse, Children, Work, Extended Family, Friends, Church, Ministry, Hobbies",
+            "value": 1
+          }
+        ]
+      ]
+    },
+    {
+      "id": "ee5056fd-3c2f-4d99-84f2-bd0dfab7d1db",
+      "email": "deborah.metts@gmail.com",
+      "name": "Deborah Metts",
+      "score": 28.2,
+      "responses": [
+        [
+          "1",
+          {
+            "option": "We each already believe in and (have) receive(d) Jesus Christ as our Lord and Savior and this reality will be the active foundation and guiding lens through which we see and operate in our marriage and family",
+            "value": 1
+          }
+        ],
+        [
+          "2",
+          {
+            "option": "In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this 'life covenant' process, unless mutually revisited and discussed at a later time.",
+            "value": 12
+          }
+        ],
+        [
+          "3",
+          {
+            "option": "We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ",
+            "value": 12
+          }
+        ],
+        [
+          "4",
+          {
+            "option": "We're committed to the belief: While a marriage relationship can yield happiness, we believe happiness is neither a stable emotion nor a stable foundation to build a marriage upon, as such, we believe each spouse is ultimately responsible for their own happiness.",
+            "value": 1
+          }
+        ],
+        [
+          "5",
+          {
+            "option": "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing our spouse as Power of Attorney before our marriage date",
+            "value": 5
+          }
+        ],
+        [
+          "6",
+          {
+            "option": "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing completing a notarized copy of our will before our marriage date",
+            "value": 5
+          }
+        ],
+        [
+          "7",
+          {
+            "option": "We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, 'Falling Out of Love', 'Growing Apart', 'Irreconcilable Differences'",
+            "value": 12
+          }
+        ],
+        [
+          "8",
+          {
+            "option": "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), still, in view of the law and the prevalent rates of marriage dissolution, we agree to explore and structure a mutually considerate prenuptial agreement for our marriage.",
+            "value": 1
+          }
+        ],
+        [
+          "9",
+          {
+            "option": "We're committed to celebrating the anniversary of our wedding day each and every year.",
+            "value": 1
+          }
+        ],
+        [
+          "10",
+          {
+            "option": "God, Work, Spouse, Children, Extended Family, Friends, Church, Ministry, Hobbies",
+            "value": 1
+          }
+        ]
+      ]
+    },
+    {
+      "id": "06a0217c-3b5b-47cd-bd9c-57cd70619215",
+      "email": "deborah.metts@gmail.com",
+      "name": "Deborah Metts",
+      "score": 28.2,
+      "responses": [
+        [
+          "1",
+          {
+            "option": "We each already believe in and (have) receive(d) Jesus Christ as our Lord and Savior and this reality will be the active foundation and guiding lens through which we see and operate in our marriage and family",
+            "value": 1
+          }
+        ],
+        [
+          "2",
+          {
+            "option": "In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this 'life covenant' process, unless mutually revisited and discussed at a later time.",
+            "value": 12
+          }
+        ],
+        [
+          "3",
+          {
+            "option": "We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ",
+            "value": 12
+          }
+        ],
+        [
+          "4",
+          {
+            "option": "We're committed to the belief: While a marriage relationship can yield happiness, we believe happiness is neither a stable emotion nor a stable foundation to build a marriage upon, as such, we believe each spouse is ultimately responsible for their own happiness.",
+            "value": 1
+          }
+        ],
+        [
+          "5",
+          {
+            "option": "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing our spouse as Power of Attorney before our marriage date",
+            "value": 5
+          }
+        ],
+        [
+          "6",
+          {
+            "option": "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing completing a notarized copy of our will before our marriage date",
+            "value": 5
+          }
+        ],
+        [
+          "7",
+          {
+            "option": "We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, 'Falling Out of Love', 'Growing Apart', 'Irreconcilable Differences'",
+            "value": 12
+          }
+        ],
+        [
+          "8",
+          {
+            "option": "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), still, in view of the law and the prevalent rates of marriage dissolution, we agree to explore and structure a mutually considerate prenuptial agreement for our marriage.",
+            "value": 1
+          }
+        ],
+        [
+          "9",
+          {
+            "option": "We're committed to celebrating the anniversary of our wedding day each and every year.",
+            "value": 1
+          }
+        ],
+        [
+          "10",
+          {
+            "option": "God, Work, Spouse, Children, Extended Family, Friends, Church, Ministry, Hobbies",
+            "value": 1
+          }
+        ]
+      ]
+    },
+    {
+      "id": "46fd5fbf-5cf0-40f4-b65a-9fb103b0d544",
+      "email": "deborah.metts@gmail.com",
+      "name": "Deborah Metts",
+      "score": 28.2,
+      "responses": [
+        [
+          "1",
+          {
+            "option": "We each already believe in and (have) receive(d) Jesus Christ as our Lord and Savior and this reality will be the active foundation and guiding lens through which we see and operate in our marriage and family",
+            "value": 1
+          }
+        ],
+        [
+          "2",
+          {
+            "option": "In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this 'life covenant' process, unless mutually revisited and discussed at a later time.",
+            "value": 12
+          }
+        ],
+        [
+          "3",
+          {
+            "option": "We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ",
+            "value": 12
+          }
+        ],
+        [
+          "4",
+          {
+            "option": "We're committed to the belief: While a marriage relationship can yield happiness, we believe happiness is neither a stable emotion nor a stable foundation to build a marriage upon, as such, we believe each spouse is ultimately responsible for their own happiness.",
+            "value": 1
+          }
+        ],
+        [
+          "5",
+          {
+            "option": "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing our spouse as Power of Attorney before our marriage date",
+            "value": 5
+          }
+        ],
+        [
+          "6",
+          {
+            "option": "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing completing a notarized copy of our will before our marriage date",
+            "value": 5
+          }
+        ],
+        [
+          "7",
+          {
+            "option": "We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, 'Falling Out of Love', 'Growing Apart', 'Irreconcilable Differences'",
+            "value": 12
+          }
+        ],
+        [
+          "8",
+          {
+            "option": "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), still, in view of the law and the prevalent rates of marriage dissolution, we agree to explore and structure a mutually considerate prenuptial agreement for our marriage.",
+            "value": 1
+          }
+        ],
+        [
+          "9",
+          {
+            "option": "We're committed to celebrating the anniversary of our wedding day each and every year.",
+            "value": 1
+          }
+        ],
+        [
+          "10",
+          {
+            "option": "God, Work, Spouse, Children, Extended Family, Friends, Church, Ministry, Hobbies",
+            "value": 1
+          }
+        ]
+      ]
+    },
+    {
+      "id": "30442473-26e6-4b87-b044-0f82848603c6",
+      "email": "harmon.jere@gmail.com",
+      "name": "Je're Harmon",
+      "score": 28.2,
+      "responses": [
+        [
+          "1",
+          {
+            "option": "We each already believe in and (have) receive(d) Jesus Christ as our Lord and Savior and this reality will be the active foundation and guiding lens through which we see and operate in our marriage and family",
+            "value": 1
+          }
+        ],
+        [
+          "2",
+          {
+            "option": "In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this 'life covenant' process, unless mutually revisited and discussed at a later time.",
+            "value": 12
+          }
+        ],
+        [
+          "3",
+          {
+            "option": "We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ",
+            "value": 12
+          }
+        ],
+        [
+          "4",
+          {
+            "option": "We're committed to the belief: While a marriage relationship can yield happiness, we believe happiness is neither a stable emotion nor a stable foundation to build a marriage upon, as such, we believe each spouse is ultimately responsible for their own happiness.",
+            "value": 1
+          }
+        ],
+        [
+          "5",
+          {
+            "option": "We do not believe it's necessary to establish Power of Attorney before marriage and prefer to address this matter later if and when it becomes relevant",
+            "value": 5
+          }
+        ],
+        [
+          "6",
+          {
+            "option": "We do not believe creating a will is necessary before marriage and prefer to address estate planning at a later stage in our relationship",
+            "value": 5
+          }
+        ],
+        [
+          "7",
+          {
+            "option": "We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, 'Falling Out of Love', 'Growing Apart', 'Irreconcilable Differences'",
+            "value": 12
+          }
+        ],
+        [
+          "8",
+          {
+            "option": "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), and do not believe any legal agreements beyond our mutual commitments through this life covenant process are necessary for us to explore and structure at this time.",
+            "value": 1
+          }
+        ],
+        [
+          "9",
+          {
+            "option": "We're committed to celebrating the anniversary of our wedding day each and every year.",
+            "value": 1
+          }
+        ],
+        [
+          "10",
+          {
+            "option": "God, Spouse, Children, Work, Extended Family, Friends, Church, Ministry, Hobbies",
+            "value": 1
+          }
+        ]
+      ]
+    },
+    {
+      "id": "f3574548-9674-4fc9-b2fe-c04cdcba31fd",
+      "email": "harmon.jere@gmail.com",
+      "name": "Je're Harmon",
+      "score": 28.2,
+      "responses": [
+        [
+          "1",
+          {
+            "option": "We each already believe in and (have) receive(d) Jesus Christ as our Lord and Savior and this reality will be the active foundation and guiding lens through which we see and operate in our marriage and family",
+            "value": 1
+          }
+        ],
+        [
+          "2",
+          {
+            "option": "In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this 'life covenant' process, unless mutually revisited and discussed at a later time.",
+            "value": 12
+          }
+        ],
+        [
+          "3",
+          {
+            "option": "We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ",
+            "value": 12
+          }
+        ],
+        [
+          "4",
+          {
+            "option": "We're committed to the belief: While a marriage relationship can yield happiness, we believe happiness is neither a stable emotion nor a stable foundation to build a marriage upon, as such, we believe each spouse is ultimately responsible for their own happiness.",
+            "value": 1
+          }
+        ],
+        [
+          "5",
+          {
+            "option": "We do not believe it's necessary to establish Power of Attorney before marriage and prefer to address this matter later if and when it becomes relevant",
+            "value": 5
+          }
+        ],
+        [
+          "6",
+          {
+            "option": "We do not believe creating a will is necessary before marriage and prefer to address estate planning at a later stage in our relationship",
+            "value": 5
+          }
+        ],
+        [
+          "7",
+          {
+            "option": "We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, 'Falling Out of Love', 'Growing Apart', 'Irreconcilable Differences'",
+            "value": 12
+          }
+        ],
+        [
+          "8",
+          {
+            "option": "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), and do not believe any legal agreements beyond our mutual commitments through this life covenant process are necessary for us to explore and structure at this time.",
+            "value": 1
+          }
+        ],
+        [
+          "9",
+          {
+            "option": "We're committed to celebrating the anniversary of our wedding day each and every year.",
+            "value": 1
+          }
+        ],
+        [
+          "10",
+          {
+            "option": "God, Spouse, Children, Work, Extended Family, Friends, Church, Ministry, Hobbies",
+            "value": 1
+          }
+        ]
+      ]
+    },
+    {
+      "id": "463dd1c8-fe7e-498a-b864-55ff4760164c",
+      "email": "cmcbrady@gmail.com",
+      "name": "Crystal McBrady",
+      "score": 36,
+      "responses": [
+        [
+          "1",
+          {
+            "option": "We are interested in living our new lives together according to the Christian faith, but we haven't each made the individual decision to receive Jesus Christ as our Lord and Savior (and be baptized) and we would like to do this in advance of our union.",
+            "value": 1
+          }
+        ],
+        [
+          "2",
+          {
+            "option": "Other: Before committing to this we need further discussion with spiritual counsel around how this would operate",
+            "value": 12
+          }
+        ],
+        [
+          "3",
+          {
+            "option": "We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ",
+            "value": 12
+          }
+        ],
+        [
+          "4",
+          {
+            "option": "We're committed to the belief: While a marriage relationship can yield happiness, we believe happiness is neither a stable emotion nor a stable foundation to build a marriage upon, as such, we believe each spouse is ultimately responsible for their own happiness.",
+            "value": 1
+          }
+        ],
+        [
+          "5",
+          {
+            "option": "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing our spouse as Power of Attorney before our marriage date",
+            "value": 5
+          }
+        ],
+        [
+          "6",
+          {
+            "option": "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing completing a notarized copy of our will before our marriage date",
+            "value": 5
+          }
+        ],
+        [
+          "7",
+          {
+            "option": "We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, 'Falling Out of Love', 'Growing Apart', 'Irreconcilable Differences'",
+            "value": 12
+          }
+        ],
+        [
+          "8",
+          {
+            "option": "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), still, in view of the law and the prevalent rates of marriage dissolution, we agree to explore and structure a mutually considerate prenuptial agreement for our marriage.",
+            "value": 1
+          }
+        ],
+        [
+          "9",
+          {
+            "option": "We're committed to celebrating the anniversary of our wedding day each and every year.",
+            "value": 1
+          }
+        ],
+        [
+          "10",
+          {
+            "option": "God, Spouse, Children, Work, Extended Family, Friends, Church, Ministry, Hobbies",
+            "value": 1
+          }
+        ]
+      ]
+    },
+    {
+      "id": "8422ab4f-138a-47e3-abc0-1cd1d51311bd",
+      "email": "la@lawrenceadjah.com",
+      "name": "A B",
+      "score": 28.2,
+      "responses": [
+        [
+          "1",
+          {
+            "option": "We each already believe in and (have) receive(d) Jesus Christ as our Lord and Savior and this reality will be the active foundation and guiding lens through which we see and operate in our marriage and family",
+            "value": 1
+          }
+        ],
+        [
+          "2",
+          {
+            "option": "In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this 'life covenant' process, unless mutually revisited and discussed at a later time.",
+            "value": 12
+          }
+        ],
+        [
+          "3",
+          {
+            "option": "We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ",
+            "value": 12
+          }
+        ],
+        [
+          "4",
+          {
+            "option": "We're committed to the belief: While a marriage relationship can yield happiness, we believe happiness is neither a stable emotion nor a stable foundation to build a marriage upon, as such, we believe each spouse is ultimately responsible for their own happiness.",
+            "value": 1
+          }
+        ],
+        [
+          "5",
+          {
+            "option": "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing our spouse as Power of Attorney before our marriage date",
+            "value": 5
+          }
+        ],
+        [
+          "6",
+          {
+            "option": "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing completing a notarized copy of our will before our marriage date",
+            "value": 5
+          }
+        ],
+        [
+          "7",
+          {
+            "option": "We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, 'Falling Out of Love', 'Growing Apart', 'Irreconcilable Differences'",
+            "value": 12
+          }
+        ],
+        [
+          "8",
+          {
+            "option": "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), still, in view of the law and the prevalent rates of marriage dissolution, we agree to explore and structure a mutually considerate prenuptial agreement for our marriage.",
+            "value": 1
+          }
+        ],
+        [
+          "9",
+          {
+            "option": "We're committed to celebrating both the anniversary of our first date and the anniversary of our wedding day each and every year.",
+            "value": 1
+          }
+        ],
+        [
+          "10",
+          {
+            "option": "God, Spouse, Children, Work, Extended Family, Friends, Church, Ministry, Hobbies",
+            "value": 1
+          }
+        ]
+      ]
+    },
+    {
+      "id": "6ea39700-133f-4d6f-9c6f-aa704de1a7e6",
+      "email": "la@lawrenceadjah.com",
+      "name": "A B",
+      "score": 28.2,
+      "responses": [
+        [
+          "1",
+          {
+            "option": "We each already believe in and (have) receive(d) Jesus Christ as our Lord and Savior and this reality will be the active foundation and guiding lens through which we see and operate in our marriage and family",
+            "value": 1
+          }
+        ],
+        [
+          "2",
+          {
+            "option": "In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this 'life covenant' process, unless mutually revisited and discussed at a later time.",
+            "value": 12
+          }
+        ],
+        [
+          "3",
+          {
+            "option": "We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ",
+            "value": 12
+          }
+        ],
+        [
+          "4",
+          {
+            "option": "We're committed to the belief: While a marriage relationship can yield happiness, we believe happiness is neither a stable emotion nor a stable foundation to build a marriage upon, as such, we believe each spouse is ultimately responsible for their own happiness.",
+            "value": 1
+          }
+        ],
+        [
+          "5",
+          {
+            "option": "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing our spouse as Power of Attorney before our marriage date",
+            "value": 5
+          }
+        ],
+        [
+          "6",
+          {
+            "option": "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing completing a notarized copy of our will before our marriage date",
+            "value": 5
+          }
+        ],
+        [
+          "7",
+          {
+            "option": "We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, 'Falling Out of Love', 'Growing Apart', 'Irreconcilable Differences'",
+            "value": 12
+          }
+        ],
+        [
+          "8",
+          {
+            "option": "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), still, in view of the law and the prevalent rates of marriage dissolution, we agree to explore and structure a mutually considerate prenuptial agreement for our marriage.",
+            "value": 1
+          }
+        ],
+        [
+          "9",
+          {
+            "option": "We're committed to celebrating both the anniversary of our first date and the anniversary of our wedding day each and every year.",
+            "value": 1
+          }
+        ],
+        [
+          "10",
+          {
+            "option": "God, Spouse, Children, Work, Extended Family, Friends, Church, Ministry, Hobbies",
+            "value": 1
+          }
+        ]
+      ]
+    }
+  ]
+}

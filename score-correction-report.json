@@ -1,0 +1,87 @@
+{
+  "processed": 10,
+  "successful": 10,
+  "failed": 0,
+  "scoreChanges": [
+    {
+      "id": "463dd1c8-fe7e-498a-b864-55ff4760164c",
+      "email": "cmcbrady@gmail.com",
+      "name": "Crystal McBrady",
+      "oldScore": 36,
+      "newScore": 74.9,
+      "difference": "38.9"
+    },
+    {
+      "id": "f3574548-9674-4fc9-b2fe-c04cdcba31fd",
+      "email": "harmon.jere@gmail.com",
+      "name": "Je're Harmon",
+      "oldScore": 28.2,
+      "newScore": 47.9,
+      "difference": "19.7"
+    },
+    {
+      "id": "8422ab4f-138a-47e3-abc0-1cd1d51311bd",
+      "email": "la@lawrenceadjah.com",
+      "name": "A B",
+      "oldScore": 28.2,
+      "newScore": 47.9,
+      "difference": "19.7"
+    },
+    {
+      "id": "ee5056fd-3c2f-4d99-84f2-bd0dfab7d1db",
+      "email": "deborah.metts@gmail.com",
+      "name": "Deborah Metts",
+      "oldScore": 28.2,
+      "newScore": 47.9,
+      "difference": "19.7"
+    },
+    {
+      "id": "46fd5fbf-5cf0-40f4-b65a-9fb103b0d544",
+      "email": "deborah.metts@gmail.com",
+      "name": "Deborah Metts",
+      "oldScore": 28.2,
+      "newScore": 47.9,
+      "difference": "19.7"
+    },
+    {
+      "id": "06a0217c-3b5b-47cd-bd9c-57cd70619215",
+      "email": "deborah.metts@gmail.com",
+      "name": "Deborah Metts",
+      "oldScore": 28.2,
+      "newScore": 47.9,
+      "difference": "19.7"
+    },
+    {
+      "id": "6ea39700-133f-4d6f-9c6f-aa704de1a7e6",
+      "email": "la@lawrenceadjah.com",
+      "name": "A B",
+      "oldScore": 28.2,
+      "newScore": 47.9,
+      "difference": "19.7"
+    },
+    {
+      "id": "30442473-26e6-4b87-b044-0f82848603c6",
+      "email": "harmon.jere@gmail.com",
+      "name": "Je're Harmon",
+      "oldScore": 28.2,
+      "newScore": 47.9,
+      "difference": "19.7"
+    },
+    {
+      "id": "64a90075-1c81-4605-adc6-344d3f185cd2",
+      "email": "sbangudu.b@gmail.com",
+      "name": "Seke Bangudu",
+      "oldScore": 28.2,
+      "newScore": 47.9,
+      "difference": "19.7"
+    },
+    {
+      "id": "c30a5b19-ff33-4c7c-aecc-abb94e4c8a14",
+      "email": "sbangudu.b@gmail.com",
+      "name": "Seke Bangudu",
+      "oldScore": 28.2,
+      "newScore": 47.9,
+      "difference": "19.7"
+    }
+  ]
+}
