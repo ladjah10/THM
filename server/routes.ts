@@ -578,7 +578,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         console.log(`Found ${assessments.length} assessments within date range`);
       } else {
+        // Get all assessments
         assessments = await storage.getAllAssessments();
+        
+        // If completedOnly is true, filter for assessments with transaction IDs
+        if (completedOnly) {
+          assessments = assessments.filter(assessment => !!assessment.transactionId);
+          console.log(`Filtered to ${assessments.length} completed assessments with transaction IDs`);
+        }
+        
+        // If requirePayment is true, filter for assessments with transaction IDs
+        if (requirePayment) {
+          assessments = assessments.filter(assessment => !!assessment.transactionId);
+          console.log(`Filtered to ${assessments.length} paid assessments`);
+        }
       }
       
       // Return the assessments

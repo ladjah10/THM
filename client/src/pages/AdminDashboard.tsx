@@ -1911,6 +1911,7 @@ export default function AdminDashboard() {
                 Found {filteredAssessments?.length || 0} assessments from {assessmentDateRange.startDate || "January 1, 2023"} 
                 {assessmentDateRange.endDate ? ` to ${assessmentDateRange.endDate}` : " to present"}
                 {assessmentDateRange.requirePayment ? " (paid assessments only)" : ""}
+                {assessmentDateRange.completedOnly ? " (completed assessments only)" : ""}
               </div>
               
               {/* Assessment Results Table */}
