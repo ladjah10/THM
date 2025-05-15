@@ -529,6 +529,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const startDate = req.query.startDate as string | undefined;
       const endDate = req.query.endDate as string | undefined;
       const requirePayment = req.query.requirePayment === 'true';
+      const completedOnly = req.query.completedOnly === 'true';
       
       let assessments;
       
@@ -563,7 +564,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
           
           // If requirePayment is true, check for transactionId
           if (requirePayment) {
-            return meetsDateCriteria && !!assessment.transactionId;
+            meetsDateCriteria = meetsDateCriteria && !!assessment.transactionId;
+          }
+          
+          // If completedOnly is true, also check for transactionId
+          // This ensures only completed assessments are shown
+          if (completedOnly) {
+            meetsDateCriteria = meetsDateCriteria && !!assessment.transactionId;
           }
           
           return meetsDateCriteria;
