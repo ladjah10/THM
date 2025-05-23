@@ -1,242 +1,205 @@
-import { useState, useEffect } from "react";
-import { useToast } from "@/hooks/use-toast";
-import { RefreshCw, Download, Mail, ArrowLeft } from "lucide-react";
+import { useEffect, useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useToast } from "@/hooks/use-toast";
+import { Loader2 } from "lucide-react";
+import { format } from "date-fns";
 import { Link } from "wouter";
 
-// Define simplified assessment result interface
-interface SimpleAssessment {
+interface AssessmentResultData {
   id: string;
   email: string;
   name: string;
-  gender?: string;
-  marriageStatus?: string;
-  score?: number;
-  profile?: string;
+  scores: {
+    sections: Record<string, { percentage: number }>;
+    overallPercentage: number;
+  };
+  profile: {
+    id: string;
+    name: string;
+  };
+  genderProfile?: {
+    id: string;
+    name: string;
+  };
   timestamp: string;
-  completed?: boolean;
+  transactionId?: string;
+  coupleId?: string;
+  coupleRole?: string;
+  reportSent: boolean;
 }
 
 export default function SimpleAssessmentResults() {
+  const [assessments, setAssessments] = useState<AssessmentResultData[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(true);
-  const [assessments, setAssessments] = useState<SimpleAssessment[]>([]);
-  
+
   useEffect(() => {
     fetchAssessments();
   }, []);
-  
-  async function fetchAssessments() {
-    setIsLoading(true);
-    
+
+  const fetchAssessments = async () => {
     try {
-      const response = await fetch('/api/admin/assessments?requirePayment=true');
+      setLoading(true);
+      // Fetch all assessments without date filtering
+      const response = await fetch("/api/admin/assessments");
       
       if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to fetch assessments");
       }
       
       const data = await response.json();
-      
-      // Map the data to our simple format and filter for completed assessments
-      const processedData = data
-        .filter((assessment: any) => assessment.completed === true)
-        .map((assessment: any) => ({
-          id: assessment.id || `temp-${Math.random().toString(36).substring(2, 9)}`,
-          email: assessment.email || 'unknown@example.com',
-          name: assessment.demographics?.name || assessment.name || 'Unknown',
-          gender: assessment.demographics?.gender || 'Unknown',
-          marriageStatus: assessment.demographics?.marriageStatus || 'Unknown',
-          score: assessment.scores?.overallPercentage || 0,
-          profile: assessment.profile?.name || 'Unknown',
-          timestamp: assessment.timestamp || new Date().toISOString(),
-          completed: assessment.completed || false
-        }));
-      
-      // Set the assessments data
-      setAssessments(processedData);
-      
-      toast({
-        title: "Assessments Loaded",
-        description: `Successfully loaded ${processedData.length} assessments`,
-        variant: "default"
-      });
+      console.log("Fetched assessments:", data);
+      setAssessments(data);
+      setError(null);
     } catch (error) {
-      console.error("Error loading assessments:", error);
-      
+      console.error("Error fetching assessments:", error);
+      setError(error instanceof Error ? error.message : "Unknown error occurred");
       toast({
-        title: "Error Loading Assessments",
-        description: "There was a problem loading the assessment results",
-        variant: "destructive"
+        title: "Error",
+        description: "Failed to load assessment results. Please try again.",
+        variant: "destructive",
       });
-      
-      // Set empty assessments array
-      setAssessments([]);
     } finally {
-      setIsLoading(false);
-    }
-  }
-  
-  // Format date for display
-  const formatDate = (dateString: string) => {
-    try {
-      const date = new Date(dateString);
-      return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    } catch (e) {
-      return dateString || "N/A";
+      setLoading(false);
     }
   };
-  
-  // Handle resending assessment results
-  const handleResendResults = async (email: string) => {
+
+  const formatDate = (dateString: string) => {
     try {
-      toast({
-        title: "Sending...",
-        description: `Resending assessment results to ${email}`,
-      });
-      
-      const response = await fetch('/api/admin/resend-assessment-results', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          email,
-          assessmentType: 'individual'
-        }),
+      return format(new Date(dateString), "PPP");
+    } catch (error) {
+      return "Invalid date";
+    }
+  };
+
+  const resendReport = async (email: string) => {
+    try {
+      const response = await fetch(`/api/admin/resend-report/${email}`, {
+        method: "POST",
       });
       
       if (!response.ok) {
-        throw new Error(`Failed to resend: ${response.status}`);
+        throw new Error("Failed to resend report");
       }
       
       toast({
-        title: "Email Sent",
-        description: `Assessment results successfully resent to ${email}`,
-        variant: "default"
+        title: "Success",
+        description: `Report resent to ${email}`,
       });
     } catch (error) {
-      console.error("Error resending assessment:", error);
-      
       toast({
-        title: "Error Sending Email",
-        description: "Failed to resend assessment results",
-        variant: "destructive"
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to resend report",
+        variant: "destructive",
       });
     }
   };
-  
+
   return (
-    <div className="container mx-auto py-8 px-4">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
+    <div className="container py-10">
+      <div className="mb-8 flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold">Assessment Results</h1>
-          <p className="text-sm text-gray-500">
-            View completed assessment results and demographic data
+          <h1 className="text-3xl font-bold tracking-tight">Assessment Results</h1>
+          <p className="text-muted-foreground mt-2">
+            View and manage all assessment results
           </p>
         </div>
-        
-        <div className="flex flex-col sm:flex-row gap-2">
-          <Button asChild variant="outline">
-            <Link href="/admin">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Admin Dashboard
-            </Link>
-          </Button>
-          
-          <Button 
-            variant="default" 
-            onClick={fetchAssessments} 
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <>
-                <span className="animate-spin mr-2 h-4 w-4 border-2 border-primary-foreground border-t-transparent rounded-full" />
-                Loading...
-              </>
-            ) : (
-              <>
-                <RefreshCw className="h-4 w-4 mr-2" />
-                Refresh Results
-              </>
-            )}
-          </Button>
-        </div>
+        <Button asChild variant="outline">
+          <Link href="/admin">Back to Dashboard</Link>
+        </Button>
       </div>
-      
+
       <Card>
         <CardHeader>
-          <CardTitle>Assessment Results</CardTitle>
+          <CardTitle>All Assessment Results</CardTitle>
           <CardDescription>
-            {assessments.length} completed assessments found
+            Displaying {assessments.length} assessments
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {isLoading ? (
-            <div className="flex justify-center py-8">
-              <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
+          {loading ? (
+            <div className="flex justify-center py-10">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+          ) : error ? (
+            <div className="bg-destructive/10 p-4 rounded-md text-destructive">
+              {error}
+            </div>
+          ) : assessments.length === 0 ? (
+            <div className="text-center py-10 text-muted-foreground">
+              <p>No assessment results found.</p>
+              <p className="mt-2">
+                This could be because no assessments have been completed yet or there might be an issue with the database connection.
+              </p>
             </div>
           ) : (
-            <div className="rounded-md border overflow-hidden">
+            <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="font-medium">Name</TableHead>
-                    <TableHead className="font-medium">Email</TableHead>
-                    <TableHead className="font-medium">Date</TableHead>
-                    <TableHead className="font-medium">Demographics</TableHead>
-                    <TableHead className="font-medium">Score</TableHead>
-                    <TableHead className="font-medium">Profile</TableHead>
-                    <TableHead className="font-medium">Actions</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Score</TableHead>
+                    <TableHead>Profile</TableHead>
+                    <TableHead>Payment</TableHead>
+                    <TableHead>Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {assessments.length > 0 ? (
-                    assessments.map((assessment) => (
-                      <TableRow key={assessment.id}>
-                        <TableCell className="font-medium">
-                          {assessment.name || "N/A"}
-                        </TableCell>
-                        <TableCell className="max-w-[180px] truncate">{assessment.email}</TableCell>
-                        <TableCell>{formatDate(assessment.timestamp)}</TableCell>
-                        <TableCell>
-                          {assessment.gender || "Unknown"}, {assessment.marriageStatus || "Unknown"}
-                        </TableCell>
-                        <TableCell>
-                          {typeof assessment.score === 'number' ? `${assessment.score.toFixed(1)}%` : "N/A"}
-                        </TableCell>
-                        <TableCell>
-                          {assessment.profile || "N/A"}
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex space-x-1">
-                            <Button 
-                              variant="ghost" 
-                              size="icon"
-                              onClick={() => handleResendResults(assessment.email)}
-                              title="Resend results to this email"
-                            >
-                              <Mail className="h-4 w-4" />
-                            </Button>
+                  {assessments.map((assessment) => (
+                    <TableRow key={assessment.id}>
+                      <TableCell>{formatDate(assessment.timestamp)}</TableCell>
+                      <TableCell>{assessment.name}</TableCell>
+                      <TableCell>{assessment.email}</TableCell>
+                      <TableCell>
+                        {assessment.scores?.overallPercentage
+                          ? `${assessment.scores.overallPercentage.toFixed(1)}%`
+                          : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {assessment.profile?.name || "N/A"}
+                        {assessment.genderProfile && (
+                          <div className="text-xs text-muted-foreground mt-1">
+                            ({assessment.genderProfile.name})
                           </div>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={7} className="h-24 text-center">
-                        No assessment results found.
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {assessment.transactionId ? (
+                          <span className="text-green-600 font-medium">Paid</span>
+                        ) : (
+                          <span className="text-amber-600">Unpaid</span>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => resendReport(assessment.email)}
+                        >
+                          Resend Report
+                        </Button>
                       </TableCell>
                     </TableRow>
-                  )}
+                  ))}
                 </TableBody>
               </Table>
             </div>

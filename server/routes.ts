@@ -8,6 +8,7 @@ import { sendFormInitiationNotification, sendAssessmentBackup } from "./sendgrid
 import { generateShareImage } from "./shareImage";
 import { AssessmentResult, DemographicData, CoupleAssessmentReport } from "../shared/schema";
 import { handleStripeWebhook, syncStripePayments } from "./stripe-webhooks";
+import { createSampleAssessmentData } from "./sampleData";
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
