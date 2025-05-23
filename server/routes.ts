@@ -572,8 +572,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         console.log(`Found ${assessments.length} assessments within date range`);
       } else {
-        // Get all assessments
-        assessments = await storage.getAllAssessments();
+        console.log('Fetching all assessments without date filtering');
+        // Get all assessments directly from the database using raw query for troubleshooting
+        try {
+          const { pool } = await import('./db');
+          
+          // Direct query to check what's in the database
+          const rawResults = await pool.query(`
+            SELECT id, email, name, timestamp, transaction_id 
+            FROM assessment_results 
+            ORDER BY timestamp DESC
+          `);
+          
+          console.log(`Direct DB query found ${rawResults.rows.length} assessment records`);
+          
+          if (rawResults.rows.length > 0) {
+            // Get the full assessment objects
+            assessments = await storage.getAllAssessments();
+            console.log(`Retrieved ${assessments.length} full assessment objects`);
+          } else {
+            assessments = [];
+            console.log('No assessment records found in database');
+          }
+        } catch (dbError) {
+          console.error('Error querying database directly:', dbError);
+          // Fall back to storage method
+          assessments = await storage.getAllAssessments();
+        }
         
         // If requirePayment is true, filter for assessments with transaction IDs
         if (requirePayment) {

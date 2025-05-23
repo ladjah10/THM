@@ -66,7 +66,52 @@ export default function SimpleAssessmentResults() {
       
       const data = await response.json();
       console.log("Fetched assessments:", data);
-      setAssessments(data);
+      
+      // Process the data to ensure all assessment properties are properly formatted
+      const processedData = Array.isArray(data) ? data.map(assessment => {
+        // Ensure scores is an object, not a string
+        let scores = assessment.scores;
+        if (typeof scores === 'string') {
+          try {
+            scores = JSON.parse(scores);
+          } catch (e) {
+            console.error("Error parsing scores JSON:", e);
+            scores = { sections: {}, overallPercentage: 0 };
+          }
+        }
+        
+        // Ensure profile is an object, not a string
+        let profile = assessment.profile;
+        if (typeof profile === 'string') {
+          try {
+            profile = JSON.parse(profile);
+          } catch (e) {
+            console.error("Error parsing profile JSON:", e);
+            profile = { id: "unknown", name: "Unknown Profile" };
+          }
+        }
+        
+        // Ensure genderProfile is an object if present, not a string
+        let genderProfile = assessment.genderProfile;
+        if (typeof genderProfile === 'string') {
+          try {
+            genderProfile = JSON.parse(genderProfile);
+          } catch (e) {
+            console.error("Error parsing genderProfile JSON:", e);
+            genderProfile = null;
+          }
+        }
+        
+        return {
+          ...assessment,
+          scores,
+          profile,
+          genderProfile
+        };
+      }) : [];
+      
+      console.log("Processed assessments:", processedData);
+      setAssessments(processedData);
       setError(null);
     } catch (error) {
       console.error("Error fetching assessments:", error);
