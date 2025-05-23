@@ -1315,12 +1315,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const startDate = req.query.startDate as string | undefined;
       const endDate = req.query.endDate as string | undefined;
-      const includeAssessmentData = req.query.includeAssessmentData === 'true';
       
-      // Choose whether to fetch basic transactions or enhanced ones with assessment data
-      const transactions = includeAssessmentData
-        ? await storage.getPaymentTransactionsWithAssessments(startDate, endDate)
-        : await storage.getPaymentTransactions(startDate, endDate);
+      // Directly fetch payment transactions from the database
+      const { pool } = await import('./db');
+      
+      const query = `
+        SELECT id, stripe_id, customer_email, amount, currency, status, 
+               created, product_type, metadata, is_refunded
+        FROM payment_transactions
+        ORDER BY created DESC
+      `;
+      
+      const result = await pool.query(query);
+      const transactions = result.rows.map((row: any) => ({
+        id: row.id,
+        stripeId: row.stripe_id,
+        customerEmail: row.customer_email,
+        amount: row.amount,
+        currency: row.currency,
+        status: row.status,
+        created: row.created,
+        productType: row.product_type,
+        metadata: row.metadata,
+        isRefunded: row.is_refunded
+      }));
+      
+      console.log(`Retrieved ${transactions.length} payment transactions from database`);
       
       return res.status(200).json(transactions);
     } catch (error) {
