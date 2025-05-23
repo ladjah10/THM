@@ -154,7 +154,7 @@ export default function PaymentTransactions() {
   };
 
   // If not authenticated, show login form
-  if (!isAdminAuthenticated()) {
+  if (!isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <Card className="w-full max-w-md">
@@ -218,7 +218,8 @@ export default function PaymentTransactions() {
               <Button
                 variant="outline"
                 onClick={() => {
-                  setAdminAuth(false);
+                  localStorage.removeItem('admin_authenticated');
+                  setIsAuthenticated(false);
                   setUsername("");
                   setPassword("");
                   

@@ -19,7 +19,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Loader2, AlertCircle } from "lucide-react";
 import { format } from "date-fns";
 import { Link } from "wouter";
-import { useAdminAuth } from "@/hooks/useAdminAuth";
+// No need for the shared auth hook
 
 interface AssessmentResultData {
   id: string;
@@ -49,7 +49,14 @@ export default function SimpleAssessmentResults() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
-  const { isAdminAuthenticated, setAdminAuth, validateAdminCredentials } = useAdminAuth();
+  // Admin constants
+  const ADMIN_USERNAME = "admin";
+  const ADMIN_PASSWORD = "100marriage";
+  
+  // Track authentication directly with local state
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return localStorage.getItem('admin_authenticated') === 'true';
+  });
   
   // Authentication states
   const [username, setUsername] = useState("");
@@ -57,19 +64,22 @@ export default function SimpleAssessmentResults() {
 
   useEffect(() => {
     // Only fetch assessments if admin is authenticated
-    if (isAdminAuthenticated()) {
+    if (isAuthenticated) {
       fetchAssessments();
     } else {
       setLoading(false);
     }
-  }, []);
+  }, [isAuthenticated]);
 
   // Handle login
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (validateAdminCredentials(username, password)) {
-      setAdminAuth(true);
+    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+      // Set authentication in localStorage
+      localStorage.setItem('admin_authenticated', 'true');
+      setIsAuthenticated(true);
+      
       toast({
         title: "Logged in successfully",
         description: "You now have access to assessment data",
