@@ -529,7 +529,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const startDate = req.query.startDate as string | undefined;
       const endDate = req.query.endDate as string | undefined;
       const requirePayment = req.query.requirePayment === 'true';
-      const completedOnly = req.query.completedOnly === 'true';
       
       let assessments;
       
@@ -564,13 +563,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           
           // If requirePayment is true, check for transactionId
           if (requirePayment) {
-            meetsDateCriteria = meetsDateCriteria && !!assessment.transactionId;
-          }
-          
-          // If completedOnly is true, also check for transactionId
-          // This ensures only completed assessments are shown
-          if (completedOnly) {
-            meetsDateCriteria = meetsDateCriteria && !!assessment.transactionId;
+            return meetsDateCriteria && !!assessment.transactionId;
           }
           
           return meetsDateCriteria;
@@ -580,12 +573,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       } else {
         // Get all assessments
         assessments = await storage.getAllAssessments();
-        
-        // If completedOnly is true, filter for assessments with transaction IDs
-        if (completedOnly) {
-          assessments = assessments.filter(assessment => !!assessment.transactionId);
-          console.log(`Filtered to ${assessments.length} completed assessments with transaction IDs`);
-        }
         
         // If requirePayment is true, filter for assessments with transaction IDs
         if (requirePayment) {
