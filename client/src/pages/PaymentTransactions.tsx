@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useLocation } from "wouter";
-import { useAdminAuth } from "@/hooks/useAdminAuth";
+// No need for the auth hook anymore
 
 // Define PaymentTransaction interface
 interface PaymentTransaction {
@@ -40,7 +40,14 @@ function formatDate(dateString: string): string {
 export default function PaymentTransactions() {
   const { toast } = useToast();
   const [, navigate] = useLocation();
-  const { isAdminAuthenticated, setAdminAuth, validateAdminCredentials } = useAdminAuth();
+  // Add admin constants
+  const ADMIN_USERNAME = "admin";
+  const ADMIN_PASSWORD = "100marriage";
+  
+  // Track authentication directly with local state
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return localStorage.getItem('admin_authenticated') === 'true';
+  });
   
   // Authentication states
   const [username, setUsername] = useState("");
@@ -51,17 +58,19 @@ export default function PaymentTransactions() {
   
   useEffect(() => {
     // Load transactions if already authenticated
-    if (isAdminAuthenticated()) {
+    if (isAuthenticated) {
       loadTransactions();
     }
-  }, []);
+  }, [isAuthenticated]);
 
   // Handle login form submission
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (validateAdminCredentials(username, password)) {
-      setAdminAuth(true);
+    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+      // Store authentication state in localStorage
+      localStorage.setItem('admin_authenticated', 'true');
+      setIsAuthenticated(true);
       
       toast({
         title: "Authentication successful",

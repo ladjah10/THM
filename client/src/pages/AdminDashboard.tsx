@@ -292,12 +292,16 @@ function RecoverySection() {
   );
 }
 
+// Admin constants
+const ADMIN_USERNAME = "admin";
+const ADMIN_PASSWORD = "100marriage";
+
 export default function AdminDashboard() {
-  // Using our shared admin authentication hook
-  const { isAdminAuthenticated, setAdminAuth, validateAdminCredentials } = useAdminAuth();
-  
-  // For backward compatibility with existing code
-  const isAuthenticated = isAdminAuthenticated();
+  // Check localStorage for authentication status on initial load
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    const savedAuth = localStorage.getItem('admin_authenticated');
+    return savedAuth === 'true';
+  });
   
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -860,13 +864,14 @@ export default function AdminDashboard() {
     analytics.profileDistribution = profileCounts;
   }
   
-  // Handle login using shared authentication hook
+  // Handle login
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (validateAdminCredentials(username, password)) {
-      // Set authentication state using our shared hook
-      setAdminAuth(true);
+    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+      // Store authentication state in localStorage
+      localStorage.setItem('admin_authenticated', 'true');
+      setIsAuthenticated(true);
       
       toast({
         title: "Login Successful",
@@ -882,10 +887,11 @@ export default function AdminDashboard() {
     }
   };
   
-  // Handle logout using shared authentication hook
+  // Handle logout
   const handleLogout = () => {
-    // Remove authentication state using our shared hook
-    setAdminAuth(false);
+    // Remove authentication state from localStorage
+    localStorage.removeItem('admin_authenticated');
+    setIsAuthenticated(false);
     
     toast({
       title: "Logged Out",
@@ -1423,7 +1429,7 @@ export default function AdminDashboard() {
     document.body.removeChild(link);
   };
 
-  // Login form using our shared authentication hook
+  // Login form
   if (!isAuthenticated) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
