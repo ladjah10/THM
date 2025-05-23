@@ -359,9 +359,10 @@ export default function AdminDashboard() {
         params.append('promoCodeUsed', 'true');
       }
       
-      if (assessmentDateRange.completedOnly) {
-        params.append('completedOnly', 'true');
-      }
+      // Remove the completedOnly filter to show all assessments
+      // if (assessmentDateRange.completedOnly) {
+      //   params.append('completedOnly', 'true');
+      // }
       
       const queryString = params.toString();
       const url = queryString ? `/api/admin/assessments?${queryString}` : '/api/admin/assessments';
