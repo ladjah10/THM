@@ -741,11 +741,11 @@ export default function AdminDashboard() {
   });
   
   const { data: paymentTransactions, isLoading: isLoadingPaymentTransactions } = useQuery<EnhancedTransaction[]>({
-    queryKey: ['/api/admin/analytics/payment-transactions', transactionDateRange],
+    queryKey: ['/api/admin/payment-transactions', transactionDateRange, Date.now()], // Add timestamp to force refresh
     queryFn: async () => {
       if (!isAuthenticated) return [];
       
-      let url = "/api/admin/analytics/payment-transactions";
+      let url = "/api/admin/payment-transactions"; // Fixed URL to match server endpoint
       const params = new URLSearchParams();
       
       if (transactionDateRange.start) {
