@@ -4,6 +4,7 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { RefreshCw, FileDown, Search, Loader2, Mail, Info, Download, AlertCircle } from "lucide-react";
 import PaymentsLink from "@/components/PaymentsLink";
 import { useToast } from "@/hooks/use-toast";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
@@ -71,9 +72,7 @@ interface CustomerRecoveryData {
   product_type: string;
 }
 
-// Simple admin authentication
-const ADMIN_USERNAME = "admin";
-const ADMIN_PASSWORD = "100marriage";
+// Using shared admin authentication hook instead of local authentication
 
 // Calculate age from birthday string (YYYY-MM-DD format)
 function calculateAge(birthday: string): number {
