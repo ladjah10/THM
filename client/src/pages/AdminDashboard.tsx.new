@@ -1,0 +1,1803 @@
+import { useState, useEffect, useMemo } from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { RefreshCw, FileDown, Search, Loader2, Mail, Info, Download, AlertCircle } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import type { AssessmentScores, UserProfile, DemographicData, AssessmentResult, SectionScore } from "@/types/assessment";
+import type { AnalyticsSummary, PageView, VisitorSession } from "@shared/schema";
+import type { ReferralData } from "@/types/referrals";
+import SimpleAdminPayments from "./SimpleAdminPayments";
+
+// Define PaymentTransaction interface
+interface PaymentTransaction {
+  id: string;
+  stripeId: string;
+  customerEmail?: string;
+  amount: number;
+  currency: string;
+  status: string;
+  created: string;
+  productType: string;
+  assessmentType?: string;
+  productName?: string;
+  metadata: string | Record<string, any>;
+  isRefunded: boolean;
+  refundAmount?: number;
+  refundReason?: string;
+  promoCode?: string;
+  customerId?: string;
+}
+
+// Define enhanced transaction type with assessment data
+interface EnhancedTransaction extends PaymentTransaction {
+  assessmentData?: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    gender: string;
+    marriageStatus: string;
+    desireChildren: string;
+    ethnicity: string;
+    city: string;
+    state: string;
+    zipCode: string;
+  };
+}
+
+// Define type for customer recovery data
+interface CustomerRecoveryData {
+  payment_id: string;
+  payment_date: string;
+  amount: number;
+  currency: string;
+  description: string;
+  email: string;
+  name: string;
+  phone: string;
+  address?: any;
+  metadata: any;
+  product_type: string;
+}
+
+// Simple admin authentication
+const ADMIN_USERNAME = "admin";
+const ADMIN_PASSWORD = "100marriage";
+
+// Calculate age from birthday string (YYYY-MM-DD format)
+function calculateAge(birthday: string): number {
+  if (!birthday) return 0;
+  
+  try {
+    const birthDate = new Date(birthday);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    
+    return age;
+  } catch (e) {
+    return 0;
+  }
+}
+
+// Calculate match compatibility score (higher is better)
+function calculateMatchScore(candidate: AssessmentResult): number {
+  const scoreWeight = 0.5;
+  const ageWeight = 0.3;
+  const locationWeight = 0.2;
+  
+  // Score ranking - higher scores are better for traditional match
+  const scoreRank = candidate.scores.overallPercentage;
+  
+  // Age ranking - optimal age range is 25-35
+  const age = calculateAge(candidate.demographics.birthday);
+  let ageRank = 0;
+  if (age >= 25 && age <= 35) {
+    ageRank = 100; // Optimal age range
+  } else if (age >= 20 && age < 25) {
+    ageRank = 80; // Still good age range
+  } else if (age > 35 && age <= 45) {
+    ageRank = 70; // Acceptable age range
+  } else if (age > 45 && age <= 55) {
+    ageRank = 50; // Less optimal age range
+  } else {
+    ageRank = 30; // Least optimal age range
+  }
+  
+  // Location score - placeholder logic (would use more sophisticated geo matching in production)
+  const locationRank = 75; // Default middle value for now
+  
+  // Combine weights for total score
+  const totalScore = (scoreRank * scoreWeight) + (ageRank * ageWeight) + (locationRank * locationWeight);
+  
+  return Math.round(totalScore);
+}
+
+function RecoverySection() {
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+  const [recoveryData, setRecoveryData] = useState<CustomerRecoveryData[]>([]);
+  const [saveInProgress, setSaveInProgress] = useState(false);
+  
+  const handleFetchRecoveryData = async () => {
+    setIsLoading(true);
+    
+    try {
+      const response = await apiRequest("GET", "/api/admin/customer-recovery");
+      
+      if (!response.ok) {
+        throw new Error("Failed to fetch customer recovery data");
+      }
+      
+      const data = await response.json();
+      setRecoveryData(data);
+      
+      toast({
+        title: "Data Retrieved",
+        description: `Found ${data.length} customer records from Stripe`,
+        variant: "default",
+      });
+    } catch (error) {
+      console.error("Error fetching recovery data:", error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch customer recovery data",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  const handleSaveRecoveryData = async () => {
+    setSaveInProgress(true);
+    
+    try {
+      const response = await apiRequest("POST", "/api/admin/customer-recovery", { 
+        data: recoveryData 
+      });
+      
+      if (!response.ok) {
+        throw new Error("Failed to save customer recovery data");
+      }
+      
+      toast({
+        title: "Data Saved",
+        description: `Successfully saved ${recoveryData.length} customer records`,
+        variant: "default",
+      });
+    } catch (error) {
+      console.error("Error saving recovery data:", error);
+      toast({
+        title: "Error",
+        description: "Failed to save customer recovery data",
+        variant: "destructive",
+      });
+    } finally {
+      setSaveInProgress(false);
+    }
+  };
+  
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
+        <div>
+          <p className="text-sm text-gray-500 mb-2">
+            This tool helps recover customer information for those who paid but data was not properly stored
+            in the database during the May 6 system outage.
+          </p>
+        </div>
+        
+        <div className="flex gap-2">
+          <Button 
+            variant="outline" 
+            disabled={isLoading}
+            onClick={handleFetchRecoveryData}
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Fetching...
+              </>
+            ) : (
+              <>
+                <Search className="h-4 w-4 mr-2" />
+                Fetch from Stripe
+              </>
+            )}
+          </Button>
+          
+          <Button 
+            variant="default" 
+            disabled={recoveryData.length === 0 || saveInProgress}
+            onClick={handleSaveRecoveryData}
+          >
+            {saveInProgress ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              <>
+                <Download className="h-4 w-4 mr-2" />
+                Save to Database
+              </>
+            )}
+          </Button>
+        </div>
+      </div>
+      
+      {recoveryData.length > 0 ? (
+        <div className="rounded-md border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Date</TableHead>
+                <TableHead>Customer</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Phone</TableHead>
+                <TableHead>Product</TableHead>
+                <TableHead>Amount</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {recoveryData.map((customer, index) => (
+                <TableRow key={index}>
+                  <TableCell>{new Date(customer.payment_date).toLocaleDateString()}</TableCell>
+                  <TableCell>{customer.name || 'Unknown'}</TableCell>
+                  <TableCell>{customer.email}</TableCell>
+                  <TableCell>{customer.phone || 'N/A'}</TableCell>
+                  <TableCell>
+                    <Badge variant="outline">
+                      {customer.product_type === 'individual'
+                        ? 'Individual Assessment'
+                        : customer.product_type === 'couple'
+                        ? 'Couple Assessment'
+                        : customer.description || 'Unknown'}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>${customer.amount.toFixed(2)}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center p-8 text-center text-gray-500 border rounded-md">
+          <Search className="h-12 w-12 mb-2 text-gray-400" />
+          <h3 className="text-lg font-medium">No customer data found</h3>
+          <p className="max-w-md">
+            Click "Fetch from Stripe" to retrieve customer information for payments made during May 6, 2025.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Format date for display
+function formatDate(dateString: string): string {
+  try {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  } catch (e) {
+    return 'Invalid date';
+  }
+}
+
+export default function AdminDashboard() {
+  const { toast } = useToast();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [referralSearchTerm, setReferralSearchTerm] = useState("");
+  const [analyticsRange, setAnalyticsRange] = useState<string>("day");
+  const [isDownloadingData, setIsDownloadingData] = useState(false);
+  const [selectedAssessment, setSelectedAssessment] = useState<AssessmentResult | null>(null);
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [isLoadingHistorical, setIsLoadingHistorical] = useState(false);
+  const [thmbPoolCandidates, setThmbPoolCandidates] = useState<AssessmentResult[]>([]);
+  const [emailSearchTerm, setEmailSearchTerm] = useState("");
+  const [poolCandidateGender, setPoolCandidateGender] = useState<string>("all");
+  const [reminderDaysAgo, setReminderDaysAgo] = useState<number>(3);
+  const [isSendingReminders, setIsSendingReminders] = useState(false);
+  const [isSyncingPayments, setIsSyncingPayments] = useState(false);
+  const [transactionDateRange, setTransactionDateRange] = useState({
+    start: '',
+    end: ''
+  });
+  
+  // Initialize transactions from localStorage if available
+  const [cachedTransactions, setCachedTransactions] = useState<EnhancedTransaction[]>(() => {
+    try {
+      const saved = localStorage.getItem('admin_payment_transactions');
+      return saved ? JSON.parse(saved) : [];
+    } catch (err) {
+      console.error("Error loading cached transactions:", err);
+      return [];
+    }
+  });
+  
+  // Fetch payment transactions
+  const { data: paymentTransactions, isLoading: isLoadingPaymentTransactions } = useQuery<EnhancedTransaction[]>({
+    queryKey: ['/api/admin/payment-transactions', transactionDateRange, Date.now()],
+    queryFn: async () => {
+      if (!isAuthenticated) return [];
+      
+      let url = "/api/admin/payment-transactions";
+      const params = new URLSearchParams();
+      
+      if (transactionDateRange.start) {
+        params.append('startDate', transactionDateRange.start);
+      }
+      
+      if (transactionDateRange.end) {
+        params.append('endDate', transactionDateRange.end);
+      }
+      
+      // Request assessment data to be included
+      params.append('includeAssessmentData', 'true');
+      
+      const queryString = params.toString();
+      if (queryString) {
+        url = `${url}?${queryString}`;
+      }
+      
+      const response = await apiRequest("GET", url);
+      
+      if (!response.ok) {
+        throw new Error("Failed to fetch payment transactions");
+      }
+      
+      const data = await response.json();
+      
+      // Save to localStorage when new data arrives
+      try {
+        localStorage.setItem('admin_payment_transactions', JSON.stringify(data));
+        setCachedTransactions(data);
+      } catch (err) {
+        console.error("Error caching transactions:", err);
+      }
+      
+      return data;
+    },
+    enabled: isAuthenticated,
+    initialData: cachedTransactions.length > 0 ? cachedTransactions : undefined,
+  });
+  
+  // Authentication mutation
+  const loginMutation = useMutation({
+    mutationFn: async ({ username, password }: { username: string, password: string }) => {
+      if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+        return { success: true };
+      }
+      throw new Error("Invalid credentials");
+    },
+    onSuccess: () => {
+      setIsAuthenticated(true);
+      toast({
+        title: "Authentication successful",
+        description: "Welcome to the admin dashboard",
+        variant: "default",
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Authentication failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Analytics data query
+  const { data: analyticsSummary, isLoading: isLoadingAnalytics } = useQuery<AnalyticsSummary>({
+    queryKey: ['/api/admin/analytics/summary', analyticsRange],
+    queryFn: async () => {
+      if (!isAuthenticated) return { pageViews: 0, uniqueVisitors: 0, averageTimeOnSite: 0, conversionRate: 0, completionRate: 0, formAbandons: 0, trafficSources: [], mostVisitedPages: [], dailyStats: [], chartData: [] };
+      
+      const url = `/api/admin/analytics/summary?range=${analyticsRange}`;
+      const response = await apiRequest("GET", url);
+      
+      if (!response.ok) {
+        throw new Error("Failed to fetch analytics summary");
+      }
+      
+      return await response.json();
+    },
+    enabled: isAuthenticated,
+  });
+
+  // Get visitors query
+  const { data: visitors, isLoading: isLoadingVisitors } = useQuery<VisitorSession[]>({
+    queryKey: ['/api/admin/analytics/visitors', analyticsRange],
+    queryFn: async () => {
+      if (!isAuthenticated) return [];
+      
+      const url = `/api/admin/analytics/visitors?range=${analyticsRange}`;
+      const response = await apiRequest("GET", url);
+      
+      if (!response.ok) {
+        throw new Error("Failed to fetch visitor sessions");
+      }
+      
+      return await response.json();
+    },
+    enabled: isAuthenticated,
+  });
+  
+  // Get page views query
+  const { data: pageViews, isLoading: isLoadingPageViews } = useQuery<PageView[]>({
+    queryKey: ['/api/admin/analytics/pageviews', analyticsRange],
+    queryFn: async () => {
+      if (!isAuthenticated) return [];
+      
+      const url = `/api/admin/analytics/pageviews?range=${analyticsRange}`;
+      const response = await apiRequest("GET", url);
+      
+      if (!response.ok) {
+        throw new Error("Failed to fetch page views");
+      }
+      
+      return await response.json();
+    },
+    enabled: isAuthenticated,
+  });
+  
+  // Assessment results query
+  const { data: assessments, isLoading: isLoadingAssessments } = useQuery<AssessmentResult[]>({
+    queryKey: ['/api/admin/assessment-results'],
+    queryFn: async () => {
+      if (!isAuthenticated) return [];
+      
+      const response = await apiRequest("GET", "/api/admin/assessment-results");
+      
+      if (!response.ok) {
+        throw new Error("Failed to fetch assessment results");
+      }
+      
+      return await response.json();
+    },
+    enabled: isAuthenticated,
+  });
+  
+  // Historical data query
+  const { data: historicalData, refetch: refetchHistorical } = useQuery<AssessmentResult[]>({
+    queryKey: ['/api/admin/historical-assessments'],
+    queryFn: async () => {
+      if (!isAuthenticated) return [];
+      
+      setIsLoadingHistorical(true);
+      
+      try {
+        const response = await apiRequest("GET", "/api/admin/historical-assessments");
+        
+        if (!response.ok) {
+          throw new Error("Failed to fetch historical assessment data");
+        }
+        
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("Error fetching historical data:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load historical assessment data",
+          variant: "destructive",
+        });
+        return [];
+      } finally {
+        setIsLoadingHistorical(false);
+      }
+    },
+    enabled: isAuthenticated,
+  });
+  
+  // Referrals query
+  const { data: referrals, isLoading: isLoadingReferrals } = useQuery<ReferralData[]>({
+    queryKey: ['/api/admin/referrals'],
+    queryFn: async () => {
+      if (!isAuthenticated) return [];
+      
+      const response = await apiRequest("GET", "/api/admin/referrals");
+      
+      if (!response.ok) {
+        throw new Error("Failed to fetch referrals");
+      }
+      
+      return await response.json();
+    },
+    enabled: isAuthenticated,
+  });
+  
+  // THM Pool applicants/candidates query
+  const { data: poolCandidates, isLoading: isLoadingPoolCandidates } = useQuery<AssessmentResult[]>({
+    queryKey: ['/api/admin/thm-pool-candidates'],
+    queryFn: async () => {
+      if (!isAuthenticated) return [];
+      
+      const response = await apiRequest("GET", "/api/admin/thm-pool-candidates");
+      
+      if (!response.ok) {
+        throw new Error("Failed to fetch THM pool candidates");
+      }
+      
+      const data = await response.json();
+      setThmbPoolCandidates(data);
+      return data;
+    },
+    enabled: isAuthenticated,
+  });
+  
+  // Handle login form submission
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    loginMutation.mutate({ username, password });
+  };
+  
+  // Handle download historical data
+  const handleDownloadHistoricalData = async () => {
+    if (!historicalData || historicalData.length === 0) {
+      toast({
+        title: "No Data Available",
+        description: "There is no historical assessment data to download",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setIsDownloadingData(true);
+    
+    try {
+      // Convert data to CSV format
+      const headers = [
+        "Email", "First Name", "Last Name", "Gender", "Age", "Marriage Status",
+        "Ethnicity", "Location", "Overall Score", "Profile Type", "Timestamp"
+      ];
+      
+      const rows = historicalData.map(assessment => [
+        assessment.email,
+        assessment.firstName,
+        assessment.lastName,
+        assessment.demographics.gender,
+        calculateAge(assessment.demographics.birthday),
+        assessment.demographics.marriageStatus,
+        assessment.demographics.ethnicity,
+        `${assessment.demographics.city || ''}, ${assessment.demographics.state || ''}`,
+        assessment.scores.overallPercentage.toFixed(1) + '%',
+        assessment.profile.name,
+        new Date(assessment.timestamp).toLocaleString()
+      ]);
+      
+      const csvContent = [
+        headers.join(','),
+        ...rows.map(row => row.join(','))
+      ].join('\n');
+      
+      // Create download link
+      const blob = new Blob([csvContent], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `100marriage-historical-data-${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      toast({
+        title: "Download Complete",
+        description: `Successfully downloaded data for ${historicalData.length} assessments`,
+        variant: "default",
+      });
+    } catch (error) {
+      console.error("Error downloading data:", error);
+      toast({
+        title: "Download Failed",
+        description: "An error occurred while downloading the data",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDownloadingData(false);
+    }
+  };
+  
+  const handleViewDetails = (assessment: AssessmentResult) => {
+    setSelectedAssessment(assessment);
+    setDetailModalOpen(true);
+  };
+  
+  const handleCloseDetails = () => {
+    setDetailModalOpen(false);
+    setSelectedAssessment(null);
+  };
+  
+  const handleResendResults = async (assessment: AssessmentResult) => {
+    try {
+      const response = await apiRequest("POST", "/api/admin/resend-results", {
+        email: assessment.email,
+        assessmentId: assessment.id
+      });
+      
+      if (!response.ok) {
+        throw new Error("Failed to resend assessment results");
+      }
+      
+      toast({
+        title: "Results Sent",
+        description: `Assessment results have been resent to ${assessment.email}`,
+        variant: "default",
+      });
+    } catch (error) {
+      console.error("Error resending results:", error);
+      toast({
+        title: "Error",
+        description: "Failed to resend assessment results",
+        variant: "destructive",
+      });
+    }
+  };
+  
+  const handleEmailSearch = async () => {
+    if (!emailSearchTerm) return;
+    
+    try {
+      const response = await apiRequest("GET", `/api/admin/search-assessment?email=${encodeURIComponent(emailSearchTerm)}`);
+      
+      if (!response.ok) {
+        throw new Error("Failed to search for assessment");
+      }
+      
+      const result = await response.json();
+      
+      if (result.found) {
+        // Found the assessment by email - show details
+        setSelectedAssessment(result.assessment);
+        setDetailModalOpen(true);
+      } else {
+        toast({
+          title: "No Assessment Found",
+          description: `No assessment found for email: ${emailSearchTerm}`,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error searching for assessment:", error);
+      toast({
+        title: "Search Error",
+        description: "Failed to search for assessment",
+        variant: "destructive",
+      });
+    }
+  };
+  
+  const handleGenerateCoupleReport = async (assessment: AssessmentResult) => {
+    try {
+      toast({
+        title: "Generating Report",
+        description: "Please wait while we generate the couple assessment report",
+        variant: "default",
+      });
+      
+      const response = await apiRequest("POST", "/api/admin/generate-couple-report", {
+        assessmentId: assessment.id
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to generate couple report");
+      }
+      
+      const result = await response.json();
+      
+      toast({
+        title: "Report Generated",
+        description: result.message || "Couple assessment report has been generated and sent",
+        variant: "default",
+      });
+    } catch (error) {
+      console.error("Error generating couple report:", error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to generate couple report",
+        variant: "destructive",
+      });
+    }
+  };
+  
+  const sendAssessmentReminders = async () => {
+    setIsSendingReminders(true);
+    
+    try {
+      const response = await apiRequest("POST", "/api/admin/send-completion-reminders", {
+        daysAgo: reminderDaysAgo
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to send reminders");
+      }
+      
+      const result = await response.json();
+      
+      toast({
+        title: "Reminders Sent",
+        description: `Sent ${result.count} assessment completion reminders`,
+        variant: "default",
+      });
+    } catch (error) {
+      console.error("Error sending reminders:", error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to send assessment reminders",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSendingReminders(false);
+    }
+  };
+  
+  const syncStripePayments = async () => {
+    setIsSyncingPayments(true);
+    
+    try {
+      const response = await apiRequest("POST", "/api/admin/sync-stripe-payments");
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to sync payments");
+      }
+      
+      const result = await response.json();
+      
+      // Refresh payment transactions data
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/payment-transactions'] });
+      
+      toast({
+        title: "Payments Synced",
+        description: `Synced ${result.count} payments from Stripe`,
+        variant: "default",
+      });
+    } catch (error) {
+      console.error("Error syncing payments:", error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to sync payments from Stripe",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSyncingPayments(false);
+    }
+  };
+  
+  // Filter assessments by search term
+  const filteredAssessments = assessments?.filter(assessment => {
+    if (!searchTerm) return true;
+    
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      assessment.name.toLowerCase().includes(searchLower) ||
+      assessment.email.toLowerCase().includes(searchLower) ||
+      assessment.demographics.gender.toLowerCase().includes(searchLower) ||
+      assessment.profile.name.toLowerCase().includes(searchLower)
+    );
+  });
+  
+  // Filter referrals by search term
+  const filteredReferrals = referrals?.filter(referral => {
+    if (!referralSearchTerm) return true;
+    
+    const searchLower = referralSearchTerm.toLowerCase();
+    return (
+      referral.referrerName.toLowerCase().includes(searchLower) ||
+      referral.referrerEmail.toLowerCase().includes(searchLower) ||
+      referral.invitedName.toLowerCase().includes(searchLower) ||
+      referral.invitedEmail.toLowerCase().includes(searchLower) ||
+      (referral.promoCode && referral.promoCode.toLowerCase().includes(searchLower))
+    );
+  });
+  
+  // Filter THM pool candidates by gender
+  const filteredPoolCandidates = useMemo(() => {
+    if (!poolCandidates) return [];
+    
+    return poolCandidates.filter(candidate => {
+      if (poolCandidateGender === 'all') return true;
+      return candidate.demographics.gender.toLowerCase() === poolCandidateGender.toLowerCase();
+    }).sort((a, b) => {
+      // Sort by overall score descending
+      return b.scores.overallPercentage - a.scores.overallPercentage;
+    });
+  }, [poolCandidates, poolCandidateGender]);
+  
+  // If not authenticated, show login form
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow">
+          <div className="text-center">
+            <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+            <p className="mt-2 text-gray-600">Please login to continue</p>
+          </div>
+          
+          <form onSubmit={handleLogin} className="mt-8 space-y-6">
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                  Username
+                </label>
+                <input
+                  id="username"
+                  name="username"
+                  type="text"
+                  required
+                  className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </div>
+              
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                  Password
+                </label>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  required
+                  className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+            </div>
+            
+            <div>
+              <button
+                type="submit"
+                disabled={loginMutation.isPending}
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+              >
+                {loginMutation.isPending ? (
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                ) : (
+                  "Login"
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-white shadow">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex justify-between items-center">
+            <h1 className="text-2xl font-bold text-gray-900">100 Marriage Assessment Admin</h1>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsAuthenticated(false);
+                setUsername("");
+                setPassword("");
+                
+                toast({
+                  title: "Logged Out",
+                  description: "You have been logged out of the admin dashboard",
+                  variant: "default",
+                });
+              }}
+            >
+              Log Out
+            </Button>
+          </div>
+        </div>
+      </header>
+
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Tabs defaultValue="analytics" className="space-y-4">
+          <TabsList>
+            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+            <TabsTrigger value="assessments">Assessment Results</TabsTrigger>
+            <TabsTrigger value="historical">Historical Data (Since May 6)</TabsTrigger>
+            <TabsTrigger value="data-recovery">Customer Data Recovery</TabsTrigger>
+            <TabsTrigger value="referrals">Invitations & Referrals</TabsTrigger>
+            <TabsTrigger value="payments">Payment Transactions</TabsTrigger>
+            <TabsTrigger value="matching">THM Pool Matching</TabsTrigger>
+          </TabsList>
+          
+          {/* Customer Data Recovery Tab */}
+          <TabsContent value="data-recovery" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Customer Data Recovery</CardTitle>
+                <CardDescription>
+                  Recover customer information directly from Stripe for customers who made payments since May 6, 2025
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <RecoverySection />
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="analytics" className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium text-gray-500">Visitors</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold">
+                    {isLoadingAnalytics ? (
+                      <div className="h-8 w-20 rounded bg-gray-200 animate-pulse" />
+                    ) : (
+                      analyticsSummary?.uniqueVisitors || 0
+                    )}
+                  </div>
+                  <div className="text-sm text-gray-500">Unique visitors</div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium text-gray-500">Page Views</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold">
+                    {isLoadingAnalytics ? (
+                      <div className="h-8 w-20 rounded bg-gray-200 animate-pulse" />
+                    ) : (
+                      analyticsSummary?.pageViews || 0
+                    )}
+                  </div>
+                  <div className="text-sm text-gray-500">Total page views</div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium text-gray-500">Conversion Rate</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold">
+                    {isLoadingAnalytics ? (
+                      <div className="h-8 w-20 rounded bg-gray-200 animate-pulse" />
+                    ) : (
+                      `${(analyticsSummary?.conversionRate || 0).toFixed(1)}%`
+                    )}
+                  </div>
+                  <div className="text-sm text-gray-500">Visit to assessment start</div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium text-gray-500">Completion Rate</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold">
+                    {isLoadingAnalytics ? (
+                      <div className="h-8 w-20 rounded bg-gray-200 animate-pulse" />
+                    ) : (
+                      `${(analyticsSummary?.completionRate || 0).toFixed(1)}%`
+                    )}
+                  </div>
+                  <div className="text-sm text-gray-500">Start to completion</div>
+                </CardContent>
+              </Card>
+            </div>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Traffic Over Time</CardTitle>
+                  <CardDescription>
+                    Visitors and page views for the selected period
+                  </CardDescription>
+                  <div className="flex gap-2 mt-2">
+                    <Select 
+                      value={analyticsRange}
+                      onValueChange={setAnalyticsRange}
+                    >
+                      <SelectTrigger className="w-32">
+                        <SelectValue placeholder="Select range" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="day">Last 24 Hours</SelectItem>
+                        <SelectItem value="week">Last 7 Days</SelectItem>
+                        <SelectItem value="month">Last 30 Days</SelectItem>
+                        <SelectItem value="all">All Time</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        queryClient.invalidateQueries({ queryKey: ['/api/admin/analytics/summary'] });
+                        queryClient.invalidateQueries({ queryKey: ['/api/admin/analytics/visitors'] });
+                        queryClient.invalidateQueries({ queryKey: ['/api/admin/analytics/pageviews'] });
+                      }}
+                    >
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                      Refresh
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent className="pl-2">
+                  {isLoadingAnalytics ? (
+                    <div className="h-64 w-full rounded bg-gray-200 animate-pulse" />
+                  ) : (
+                    <ResponsiveContainer width="100%" height={300}>
+                      <BarChart data={analyticsSummary?.chartData || []}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis 
+                          dataKey="date" 
+                          tickFormatter={(date) => {
+                            const d = new Date(date);
+                            return `${d.getMonth() + 1}/${d.getDate()}`;
+                          }}
+                        />
+                        <YAxis />
+                        <RechartsTooltip 
+                          labelFormatter={(label) => {
+                            try {
+                              return new Date(label).toLocaleDateString();
+                            } catch (e) {
+                              return label;
+                            }
+                          }}
+                          formatter={(value) => [value, 'Count']}
+                        />
+                        <Bar dataKey="visitors" name="Visitors" fill="#8884d8" />
+                        <Bar dataKey="pageViews" name="Page Views" fill="#82ca9d" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  )}
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle>Top Pages</CardTitle>
+                  <CardDescription>Most viewed pages in the selected period</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {isLoadingAnalytics ? (
+                    <div className="space-y-2">
+                      {Array(5).fill(0).map((_, i) => (
+                        <div key={i} className="h-8 rounded bg-gray-200 animate-pulse" />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {analyticsSummary?.mostVisitedPages && analyticsSummary.mostVisitedPages.length > 0 ? (
+                        analyticsSummary.mostVisitedPages.map((page, index) => (
+                          <div key={index} className="flex items-center justify-between">
+                            <div className="flex items-center space-x-2">
+                              <span className="text-sm font-medium">{index + 1}.</span>
+                              <span className="font-mono text-sm truncate max-w-[300px]">
+                                {page.path === '/' ? '/home' : page.path}
+                              </span>
+                            </div>
+                            <div className="flex items-center">
+                              <span className="text-sm font-medium">{page.count}</span>
+                              <span className="text-xs text-gray-500 ml-1">views</span>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-center py-4 text-gray-500">
+                          No page view data available
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Card className="md:col-span-2">
+                <CardHeader>
+                  <CardTitle>Recent Visitors</CardTitle>
+                  <CardDescription>Latest visitors to the website</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {isLoadingVisitors ? (
+                    <div className="space-y-2">
+                      {Array(5).fill(0).map((_, i) => (
+                        <div key={i} className="h-8 rounded bg-gray-200 animate-pulse" />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="rounded-md border">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Session ID</TableHead>
+                            <TableHead>First Visit</TableHead>
+                            <TableHead>Last Visit</TableHead>
+                            <TableHead>Pages Viewed</TableHead>
+                            <TableHead>Device</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {visitors && visitors.length > 0 ? (
+                            visitors.slice(0, 5).map((visitor) => (
+                              <TableRow key={visitor.id}>
+                                <TableCell className="font-mono text-xs">
+                                  {visitor.id.substring(0, 8)}...
+                                </TableCell>
+                                <TableCell>
+                                  {formatDate(visitor.firstVisitTimestamp)}
+                                </TableCell>
+                                <TableCell>
+                                  {formatDate(visitor.lastActivityTimestamp)}
+                                </TableCell>
+                                <TableCell>{visitor.pageViewCount}</TableCell>
+                                <TableCell>
+                                  {visitor.deviceType || 'Unknown'}
+                                </TableCell>
+                              </TableRow>
+                            ))
+                          ) : (
+                            <TableRow>
+                              <TableCell colSpan={5} className="text-center py-4 text-gray-500">
+                                No visitor data available
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle>Traffic Sources</CardTitle>
+                  <CardDescription>Where visitors are coming from</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {isLoadingAnalytics ? (
+                    <div className="space-y-2">
+                      {Array(4).fill(0).map((_, i) => (
+                        <div key={i} className="h-8 rounded bg-gray-200 animate-pulse" />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {analyticsSummary?.trafficSources && analyticsSummary.trafficSources.length > 0 ? (
+                        analyticsSummary.trafficSources.map((source, index) => (
+                          <div key={index} className="flex items-center justify-between">
+                            <div>
+                              <span className="font-medium">{source.source || 'Direct'}</span>
+                            </div>
+                            <div className="flex items-center">
+                              <span className="font-medium">{source.count}</span>
+                              <span className="text-xs text-gray-500 ml-1">visitors</span>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-center py-4 text-gray-500">
+                          No referrer data available
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="assessments" className="space-y-4">
+            <div className="bg-white p-4 rounded-lg shadow-sm">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+                <div>
+                  <h2 className="text-lg font-medium">Assessment Results</h2>
+                  <p className="text-sm text-gray-500">
+                    View individual assessment results and profiles
+                  </p>
+                </div>
+                
+                <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                  <div className="flex items-center gap-2">
+                    <Input
+                      placeholder="Search by name, email, or profile..."
+                      className="w-full sm:w-60"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              {isLoadingAssessments ? (
+                <div className="flex justify-center py-8">
+                  <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
+                </div>
+              ) : filteredAssessments && filteredAssessments.length > 0 ? (
+                <div className="rounded-md border">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Demographics</TableHead>
+                        <TableHead>Overall Score</TableHead>
+                        <TableHead>Profile Type</TableHead>
+                        <TableHead>Date Completed</TableHead>
+                        <TableHead>Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredAssessments.map((assessment) => (
+                        <TableRow key={assessment.id}>
+                          <TableCell>{assessment.name}</TableCell>
+                          <TableCell>{assessment.email}</TableCell>
+                          <TableCell>
+                            <div className="flex flex-col">
+                              <span>{assessment.demographics.gender}, {calculateAge(assessment.demographics.birthday)}</span>
+                              <span className="text-xs text-gray-500">{assessment.demographics.marriageStatus}</span>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant="outline">
+                              {assessment.scores.overallPercentage.toFixed(1)}%
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            {assessment.profile.name}
+                          </TableCell>
+                          <TableCell>
+                            {formatDate(assessment.timestamp)}
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex space-x-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleViewDetails(assessment)}
+                              >
+                                Details
+                              </Button>
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => handleResendResults(assessment)}
+                                    >
+                                      <Mail className="h-4 w-4" />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>Resend results email</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-8 px-4">
+                  <div className="bg-gray-100 rounded-full p-3 mb-4">
+                    <Search className="h-6 w-6 text-gray-400" />
+                  </div>
+                  <h3 className="text-lg font-medium">No assessment results found</h3>
+                  <p className="text-sm text-center text-gray-500 max-w-md mt-1">
+                    {searchTerm 
+                      ? `No results matching "${searchTerm}". Try a different search term.`
+                      : "There are no completed assessments in the database yet."}
+                  </p>
+                </div>
+              )}
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="historical" className="space-y-4">
+            <div className="bg-white p-4 rounded-lg shadow-sm">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+                <div>
+                  <h2 className="text-lg font-medium">Historical Assessment Data</h2>
+                  <p className="text-sm text-gray-500">
+                    View and download historical assessment data since May 6, 2025
+                  </p>
+                </div>
+                
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => refetchHistorical()}
+                    disabled={isLoadingHistorical}
+                  >
+                    {isLoadingHistorical ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Loading...
+                      </>
+                    ) : (
+                      <>
+                        <RefreshCw className="h-4 w-4 mr-2" />
+                        Refresh Data
+                      </>
+                    )}
+                  </Button>
+                  
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={handleDownloadHistoricalData}
+                    disabled={isDownloadingData || !historicalData || historicalData.length === 0}
+                  >
+                    {isDownloadingData ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Downloading...
+                      </>
+                    ) : (
+                      <>
+                        <FileDown className="h-4 w-4 mr-2" />
+                        Download CSV
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+              
+              {isLoadingHistorical ? (
+                <div className="flex justify-center py-8">
+                  <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
+                </div>
+              ) : historicalData && historicalData.length > 0 ? (
+                <div className="rounded-md border">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Demographics</TableHead>
+                        <TableHead>Overall Score</TableHead>
+                        <TableHead>Profile Type</TableHead>
+                        <TableHead>Date Completed</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {historicalData.map((assessment) => (
+                        <TableRow key={assessment.id}>
+                          <TableCell>{assessment.name}</TableCell>
+                          <TableCell>{assessment.email}</TableCell>
+                          <TableCell>
+                            <div className="flex flex-col">
+                              <span>{assessment.demographics.gender}, {calculateAge(assessment.demographics.birthday)}</span>
+                              <span className="text-xs text-gray-500">{assessment.demographics.marriageStatus}</span>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant="outline">
+                              {assessment.scores.overallPercentage.toFixed(1)}%
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            {assessment.profile.name}
+                          </TableCell>
+                          <TableCell>
+                            {formatDate(assessment.timestamp)}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-8 px-4">
+                  <div className="bg-gray-100 rounded-full p-3 mb-4">
+                    <Info className="h-6 w-6 text-gray-400" />
+                  </div>
+                  <h3 className="text-lg font-medium">No historical data found</h3>
+                  <p className="text-sm text-center text-gray-500 max-w-md mt-1">
+                    There is no historical assessment data available for the period since May 6, 2025.
+                  </p>
+                </div>
+              )}
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="referrals" className="space-y-4">
+            <div className="bg-white p-4 rounded-lg shadow-sm">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+                <div>
+                  <h2 className="text-lg font-medium">Invitations & Referrals</h2>
+                  <p className="text-sm text-gray-500">
+                    Track invitations sent and referral conversions
+                  </p>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <Input
+                    placeholder="Search by name, email, or promo code..."
+                    className="w-full sm:w-60"
+                    value={referralSearchTerm}
+                    onChange={(e) => setReferralSearchTerm(e.target.value)}
+                  />
+                </div>
+              </div>
+              
+              {isLoadingReferrals ? (
+                <div className="flex justify-center py-8">
+                  <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
+                </div>
+              ) : filteredReferrals && filteredReferrals.length > 0 ? (
+                <div className="rounded-md border">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Referrer</TableHead>
+                        <TableHead>Invited</TableHead>
+                        <TableHead>Invitation Sent</TableHead>
+                        <TableHead>Promo Code</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Completed</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredReferrals.map((referral) => (
+                        <TableRow key={referral.id}>
+                          <TableCell>
+                            <div className="flex flex-col">
+                              <span>{referral.referrerName}</span>
+                              <span className="text-xs text-gray-500">{referral.referrerEmail}</span>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex flex-col">
+                              <span>{referral.invitedName}</span>
+                              <span className="text-xs text-gray-500">{referral.invitedEmail}</span>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            {formatDate(referral.sentTimestamp)}
+                          </TableCell>
+                          <TableCell>
+                            {referral.promoCode ? (
+                              <Badge variant="outline">{referral.promoCode}</Badge>
+                            ) : (
+                              <span className="text-gray-400">-</span>
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            <Badge 
+                              variant={
+                                referral.status === 'completed' ? 'default' : 
+                                referral.status === 'sent' ? 'outline' : 'secondary'
+                              }
+                            >
+                              {referral.status}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            {referral.completedTimestamp ? (
+                              formatDate(referral.completedTimestamp)
+                            ) : (
+                              <span className="text-gray-400">-</span>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="payments" className="space-y-4">
+            <SimpleAdminPayments />
+          </TabsContent>
+          
+          <TabsContent value="matching" className="space-y-4">
+            <div className="bg-white p-4 rounded-lg shadow-sm">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+                <div>
+                  <h2 className="text-lg font-medium">THM Pool Match Candidates</h2>
+                  <p className="text-sm text-gray-500">
+                    View and match candidates for The Hundred Marriage Pool
+                  </p>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <Select
+                    value={poolCandidateGender}
+                    onValueChange={setPoolCandidateGender}
+                  >
+                    <SelectTrigger className="w-[160px]">
+                      <SelectValue placeholder="Filter by gender" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Candidates</SelectItem>
+                      <SelectItem value="male">Male Candidates</SelectItem>
+                      <SelectItem value="female">Female Candidates</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      queryClient.invalidateQueries({ queryKey: ['/api/admin/thm-pool-candidates'] });
+                    }}
+                  >
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    Refresh
+                  </Button>
+                </div>
+              </div>
+              
+              {isLoadingPoolCandidates ? (
+                <div className="flex justify-center py-8">
+                  <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
+                </div>
+              ) : filteredPoolCandidates && filteredPoolCandidates.length > 0 ? (
+                <div className="rounded-md border">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Demographics</TableHead>
+                        <TableHead>Location</TableHead>
+                        <TableHead>Overall Score</TableHead>
+                        <TableHead>Profile</TableHead>
+                        <TableHead>Match Score</TableHead>
+                        <TableHead>Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredPoolCandidates.map((candidate) => (
+                        <TableRow key={candidate.id}>
+                          <TableCell>
+                            <div className="flex flex-col">
+                              <span>{candidate.name}</span>
+                              <span className="text-xs text-gray-500">{candidate.email}</span>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex flex-col">
+                              <span>{candidate.demographics.gender}, {calculateAge(candidate.demographics.birthday)}</span>
+                              <span className="text-xs text-gray-500">{candidate.demographics.marriageStatus}</span>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            {candidate.demographics.city}, {candidate.demographics.state}
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant="outline">
+                              {candidate.scores.overallPercentage.toFixed(1)}%
+                            </Badge>
+                          </TableCell>
+                          <TableCell>{candidate.profile.name}</TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={
+                                calculateMatchScore(candidate) >= 80 ? "default" :
+                                calculateMatchScore(candidate) >= 60 ? "outline" : "secondary"
+                              }
+                            >
+                              {calculateMatchScore(candidate)}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex space-x-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleViewDetails(candidate)}
+                              >
+                                Details
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-8 px-4">
+                  <div className="bg-gray-100 rounded-full p-3 mb-4">
+                    <Info className="h-6 w-6 text-gray-400" />
+                  </div>
+                  <h3 className="text-lg font-medium">No matching candidates found</h3>
+                  <p className="text-sm text-center text-gray-500 max-w-md mt-1">
+                    {poolCandidateGender !== 'all'
+                      ? `No ${poolCandidateGender} candidates available in the THM Pool.`
+                      : "There are no candidates in the THM Pool yet."}
+                  </p>
+                </div>
+              )}
+            </div>
+          </TabsContent>
+        </Tabs>
+      </main>
+      
+      {/* Assessment details modal */}
+      <Dialog open={detailModalOpen} onOpenChange={setDetailModalOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Assessment Details</DialogTitle>
+            <DialogDescription>
+              Detailed assessment results for {selectedAssessment?.name}
+            </DialogDescription>
+          </DialogHeader>
+          
+          {selectedAssessment && (
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h3 className="text-lg font-medium mb-2">Personal Information</h3>
+                  <div className="space-y-2">
+                    <div className="grid grid-cols-3 gap-1">
+                      <span className="text-sm font-medium">Name:</span>
+                      <span className="text-sm col-span-2">{selectedAssessment.name}</span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-1">
+                      <span className="text-sm font-medium">Email:</span>
+                      <span className="text-sm col-span-2">{selectedAssessment.email}</span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-1">
+                      <span className="text-sm font-medium">Gender:</span>
+                      <span className="text-sm col-span-2">{selectedAssessment.demographics.gender}</span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-1">
+                      <span className="text-sm font-medium">Age:</span>
+                      <span className="text-sm col-span-2">{calculateAge(selectedAssessment.demographics.birthday)}</span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-1">
+                      <span className="text-sm font-medium">Location:</span>
+                      <span className="text-sm col-span-2">{selectedAssessment.demographics.city}, {selectedAssessment.demographics.state}</span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-1">
+                      <span className="text-sm font-medium">Status:</span>
+                      <span className="text-sm col-span-2">{selectedAssessment.demographics.marriageStatus}</span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-1">
+                      <span className="text-sm font-medium">Ethnicity:</span>
+                      <span className="text-sm col-span-2">{selectedAssessment.demographics.ethnicity}</span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-1">
+                      <span className="text-sm font-medium">Completed:</span>
+                      <span className="text-sm col-span-2">{new Date(selectedAssessment.timestamp).toLocaleString()}</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div>
+                  <h3 className="text-lg font-medium mb-2">Assessment Results</h3>
+                  <div className="space-y-2">
+                    <div className="grid grid-cols-3 gap-1">
+                      <span className="text-sm font-medium">Overall Score:</span>
+                      <span className="text-sm col-span-2 font-bold">{selectedAssessment.scores.overallPercentage.toFixed(1)}%</span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-1">
+                      <span className="text-sm font-medium">Primary Profile:</span>
+                      <span className="text-sm col-span-2">{selectedAssessment.profile.name}</span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-1">
+                      <span className="text-sm font-medium">Gender Profile:</span>
+                      <span className="text-sm col-span-2">{selectedAssessment.genderProfile?.name || 'N/A'}</span>
+                    </div>
+                    
+                    <div className="mt-4">
+                      <h4 className="text-sm font-medium mb-2">Section Scores</h4>
+                      <div className="space-y-2">
+                        {Object.entries(selectedAssessment.scores.sections).map(([section, score]) => (
+                          <div key={section} className="grid grid-cols-6 gap-1 items-center">
+                            <span className="text-xs font-medium col-span-2">{section}:</span>
+                            <div className="col-span-3 h-2 bg-gray-200 rounded-full overflow-hidden">
+                              <div
+                                className="h-full bg-primary rounded-full"
+                                style={{ width: `${score.percentage}%` }}
+                              />
+                            </div>
+                            <span className="text-xs text-right">{score.percentage.toFixed(1)}%</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <h3 className="text-lg font-medium mb-2">Psychographic Profile</h3>
+                <div className="space-y-4">
+                  <p className="text-sm">{selectedAssessment.profile.description}</p>
+                  
+                  <div>
+                    <h4 className="text-sm font-medium mb-1">Key Characteristics</h4>
+                    <ul className="list-disc list-inside text-sm">
+                      {selectedAssessment.profile.characteristics.map((char, index) => (
+                        <li key={index}>{char}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <h4 className="text-sm font-medium mb-1">Compatible With</h4>
+                      <ul className="list-disc list-inside text-sm">
+                        {selectedAssessment.profile.matchesWellWith.map((match, index) => (
+                          <li key={index}>{match}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    
+                    <div>
+                      <h4 className="text-sm font-medium mb-1">Areas for Growth</h4>
+                      <ul className="list-disc list-inside text-sm">
+                        {selectedAssessment.scores.improvementAreas.map((area, index) => (
+                          <li key={index}>{area}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <DialogFooter className="gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => handleResendResults(selectedAssessment)}
+                >
+                  <Mail className="h-4 w-4 mr-2" />
+                  Resend Results
+                </Button>
+                
+                <Button
+                  variant="outline"
+                  onClick={() => handleGenerateCoupleReport(selectedAssessment)}
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Generate Couple Report
+                </Button>
+                
+                <Button onClick={handleCloseDetails}>Close</Button>
+              </DialogFooter>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}

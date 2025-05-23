@@ -15,6 +15,7 @@ import SampleCoupleAssessment from "@/pages/SampleCoupleAssessment";
 import IndividualAssessmentOnScreen from "@/pages/IndividualAssessmentOnScreen";
 import ViewAssessmentReports from "@/pages/ViewAssessmentReports";
 import InviteFriends from "@/pages/InviteFriends";
+import PaymentTransactions from "@/pages/PaymentTransactions";
 
 function Router() {
   return (
@@ -35,6 +36,7 @@ function Router() {
       }} />
       <Route path="/view-reports" component={ViewAssessmentReports} />
       <Route path="/invite" component={InviteFriends} />
+      <Route path="/admin/payments" component={PaymentTransactions} />
       <Route component={NotFound} />
     </Switch>
   );
