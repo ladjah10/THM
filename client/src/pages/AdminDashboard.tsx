@@ -2137,49 +2137,36 @@ export default function AdminDashboard() {
           </TabsContent>
           
           <TabsContent value="payments" className="space-y-4">
-            <div className="bg-white p-4 rounded-lg shadow-sm">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
-                <div>
-                  <h2 className="text-lg font-medium">Payment Transactions</h2>
-                  <p className="text-sm text-gray-500">
-                    View revenue and payment details
-                  </p>
+            <Card>
+              <CardHeader>
+                <CardTitle>Payment Transactions</CardTitle>
+                <CardDescription>
+                  View revenue and payment details
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="p-6 bg-amber-50 rounded-md border border-amber-200">
+                  <div className="flex flex-col gap-4 items-center text-center">
+                    <AlertCircle className="h-10 w-10 text-amber-500" />
+                    <div>
+                      <h3 className="text-lg font-medium text-amber-800">Payment Transactions</h3>
+                      <p className="text-sm text-amber-700 mt-1 max-w-md mx-auto">
+                        For improved performance and reliability, payment transactions are now available in a dedicated page.
+                      </p>
+                    </div>
+                    <Button 
+                      onClick={() => window.open('/admin/payments', '_blank')}
+                      variant="default"
+                      size="lg"
+                    >
+                      View Payment Transactions
+                    </Button>
+                  </div>
                 </div>
+              </CardContent>
+            </Card>
                 
-                <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-                  <Button
-                    variant="default"
-                    size="sm"
-                    onClick={() => {
-                      toast({
-                        title: "Transactions Loaded",
-                        description: "Successfully loaded payment transactions data.",
-                        variant: "default"
-                      });
-                    }}
-                  >
-                    Load Transaction Data
-                  </Button>
-                    </div>
-                    
-                    {/* Email search input */}
-                    <div className="flex items-center gap-2 mt-2 sm:mt-0">
-                      <input
-                        type="email"
-                        placeholder="Search by email..."
-                        className="text-sm border rounded p-1 w-full sm:w-60"
-                        value={emailSearchTerm}
-                        onChange={(e) => setEmailSearchTerm(e.target.value)}
-                      />
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleEmailSearch}
-                        disabled={!emailSearchTerm}
-                      >
-                        Search
-                      </Button>
-                    </div>
+
 
                     <div className="flex space-x-2">
                       <Button 
