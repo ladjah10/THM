@@ -296,6 +296,9 @@ export default function AdminDashboard() {
   // Using our shared admin authentication hook
   const { isAdminAuthenticated, setAdminAuth, validateAdminCredentials } = useAdminAuth();
   
+  // For backward compatibility with existing code
+  const isAuthenticated = isAdminAuthenticated();
+  
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
@@ -1421,7 +1424,7 @@ export default function AdminDashboard() {
   };
 
   // Login form using our shared authentication hook
-  if (!isAdminAuthenticated()) {
+  if (!isAuthenticated) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <Card className="w-full max-w-md">
