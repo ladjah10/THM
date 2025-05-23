@@ -10,7 +10,7 @@ import { DatePicker } from "@/components/ui/date-picker";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Link } from "wouter";
-import type { AssessmentResult } from "@/types/assessment";
+import { AssessmentResult } from "@shared/schema";
 
 export default function AdminAssessmentResults() {
   const { toast } = useToast();
