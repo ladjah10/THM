@@ -293,11 +293,8 @@ function RecoverySection() {
 }
 
 export default function AdminDashboard() {
-  // Check localStorage for authentication status on initial load
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    const savedAuth = localStorage.getItem('admin_authenticated');
-    return savedAuth === 'true';
-  });
+  // Using our shared admin authentication hook
+  const { isAdminAuthenticated, setAdminAuth, validateAdminCredentials } = useAdminAuth();
   
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -860,14 +857,13 @@ export default function AdminDashboard() {
     analytics.profileDistribution = profileCounts;
   }
   
-  // Handle login
+  // Handle login using shared authentication hook
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-      // Store authentication state in localStorage
-      localStorage.setItem('admin_authenticated', 'true');
-      setIsAuthenticated(true);
+    if (validateAdminCredentials(username, password)) {
+      // Set authentication state using our shared hook
+      setAdminAuth(true);
       
       toast({
         title: "Login Successful",
@@ -883,11 +879,10 @@ export default function AdminDashboard() {
     }
   };
   
-  // Handle logout
+  // Handle logout using shared authentication hook
   const handleLogout = () => {
-    // Remove authentication state from localStorage
-    localStorage.removeItem('admin_authenticated');
-    setIsAuthenticated(false);
+    // Remove authentication state using our shared hook
+    setAdminAuth(false);
     
     toast({
       title: "Logged Out",
@@ -1425,8 +1420,8 @@ export default function AdminDashboard() {
     document.body.removeChild(link);
   };
 
-  // Login form
-  if (!isAuthenticated) {
+  // Login form using our shared authentication hook
+  if (!isAdminAuthenticated()) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <Card className="w-full max-w-md">
