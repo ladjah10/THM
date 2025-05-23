@@ -16,9 +16,10 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
+import { Loader2, AlertCircle } from "lucide-react";
 import { format } from "date-fns";
 import { Link } from "wouter";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 
 interface AssessmentResultData {
   id: string;
@@ -48,10 +49,40 @@ export default function SimpleAssessmentResults() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
+  const { isAdminAuthenticated, setAdminAuth, validateAdminCredentials } = useAdminAuth();
+  
+  // Authentication states
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
-    fetchAssessments();
+    // Only fetch assessments if admin is authenticated
+    if (isAdminAuthenticated()) {
+      fetchAssessments();
+    } else {
+      setLoading(false);
+    }
   }, []);
+
+  // Handle login
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (validateAdminCredentials(username, password)) {
+      setAdminAuth(true);
+      toast({
+        title: "Logged in successfully",
+        description: "You now have access to assessment data",
+      });
+      fetchAssessments();
+    } else {
+      toast({
+        title: "Login failed",
+        description: "Invalid username or password",
+        variant: "destructive",
+      });
+    }
+  };
 
   const fetchAssessments = async () => {
     try {
@@ -157,6 +188,56 @@ export default function SimpleAssessmentResults() {
     }
   };
 
+  // Login form for admin authentication
+  if (!isAdminAuthenticated()) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gray-50">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="text-2xl">Admin Login</CardTitle>
+            <CardDescription>
+              Login to view and manage assessment results
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div className="space-y-2">
+                <label htmlFor="username" className="text-sm font-medium">
+                  Username
+                </label>
+                <input
+                  id="username"
+                  type="text"
+                  className="w-full rounded-md border border-input px-3 py-2"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <label htmlFor="password" className="text-sm font-medium">
+                  Password
+                </label>
+                <input
+                  id="password"
+                  type="password"
+                  className="w-full rounded-md border border-input px-3 py-2"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <Button type="submit" className="w-full">
+                Login
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Admin authenticated view with assessment data
   return (
     <div className="container py-10">
       <div className="mb-8 flex justify-between items-center">
@@ -166,12 +247,26 @@ export default function SimpleAssessmentResults() {
             View and manage all assessment results
           </p>
         </div>
-        <Button 
-          variant="outline" 
-          onClick={() => window.location.href = "/admin"}
-        >
-          Back to Dashboard
-        </Button>
+        <div className="flex gap-2">
+          <Button 
+            variant="outline" 
+            onClick={() => window.location.href = "/admin"}
+          >
+            Back to Dashboard
+          </Button>
+          <Button 
+            variant="outline"
+            onClick={() => {
+              setAdminAuth(false);
+              toast({
+                title: "Logged out",
+                description: "You have been logged out successfully",
+              });
+            }}
+          >
+            Logout
+          </Button>
+        </div>
       </div>
 
       <Card>
@@ -188,7 +283,10 @@ export default function SimpleAssessmentResults() {
             </div>
           ) : error ? (
             <div className="bg-destructive/10 p-4 rounded-md text-destructive">
-              {error}
+              <div className="flex items-center">
+                <AlertCircle className="h-5 w-5 mr-2" />
+                <div>{error}</div>
+              </div>
             </div>
           ) : assessments.length === 0 ? (
             <div className="text-center py-10 text-muted-foreground">

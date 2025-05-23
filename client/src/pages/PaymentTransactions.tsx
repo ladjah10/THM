@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useLocation } from "wouter";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 
 // Define PaymentTransaction interface
 interface PaymentTransaction {
@@ -36,26 +37,31 @@ function formatDate(dateString: string): string {
   }
 }
 
-// Simple admin authentication
-const ADMIN_USERNAME = "admin";
-const ADMIN_PASSWORD = "100marriage";
-
 export default function PaymentTransactions() {
   const { toast } = useToast();
   const [, navigate] = useLocation();
+  const { isAdminAuthenticated, setAdminAuth, validateAdminCredentials } = useAdminAuth();
+  
+  // Authentication states
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [transactions, setTransactions] = useState<PaymentTransaction[]>([]);
   const [error, setError] = useState<string | null>(null);
+  
+  useEffect(() => {
+    // Load transactions if already authenticated
+    if (isAdminAuthenticated()) {
+      loadTransactions();
+    }
+  }, []);
 
   // Handle login form submission
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-      setIsAuthenticated(true);
+    if (validateAdminCredentials(username, password)) {
+      setAdminAuth(true);
       
       toast({
         title: "Authentication successful",
@@ -139,58 +145,50 @@ export default function PaymentTransactions() {
   };
 
   // If not authenticated, show login form
-  if (!isAuthenticated) {
+  if (!isAdminAuthenticated()) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow">
-          <div className="text-center">
-            <h1 className="text-3xl font-bold">Payment Transactions</h1>
-            <p className="mt-2 text-gray-600">Please login to continue</p>
-          </div>
-          
-          <form onSubmit={handleLogin} className="mt-8 space-y-6">
-            <div className="space-y-4">
-              <div>
-                <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="text-2xl">Payment Transactions</CardTitle>
+            <CardDescription>
+              Login to view payment transaction data
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div className="space-y-2">
+                <label htmlFor="username" className="text-sm font-medium">
                   Username
                 </label>
                 <input
                   id="username"
-                  name="username"
                   type="text"
-                  required
-                  className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full rounded-md border border-input px-3 py-2"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
+                  required
                 />
               </div>
-              
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <div className="space-y-2">
+                <label htmlFor="password" className="text-sm font-medium">
                   Password
                 </label>
                 <input
                   id="password"
-                  name="password"
                   type="password"
-                  required
-                  className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full rounded-md border border-input px-3 py-2"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  required
                 />
               </div>
-            </div>
-            
-            <div>
-              <button
-                type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
+              <Button type="submit" className="w-full">
                 Login
-              </button>
-            </div>
-          </form>
-        </div>
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -211,7 +209,7 @@ export default function PaymentTransactions() {
               <Button
                 variant="outline"
                 onClick={() => {
-                  setIsAuthenticated(false);
+                  setAdminAuth(false);
                   setUsername("");
                   setPassword("");
                   
