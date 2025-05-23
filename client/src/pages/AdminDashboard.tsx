@@ -2138,6 +2138,32 @@ export default function AdminDashboard() {
           
           <TabsContent value="payments" className="space-y-4">
             <div className="bg-white p-4 rounded-lg shadow-sm">
+              <div className="flex flex-col gap-4">
+                <div>
+                  <h2 className="text-lg font-medium">Payment Transactions</h2>
+                  <p className="text-sm text-gray-500 mb-4">
+                    View revenue and payment details
+                  </p>
+                </div>
+                
+                <div className="p-6 bg-amber-50 rounded-md border border-amber-200">
+                  <div className="flex flex-col gap-4 items-center text-center">
+                    <AlertCircle className="h-10 w-10 text-amber-500" />
+                    <div>
+                      <h3 className="text-lg font-medium text-amber-800">Payment Transactions Viewer</h3>
+                      <p className="text-sm text-amber-700 mt-1 max-w-md mx-auto">
+                        For improved performance and reliability, payment transactions are now available in a dedicated page.
+                      </p>
+                    </div>
+                    <a href="/admin/payments" 
+                      className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none bg-primary text-primary-foreground hover:bg-primary/90 h-10 py-2 px-4">
+                      View Payment Transactions
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white p-4 rounded-lg shadow-sm">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
                 <div>
                   <h2 className="text-lg font-medium">Payment Transactions</h2>

@@ -6,6 +6,7 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import MarriageAssessment from "@/pages/MarriageAssessment";
 import AdminDashboard from "@/pages/AdminDashboard";
+import AdminDashboardBasic from "@/pages/AdminDashboardBasic";
 import SamplesPage from "@/pages/SamplesPage";
 import CoupleAssessmentInvite from "@/pages/CoupleAssessmentInvite";
 import CoupleAssessmentReport from "@/pages/CoupleAssessmentReport";
@@ -15,14 +16,14 @@ import SampleCoupleAssessment from "@/pages/SampleCoupleAssessment";
 import IndividualAssessmentOnScreen from "@/pages/IndividualAssessmentOnScreen";
 import ViewAssessmentReports from "@/pages/ViewAssessmentReports";
 import InviteFriends from "@/pages/InviteFriends";
-import PaymentTransactions from "@/pages/PaymentTransactions";
+import AdminPaymentsSimple from "@/pages/AdminPaymentsSimple";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/assessment" component={MarriageAssessment} />
-      <Route path="/admin" component={AdminDashboard} />
+      <Route path="/admin" component={AdminDashboardBasic} />
       <Route path="/samples" component={SamplesPage} />
       <Route path="/couple-assessment/invite/:coupleId" component={CoupleAssessmentInvite} />
       <Route path="/couple-assessment/report/:coupleId" component={CoupleAssessmentReport} />
@@ -36,7 +37,7 @@ function Router() {
       }} />
       <Route path="/view-reports" component={ViewAssessmentReports} />
       <Route path="/invite" component={InviteFriends} />
-      <Route path="/admin/payments" component={PaymentTransactions} />
+      <Route path="/admin/payments" component={AdminPaymentsSimple} />
       <Route component={NotFound} />
     </Switch>
   );
