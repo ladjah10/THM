@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { RefreshCw, FileDown, Search, Loader2, Mail, Info, Download, AlertCircle } from "lucide-react";
+import PaymentsLink from "@/components/PaymentsLink";
 import { useToast } from "@/hooks/use-toast";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
@@ -2137,34 +2138,8 @@ export default function AdminDashboard() {
           </TabsContent>
           
           <TabsContent value="payments" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Payment Transactions</CardTitle>
-                <CardDescription>
-                  View revenue and payment details
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="p-6 bg-amber-50 rounded-md border border-amber-200">
-                  <div className="flex flex-col gap-4 items-center text-center">
-                    <AlertCircle className="h-10 w-10 text-amber-500" />
-                    <div>
-                      <h3 className="text-lg font-medium text-amber-800">Payment Transactions</h3>
-                      <p className="text-sm text-amber-700 mt-1 max-w-md mx-auto">
-                        For improved performance and reliability, payment transactions are now available in a dedicated page.
-                      </p>
-                    </div>
-                    <Button 
-                      onClick={() => window.open('/admin/payments', '_blank')}
-                      variant="default"
-                      size="lg"
-                    >
-                      View Payment Transactions
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <PaymentsLink />
+          </TabsContent>
                 
 
 
