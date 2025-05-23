@@ -1310,8 +1310,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // API to fetch payment transactions for analytics
-  app.get('/api/admin/analytics/payment-transactions', async (req: Request, res: Response) => {
+  // API to fetch payment transactions for the admin dashboard
+  app.get('/api/admin/payment-transactions', async (req: Request, res: Response) => {
     try {
       const startDate = req.query.startDate as string | undefined;
       const endDate = req.query.endDate as string | undefined;

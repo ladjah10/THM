@@ -323,16 +323,18 @@ export default function AdminDashboard() {
     completedOnly: true
   });
 
-  // Initialize assessments from localStorage if available
-  const [cachedAssessments, setCachedAssessments] = useState<AssessmentResult[]>(() => {
+  // Completely avoid localStorage caching for assessments to ensure we always get fresh data
+  const [cachedAssessments, setCachedAssessments] = useState<AssessmentResult[]>([]);
+  
+  // Clear existing localStorage data to force fresh fetch
+  useEffect(() => {
     try {
-      const saved = localStorage.getItem('admin_assessments');
-      return saved ? JSON.parse(saved) : [];
+      localStorage.removeItem('admin_assessments');
+      localStorage.removeItem('admin_payments');
     } catch (err) {
-      console.error("Error loading cached assessments:", err);
-      return [];
+      console.error("Error clearing localStorage:", err);
     }
-  });
+  }, []);
   
   // Query to fetch assessments with date filtering
   const { data: assessments, isLoading, error, refetch: refetchAssessments } = useQuery<AssessmentResult[]>({
