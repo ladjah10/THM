@@ -199,7 +199,7 @@ export default function SimpleAssessmentResults() {
   };
 
   // Login form for admin authentication
-  if (!isAdminAuthenticated()) {
+  if (!isAuthenticated) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-50">
         <Card className="w-full max-w-md">
@@ -267,7 +267,8 @@ export default function SimpleAssessmentResults() {
           <Button 
             variant="outline"
             onClick={() => {
-              setAdminAuth(false);
+              localStorage.removeItem('admin_authenticated');
+              setIsAuthenticated(false);
               toast({
                 title: "Logged out",
                 description: "You have been logged out successfully",
