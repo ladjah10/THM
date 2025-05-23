@@ -17,7 +17,7 @@ import IndividualAssessmentOnScreen from "@/pages/IndividualAssessmentOnScreen";
 import ViewAssessmentReports from "@/pages/ViewAssessmentReports";
 import InviteFriends from "@/pages/InviteFriends";
 import AdminPaymentsSimple from "@/pages/AdminPaymentsSimple";
-import AdminAssessmentResults from "@/pages/AdminAssessmentResults";
+import SimpleAssessmentResults from "@/pages/SimpleAssessmentResults";
 
 function Router() {
   return (
@@ -39,7 +39,7 @@ function Router() {
       <Route path="/view-reports" component={ViewAssessmentReports} />
       <Route path="/invite" component={InviteFriends} />
       <Route path="/admin/payments" component={AdminPaymentsSimple} />
-      <Route path="/admin/assessments" component={AdminAssessmentResults} />
+      <Route path="/admin/assessments" component={SimpleAssessmentResults} />
       <Route component={NotFound} />
     </Switch>
   );
