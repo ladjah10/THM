@@ -204,7 +204,7 @@ export default function PaymentTransactions() {
             <div className="flex gap-2">
               <Button
                 variant="outline"
-                onClick={() => navigate("/")}
+                onClick={() => window.location.href = "/admin"}
               >
                 Back to Dashboard
               </Button>

@@ -166,8 +166,11 @@ export default function SimpleAssessmentResults() {
             View and manage all assessment results
           </p>
         </div>
-        <Button asChild variant="outline">
-          <Link href="/admin">Back to Dashboard</Link>
+        <Button 
+          variant="outline" 
+          onClick={() => window.location.href = "/admin"}
+        >
+          Back to Dashboard
         </Button>
       </div>
 
