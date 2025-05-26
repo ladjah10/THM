@@ -360,16 +360,20 @@ export default function AdminDashboard() {
     if (!assessments || !Array.isArray(assessments)) return [];
     
     return assessments
-      .filter((assessment: AssessmentResult) => 
-        assessment.demographics?.marriageStatus?.toLowerCase() === 'single' &&
-        assessment.scores?.overallPercentage > 75
-      )
+      .filter((assessment: AssessmentResult) => {
+        const marriageStatus = assessment.demographics?.marriageStatus?.toLowerCase();
+        const score = assessment.scores?.overallPercentage || 0;
+        
+        // Include single, divorced, or widowed with scores above 60%
+        return (marriageStatus === 'single' || marriageStatus === 'divorced' || marriageStatus === 'widowed') &&
+               score > 60;
+      })
       .map((assessment: AssessmentResult) => ({
         ...assessment,
         matchScore: calculateMatchScore(assessment)
       }))
       .sort((a: any, b: any) => b.matchScore - a.matchScore)
-      .slice(0, 20);
+      .slice(0, 50);
   }, [assessments]);
 
   // Generate analytics summary
