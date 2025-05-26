@@ -801,6 +801,122 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     }
   });
+
+  // Admin API to download complete assessment data as CSV
+  app.get('/api/admin/export-all-assessments-csv', async (req: Request, res: Response) => {
+    try {
+      const assessments = await storage.getAllAssessments();
+      
+      // Create comprehensive CSV header with all data fields
+      const csvHeader = [
+        'Email', 'Name', 'Phone', 'Gender', 'Marriage Status', 'Birthday', 'Age',
+        'City', 'State', 'Zip Code', 'Ethnicity', 'Desire Children', 
+        'Has Purchased Book', 'Purchase Date', 'Life Stage',
+        'Interested in Arranged Marriage', 'THM Pool Applied',
+        'Overall Score', 'Profile Name', 'Profile Description',
+        'Gender Profile Name', 'Gender Profile Description',
+        'Date Completed', 'Transaction ID',
+        // All 99 question responses
+        ...Array.from({length: 99}, (_, i) => `Q${i+1}_Option`),
+        ...Array.from({length: 99}, (_, i) => `Q${i+1}_Value`),
+        // Section scores
+        'Foundation_Score', 'Foundation_Percentage',
+        'Faith_Score', 'Faith_Percentage',
+        'Marriage_Score', 'Marriage_Percentage',
+        'Boundaries_Score', 'Boundaries_Percentage',
+        'Family_Score', 'Family_Percentage',
+        'Parenting_Score', 'Parenting_Percentage',
+        'Finances_Score', 'Finances_Percentage',
+        'Health_Score', 'Health_Percentage',
+        'Other_Score', 'Other_Percentage',
+        'Marriage_Children_Score', 'Marriage_Children_Percentage'
+      ];
+      
+      // Create comprehensive CSV rows with all data
+      const csvRows = assessments.map(assessment => {
+        const demographics = assessment.demographics || {};
+        const responses = assessment.responses || {};
+        const scores = assessment.scores || {};
+        const sections = scores.sections || {};
+        
+        // Calculate age
+        const age = demographics.birthday ? 
+          String(new Date().getFullYear() - new Date(demographics.birthday).getFullYear()) : '';
+        
+        // Extract all question responses
+        const questionOptions = Array.from({length: 99}, (_, i) => {
+          const questionNum = String(i + 1);
+          return responses[questionNum]?.option || '';
+        });
+        
+        const questionValues = Array.from({length: 99}, (_, i) => {
+          const questionNum = String(i + 1);
+          return responses[questionNum]?.value || '';
+        });
+        
+        // Extract section scores
+        const sectionData = [
+          sections['Your Foundation']?.earned || '', sections['Your Foundation']?.percentage || '',
+          sections['Your Faith Life']?.earned || '', sections['Your Faith Life']?.percentage || '',
+          sections['Your Marriage Life']?.earned || '', sections['Your Marriage Life']?.percentage || '',
+          sections['Your Marriage and Boundaries']?.earned || '', sections['Your Marriage and Boundaries']?.percentage || '',
+          sections['Your Family/Home Life']?.earned || '', sections['Your Family/Home Life']?.percentage || '',
+          sections['Your Parenting Life']?.earned || '', sections['Your Parenting Life']?.percentage || '',
+          sections['Your Finances']?.earned || '', sections['Your Finances']?.percentage || '',
+          sections['Your Health and Wellness']?.earned || '', sections['Your Health and Wellness']?.percentage || '',
+          sections['Other']?.earned || '', sections['Other']?.percentage || '',
+          sections['Your Marriage Life with Children']?.earned || '', sections['Your Marriage Life with Children']?.percentage || ''
+        ];
+        
+        return [
+          demographics.email || '',
+          `${demographics.firstName || ''} ${demographics.lastName || ''}`,
+          demographics.phone || '',
+          demographics.gender || '',
+          demographics.marriageStatus || '',
+          demographics.birthday || '',
+          age,
+          demographics.city || '',
+          demographics.state || '',
+          demographics.zipCode || '',
+          demographics.ethnicity || '',
+          demographics.desireChildren || '',
+          demographics.hasPurchasedBook || '',
+          demographics.purchaseDate || '',
+          demographics.lifeStage || '',
+          demographics.interestedInArrangedMarriage || '',
+          demographics.thmPoolApplied || '',
+          scores.overallPercentage?.toFixed(1) || '0',
+          assessment.profile?.name || '',
+          assessment.profile?.description || '',
+          assessment.genderProfile?.name || '',
+          assessment.genderProfile?.description || '',
+          assessment.timestamp ? new Date(assessment.timestamp).toLocaleDateString() : '',
+          assessment.transactionId || '',
+          ...questionOptions,
+          ...questionValues,
+          ...sectionData
+        ];
+      });
+      
+      // Combine header and rows
+      const csvContent = [csvHeader, ...csvRows]
+        .map(row => row.map(field => `"${String(field).replace(/"/g, '""')}"`).join(','))
+        .join('\n');
+      
+      // Set response headers for file download
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', 'attachment; filename="complete-assessment-data.csv"');
+      
+      return res.send(csvContent);
+    } catch (error) {
+      console.error("Error exporting assessment data:", error);
+      return res.status(500).json({ 
+        success: false,
+        message: "Failed to export assessment data"
+      });
+    }
+  });
   
   // API to register a couple assessment early (before assessments are completed)
   app.post('/api/couple-assessment/register-early', async (req: Request, res: Response) => {

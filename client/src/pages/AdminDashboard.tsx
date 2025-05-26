@@ -680,7 +680,26 @@ export default function AdminDashboard() {
                         disabled={downloadDataMutation.isPending}
                       >
                         <Download className="h-4 w-4 mr-2" />
-                        Export All
+                        Export Summary
+                      </Button>
+                      <Button 
+                        onClick={() => {
+                          const link = document.createElement('a');
+                          link.href = '/api/admin/export-all-assessments-csv';
+                          link.download = 'complete-assessment-data.csv';
+                          document.body.appendChild(link);
+                          link.click();
+                          document.body.removeChild(link);
+                          
+                          toast({
+                            title: "Complete data export started",
+                            description: "Downloading comprehensive assessment data with all original responses",
+                          });
+                        }}
+                        variant="outline"
+                      >
+                        <FileDown className="h-4 w-4 mr-2" />
+                        Export Complete Data
                       </Button>
                     </div>
                   </div>
