@@ -33,41 +33,51 @@ export async function calculateAssessmentWithResponses(
       order: q.order
     }));
     
-    // Simplified scoring calculation
+    // Corrected scoring calculation using proper question mapping
     function calculateScores(questions: any[], responses: Record<string, any>) {
-      // Group questions by section
-      const sectionQuestions: Record<string, any[]> = {};
-      
-      questions.forEach(q => {
-        if (!sectionQuestions[q.section]) {
-          sectionQuestions[q.section] = [];
-        }
-        sectionQuestions[q.section].push(q);
+      // Create question mapping by order/position (1-99)
+      const questionMap: Record<number, any> = {};
+      questions.forEach((q, index) => {
+        questionMap[index + 1] = q; // Questions are numbered 1-99
       });
+      
+      // Section definitions matching the original assessment
+      const sectionRanges = {
+        "Your Foundation": [1, 10],
+        "Your Faith Life": [11, 13],
+        "Your Marriage Life": [14, 27],
+        "Your Marriage and Boundaries": [28, 36],
+        "Your Family/Home Life": [37, 52],
+        "Your Parenting Life": [53, 62],
+        "Your Finances": [63, 77],
+        "Other": [78, 89],
+        "Your Health and Wellness": [90, 99]
+      };
       
       // Calculate scores per section
       const sections: Record<string, {earned: number, possible: number, percentage: number}> = {};
       let totalEarned = 0;
       let totalPossible = 0;
       
-      Object.entries(sectionQuestions).forEach(([section, sectionQs]) => {
+      Object.entries(sectionRanges).forEach(([section, [start, end]]) => {
         let sectionEarned = 0;
         let sectionPossible = 0;
         
-        sectionQs.forEach(q => {
-          const response = responses[q.id];
-          if (response) {
+        for (let qNum = start; qNum <= end; qNum++) {
+          const response = responses[qNum.toString()];
+          if (response && response.value !== undefined) {
             sectionEarned += response.value;
-            sectionPossible += q.weight || 1;
+            // Use maximum possible value (12) for each question
+            sectionPossible += 12;
           }
-        });
+        }
         
         const percentage = sectionPossible > 0 ? (sectionEarned / sectionPossible) * 100 : 0;
         
         sections[section] = {
           earned: sectionEarned,
           possible: sectionPossible,
-          percentage: Math.round(percentage * 10) / 10 // Round to 1 decimal place
+          percentage: Math.round(percentage * 10) / 10
         };
         
         totalEarned += sectionEarned;
@@ -78,16 +88,18 @@ export async function calculateAssessmentWithResponses(
         ? Math.round((totalEarned / totalPossible) * 1000) / 10 
         : 0;
       
-      // Determine strengths and improvement areas
-      const strengths = Object.entries(sections)
-        .sort((a, b) => b[1].percentage - a[1].percentage)
+      // Determine strengths and improvement areas based on highest/lowest percentages
+      const sectionPercentages = Object.entries(sections)
+        .map(([section, data]) => ({ section, percentage: data.percentage }))
+        .sort((a, b) => b.percentage - a.percentage);
+      
+      const strengths = sectionPercentages
         .slice(0, 3)
-        .map(([section]) => section);
+        .map(s => `Strong ${s.section} compatibility (${s.percentage}%)`);
         
-      const improvementAreas = Object.entries(sections)
-        .sort((a, b) => a[1].percentage - b[1].percentage)
-        .slice(0, 3)
-        .map(([section]) => section);
+      const improvementAreas = sectionPercentages
+        .slice(-2)
+        .map(s => `${s.section} alignment can be improved (${s.percentage}%)`);
       
       return {
         sections,
