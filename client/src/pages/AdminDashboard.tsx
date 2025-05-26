@@ -1045,8 +1045,8 @@ export default function AdminDashboard() {
                         </TableHeader>
                         <TableBody>
                           {poolCandidates
-                            .filter(candidate => filterGender === "all" || candidate.demographics?.gender?.toLowerCase() === filterGender.toLowerCase())
-                            .map((candidate, index) => (
+                            .filter((candidate: any) => filterGender === "all" || candidate.demographics?.gender?.toLowerCase() === filterGender.toLowerCase())
+                            .map((candidate: any, index: number) => (
                             <TableRow key={index}>
                               <TableCell className="font-medium">
                                 {candidate.demographics?.firstName} {candidate.demographics?.lastName}
