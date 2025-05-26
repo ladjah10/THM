@@ -1,9 +1,9 @@
 import { useState, useEffect, useMemo } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { RefreshCw, FileDown, Search, Loader2, Mail, Info, Download, AlertCircle } from "lucide-react";
+import { RefreshCw, FileDown, Search, Loader2, Mail, Info, Download, AlertCircle, Users, DollarSign, Activity, TrendingUp } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from "recharts";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -30,13 +30,13 @@ interface PaymentTransaction {
   created: string;
   productType: string;
   assessmentType?: string;
-  productName?: string; // Added missing property
+  productName?: string;
   metadata: string | Record<string, any>;
   isRefunded: boolean;
   refundAmount?: number;
   refundReason?: string;
   promoCode?: string;
-  customerId?: string; // Added missing property
+  customerId?: string;
 }
 
 // Define enhanced transaction type with assessment data
@@ -98,774 +98,344 @@ function calculateAge(birthday: string): number {
 function calculateMatchScore(candidate: AssessmentResult): number {
   const scoreWeight = 0.5;
   const ageWeight = 0.3;
-  const locationWeight = 0.2;
+  const profileWeight = 0.2;
   
-  // Score ranking - higher scores are better for traditional match
-  const scoreRank = candidate.scores.overallPercentage;
+  // Base score from assessment percentage
+  const baseScore = candidate.scores?.overallPercentage || 0;
   
-  // Age ranking - optimal age range is 25-35
-  const age = calculateAge(candidate.demographics.birthday);
-  let ageRank = 0;
-  if (age >= 25 && age <= 35) {
-    ageRank = 100; // Optimal age range
-  } else if (age < 25) {
-    ageRank = 100 - ((25 - age) * 5); // 5% penalty per year under 25
-  } else {
-    ageRank = 100 - ((age - 35) * 3); // 3% penalty per year over 35
-  }
+  // Age factor (prefer ages 25-35)
+  const age = calculateAge(candidate.demographics?.birthday || '');
+  const ageFactor = age >= 25 && age <= 35 ? 1.0 : age >= 22 && age <= 40 ? 0.8 : 0.6;
   
-  // Location ranking - placeholder (would use zipcode proximity in real implementation)
-  // For now, just check if location info is complete
-  const locationRank = candidate.demographics.city && 
-    candidate.demographics.state && 
-    candidate.demographics.zipCode ? 100 : 50;
+  // Profile compatibility (simplified)
+  const profileFactor = candidate.profile?.name ? 1.0 : 0.8;
   
-  // Calculate weighted score
-  return (scoreRank * scoreWeight) + (ageRank * ageWeight) + (locationRank * locationWeight);
+  return (baseScore * scoreWeight) + (ageFactor * ageWeight * 100) + (profileFactor * profileWeight * 100);
 }
 
-// Component for customer data recovery from Stripe
+// Recovery Section Component
 function RecoverySection() {
-  const [isRecoveryLoading, setIsRecoveryLoading] = useState(false);
-  const [recoveryData, setRecoveryData] = useState<CustomerRecoveryData[] | null>(null);
+  const [recoveryData, setRecoveryData] = useState<CustomerRecoveryData[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const handleRecoverData = async () => {
-    setIsRecoveryLoading(true);
-    
+  const handleRecoveryImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setIsLoading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
     try {
-      const response = await apiRequest("GET", "/api/admin/customer-data-recovery");
-      
+      const response = await fetch('/api/admin/import-recovery-data', {
+        method: 'POST',
+        body: formData,
+      });
+
       if (!response.ok) {
-        throw new Error(`Error retrieving customer data: ${response.statusText}`);
+        throw new Error('Failed to import recovery data');
       }
-      
+
       const data = await response.json();
       setRecoveryData(data);
       
       toast({
-        title: "Data Recovery Complete",
-        description: `Retrieved contact information for ${data.length} customers`,
-        variant: "default"
+        title: "Recovery data imported",
+        description: `Successfully imported ${data.length} customer records`,
       });
     } catch (error) {
       toast({
-        title: "Data Recovery Failed",
-        description: error instanceof Error ? error.message : String(error),
-        variant: "destructive"
+        title: "Import failed",
+        description: error instanceof Error ? error.message : "Failed to import recovery data",
+        variant: "destructive",
       });
     } finally {
-      setIsRecoveryLoading(false);
+      setIsLoading(false);
     }
   };
-  
-  const handleDownloadCSV = () => {
-    if (!recoveryData) return;
-    
-    try {
-      // Create CSV data
-      const headers = ["Date", "Email", "Name", "Phone", "Amount", "Product Type", "Description"];
-      
-      const csvRows = [
-        headers.join(','),
-        ...recoveryData.map(customer => [
-          new Date(customer.payment_date).toLocaleDateString(),
-          `"${customer.email || ''}"`,
-          `"${customer.name || ''}"`,
-          `"${customer.phone || ''}"`,
-          customer.amount,
-          customer.product_type,
-          `"${customer.description || ''}"`,
-        ].join(','))
-      ];
-      
-      const csvString = csvRows.join('\n');
-      const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.setAttribute('href', url);
-      link.setAttribute('download', `customer-data-${new Date().toISOString().split('T')[0]}.csv`);
-      link.style.visibility = 'hidden';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      
-      toast({
-        title: "CSV Generated",
-        description: "Customer data has been exported to CSV format",
-        variant: "default"
-      });
-    } catch (error) {
-      toast({
-        title: "CSV Export Failed",
-        description: error instanceof Error ? error.message : String(error),
-        variant: "destructive"
-      });
-    }
-  };
-  
+
   return (
-    <>
-      <div className="mb-4">
-        <Button 
-          onClick={handleRecoverData}
-          className="bg-green-600 hover:bg-green-700 text-white"
-          disabled={isRecoveryLoading}
-        >
-          {isRecoveryLoading ? (
-            <>
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              Retrieving Data...
-            </>
-          ) : (
-            <>
-              <FileDown className="h-4 w-4 mr-2" />
-              Recover Customer Data from Stripe
-            </>
-          )}
-        </Button>
-      </div>
-      
-      {isRecoveryLoading ? (
-        <div className="flex justify-center items-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
-          <span className="ml-2 text-gray-500">Retrieving customer data from Stripe...</span>
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Download className="h-5 w-5" />
+          Customer Recovery Data
+        </CardTitle>
+        <CardDescription>
+          Import and process customer data for account recovery
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div>
+          <Label htmlFor="recovery-file">Upload Recovery Data (CSV/JSON)</Label>
+          <Input
+            id="recovery-file"
+            type="file"
+            accept=".csv,.json"
+            onChange={handleRecoveryImport}
+            disabled={isLoading}
+          />
         </div>
-      ) : recoveryData && recoveryData.length > 0 ? (
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Date</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Phone</TableHead>
-                <TableHead>Amount</TableHead>
-                <TableHead>Product Type</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {recoveryData.map((customer, index) => (
-                <TableRow key={index}>
-                  <TableCell>{new Date(customer.payment_date).toLocaleDateString()}</TableCell>
-                  <TableCell>{customer.email || 'N/A'}</TableCell>
-                  <TableCell>{customer.name || 'N/A'}</TableCell>
-                  <TableCell>{customer.phone || 'N/A'}</TableCell>
-                  <TableCell>${customer.amount}</TableCell>
-                  <TableCell>
-                    <Badge variant={
-                      customer.product_type === 'marriage_pool' ? 'secondary' :
-                      customer.product_type === 'individual' ? 'outline' :
-                      customer.product_type === 'couple' ? 'default' : 'destructive'
-                    }>
-                      {customer.product_type}
-                    </Badge>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          
-          <div className="mt-4 flex justify-between items-center">
-            <div className="text-sm text-gray-500">
-              Total records: {recoveryData.length}
-            </div>
-            <Button 
-              onClick={handleDownloadCSV}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
-              size="sm"
-            >
-              Download CSV
-            </Button>
+        
+        {isLoading && (
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            Processing recovery data...
           </div>
-        </div>
-      ) : recoveryData ? (
-        <div className="text-center py-12 text-gray-500">
-          No customer data found. Try syncing with Stripe first.
-        </div>
-      ) : (
-        <div className="text-center py-12 text-gray-500">
-          Click the button above to recover customer data from Stripe.
-        </div>
-      )}
-    </>
+        )}
+        
+        {recoveryData.length > 0 && (
+          <div className="space-y-2">
+            <p className="text-sm font-medium">
+              Imported {recoveryData.length} customer records
+            </p>
+            <div className="max-h-48 overflow-y-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Amount</TableHead>
+                    <TableHead>Date</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {recoveryData.slice(0, 10).map((record, index) => (
+                    <TableRow key={index}>
+                      <TableCell className="font-mono text-xs">{record.email}</TableCell>
+                      <TableCell>{record.name}</TableCell>
+                      <TableCell>${record.amount}</TableCell>
+                      <TableCell>{new Date(record.payment_date).toLocaleDateString()}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }
 
 export default function AdminDashboard() {
-  // Check localStorage for authentication status on initial load
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    const savedAuth = localStorage.getItem('admin_authenticated');
-    return savedAuth === 'true';
+    return localStorage.getItem('admin_authenticated') === 'true';
   });
-  
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [referralSearchTerm, setReferralSearchTerm] = useState("");
-  const [filterGender, setFilterGender] = useState<"all" | "male" | "female">("all");
   const [selectedAssessment, setSelectedAssessment] = useState<AssessmentResult | null>(null);
   const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [filterGender, setFilterGender] = useState<string>("all");
+  const [filterMarriageStatus, setFilterMarriageStatus] = useState<string>("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   const { toast } = useToast();
 
-  // State for assessment date filtering
-  const [assessmentDateRange, setAssessmentDateRange] = useState<{
-    startDate?: string,
-    endDate?: string,
-    requirePayment: boolean,
-    promoCodeUsed: boolean,
-    completedOnly: boolean
-  }>({
-    startDate: "2023-01-01", // Default to January 1, 2023 to ensure we capture historical data
-    endDate: undefined,
-    requirePayment: false,
-    promoCodeUsed: false,
-    completedOnly: true
+  // Fetch assessments data
+  const { 
+    data: assessments, 
+    isLoading: assessmentsLoading, 
+    error: assessmentsError,
+    refetch: refetchAssessments 
+  } = useQuery({
+    queryKey: ["/api/admin/assessments"],
+    enabled: isAuthenticated,
   });
 
-  // Completely avoid localStorage caching for assessments to ensure we always get fresh data
-  const [cachedAssessments, setCachedAssessments] = useState<AssessmentResult[]>([]);
-  
-  // Clear existing localStorage data to force fresh fetch
-  useEffect(() => {
-    try {
-      localStorage.removeItem('admin_assessments');
-      localStorage.removeItem('admin_payments');
-    } catch (err) {
-      console.error("Error clearing localStorage:", err);
-    }
-  }, []);
-  
-  // Query to fetch assessments with date filtering
-  const { data: assessments, isLoading, error, refetch: refetchAssessments } = useQuery<AssessmentResult[]>({
-    queryKey: ['/api/admin/assessments', assessmentDateRange],
-    queryFn: async () => {
-      // Only fetch if authenticated
-      if (!isAuthenticated) return [];
-      
-      const params = new URLSearchParams();
-      
-      if (assessmentDateRange.startDate) {
-        params.append('startDate', assessmentDateRange.startDate);
-      }
-      
-      if (assessmentDateRange.endDate) {
-        params.append('endDate', assessmentDateRange.endDate);
-      }
-      
-      if (assessmentDateRange.requirePayment) {
-        params.append('requirePayment', 'true');
-      }
-      
-      if (assessmentDateRange.promoCodeUsed) {
-        params.append('promoCodeUsed', 'true');
-      }
-      
-      // Remove the completedOnly filter to show all assessments
-      // if (assessmentDateRange.completedOnly) {
-      //   params.append('completedOnly', 'true');
-      // }
-      
-      const queryString = params.toString();
-      const url = queryString ? `/api/admin/assessments?${queryString}` : '/api/admin/assessments';
-      
-      const response = await apiRequest("GET", url);
-      
-      if (!response.ok) {
-        throw new Error("Failed to fetch assessments");
-      }
-      
-      const data = await response.json();
-      
-      // Save to localStorage when new data arrives
-      try {
-        localStorage.setItem('admin_assessments', JSON.stringify(data));
-        setCachedAssessments(data);
-      } catch (err) {
-        console.error("Error caching assessments:", err);
-      }
-      
-      return data;
-    },
+  // Fetch analytics data
+  const { 
+    data: analytics, 
+    isLoading: analyticsLoading,
+    refetch: refetchAnalytics 
+  } = useQuery({
+    queryKey: ["/api/admin/analytics"],
     enabled: isAuthenticated,
-    initialData: cachedAssessments.length > 0 ? cachedAssessments : undefined,
   });
-  
-  // Initialize referrals from localStorage if available
-  const [cachedReferrals, setCachedReferrals] = useState<ReferralData[]>(() => {
-    try {
-      const saved = localStorage.getItem('admin_referrals');
-      return saved ? JSON.parse(saved) : [];
-    } catch (err) {
-      console.error("Error loading cached referrals:", err);
-      return [];
-    }
-  });
-  
-  // Query to fetch referrals
-  const { data: referrals, isLoading: isLoadingReferrals, error: referralsError } = useQuery<ReferralData[]>({
-    queryKey: ['/api/admin/referrals'],
-    queryFn: async () => {
-      // Only fetch if authenticated
-      if (!isAuthenticated) return [];
-      
-      const response = await apiRequest("GET", "/api/admin/referrals");
-      
-      if (!response.ok) {
-        throw new Error("Failed to fetch referrals");
-      }
-      
-      const data = await response.json();
-      
-      // Save to localStorage when new data arrives
-      try {
-        localStorage.setItem('admin_referrals', JSON.stringify(data));
-        setCachedReferrals(data);
-      } catch (err) {
-        console.error("Error caching referrals:", err);
-      }
-      
-      return data;
-    },
+
+  // Fetch payment transactions
+  const { 
+    data: paymentTransactions, 
+    isLoading: transactionsLoading,
+    refetch: refetchTransactions 
+  } = useQuery({
+    queryKey: ["/api/admin/payment-transactions"],
     enabled: isAuthenticated,
-    initialData: cachedReferrals.length > 0 ? cachedReferrals : undefined,
   });
-  
-  // Website Analytics - summary data
-  const [analyticsPeriod, setAnalyticsPeriod] = useState<'day' | 'week' | 'month' | 'year'>('week');
-  
-  // Initialize analytics summary from localStorage if available
-  const [cachedAnalyticsSummary, setCachedAnalyticsSummary] = useState<AnalyticsSummary>(() => {
-    try {
-      const saved = localStorage.getItem('admin_analytics_summary');
-      return saved ? JSON.parse(saved) : {
-        totalVisitors: 0,
-        totalPageViews: 0,
-        topPages: [],
-        dailyVisitors: [],
-        conversionRate: 0,
-        averageSessionDuration: 0
-      };
-    } catch (err) {
-      console.error("Error loading cached analytics summary:", err);
-      return {
-        totalVisitors: 0,
-        totalPageViews: 0,
-        topPages: [],
-        dailyVisitors: [],
-        conversionRate: 0,
-        averageSessionDuration: 0
-      };
-    }
-  });
-  
-  const { data: analyticsSummary, isLoading: isLoadingAnalytics } = useQuery<AnalyticsSummary>({
-    queryKey: ['/api/admin/analytics/summary', analyticsPeriod],
-    queryFn: async () => {
-      if (!isAuthenticated) return cachedAnalyticsSummary;
-      
-      const response = await apiRequest("GET", `/api/admin/analytics/summary?period=${analyticsPeriod}`);
-      
-      if (!response.ok) {
-        throw new Error("Failed to fetch analytics summary");
-      }
-      
-      const data = await response.json();
-      
-      // Save to localStorage when new data arrives
-      try {
-        localStorage.setItem('admin_analytics_summary', JSON.stringify(data));
-        setCachedAnalyticsSummary(data);
-      } catch (err) {
-        console.error("Error caching analytics summary:", err);
-      }
-      
-      return data;
-    },
+
+  // Fetch referral data
+  const { 
+    data: referralData, 
+    isLoading: referralsLoading,
+    refetch: refetchReferrals 
+  } = useQuery({
+    queryKey: ["/api/admin/referrals"],
     enabled: isAuthenticated,
-    initialData: cachedAnalyticsSummary,
   });
-  
-  // Initialize page views from localStorage if available
-  const [cachedPageViews, setCachedPageViews] = useState<PageView[]>(() => {
-    try {
-      const saved = localStorage.getItem('admin_page_views');
-      return saved ? JSON.parse(saved) : [];
-    } catch (err) {
-      console.error("Error loading cached page views:", err);
-      return [];
-    }
-  });
-  
-  // Website Analytics - page views data
-  const { data: pageViews, isLoading: isLoadingPageViews } = useQuery<PageView[]>({
-    queryKey: ['/api/admin/analytics/page-views'],
-    queryFn: async () => {
-      if (!isAuthenticated) return [];
-      
-      const response = await apiRequest("GET", "/api/admin/analytics/page-views");
-      
-      if (!response.ok) {
-        throw new Error("Failed to fetch page views");
-      }
-      
-      const data = await response.json();
-      
-      // Save to localStorage when new data arrives
-      try {
-        localStorage.setItem('admin_page_views', JSON.stringify(data));
-        setCachedPageViews(data);
-      } catch (err) {
-        console.error("Error caching page views:", err);
-      }
-      
-      return data;
-    },
-    enabled: isAuthenticated,
-    initialData: cachedPageViews.length > 0 ? cachedPageViews : undefined,
-  });
-  
-  // Initialize visitor sessions from localStorage if available
-  const [cachedVisitorSessions, setCachedVisitorSessions] = useState<VisitorSession[]>(() => {
-    try {
-      const saved = localStorage.getItem('admin_visitor_sessions');
-      return saved ? JSON.parse(saved) : [];
-    } catch (err) {
-      console.error("Error loading cached visitor sessions:", err);
-      return [];
-    }
-  });
-  
-  // Website Analytics - visitor sessions data
-  const { data: visitorSessions, isLoading: isLoadingVisitorSessions } = useQuery<VisitorSession[]>({
-    queryKey: ['/api/admin/analytics/visitor-sessions'],
-    queryFn: async () => {
-      if (!isAuthenticated) return [];
-      
-      const response = await apiRequest("GET", "/api/admin/analytics/visitor-sessions");
-      
-      if (!response.ok) {
-        throw new Error("Failed to fetch visitor sessions");
-      }
-      
-      const data = await response.json();
-      
-      // Save to localStorage when new data arrives
-      try {
-        localStorage.setItem('admin_visitor_sessions', JSON.stringify(data));
-        setCachedVisitorSessions(data);
-      } catch (err) {
-        console.error("Error caching visitor sessions:", err);
-      }
-      
-      return data;
-    },
-    enabled: isAuthenticated,
-    initialData: cachedVisitorSessions.length > 0 ? cachedVisitorSessions : undefined,
-  });
-  
-  // Payment transactions data
-  const [transactionDateRange, setTransactionDateRange] = useState<{start?: string, end?: string}>({});
-  const [emailSearchTerm, setEmailSearchTerm] = useState<string>("");
-  const [searchResults, setSearchResults] = useState<AssessmentResult[] | null>(null);
-  
-  // Remove customerRecoveryData state as it's now in the RecoverySection component
-  
-  // State for assessment reminder system
-  const [sendingReminders, setSendingReminders] = useState<boolean>(false);
-  const [reminderDaysAgo, setReminderDaysAgo] = useState<number>(3);
-  
-  // Mutation to send assessment reminders
-  const { mutate: sendAssessmentReminders, isPending: isSendingReminders } = useMutation({
-    mutationFn: async () => {
-      setSendingReminders(true);
-      
-      // Show toast that reminders are being sent
-      toast({
-        title: "Sending Reminders",
-        description: "Processing incomplete assessments and sending reminders...",
-        variant: "default"
-      });
-      
-      const response = await apiRequest("POST", "/api/admin/send-assessment-reminders", {
-        daysAgo: reminderDaysAgo
-      });
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Failed to send assessment reminders: ${errorText}`);
-      }
-      
+
+  // Mutation for sending assessment results
+  const sendResultsMutation = useMutation({
+    mutationFn: async (email: string) => {
+      const response = await apiRequest("POST", `/api/admin/resend-report/${email}`);
       return response.json();
     },
-    onSuccess: (data) => {
-      const stats = data.stats || {};
-      const emailsSent = stats.emailsSent || 0;
-      const incompleteCount = stats.incompleteAssessments || 0;
-      
+    onSuccess: () => {
       toast({
-        title: emailsSent > 0 ? "Reminders Sent Successfully" : "Process Complete",
-        description: emailsSent > 0 
-          ? `Sent ${emailsSent} reminder email${emailsSent !== 1 ? 's' : ''} to customers with incomplete assessments.`
-          : "No incomplete assessments found that require reminders.",
-        variant: "default"
+        title: "Report sent successfully",
+        description: "The assessment report has been sent via email",
       });
-      
-      setSendingReminders(false);
     },
     onError: (error: Error) => {
       toast({
-        title: "Failed to Send Reminders",
+        title: "Failed to send report",
         description: error.message,
-        variant: "destructive"
-      });
-      
-      setSendingReminders(false);
-    }
-  });
-  
-  // Resend assessment results mutation
-  const { mutate: resendAssessmentResults, isPending: isResendingResults } = useMutation({
-    mutationFn: async ({ email, assessmentType }: { email: string, assessmentType?: 'individual' | 'couple' }) => {
-      toast({
-        title: "Sending Assessment Results",
-        description: `Resending results to ${email}...`,
-        variant: "default"
-      });
-      
-      const response = await apiRequest("POST", "/api/admin/resend-assessment-results", { 
-        email, 
-        assessmentType
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to resend assessment results');
-      }
-      
-      return await response.json();
-    },
-    onSuccess: (data) => {
-      toast({
-        title: "Success",
-        description: data.message || "Assessment results resent successfully",
-      });
-    },
-    onError: (error) => {
-      console.error("Error resending assessment results:", error);
-      toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to resend assessment results",
         variant: "destructive",
       });
-    }
-  });
-  
-  // Sync Stripe payments mutation
-  const { mutate: syncStripePayments, isPending: isSyncingPayments } = useMutation({
-    mutationFn: async () => {
-      // Show toast that sync is starting
-      toast({
-        title: "Syncing Transactions",
-        description: "Retrieving payment data from Stripe...",
-        variant: "default"
-      });
-      
-      const response = await apiRequest("POST", "/api/admin/stripe/sync-payments", {
-        startDate: transactionDateRange.start,
-        endDate: transactionDateRange.end
-      });
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Failed to sync Stripe payments: ${errorText}`);
-      }
-      
-      return response.json();
     },
-    onSuccess: (data) => {
-      const newCount = data.count || 0;
-      const detail = data.detail || {};
-      
-      // Build a more detailed message
-      let detailMessage = "";
-      if (detail.individual) detailMessage += `\n• ${detail.individual} individual assessment(s)`;
-      if (detail.couple) detailMessage += `\n• ${detail.couple} couple assessment(s)`;
-      if (detail.marriage_pool) detailMessage += `\n• ${detail.marriage_pool} arranged marriage pool application(s)`;
-      if (detail.other) detailMessage += `\n• ${detail.other} other transaction(s)`;
+  });
+
+  // Mutation for downloading assessment data
+  const downloadDataMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest("GET", "/api/admin/download-assessment-data");
+      const blob = await response.blob();
+      return blob;
+    },
+    onSuccess: (blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `assessment-data-${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
       
       toast({
-        title: newCount > 0 ? "Sync Successful" : "Sync Complete",
-        description: newCount > 0 
-          ? `Found ${newCount} new payment(s):${detailMessage}`
-          : "No new transactions found. You're up to date!",
-        variant: "default"
+        title: "Download completed",
+        description: "Assessment data has been downloaded as CSV",
       });
-      
-      // Invalidate payment transactions query to refresh the data
-      queryClient.invalidateQueries({ queryKey: ['/api/admin/analytics/payment-transactions'] });
     },
     onError: (error: Error) => {
       toast({
-        title: "Sync Failed",
+        title: "Download failed",
         description: error.message,
-        variant: "destructive"
+        variant: "destructive",
       });
-    }
-  });
-  
-  // Define a type for enhanced transactions including assessment data
-  interface EnhancedTransaction extends PaymentTransaction { 
-    assessmentData?: { 
-      firstName?: string;
-      lastName?: string; 
-      gender?: string;
-      marriageStatus?: string;
-      desireChildren?: string;
-      ethnicity?: string;
-      city?: string;
-      state?: string;
-      zipCode?: string;
-    }
-  };
-  
-  // Initialize paymentTransactions from localStorage if available
-  const [cachedTransactions, setCachedTransactions] = useState<EnhancedTransaction[]>(() => {
-    try {
-      const saved = localStorage.getItem('admin_payment_transactions');
-      return saved ? JSON.parse(saved) : [];
-    } catch (err) {
-      console.error("Error loading cached transactions:", err);
-      return [];
-    }
-  });
-  
-  const { data: paymentTransactions, isLoading: isLoadingPaymentTransactions } = useQuery<EnhancedTransaction[]>({
-    queryKey: ['/api/admin/payment-transactions', transactionDateRange, Date.now()], // Add timestamp to force refresh
-    queryFn: async () => {
-      if (!isAuthenticated) return [];
-      
-      let url = "/api/admin/payment-transactions"; // Fixed URL to match server endpoint
-      const params = new URLSearchParams();
-      
-      if (transactionDateRange.start) {
-        params.append('startDate', transactionDateRange.start);
-      }
-      
-      if (transactionDateRange.end) {
-        params.append('endDate', transactionDateRange.end);
-      }
-      
-      // Request assessment data to be included
-      params.append('includeAssessmentData', 'true');
-      
-      const queryString = params.toString();
-      if (queryString) {
-        url = `${url}?${queryString}`;
-      }
-      
-      const response = await apiRequest("GET", url);
-      
-      if (!response.ok) {
-        throw new Error("Failed to fetch payment transactions");
-      }
-      
-      const data = await response.json();
-      
-      // Save to localStorage when new data arrives
-      try {
-        localStorage.setItem('admin_payment_transactions', JSON.stringify(data));
-        setCachedTransactions(data);
-      } catch (err) {
-        console.error("Error caching transactions:", err);
-      }
-      
-      return data;
     },
-    enabled: isAuthenticated,
-    initialData: cachedTransactions.length > 0 ? cachedTransactions : undefined,
   });
-  
-  // Filter assessments by search term
-  const filteredAssessments = assessments?.filter(assessment => {
-    if (!searchTerm) return true;
-    
-    const searchLower = searchTerm.toLowerCase();
-    return (
-      assessment.name.toLowerCase().includes(searchLower) ||
-      assessment.email.toLowerCase().includes(searchLower) ||
-      assessment.demographics.gender.toLowerCase().includes(searchLower) ||
-      assessment.profile.name.toLowerCase().includes(searchLower)
-    );
-  });
-  
-  // Filter referrals by search term
-  const filteredReferrals = referrals?.filter(referral => {
-    if (!referralSearchTerm) return true;
-    
-    const searchLower = referralSearchTerm.toLowerCase();
-    return (
-      referral.referrerName.toLowerCase().includes(searchLower) ||
-      referral.referrerEmail.toLowerCase().includes(searchLower) ||
-      referral.invitedName.toLowerCase().includes(searchLower) ||
-      referral.invitedEmail.toLowerCase().includes(searchLower) ||
-      (referral.promoCode && referral.promoCode.toLowerCase().includes(searchLower))
-    );
-  });
-  
-  // Filter THM pool candidates by gender
-  const filteredPoolCandidates = useMemo(() => {
+
+  // Filter assessments based on search and filters
+  const filteredAssessments = useMemo(() => {
     if (!assessments) return [];
     
-    // First filter by THM pool opt-in
-    const poolCandidates = assessments.filter(a => a.demographics.thmPoolApplied);
-    
-    // Then filter by gender if needed
-    if (filterGender === "all") {
-      return poolCandidates;
-    } else {
-      return poolCandidates.filter(a => a.demographics.gender === filterGender);
-    }
-  }, [assessments, filterGender]);
-  
-  // Calculate analytics
-  const analytics = {
-    totalAssessments: assessments?.length || 0,
-    genderDistribution: {
-      male: assessments?.filter(a => a.demographics.gender === "male").length || 0,
-      female: assessments?.filter(a => a.demographics.gender === "female").length || 0,
-    },
-    averageScore: assessments && assessments.length > 0 
-      ? assessments.reduce((sum, assessment) => sum + assessment.scores.overallPercentage, 0) / assessments.length 
-      : 0,
-    profileDistribution: {} as Record<string, number>,
-    referralsStats: {
-      total: referrals?.length || 0,
-      completed: referrals?.filter(r => r.status === 'completed').length || 0,
-      pending: referrals?.filter(r => r.status === 'sent').length || 0,
-      expired: referrals?.filter(r => r.status === 'expired').length || 0,
-      completionRate: referrals && referrals.length > 0
-        ? (referrals.filter(r => r.status === 'completed').length / referrals.length) * 100
-        : 0
-    }
-  };
-  
-  // Count profiles
-  if (assessments?.length) {
-    const profileCounts: Record<string, number> = {};
-    assessments.forEach(assessment => {
-      const profileName = assessment.profile.name;
-      profileCounts[profileName] = (profileCounts[profileName] || 0) + 1;
+    return assessments.filter((assessment: AssessmentResult) => {
+      const matchesSearch = !searchTerm || 
+        assessment.demographics?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        assessment.demographics?.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        assessment.demographics?.lastName?.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      const matchesGender = filterGender === "all" || 
+        assessment.demographics?.gender?.toLowerCase() === filterGender.toLowerCase();
+      
+      const matchesMarriageStatus = filterMarriageStatus === "all" || 
+        assessment.demographics?.marriageStatus?.toLowerCase() === filterMarriageStatus.toLowerCase();
+      
+      return matchesSearch && matchesGender && matchesMarriageStatus;
     });
-    analytics.profileDistribution = profileCounts;
-  }
-  
+  }, [assessments, searchTerm, filterGender, filterMarriageStatus]);
+
+  // Paginated assessments
+  const paginatedAssessments = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return filteredAssessments.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredAssessments, currentPage]);
+
+  const totalPages = Math.ceil(filteredAssessments.length / itemsPerPage);
+
+  // Calculate pool candidates (highly compatible singles)
+  const poolCandidates = useMemo(() => {
+    if (!assessments) return [];
+    
+    return assessments
+      .filter((assessment: AssessmentResult) => 
+        assessment.demographics?.marriageStatus?.toLowerCase() === 'single' &&
+        assessment.scores?.overallPercentage > 75
+      )
+      .map((assessment: AssessmentResult) => ({
+        ...assessment,
+        matchScore: calculateMatchScore(assessment)
+      }))
+      .sort((a, b) => b.matchScore - a.matchScore)
+      .slice(0, 20);
+  }, [assessments]);
+
+  // Generate analytics summary
+  const analyticsSummary = useMemo(() => {
+    if (!assessments || !analytics) return null;
+
+    const summary = {
+      totalAssessments: assessments.length,
+      totalRevenue: 0,
+      averageScore: 0,
+      completionRate: 0,
+      genderDistribution: {},
+      ageDistribution: {},
+      marriageStatusDistribution: {},
+      profileDistribution: {},
+      monthlyTrends: [],
+      topPerformers: [],
+      recentActivity: []
+    };
+
+    // Calculate revenue from payment transactions
+    if (paymentTransactions) {
+      summary.totalRevenue = paymentTransactions.reduce((total: number, transaction: PaymentTransaction) => {
+        return total + (transaction.amount / 100); // Convert from cents
+      }, 0);
+    }
+
+    // Calculate average score
+    const validScores = assessments.filter((a: AssessmentResult) => a.scores?.overallPercentage);
+    if (validScores.length > 0) {
+      summary.averageScore = validScores.reduce((sum: number, a: AssessmentResult) => 
+        sum + (a.scores?.overallPercentage || 0), 0) / validScores.length;
+    }
+
+    // Gender distribution
+    const genderCounts: Record<string, number> = {};
+    assessments.forEach((assessment: AssessmentResult) => {
+      const gender = assessment.demographics?.gender || 'Unknown';
+      genderCounts[gender] = (genderCounts[gender] || 0) + 1;
+    });
+    summary.genderDistribution = genderCounts;
+
+    // Marriage status distribution
+    const marriageCounts: Record<string, number> = {};
+    assessments.forEach((assessment: AssessmentResult) => {
+      const status = assessment.demographics?.marriageStatus || 'Unknown';
+      marriageCounts[status] = (marriageCounts[status] || 0) + 1;
+    });
+    summary.marriageStatusDistribution = marriageCounts;
+
+    // Profile distribution
+    const profileCounts: Record<string, number> = {};
+    assessments.forEach((assessment: AssessmentResult) => {
+      const profile = assessment.profile?.name || 'Unknown';
+      profileCounts[profile] = (profileCounts[profile] || 0) + 1;
+    });
+    summary.profileDistribution = profileCounts;
+
+    return summary;
+  }, [assessments, analytics, paymentTransactions]);
+
   // Handle login
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-      // Store authentication state in localStorage
       localStorage.setItem('admin_authenticated', 'true');
       setIsAuthenticated(true);
       
@@ -882,10 +452,9 @@ export default function AdminDashboard() {
       });
     }
   };
-  
+
   // Handle logout
   const handleLogout = () => {
-    // Remove authentication state from localStorage
     localStorage.removeItem('admin_authenticated');
     setIsAuthenticated(false);
     
@@ -895,7 +464,44 @@ export default function AdminDashboard() {
       variant: "default"
     });
   };
-  
+
+  // Handle view details
+  const handleViewDetails = (assessment: AssessmentResult) => {
+    setSelectedAssessment(assessment);
+    setDetailModalOpen(true);
+  };
+
+  // Handle resend assessment
+  const handleResendAssessment = (email: string) => {
+    sendResultsMutation.mutate(email);
+  };
+
+  // Handle download assessment data
+  const handleDownloadAssessmentData = (assessment: AssessmentResult) => {
+    const csvData = [
+      ['Field', 'Value'],
+      ['Email', assessment.demographics?.email || ''],
+      ['Name', `${assessment.demographics?.firstName || ''} ${assessment.demographics?.lastName || ''}`],
+      ['Gender', assessment.demographics?.gender || ''],
+      ['Age', calculateAge(assessment.demographics?.birthday || '').toString()],
+      ['Marriage Status', assessment.demographics?.marriageStatus || ''],
+      ['Overall Score', `${assessment.scores?.overallPercentage || 0}%`],
+      ['Profile', assessment.profile?.name || ''],
+      ['Timestamp', assessment.timestamp || '']
+    ];
+
+    const csvContent = csvData.map(row => row.join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `assessment-${assessment.demographics?.email || 'unknown'}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  };
+
   // Format date for display
   const formatDate = (dateString: string | undefined) => {
     if (!dateString) return "N/A";
@@ -903,526 +509,13 @@ export default function AdminDashboard() {
       return new Date(dateString).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
-        day: 'numeric'
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
       });
     } catch (e) {
-      return dateString || "N/A";
+      return "Invalid date";
     }
-  };
-  
-  // Handle viewing assessment details
-  const handleViewDetails = (assessment: AssessmentResult) => {
-    setSelectedAssessment(assessment);
-    setDetailModalOpen(true);
-  };
-  
-  // Handle downloading full assessment data as JSON
-  const handleDownloadAssessmentData = async (email: string, isCoupleAssessment: boolean = false) => {
-    try {
-      // Show loading toast
-      toast({
-        title: "Downloading...",
-        description: `Downloading assessment data for ${email}`,
-      });
-      
-      const endpoint = isCoupleAssessment 
-        ? `/api/admin/download-couple-assessment/${encodeURIComponent(email)}`
-        : `/api/admin/download-assessment/${encodeURIComponent(email)}`;
-      
-      // Create authentication header with admin credentials
-      const adminUsername = 'admin';
-      const adminPassword = '100marriage';
-      // Browser-safe base64 encoding (Buffer is not available in the browser)
-      const adminAuth = btoa(`${adminUsername}:${adminPassword}`);
-      
-      // Fetch data with auth header
-      const response = await fetch(endpoint, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Admin-Auth": adminAuth
-        },
-        credentials: "include"
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Download failed with status:", response.status, errorData);
-        throw new Error(errorData.message || `Failed to download assessment data (${response.status})`);
-      }
-      
-      // Get the assessment data
-      const assessmentData = await response.json();
-      
-      // Create blob and trigger download
-      const blob = new Blob([JSON.stringify(assessmentData, null, 2)], { type: 'application/json' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = isCoupleAssessment 
-        ? `couple-assessment-${email}-${Date.now()}.json` 
-        : `assessment-${email}-${Date.now()}.json`;
-      document.body.appendChild(a);
-      a.click();
-      
-      // Cleanup
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-      
-      toast({
-        title: "Success",
-        description: "Assessment data downloaded successfully",
-      });
-    } catch (error) {
-      console.error("Error downloading assessment data:", error);
-      toast({
-        title: "Download Failed",
-        description: error instanceof Error ? error.message : "Failed to download assessment data",
-        variant: "destructive",
-      });
-    }
-  };
-  
-  // Handle searching for assessments by email
-  const handleEmailSearch = async () => {
-    if (!emailSearchTerm) return;
-    
-    try {
-      // Show loading toast
-      toast({
-        title: "Searching...",
-        description: `Looking for assessments with email: ${emailSearchTerm}`,
-      });
-      
-      const response = await apiRequest(
-        "GET", 
-        `/api/admin/assessments/search?email=${encodeURIComponent(emailSearchTerm)}`
-      );
-      
-      if (!response.ok) {
-        throw new Error(`Search failed: ${response.statusText}`);
-      }
-      
-      const data = await response.json();
-      
-      if (data.assessments.length === 0) {
-        toast({
-          title: "No Results Found",
-          description: `No assessments found for email: ${emailSearchTerm}`,
-          variant: "destructive"
-        });
-        setSearchResults(null);
-      } else {
-        toast({
-          title: "Search Results",
-          description: `Found ${data.assessments.length} assessment(s) for ${emailSearchTerm}`,
-        });
-        setSearchResults(data.assessments);
-        
-        // If there's exactly one result, open the details modal
-        if (data.assessments.length === 1) {
-          setSelectedAssessment(data.assessments[0]);
-          setDetailModalOpen(true);
-        }
-      }
-    } catch (error) {
-      console.error("Error searching for assessments:", error);
-      toast({
-        title: "Search Failed",
-        description: error instanceof Error ? error.message : "Unknown error occurred",
-        variant: "destructive"
-      });
-    }
-  };
-  
-  // Pool Candidates Table component for THM matching
-  const PoolCandidatesTable = ({ candidates }: { candidates: AssessmentResult[] }) => {
-    const [selectedCandidates, setSelectedCandidates] = useState<string[]>([]);
-    
-    // Rank candidates by score, age and location
-    const rankedCandidates = useMemo(() => {
-      return [...candidates].sort((a, b) => {
-        const scoreA = calculateMatchScore(a);
-        const scoreB = calculateMatchScore(b);
-        return scoreB - scoreA; // Sort by descending score
-      });
-    }, [candidates]);
-    
-    // Handle checkbox selection
-    const handleSelectCandidate = (email: string) => {
-      setSelectedCandidates(prev => {
-        if (prev.includes(email)) {
-          return prev.filter(e => e !== email);
-        } else {
-          return [...prev, email];
-        }
-      });
-    };
-    
-    // Handle sending match notification emails
-    const handleSendMatchNotifications = async () => {
-      if (selectedCandidates.length < 2) {
-        alert("Please select at least 2 candidates to match");
-        return;
-      }
-      
-      try {
-        // API call would go here
-        // await apiRequest("POST", "/api/admin/send-match-notifications", { candidates: selectedCandidates });
-        alert(`Match notifications would be sent to ${selectedCandidates.length} candidates`);
-        setSelectedCandidates([]);
-      } catch (error) {
-        console.error("Error sending match notifications:", error);
-        alert("Error sending match notifications");
-      }
-    };
-    
-    return (
-      <div className="space-y-4">
-        {selectedCandidates.length > 0 && (
-          <div className="flex justify-between items-center p-3 bg-blue-50 border border-blue-200 rounded-md">
-            <span className="text-sm">
-              <span className="font-medium">{selectedCandidates.length}</span> candidates selected
-            </span>
-            <Button 
-              size="sm" 
-              onClick={handleSendMatchNotifications}
-            >
-              Send Match Notifications
-            </Button>
-          </div>
-        )}
-        
-        <Table>
-          <TableCaption>THM Pool Candidates - Ranked by compatibility</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-12">Select</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Age</TableHead>
-              <TableHead>Gender</TableHead>
-              <TableHead>Location</TableHead>
-              <TableHead className="text-nowrap">Assessment</TableHead>
-              <TableHead className="text-nowrap">Match Score</TableHead>
-              <TableHead>Profile</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {rankedCandidates.length ? (
-              rankedCandidates.map((candidate) => {
-                const age = calculateAge(candidate.demographics.birthday);
-                const matchScore = calculateMatchScore(candidate);
-                const location = `${candidate.demographics.city}, ${candidate.demographics.state} ${candidate.demographics.zipCode}`;
-                
-                return (
-                  <TableRow key={candidate.email}>
-                    <TableCell>
-                      <input 
-                        type="checkbox" 
-                        className="h-4 w-4 rounded border-gray-300"
-                        checked={selectedCandidates.includes(candidate.email)}
-                        onChange={() => handleSelectCandidate(candidate.email)}
-                      />
-                    </TableCell>
-                    <TableCell className="font-medium">{candidate.name}</TableCell>
-                    <TableCell>{age || "N/A"}</TableCell>
-                    <TableCell>{candidate.demographics.gender}</TableCell>
-                    <TableCell>{location}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <div className="h-2 w-12 bg-gray-200 rounded-full overflow-hidden">
-                          <div 
-                            className="h-full bg-blue-600" 
-                            style={{ width: `${candidate.scores.overallPercentage}%` }}
-                          />
-                        </div>
-                        <span className="text-sm">{candidate.scores.overallPercentage.toFixed(1)}%</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <div className="h-2 w-12 bg-gray-200 rounded-full overflow-hidden">
-                          <div 
-                            className="h-full bg-primary" 
-                            style={{ width: `${matchScore}%` }}
-                          />
-                        </div>
-                        <span className="text-sm">{matchScore.toFixed(1)}%</span>
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                            </TooltipTrigger>
-                            <TooltipContent className="max-w-xs">
-                              <p className="text-xs">Combined score: 50% assessment, 30% age factors, 20% location</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline">{candidate.profile.name}</Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => alert(`View ${candidate.name}'s profile (would show detailed info)`)}
-                      >
-                        View Profile
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                );
-              })
-            ) : (
-              <TableRow>
-                <TableCell colSpan={8} className="text-center py-8 text-gray-500">
-                  No THM pool candidates found
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-    );
-  };
-
-  // Handle Assessment CSV export
-  const handleExportAssessmentsCSV = () => {
-    if (!assessments?.length) return;
-    
-    // Define CSV columns
-    const headers = [
-      "Name",
-      "Email",
-      "Date",
-      "Gender",
-      "Marriage Status",
-      "Desire Children",
-      "Ethnicity",
-      "Profile",
-      "Raw Assessment Score (0-100%)",
-      "THM Match Score (Weighted)",
-      "Book Purchased"
-    ];
-    
-    // Convert assessment data to CSV rows
-    const rows = assessments.map(assessment => {
-      // Calculate the weighted THM match score
-      const matchScore = calculateMatchScore(assessment);
-      
-      return [
-        assessment.name,
-        assessment.email,
-        assessment.timestamp ? new Date(assessment.timestamp).toISOString().split('T')[0] : '',
-        assessment.demographics.gender,
-        assessment.demographics.marriageStatus,
-        assessment.demographics.desireChildren,
-        assessment.demographics.ethnicity,
-        assessment.profile.name,
-        assessment.scores.overallPercentage.toFixed(1) + '%', // Raw assessment score
-        matchScore.toFixed(1) + '%', // THM match score with age/location weighting
-        assessment.demographics.hasPurchasedBook
-      ];
-    });
-    
-    // Add headers to beginning of rows
-    rows.unshift(headers);
-    
-    // Convert to CSV content
-    const csvContent = rows.map(row => row.map(cell => 
-      // Escape quotes and wrap in quotes if contains comma or quote
-      typeof cell === 'string' && (cell.includes(',') || cell.includes('"')) 
-        ? `"${cell.replace(/"/g, '""')}"` 
-        : cell
-    ).join(',')).join('\n');
-    
-    // Create a download link
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `100-marriage-assessments-${new Date().toISOString().split('T')[0]}.csv`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-  
-  // Export detailed responses with questions for all assessments
-  const handleExportDetailedResponsesCSV = async () => {
-    if (!assessments?.length) return;
-    
-    try {
-      toast({
-        title: "Preparing Export",
-        description: "Generating detailed responses export for all assessments. This may take a moment..."
-      });
-      
-      // Import questions data for mapping
-      const { questions } = await import('@/data/questionsData');
-      
-      // First, create column headers with all question IDs
-      const basicHeaders = [
-        "Name", "Email", "Date", "Gender", "Marriage Status", "Profile", "Overall Score"
-      ];
-      
-      // Add a column for each question
-      const questionHeaders = questions.map(q => 
-        `Q${q.id} (${q.section}): ${q.text.substring(0, 30)}...`
-      );
-      
-      // Create final headers array
-      const headers = [...basicHeaders, ...questionHeaders];
-      
-      // Process each assessment
-      const rows = await Promise.all(assessments.map(async (assessment) => {
-        // Get the detailed responses for this assessment
-        // First try to parse the responses field if it exists
-        let detailedResponses = {};
-        try {
-          if (typeof assessment.responses === 'string') {
-            detailedResponses = JSON.parse(assessment.responses);
-          } else if (assessment.responses) {
-            detailedResponses = assessment.responses;
-          }
-        } catch (error) {
-          console.error(`Failed to parse responses for ${assessment.email}:`, error);
-        }
-        
-        // Get demographics
-        let demographics = {};
-        try {
-          if (typeof assessment.demographics === 'string') {
-            demographics = JSON.parse(assessment.demographics);
-          } else if (assessment.demographics) {
-            demographics = assessment.demographics;
-          }
-        } catch (error) {
-          console.error(`Failed to parse demographics for ${assessment.email}:`, error);
-        }
-        
-        // Get scores
-        let scores = { overallPercentage: 0 };
-        try {
-          if (typeof assessment.scores === 'string') {
-            scores = JSON.parse(assessment.scores);
-          } else if (assessment.scores) {
-            scores = assessment.scores;
-          }
-        } catch (error) {
-          console.error(`Failed to parse scores for ${assessment.email}:`, error);
-        }
-        
-        // Basic assessment data
-        const basicData = [
-          assessment.name,
-          assessment.email,
-          assessment.timestamp ? new Date(assessment.timestamp).toISOString().split('T')[0] : '',
-          demographics.gender || '',
-          demographics.marriageStatus || '',
-          typeof assessment.profile === 'string'
-            ? JSON.parse(assessment.profile).name
-            : assessment.profile?.name || '',
-          scores.overallPercentage.toFixed(1) + '%'
-        ];
-        
-        // Create an array of responses matching question order
-        const responseData = questions.map(question => {
-          const response = detailedResponses[question.id];
-          if (!response) return "No answer";
-          return `${response.option} (${response.value})`;
-        });
-        
-        return [...basicData, ...responseData];
-      }));
-      
-      // Add headers to beginning of rows
-      rows.unshift(headers);
-      
-      // Convert to CSV content
-      const csvContent = rows.map(row => row.map(cell => 
-        // Escape quotes and wrap in quotes if contains comma or quote
-        typeof cell === 'string' && (cell.includes(',') || cell.includes('"')) 
-          ? `"${cell.replace(/"/g, '""')}"` 
-          : cell
-      ).join(',')).join('\n');
-      
-      // Create and trigger download
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `detailed-assessment-responses-${new Date().toISOString().split('T')[0]}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      
-      toast({
-        title: "Export Complete",
-        description: "Detailed assessment responses have been exported successfully!"
-      });
-    } catch (error) {
-      console.error("Error exporting detailed responses:", error);
-      toast({
-        title: "Export Failed",
-        description: error instanceof Error ? error.message : "Failed to export detailed responses",
-        variant: "destructive"
-      });
-    }
-  };
-  
-  // Handle Referrals CSV export
-  const handleExportReferralsCSV = () => {
-    if (!referrals?.length) return;
-    
-    // Define CSV columns
-    const headers = [
-      "Referrer Name",
-      "Referrer Email",
-      "Invited Person",
-      "Invited Email",
-      "Date Sent",
-      "Status",
-      "Promo Code",
-      "Completion Date"
-    ];
-    
-    // Convert referral data to CSV rows
-    const rows = referrals.map(referral => [
-      referral.referrerName,
-      referral.referrerEmail,
-      referral.invitedName,
-      referral.invitedEmail,
-      referral.timestamp ? new Date(referral.timestamp).toISOString().split('T')[0] : '',
-      referral.status,
-      referral.promoCode || 'N/A',
-      referral.completedTimestamp ? new Date(referral.completedTimestamp).toISOString().split('T')[0] : 'N/A'
-    ]);
-    
-    // Add headers to beginning of rows
-    rows.unshift(headers);
-    
-    // Convert to CSV content
-    const csvContent = rows.map(row => row.map(cell => 
-      // Escape quotes and wrap in quotes if contains comma or quote
-      typeof cell === 'string' && (cell.includes(',') || cell.includes('"')) 
-        ? `"${cell.replace(/"/g, '""')}"` 
-        : cell
-    ).join(',')).join('\n');
-    
-    // Create a download link
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `100-marriage-referrals-${new Date().toISOString().split('T')[0]}.csv`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
   };
 
   // Login form
@@ -1432,13 +525,15 @@ export default function AdminDashboard() {
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle className="text-2xl">Admin Dashboard</CardTitle>
-            <CardDescription>Please login to access the dashboard</CardDescription>
+            <CardDescription>
+              Enter your credentials to access the admin dashboard
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium" htmlFor="username">Username</label>
-                <Input 
+                <Label htmlFor="username">Username</Label>
+                <Input
                   id="username"
                   type="text"
                   value={username}
@@ -1447,8 +542,8 @@ export default function AdminDashboard() {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium" htmlFor="password">Password</label>
-                <Input 
+                <Label htmlFor="password">Password</Label>
+                <Input
                   id="password"
                   type="password"
                   value={password}
@@ -1456,7 +551,9 @@ export default function AdminDashboard() {
                   required
                 />
               </div>
-              <Button type="submit" className="w-full">Login</Button>
+              <Button type="submit" className="w-full">
+                Login
+              </Button>
             </form>
           </CardContent>
         </Card>
@@ -1465,1319 +562,649 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <h1 className="text-xl font-semibold text-gray-900">100 Marriage Assessment - Admin Dashboard</h1>
-          <Button variant="outline" onClick={handleLogout}>Logout</Button>
-        </div>
-      </header>
+    <TooltipProvider>
+      <div className="min-h-screen bg-gray-50">
+        {/* Header */}
+        <header className="bg-white shadow">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex justify-between items-center">
+              <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+              <div className="flex items-center gap-4">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    refetchAssessments();
+                    refetchAnalytics();
+                    refetchTransactions();
+                    refetchReferrals();
+                  }}
+                  disabled={assessmentsLoading || analyticsLoading}
+                >
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Refresh Data
+                </Button>
+                <Button variant="outline" onClick={handleLogout}>
+                  Logout
+                </Button>
+              </div>
+            </div>
+          </div>
+        </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Tabs defaultValue="analytics" className="space-y-4">
-          <TabsList>
-            <TabsTrigger value="analytics">Analytics</TabsTrigger>
-            <TabsTrigger value="assessments">Assessment Results</TabsTrigger>
-            <TabsTrigger value="historical">Historical Data (Since May 6)</TabsTrigger>
-            <TabsTrigger value="data-recovery">Customer Data Recovery</TabsTrigger>
-            <TabsTrigger value="referrals">Invitations & Referrals</TabsTrigger>
-            <TabsTrigger value="payments">Payment Transactions</TabsTrigger>
-            <TabsTrigger value="matching">THM Pool Matching</TabsTrigger>
-          </TabsList>
-          
-          {/* Customer Data Recovery Tab */}
-          <TabsContent value="data-recovery" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Customer Data Recovery</CardTitle>
-                <CardDescription>
-                  Recover customer information directly from Stripe for customers who made payments since May 6, 2025
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <RecoverySection />
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="analytics" className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Summary Cards */}
+          {analyticsSummary && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-500">Total Assessments</CardTitle>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Assessments</CardTitle>
+                  <Users className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold">{analytics.totalAssessments}</div>
+                  <div className="text-2xl font-bold">{analyticsSummary.totalAssessments}</div>
+                  <p className="text-xs text-muted-foreground">
+                    Active assessments in system
+                  </p>
                 </CardContent>
               </Card>
               
               <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-500">Average Score</CardTitle>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+                  <DollarSign className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold">{analytics.averageScore.toFixed(1)}%</div>
+                  <div className="text-2xl font-bold">${analyticsSummary.totalRevenue.toFixed(2)}</div>
+                  <p className="text-xs text-muted-foreground">
+                    From assessment payments
+                  </p>
                 </CardContent>
               </Card>
               
               <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-500">Gender Distribution</CardTitle>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Average Score</CardTitle>
+                  <Activity className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
-                <CardContent className="flex gap-4">
-                  <div>
-                    <div className="text-sm text-gray-500">Male</div>
-                    <div className="text-2xl font-bold">{analytics.genderDistribution.male}</div>
-                  </div>
-                  <div>
-                    <div className="text-sm text-gray-500">Female</div>
-                    <div className="text-2xl font-bold">{analytics.genderDistribution.female}</div>
-                  </div>
+                <CardContent>
+                  <div className="text-2xl font-bold">{analyticsSummary.averageScore.toFixed(1)}%</div>
+                  <p className="text-xs text-muted-foreground">
+                    Across all assessments
+                  </p>
                 </CardContent>
               </Card>
               
               <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-500">Referrals</CardTitle>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Pool Candidates</CardTitle>
+                  <TrendingUp className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="flex flex-col gap-2">
-                    <div className="flex justify-between items-center">
-                      <div className="text-sm text-gray-500">Total Invitations</div>
-                      <div className="text-lg font-semibold">{analytics.referralsStats.total}</div>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <div className="text-sm text-gray-500">Completed</div>
-                      <div className="text-lg font-semibold text-green-600">{analytics.referralsStats.completed}</div>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <div className="text-sm text-gray-500">Completion Rate</div>
-                      <div className="text-lg font-semibold">
-                        {analytics.referralsStats.completionRate.toFixed(1)}%
-                      </div>
-                    </div>
-                  </div>
+                  <div className="text-2xl font-bold">{poolCandidates.length}</div>
+                  <p className="text-xs text-muted-foreground">
+                    High-compatibility singles
+                  </p>
                 </CardContent>
               </Card>
             </div>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle>Profile Distribution</CardTitle>
-                <CardDescription>Number of users in each psychographic profile</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {Object.entries(analytics.profileDistribution).map(([profile, count]) => (
-                    <div key={profile} className="flex items-center justify-between">
-                      <span>{profile}</span>
-                      <div className="flex items-center gap-2">
-                        <div className="h-2.5 bg-primary-200 rounded-full w-[200px] overflow-hidden">
-                          <div 
-                            className="h-full bg-primary-500 rounded-full" 
-                            style={{ width: `${(Number(count) / analytics.totalAssessments) * 100}%` }} 
-                          />
-                        </div>
-                        <span className="text-sm text-gray-500">{Number(count)}</span>
-                      </div>
+          )}
+
+          <Tabs defaultValue="assessments" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-6">
+              <TabsTrigger value="assessments">Assessments</TabsTrigger>
+              <TabsTrigger value="analytics">Analytics</TabsTrigger>
+              <TabsTrigger value="payments">Payments</TabsTrigger>
+              <TabsTrigger value="pool">Marriage Pool</TabsTrigger>
+              <TabsTrigger value="referrals">Referrals</TabsTrigger>
+              <TabsTrigger value="recovery">Recovery</TabsTrigger>
+            </TabsList>
+
+            {/* Assessments Tab */}
+            <TabsContent value="assessments" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <CardTitle>Assessment Results</CardTitle>
+                      <CardDescription>
+                        Manage and view all assessment submissions
+                      </CardDescription>
                     </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-            
-            {/* Website Traffic Analytics Section */}
-            <div className="mt-8">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold">Website Traffic Analytics</h2>
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm text-gray-500">Time period:</span>
-                  <select 
-                    value={analyticsPeriod}
-                    onChange={(e) => setAnalyticsPeriod(e.target.value as 'day' | 'week' | 'month' | 'year')}
-                    className="text-sm border rounded p-1"
-                  >
-                    <option value="day">Last 24 hours</option>
-                    <option value="week">Last 7 days</option>
-                    <option value="month">Last 30 days</option>
-                    <option value="year">Last 12 months</option>
-                  </select>
-                </div>
-              </div>
-              
-              {isLoadingAnalytics ? (
-                <div className="flex justify-center items-center h-64">
-                  <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></div>
-                </div>
-              ) : (
-                <>
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                    <Card>
-                      <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-gray-500">Total Visitors</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="text-3xl font-bold">{analyticsSummary?.totalVisitors || 0}</div>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card>
-                      <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-gray-500">Page Views</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="text-3xl font-bold">{analyticsSummary?.totalPageViews || 0}</div>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card>
-                      <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-gray-500">Conversion Rate</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="text-3xl font-bold">{(analyticsSummary?.conversionRate || 0).toFixed(1)}%</div>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card>
-                      <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-gray-500">Avg. Session</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="text-3xl font-bold">
-                          {Math.floor((analyticsSummary?.averageSessionDuration || 0) / 60)}m {Math.floor((analyticsSummary?.averageSessionDuration || 0) % 60)}s
-                        </div>
-                      </CardContent>
-                    </Card>
+                    <div className="flex gap-2">
+                      <Button 
+                        onClick={() => downloadDataMutation.mutate()}
+                        disabled={downloadDataMutation.isPending}
+                      >
+                        <Download className="h-4 w-4 mr-2" />
+                        Export All
+                      </Button>
+                    </div>
                   </div>
                   
+                  {/* Search and Filters */}
+                  <div className="flex flex-col sm:flex-row gap-4 mt-4">
+                    <div className="flex-1">
+                      <div className="relative">
+                        <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          placeholder="Search by email, name..."
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          className="pl-8"
+                        />
+                      </div>
+                    </div>
+                    <Select value={filterGender} onValueChange={setFilterGender}>
+                      <SelectTrigger className="w-32">
+                        <SelectValue placeholder="Gender" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Genders</SelectItem>
+                        <SelectItem value="male">Male</SelectItem>
+                        <SelectItem value="female">Female</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Select value={filterMarriageStatus} onValueChange={setFilterMarriageStatus}>
+                      <SelectTrigger className="w-40">
+                        <SelectValue placeholder="Status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Status</SelectItem>
+                        <SelectItem value="single">Single</SelectItem>
+                        <SelectItem value="married">Married</SelectItem>
+                        <SelectItem value="divorced">Divorced</SelectItem>
+                        <SelectItem value="widowed">Widowed</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {assessmentsLoading ? (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="h-8 w-8 animate-spin" />
+                    </div>
+                  ) : assessmentsError ? (
+                    <div className="flex items-center justify-center py-8 text-red-500">
+                      <AlertCircle className="h-5 w-5 mr-2" />
+                      Failed to load assessments
+                    </div>
+                  ) : (
+                    <>
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Name</TableHead>
+                            <TableHead>Email</TableHead>
+                            <TableHead>Score</TableHead>
+                            <TableHead>Profile</TableHead>
+                            <TableHead>Date</TableHead>
+                            <TableHead>Actions</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {paginatedAssessments.map((assessment: AssessmentResult, index) => (
+                            <TableRow key={index}>
+                              <TableCell className="font-medium">
+                                {assessment.demographics?.firstName} {assessment.demographics?.lastName}
+                              </TableCell>
+                              <TableCell>{assessment.demographics?.email}</TableCell>
+                              <TableCell>
+                                <Badge variant={
+                                  (assessment.scores?.overallPercentage || 0) >= 80 ? "default" :
+                                  (assessment.scores?.overallPercentage || 0) >= 60 ? "secondary" : "destructive"
+                                }>
+                                  {assessment.scores?.overallPercentage?.toFixed(1) || 0}%
+                                </Badge>
+                              </TableCell>
+                              <TableCell>{assessment.profile?.name || "N/A"}</TableCell>
+                              <TableCell>{formatDate(assessment.timestamp)}</TableCell>
+                              <TableCell>
+                                <div className="flex gap-1">
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Button
+                                        size="sm"
+                                        variant="outline"
+                                        onClick={() => handleViewDetails(assessment)}
+                                      >
+                                        <Info className="h-3 w-3" />
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>View Details</TooltipContent>
+                                  </Tooltip>
+                                  
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Button
+                                        size="sm"
+                                        variant="outline"
+                                        onClick={() => handleResendAssessment(assessment.demographics?.email || '')}
+                                        disabled={sendResultsMutation.isPending}
+                                      >
+                                        <Mail className="h-3 w-3" />
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>Resend Report</TooltipContent>
+                                  </Tooltip>
+                                  
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Button
+                                        size="sm"
+                                        variant="outline"
+                                        onClick={() => handleDownloadAssessmentData(assessment)}
+                                      >
+                                        <Download className="h-3 w-3" />
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>Download Data</TooltipContent>
+                                  </Tooltip>
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+
+                      {/* Pagination */}
+                      {totalPages > 1 && (
+                        <div className="flex items-center justify-between space-x-2 py-4">
+                          <div className="text-sm text-muted-foreground">
+                            Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredAssessments.length)} of {filteredAssessments.length} results
+                          </div>
+                          <div className="flex space-x-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                              disabled={currentPage === 1}
+                            >
+                              Previous
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                              disabled={currentPage === totalPages}
+                            >
+                              Next
+                            </Button>
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Analytics Tab */}
+            <TabsContent value="analytics" className="space-y-6">
+              {analyticsSummary && (
+                <>
+                  {/* Gender Distribution */}
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <Card>
                       <CardHeader>
-                        <CardTitle>Visitor Trends</CardTitle>
-                        <CardDescription>Daily visitor count over time</CardDescription>
-                      </CardHeader>
-                      <CardContent className="h-80">
-                        {analyticsSummary?.dailyVisitors && analyticsSummary.dailyVisitors.length > 0 ? (
-                          <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={analyticsSummary.dailyVisitors}>
-                              <CartesianGrid strokeDasharray="3 3" />
-                              <XAxis 
-                                dataKey="date" 
-                                tickFormatter={(date) => new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                              />
-                              <YAxis allowDecimals={false} />
-                              <Tooltip 
-                                labelFormatter={(label) => new Date(label).toLocaleDateString('en-US', { 
-                                  weekday: 'long',
-                                  year: 'numeric', 
-                                  month: 'long', 
-                                  day: 'numeric' 
-                                })}
-                                formatter={(value) => [`${value} visitors`, 'Count']}
-                              />
-                              <Bar dataKey="count" fill="#8884d8" radius={[4, 4, 0, 0]} />
-                            </BarChart>
-                          </ResponsiveContainer>
-                        ) : (
-                          <div className="flex items-center justify-center h-full text-gray-500">
-                            No visitor data available for this period
-                          </div>
-                        )}
-                      </CardContent>
-                    </Card>
-                    
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Top Pages</CardTitle>
-                        <CardDescription>Most visited pages on the website</CardDescription>
+                        <CardTitle>Gender Distribution</CardTitle>
+                        <CardDescription>Assessment participants by gender</CardDescription>
                       </CardHeader>
                       <CardContent>
-                        {analyticsSummary?.topPages && analyticsSummary.topPages.length > 0 ? (
-                          <div className="space-y-4">
-                            {analyticsSummary.topPages.map((page, index) => (
-                              <div key={index} className="flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                  <span className="text-sm font-medium w-6 text-center">{index + 1}</span>
-                                  <span className="text-sm truncate max-w-[200px]">{page.path}</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <div className="w-32 h-2 bg-gray-100 rounded-full overflow-hidden">
-                                    <div 
-                                      className="h-full bg-primary" 
-                                      style={{ 
-                                        width: `${(page.count / (analyticsSummary.topPages[0]?.count || 1)) * 100}%` 
-                                      }}
-                                    />
-                                  </div>
-                                  <span className="text-sm font-medium">{page.count}</span>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        ) : (
-                          <div className="flex items-center justify-center h-32 text-gray-500">
-                            No page view data available
-                          </div>
-                        )}
-                      </CardContent>
-                    </Card>
-                  </div>
-                </>
-              )}
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="assessments" className="space-y-4">
-            <div className="bg-white p-4 rounded-lg shadow-sm">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
-                <h2 className="text-lg font-medium">Assessment Results</h2>
-                
-                <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleExportAssessmentsCSV}
-                    disabled={!assessments?.length}
-                    className="whitespace-nowrap"
-                  >
-                    Export CSV
-                  </Button>
-                  
-                  <Input 
-                    placeholder="Search by name, email, etc..." 
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full sm:w-64"
-                  />
-                </div>
-              </div>
-              
-              {isLoading ? (
-                <div className="flex justify-center py-8">
-                  <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
-                </div>
-              ) : error ? (
-                <div className="text-center py-8 text-red-500">
-                  Error loading assessment data
-                </div>
-              ) : (
-                <div className="overflow-auto">
-                  <Table>
-                    <TableCaption>A list of all assessment results</TableCaption>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Date</TableHead>
-                        <TableHead>Gender</TableHead>
-                        <TableHead>Profile</TableHead>
-                        <TableHead>Score</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {filteredAssessments?.length ? (
-                        filteredAssessments.map((assessment) => (
-                          <TableRow key={`${assessment.email}-${assessment.timestamp}`}>
-                            <TableCell className="font-medium">{assessment.name}</TableCell>
-                            <TableCell>{assessment.email}</TableCell>
-                            <TableCell>{formatDate(assessment.timestamp)}</TableCell>
-                            <TableCell>{assessment.demographics.gender}</TableCell>
-                            <TableCell>
-                              <Badge variant="outline">{assessment.profile.name}</Badge>
-                            </TableCell>
-                            <TableCell>{assessment.scores.overallPercentage}%</TableCell>
-                            <TableCell className="text-right">
-                              <Button 
-                                variant="outline" 
-                                size="sm"
-                                onClick={() => handleViewDetails(assessment)}
-                              >
-                                View Details
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      ) : (
-                        <TableRow>
-                          <TableCell colSpan={7} className="text-center py-8 text-gray-500">
-                            No assessment results found
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
-                </div>
-              )}
-            </div>
-          </TabsContent>
-          <TabsContent value="historical" className="space-y-4">
-            <div className="bg-white p-4 rounded-lg shadow-sm">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
-                <h2 className="text-lg font-medium">Historical Assessment Data (Since May 6)</h2>
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleExportAssessmentsCSV}
-                    disabled={!assessments?.length}
-                    className="whitespace-nowrap"
-                  >
-                    Export Summary CSV
-                  </Button>
-                  <Button
-                    variant="default"
-                    size="sm"
-                    onClick={handleExportDetailedResponsesCSV}
-                    disabled={!assessments?.length}
-                    className="whitespace-nowrap"
-                  >
-                    Export Detailed Responses CSV
-                  </Button>
-                </div>
-              </div>
-              
-              {/* Date Filter Controls */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4 bg-gray-50 p-4 rounded-lg">
-                <div>
-                  <Label htmlFor="startDate">From Date</Label>
-                  <Input
-                    type="date"
-                    id="startDate"
-                    value={assessmentDateRange.startDate || "2023-01-01"}
-                    onChange={(e) => setAssessmentDateRange({
-                      ...assessmentDateRange,
-                      startDate: e.target.value || "2023-01-01"
-                    })}
-                    className="mt-1"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="endDate">To Date</Label>
-                  <Input
-                    type="date"
-                    id="endDate"
-                    value={assessmentDateRange.endDate || ""}
-                    onChange={(e) => setAssessmentDateRange({
-                      ...assessmentDateRange,
-                      endDate: e.target.value
-                    })}
-                    className="mt-1"
-                  />
-                </div>
-                <div className="flex flex-col justify-end">
-                  <div className="flex items-center space-x-2 h-10">
-                    <Checkbox
-                      id="requirePayment"
-                      checked={assessmentDateRange.requirePayment}
-                      onCheckedChange={(checked) => setAssessmentDateRange({
-                        ...assessmentDateRange,
-                        requirePayment: checked === true
-                      })}
-                    />
-                    <Label htmlFor="requirePayment">Paid assessments only</Label>
-                  </div>
-                  <Button 
-                    variant="default" 
-                    onClick={() => refetchAssessments()}
-                    className="mt-2"
-                  >
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                    Apply Filters
-                  </Button>
-                </div>
-              </div>
-              
-              {/* Scoring Info */}
-              <div className="bg-muted/30 p-3 rounded-md mb-4">
-                <h4 className="text-sm font-medium mb-1 flex items-center">
-                  <Info className="h-4 w-4 mr-1 text-muted-foreground" />
-                  About Assessment Scores
-                </h4>
-                <p className="text-xs text-muted-foreground">
-                  <strong>Assessment Score:</strong> Raw percentage from the questionnaire (0-100%).<br/>
-                  <strong>THM Match Score:</strong> Compatibility score used in the THM pool (50% assessment + 30% age factors + 20% location).
-                </p>
-                <div className="mt-2 pt-2 border-t border-muted">
-                  <p className="text-xs text-amber-600 flex items-start">
-                    <Info className="h-3 w-3 mr-1 mt-0.5 flex-shrink-0" />
-                    <span>
-                      <strong>Data Notice:</strong> Some assessment data shows identical scores because the responses were duplicated during sample data creation. New assessments will show unique scores based on actual user responses.
-                    </span>
-                  </p>
-                </div>
-              </div>
-              
-              {/* Results Summary */}
-              <div className="text-sm text-muted-foreground mb-4">
-                Found {filteredAssessments?.length || 0} assessments from {assessmentDateRange.startDate || "January 1, 2023"} 
-                {assessmentDateRange.endDate ? ` to ${assessmentDateRange.endDate}` : " to present"}
-                {assessmentDateRange.requirePayment ? " (paid assessments only)" : ""}
-                {assessmentDateRange.completedOnly ? " (completed assessments only)" : ""}
-              </div>
-              
-              {/* Assessment Results Table */}
-              <div className="rounded-md border">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="font-medium">Name</TableHead>
-                      <TableHead className="font-medium">Email</TableHead>
-                      <TableHead className="font-medium">Date</TableHead>
-                      <TableHead className="font-medium">Gender</TableHead>
-                      <TableHead className="font-medium">Location</TableHead>
-                      <TableHead className="font-medium">Marriage Status</TableHead>
-                      <TableHead className="font-medium">Profile</TableHead>
-                      <TableHead className="font-medium">Assessment</TableHead>
-                      <TableHead className="font-medium">THM Score</TableHead>
-                      <TableHead className="font-medium"></TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {isLoading ? (
-                      <TableRow>
-                        <TableCell colSpan={10} className="h-24 text-center">
-                          <div className="flex justify-center">
-                            <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ) : filteredAssessments && filteredAssessments.length > 0 ? (
-                      // Display filtered assessments sorted by date
-                      filteredAssessments
-                        .sort((a, b) => {
-                          // Sort by most recent first
-                          const dateA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
-                          const dateB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
-                          return dateB - dateA;
-                        })
-                        .map((assessment, index) => (
-                          <TableRow key={index}>
-                            <TableCell>{assessment.name}</TableCell>
-                            <TableCell className="font-mono text-xs">{assessment.email}</TableCell>
-                            <TableCell>
-                              {assessment.timestamp ? formatDate(assessment.timestamp) : "N/A"}
-                            </TableCell>
-                            <TableCell>{assessment.demographics.gender}</TableCell>
-                            <TableCell>
-                              {assessment.demographics.city}, {assessment.demographics.state}
-                            </TableCell>
-                            <TableCell>{assessment.demographics.marriageStatus}</TableCell>
-                            <TableCell>
-                              <Badge variant="outline">{assessment.profile.name}</Badge>
-                            </TableCell>
-                            <TableCell>
-                              {assessment.scores.overallPercentage.toFixed(1)}%
-                            </TableCell>
-                            <TableCell>
-                              <div className="flex items-center gap-1">
-                                {calculateMatchScore(assessment).toFixed(1)}%
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                                    </TooltipTrigger>
-                                    <TooltipContent className="max-w-xs">
-                                      <p className="text-xs">Combined match score: 50% assessment, 30% age factors, 20% location</p>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
-                              </div>
-                            </TableCell>
-                            <TableCell>
-                              <div className="flex gap-1">
-                                <Button 
-                                  variant="ghost" 
-                                  size="icon"
-                                  onClick={() => {
-                                    setSelectedAssessment(assessment);
-                                    setDetailModalOpen(true);
-                                  }}
-                                  title="View details"
-                                >
-                                  <Search className="h-4 w-4" />
-                                </Button>
-                                <Button 
-                                  variant="ghost" 
-                                  size="icon"
-                                  disabled={isResendingResults}
-                                  onClick={() => {
-                                    resendAssessmentResults({
-                                      email: assessment.email,
-                                      assessmentType: 'individual'
-                                    });
-                                  }}
-                                  title="Resend results to this email"
-                                >
-                                  <Mail className="h-4 w-4" />
-                                </Button>
-                                <Button 
-                                  variant="ghost" 
-                                  size="icon"
-                                  onClick={() => handleDownloadAssessmentData(assessment.email)}
-                                  title="Download full assessment data"
-                                >
-                                  <Download className="h-4 w-4" />
-                                </Button>
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                      ))
-                    ) : (
-                      <TableRow>
-                        <TableCell colSpan={10} className="h-24 text-center">
-                          No assessment results found in this date range.
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </div>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="referrals" className="space-y-4">
-            <div className="bg-white p-4 rounded-lg shadow-sm">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
-                <h2 className="text-lg font-medium">Invitations & Referrals</h2>
-                
-                <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleExportReferralsCSV}
-                    disabled={!referrals?.length}
-                    className="whitespace-nowrap"
-                  >
-                    Export CSV
-                  </Button>
-                  
-                  <Input 
-                    placeholder="Search referrals..." 
-                    value={referralSearchTerm}
-                    onChange={(e) => setReferralSearchTerm(e.target.value)}
-                    className="w-full sm:w-64"
-                  />
-                </div>
-              </div>
-              
-              {isLoadingReferrals ? (
-                <div className="flex justify-center py-8">
-                  <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
-                </div>
-              ) : referralsError ? (
-                <div className="text-center py-8 text-red-500">
-                  Error loading referral data
-                </div>
-              ) : (
-                <div className="overflow-auto">
-                  <Table>
-                    <TableCaption>A list of all invitations and referrals</TableCaption>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Referrer</TableHead>
-                        <TableHead>Invited Person</TableHead>
-                        <TableHead>Invited Email</TableHead>
-                        <TableHead>Date Sent</TableHead>
-                        <TableHead>Promo Code</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Completion Date</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {filteredReferrals?.length ? (
-                        filteredReferrals.map((referral) => (
-                          <TableRow key={referral.id}>
-                            <TableCell className="font-medium">
-                              {referral.referrerName}
-                              <div className="text-xs text-gray-500">{referral.referrerEmail}</div>
-                            </TableCell>
-                            <TableCell>{referral.invitedName}</TableCell>
-                            <TableCell>{referral.invitedEmail}</TableCell>
-                            <TableCell>{formatDate(referral.timestamp)}</TableCell>
-                            <TableCell>
-                              {referral.promoCode ? (
-                                <Badge variant="outline">{referral.promoCode}</Badge>
-                              ) : (
-                                <span className="text-gray-400">-</span>
-                              )}
-                            </TableCell>
-                            <TableCell>
-                              <Badge 
-                                variant={
-                                  referral.status === 'completed' ? 'default' : 
-                                  referral.status === 'sent' ? 'outline' : 'secondary'
-                                }
-                              >
-                                {referral.status}
-                              </Badge>
-                            </TableCell>
-                            <TableCell>
-                              {referral.completedTimestamp ? (
-                                formatDate(referral.completedTimestamp)
-                              ) : (
-                                <span className="text-gray-400">-</span>
-                              )}
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      ) : (
-                        <TableRow>
-                          <TableCell colSpan={7} className="text-center py-8 text-gray-500">
-                            No referrals found
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
-                </div>
-              )}
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="payments" className="space-y-4">
-            <div className="bg-white p-4 rounded-lg shadow-sm">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
-                <div>
-                  <h2 className="text-lg font-medium">Payment Transactions</h2>
-                  <p className="text-sm text-gray-500">
-                    View revenue and payment details
-                  </p>
-                </div>
-                
-                <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-                  <Button
-                    variant="default"
-                    size="sm"
-                    onClick={() => {
-                      toast({
-                        title: "Transactions Loaded",
-                        description: "Successfully loaded payment transactions data.",
-                        variant: "default"
-                      });
-                    }}
-                  >
-                    Load Transaction Data
-                  </Button>
-                    </div>
-                    
-                    {/* Email search input */}
-                    <div className="flex items-center gap-2 mt-2 sm:mt-0">
-                      <input
-                        type="email"
-                        placeholder="Search by email..."
-                        className="text-sm border rounded p-1 w-full sm:w-60"
-                        value={emailSearchTerm}
-                        onChange={(e) => setEmailSearchTerm(e.target.value)}
-                      />
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleEmailSearch}
-                        disabled={!emailSearchTerm}
-                      >
-                        Search
-                      </Button>
-                    </div>
-
-                    <div className="flex space-x-2">
-                      <Button 
-                        variant="default"
-                        size="sm" 
-                        onClick={() => syncStripePayments()}
-                        disabled={isSyncingPayments}
-                        className="whitespace-nowrap"
-                      >
-                        {isSyncingPayments ? (
-                          <>
-                            <span className="animate-spin mr-2 h-4 w-4 border-2 border-primary-foreground border-t-transparent rounded-full" />
-                            Syncing Transactions...
-                          </>
-                        ) : "Sync Missing Transactions"}
-                      </Button>
-                      
-                      <div className="flex items-center space-x-2">
-                        <Select 
-                          value={reminderDaysAgo.toString()} 
-                          onValueChange={(value) => setReminderDaysAgo(parseInt(value))}
-                        >
-                          <SelectTrigger className="w-[120px]">
-                            <SelectValue placeholder="Reminder Days" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="1">1 day ago</SelectItem>
-                            <SelectItem value="3">3 days ago</SelectItem>
-                            <SelectItem value="7">7 days ago</SelectItem>
-                            <SelectItem value="14">14 days ago</SelectItem>
-                            <SelectItem value="30">30 days ago</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        
-                        <Button 
-                          variant="outline"
-                          size="sm" 
-                          onClick={() => sendAssessmentReminders()}
-                          disabled={isSendingReminders}
-                          className="whitespace-nowrap"
-                        >
-                          {isSendingReminders ? (
-                            <>
-                              <span className="animate-spin mr-2 h-4 w-4 border-2 border-primary border-t-transparent rounded-full" />
-                              Sending Reminders...
-                            </>
-                          ) : "Send Completion Reminders"}
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              {isLoadingPaymentTransactions ? (
-                <div className="flex justify-center py-8">
-                  <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
-                </div>
-              ) : paymentTransactions === undefined || paymentTransactions === null ? (
-                <div className="flex flex-col items-center justify-center py-8 px-4 bg-red-50 rounded-lg">
-                  <AlertCircle className="h-8 w-8 text-red-500 mb-2" />
-                  <h3 className="text-lg font-medium text-red-700">Error Loading Transactions</h3>
-                  <p className="text-sm text-center text-red-600 max-w-md">
-                    There was a problem loading payment transactions. Please try refreshing the page
-                    or contact support if the issue persists.
-                  </p>
-                  <Button 
-                    className="mt-4" 
-                    variant="outline" 
-                    onClick={() => {
-                      queryClient.invalidateQueries({ queryKey: ['/api/admin/analytics/payment-transactions'] })
-                    }}
-                  >
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                    Retry Loading Transactions
-                  </Button>
-                </div>
-              ) : (
-                <>
-                  {/* Revenue Summary */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <Card>
-                      <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-gray-500">Total Revenue</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="text-3xl font-bold">
-                          ${paymentTransactions 
-                            ? paymentTransactions
-                                .filter(t => !t.isRefunded)
-                                .reduce((sum, t) => sum + Number(t.amount)/100, 0)
-                                .toFixed(2)
-                            : '0.00'
-                          }
-                        </div>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card>
-                      <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-gray-500">Transactions</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="text-3xl font-bold">{paymentTransactions?.length || 0}</div>
-                        <div className="text-sm text-gray-500">
-                          {paymentTransactions 
-                            ? `${paymentTransactions.filter(t => !t.isRefunded).length} active / 
-                               ${paymentTransactions.filter(t => t.isRefunded).length} refunded`
-                            : '0 active / 0 refunded'
-                          }
-                        </div>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card>
-                      <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-gray-500">Product Breakdown</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-1 text-sm">
-                          <div className="flex justify-between items-center">
-                            <span>Individual Assessments:</span>
-                            <span className="font-medium">
-                              ${paymentTransactions 
-                                ? paymentTransactions
-                                    .filter(t => t.productType === 'individual' && !t.isRefunded)
-                                    .reduce((sum, t) => sum + Number(t.amount)/100, 0)
-                                    .toFixed(2)
-                                : '0.00'
-                              }
-                            </span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span>Couple Assessments:</span>
-                            <span className="font-medium">
-                              ${paymentTransactions 
-                                ? paymentTransactions
-                                    .filter(t => t.productType === 'couple' && !t.isRefunded)
-                                    .reduce((sum, t) => sum + Number(t.amount)/100, 0)
-                                    .toFixed(2)
-                                : '0.00'
-                              }
-                            </span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span>THM Marriage Pool:</span>
-                            <span className="font-medium">
-                              ${paymentTransactions 
-                                ? paymentTransactions
-                                    .filter(t => t.productType === 'marriage_pool' && !t.isRefunded)
-                                    .reduce((sum, t) => sum + Number(t.amount)/100, 0)
-                                    .toFixed(2)
-                                : '0.00'
-                              }
-                            </span>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                  
-                  {/* Search Results */}
-                  {searchResults && searchResults.length > 0 && (
-                    <Card className="mb-6">
-                      <CardHeader>
-                        <CardTitle>Search Results for: {emailSearchTerm}</CardTitle>
-                        <CardDescription>Found {searchResults.length} assessment{searchResults.length > 1 ? 's' : ''}</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-4">
-                          {searchResults.map(assessment => (
-                            <div key={assessment.email} className="border rounded-lg p-4 hover:bg-gray-50">
-                              <div className="flex justify-between">
-                                <div>
-                                  <div className="text-lg font-medium">{assessment.name}</div>
-                                  <div className="text-sm text-gray-500">{assessment.email}</div>
-                                  <div className="flex mt-2 gap-2">
-                                    <Badge>{assessment.demographics.gender}</Badge>
-                                    <Badge variant="outline">{assessment.profile.name}</Badge>
-                                    <Badge variant="secondary">{assessment.scores.overallPercentage.toFixed(1)}%</Badge>
-                                  </div>
-                                </div>
-                                <Button 
-                                  variant="outline" 
-                                  size="sm"
-                                  onClick={() => handleViewDetails(assessment)}
-                                >
-                                  View Details
-                                </Button>
-                              </div>
-                              <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm">
-                                <div>
-                                  <span className="font-medium">Demographics:</span> {assessment.demographics.marriageStatus}, {assessment.demographics.ethnicity}
-                                </div>
-                                <div>
-                                  <span className="font-medium">Location:</span> {assessment.demographics.city}, {assessment.demographics.state}
-                                </div>
-                                <div>
-                                  <span className="font-medium">Date:</span> {formatDate(assessment.timestamp)}
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )}
-
-                  {/* Revenue Chart */}
-                  {paymentTransactions && paymentTransactions.length > 0 && (
-                    <Card className="mb-6">
-                      <CardHeader>
-                        <CardTitle>Revenue by Product Type</CardTitle>
-                        <CardDescription>Distribution of revenue across assessment types</CardDescription>
-                      </CardHeader>
-                      <CardContent className="h-80">
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width="100%" height={300}>
                           <PieChart>
                             <Pie
-                              data={[
-                                { 
-                                  name: 'Individual Assessments', 
-                                  value: paymentTransactions
-                                    .filter(t => t.productType === 'individual' && !t.isRefunded)
-                                    .reduce((sum, t) => sum + Number(t.amount)/100, 0)
-                                },
-                                { 
-                                  name: 'Couple Assessments', 
-                                  value: paymentTransactions
-                                    .filter(t => t.productType === 'couple' && !t.isRefunded)
-                                    .reduce((sum, t) => sum + Number(t.amount)/100, 0)
-                                },
-                                { 
-                                  name: 'THM Marriage Pool', 
-                                  value: paymentTransactions
-                                    .filter(t => t.productType === 'marriage_pool' && !t.isRefunded)
-                                    .reduce((sum, t) => sum + Number(t.amount)/100, 0)
-                                }
-                              ]}
+                              data={Object.entries(analyticsSummary.genderDistribution).map(([key, value]) => ({
+                                name: key,
+                                value: value,
+                                fill: key === 'Male' ? '#3b82f6' : key === 'Female' ? '#ec4899' : '#6b7280'
+                              }))}
                               cx="50%"
                               cy="50%"
-                              labelLine={true}
-                              outerRadius={120}
+                              labelLine={false}
+                              label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                              outerRadius={80}
                               fill="#8884d8"
                               dataKey="value"
-                              label={({ name, value, percent }) => 
-                                `${name}: $${Number(value).toFixed(2)} (${(percent * 100).toFixed(1)}%)`
-                              }
                             >
-                              <Cell key="individual" fill="#8884d8" />
-                              <Cell key="couple" fill="#82ca9d" />
-                              <Cell key="marriage_pool" fill="#ffc658" />
+                              {Object.entries(analyticsSummary.genderDistribution).map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry[0] === 'Male' ? '#3b82f6' : entry[0] === 'Female' ? '#ec4899' : '#6b7280'} />
+                              ))}
                             </Pie>
-                            <Tooltip formatter={(value) => [`$${Number(value).toFixed(2)}`, 'Revenue']} />
+                            <RechartsTooltip />
                           </PieChart>
                         </ResponsiveContainer>
                       </CardContent>
                     </Card>
-                  )}
-                  
-                  {/* Transactions Table */}
+
+                    {/* Marriage Status Distribution */}
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Marriage Status</CardTitle>
+                        <CardDescription>Participants by relationship status</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <ResponsiveContainer width="100%" height={300}>
+                          <BarChart data={Object.entries(analyticsSummary.marriageStatusDistribution).map(([key, value]) => ({ name: key, count: value }))}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="name" />
+                            <YAxis />
+                            <RechartsTooltip />
+                            <Bar dataKey="count" fill="#8884d8" />
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  {/* Profile Distribution */}
                   <Card>
                     <CardHeader>
-                      <CardTitle>Transaction History</CardTitle>
-                      <CardDescription>
-                        Complete transaction records from Stripe
-                      </CardDescription>
+                      <CardTitle>Profile Distribution</CardTitle>
+                      <CardDescription>Most common personality profiles</CardDescription>
                     </CardHeader>
                     <CardContent>
+                      <ResponsiveContainer width="100%" height={400}>
+                        <BarChart data={Object.entries(analyticsSummary.profileDistribution).map(([key, value]) => ({ name: key, count: value }))}>
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
+                          <YAxis />
+                          <RechartsTooltip />
+                          <Bar dataKey="count" fill="#10b981" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </CardContent>
+                  </Card>
+                </>
+              )}
+            </TabsContent>
+
+            {/* Payments Tab */}
+            <TabsContent value="payments" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Payment Transactions</CardTitle>
+                  <CardDescription>All payment transactions and revenue data</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {transactionsLoading ? (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="h-8 w-8 animate-spin" />
+                    </div>
+                  ) : paymentTransactions === undefined || paymentTransactions === null ? (
+                    <div className="flex items-center justify-center py-8 text-muted-foreground">
+                      <AlertCircle className="h-5 w-5 mr-2" />
+                      No payment transactions available
+                    </div>
+                  ) : paymentTransactions.length === 0 ? (
+                    <div className="flex items-center justify-center py-8 text-muted-foreground">
+                      No payment transactions found
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {/* Summary Stats */}
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <Card>
+                          <CardContent className="p-4">
+                            <div className="text-2xl font-bold text-green-600">
+                              ${(paymentTransactions.reduce((sum: number, t: PaymentTransaction) => sum + (t.amount / 100), 0)).toFixed(2)}
+                            </div>
+                            <p className="text-sm text-muted-foreground">Total Revenue</p>
+                          </CardContent>
+                        </Card>
+                        <Card>
+                          <CardContent className="p-4">
+                            <div className="text-2xl font-bold">{paymentTransactions.length}</div>
+                            <p className="text-sm text-muted-foreground">Total Transactions</p>
+                          </CardContent>
+                        </Card>
+                        <Card>
+                          <CardContent className="p-4">
+                            <div className="text-2xl font-bold">
+                              ${(paymentTransactions.reduce((sum: number, t: PaymentTransaction) => sum + (t.amount / 100), 0) / paymentTransactions.length).toFixed(2)}
+                            </div>
+                            <p className="text-sm text-muted-foreground">Average Transaction</p>
+                          </CardContent>
+                        </Card>
+                      </div>
+
+                      {/* Transactions Table */}
                       <Table>
                         <TableHeader>
                           <TableRow>
                             <TableHead>Date</TableHead>
                             <TableHead>Customer</TableHead>
-                            <TableHead>Product</TableHead>
-                            <TableHead>Description</TableHead>
-                            <TableHead>Demographics</TableHead>
                             <TableHead>Amount</TableHead>
                             <TableHead>Status</TableHead>
-                            <TableHead>Transaction ID</TableHead>
+                            <TableHead>Product</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {paymentTransactions && Array.isArray(paymentTransactions) && paymentTransactions.length > 0 ? (
-                            paymentTransactions
-                              .sort((a, b) => {
-                                try {
-                                  return new Date(b.created).getTime() - new Date(a.created).getTime();
-                                } catch (e) {
-                                  console.error("Error sorting transactions", e);
-                                  return 0;
-                                }
-                              })
-                              .map((transaction, index) => (
-                                <TableRow key={transaction.id} className={transaction.isRefunded ? "bg-red-50" : ""}>
-                                  <TableCell>{formatDate(transaction.created)}</TableCell>
-                                  <TableCell>
-                                    {transaction.assessmentData?.firstName && transaction.assessmentData?.lastName ? (
-                                      <div className="flex flex-col">
-                                        <span className="font-medium">{`${transaction.assessmentData.firstName} ${transaction.assessmentData.lastName}`}</span>
-                                        <span className="text-xs text-muted-foreground">{transaction.customerEmail || 'N/A'}</span>
-                                      </div>
-                                    ) : (
-                                      <span>{transaction.customerEmail || "Anonymous"}</span>
-                                    )}
-                                  </TableCell>
-                                  <TableCell>
-                                    {transaction.productType === 'individual' ? (
-                                      <Badge variant="outline">Individual</Badge>
-                                    ) : transaction.productType === 'couple' ? (
-                                      <Badge variant="default">Couple</Badge>
-                                    ) : transaction.productType === 'marriage_pool' ? (
-                                      <Badge variant="secondary">Marriage Pool</Badge>
-                                    ) : (
-                                      <Badge>{transaction.productType}</Badge>
-                                    )}
-                                  </TableCell>
-                                  <TableCell className="text-sm">
-                                    {transaction.productName || (
-                                      transaction.productType === 'individual' ? 'The 100 Marriage Assessment - Series 1 (Individual)' :
-                                      transaction.productType === 'couple' ? 'The 100 Marriage Assessment - Series 1 (Couple)' :
-                                      transaction.productType === 'marriage_pool' ? 'THM Arranged Marriage Pool Application Fee' :
-                                      'Unknown Product'
-                                    )}
-                                  </TableCell>
-                                  <TableCell>
-                                    {transaction.assessmentData ? (
-                                      <div className="space-y-1 text-xs">
-                                        {transaction.assessmentData.gender && (
-                                          <div className="flex items-center gap-1">
-                                            <span className="font-medium">Gender:</span> {transaction.assessmentData.gender}
-                                          </div>
-                                        )}
-                                        {transaction.assessmentData.marriageStatus && (
-                                          <div className="flex items-center gap-1">
-                                            <span className="font-medium">Status:</span> {transaction.assessmentData.marriageStatus}
-                                          </div>
-                                        )}
-                                        {transaction.assessmentData.city && transaction.assessmentData.state && (
-                                          <div className="flex items-center gap-1">
-                                            <span className="font-medium">Location:</span> {`${transaction.assessmentData.city}, ${transaction.assessmentData.state}`}
-                                          </div>
-                                        )}
-                                      </div>
-                                    ) : (
-                                      <span className="text-xs text-muted-foreground">No data</span>
-                                    )}
-                                  </TableCell>
-                                  <TableCell className="font-medium">
-                                    ${(Number(transaction.amount)/100).toFixed(2)}
-                                  </TableCell>
-                                  <TableCell>
-                                    {transaction.isRefunded ? (
-                                      <Badge variant="destructive">Refunded</Badge>
-                                    ) : transaction.status === 'succeeded' ? (
-                                      <Badge variant="default">Succeeded</Badge>
-                                    ) : (
-                                      <Badge variant="outline">{transaction.status}</Badge>
-                                    )}
-                                  </TableCell>
-                                  <TableCell className="font-mono text-xs">{transaction.stripeId.substring(0, 14)}...</TableCell>
-                                </TableRow>
-                              ))
-                          ) : (
-                            <TableRow>
-                              <TableCell colSpan={8} className="text-center py-8 text-gray-500">
-                                No transactions found for the selected period
+                          {paymentTransactions.slice(0, 20).map((transaction: PaymentTransaction) => (
+                            <TableRow key={transaction.id}>
+                              <TableCell>{formatDate(transaction.created)}</TableCell>
+                              <TableCell>{transaction.customerEmail || 'N/A'}</TableCell>
+                              <TableCell>${(transaction.amount / 100).toFixed(2)}</TableCell>
+                              <TableCell>
+                                <Badge variant={transaction.status === 'succeeded' ? 'default' : 'destructive'}>
+                                  {transaction.status}
+                                </Badge>
                               </TableCell>
+                              <TableCell>{transaction.productType || 'Assessment'}</TableCell>
                             </TableRow>
-                          )}
+                          ))}
                         </TableBody>
                       </Table>
-                    </CardContent>
-                  </Card>
-                </>
-              )}
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="matching" className="space-y-4">
-            <div className="bg-white p-4 rounded-lg shadow-sm">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
-                <div>
-                  <h2 className="text-lg font-medium">THM Pool Matching</h2>
-                  <p className="text-sm text-gray-500">
-                    View and match candidates who opted into The 100 Marriage Arranged pool
-                  </p>
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setFilterGender("all")}
-                    className={filterGender === "all" ? "bg-primary-50" : ""}
-                  >
-                    All Candidates
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setFilterGender("male")}
-                    className={filterGender === "male" ? "bg-primary-50" : ""}
-                  >
-                    Male Candidates
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setFilterGender("female")}
-                    className={filterGender === "female" ? "bg-primary-50" : ""}
-                  >
-                    Female Candidates
-                  </Button>
-                </div>
-              </div>
-              
-              {isLoading ? (
-                <div className="flex justify-center py-8">
-                  <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
-                </div>
-              ) : error ? (
-                <div className="text-center py-8 text-red-500">
-                  Error loading assessment data
-                </div>
-              ) : (
-                <div className="overflow-auto">
-                  {filteredPoolCandidates?.length ? (
-                    <PoolCandidatesTable candidates={filteredPoolCandidates} />
-                  ) : (
-                    <div className="text-center py-8 text-gray-500">
-                      No THM pool candidates found
                     </div>
                   )}
-                </div>
-              )}
-            </div>
-          </TabsContent>
-        </Tabs>
-      </main>
-      
-      {/* Assessment Detail Modal */}
-      <Dialog open={detailModalOpen} onOpenChange={setDetailModalOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          {selectedAssessment && (
-            <>
-              <DialogHeader>
-                <DialogTitle className="text-xl">Assessment Details</DialogTitle>
-                <DialogDescription>
-                  {selectedAssessment.name} - {formatDate(selectedAssessment.timestamp)}
-                </DialogDescription>
-              </DialogHeader>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
-                {/* Demographic Information */}
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-lg">User Information</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
-                    <div className="grid grid-cols-2 gap-2">
-                      <div className="text-sm font-medium">Name:</div>
-                      <div>{selectedAssessment.name}</div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Marriage Pool Tab */}
+            <TabsContent value="pool" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Arranged Marriage Pool</CardTitle>
+                  <CardDescription>High-compatibility singles available for matching</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex gap-4 items-center">
+                      <Select value={filterGender} onValueChange={setFilterGender}>
+                        <SelectTrigger className="w-40">
+                          <SelectValue placeholder="Filter by gender" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">All Genders</SelectItem>
+                          <SelectItem value="male">Male</SelectItem>
+                          <SelectItem value="female">Female</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <div className="text-sm font-medium">Email:</div>
-                      <div>{selectedAssessment.email}</div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <div className="text-sm font-medium">Gender:</div>
-                      <div>{selectedAssessment.demographics.gender}</div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <div className="text-sm font-medium">Marriage Status:</div>
-                      <div>{selectedAssessment.demographics.marriageStatus}</div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <div className="text-sm font-medium">Desire Children:</div>
-                      <div>{selectedAssessment.demographics.desireChildren}</div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <div className="text-sm font-medium">Ethnicity:</div>
-                      <div>{selectedAssessment.demographics.ethnicity.split(',').join(', ')}</div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <div className="text-sm font-medium">Book Purchase:</div>
-                      <div>{selectedAssessment.demographics.hasPurchasedBook}</div>
-                    </div>
-                    {selectedAssessment.demographics.purchaseDate && (
-                      <div className="grid grid-cols-2 gap-2">
-                        <div className="text-sm font-medium">Purchase Date:</div>
-                        <div>{selectedAssessment.demographics.purchaseDate}</div>
+
+                    {assessmentsLoading ? (
+                      <div className="flex items-center justify-center py-8">
+                        <Loader2 className="h-8 w-8 animate-spin" />
                       </div>
+                    ) : assessmentsError ? (
+                      <div className="flex items-center justify-center py-8 text-red-500">
+                        <AlertCircle className="h-5 w-5 mr-2" />
+                        Failed to load pool candidates
+                      </div>
+                    ) : (
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Name</TableHead>
+                            <TableHead>Age</TableHead>
+                            <TableHead>Score</TableHead>
+                            <TableHead>Profile</TableHead>
+                            <TableHead>Location</TableHead>
+                            <TableHead>Match Score</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {poolCandidates
+                            .filter(candidate => filterGender === "all" || candidate.demographics?.gender?.toLowerCase() === filterGender.toLowerCase())
+                            .map((candidate, index) => (
+                            <TableRow key={index}>
+                              <TableCell className="font-medium">
+                                {candidate.demographics?.firstName} {candidate.demographics?.lastName}
+                              </TableCell>
+                              <TableCell>{calculateAge(candidate.demographics?.birthday || '')}</TableCell>
+                              <TableCell>
+                                <Badge variant="default">
+                                  {candidate.scores?.overallPercentage?.toFixed(1) || 0}%
+                                </Badge>
+                              </TableCell>
+                              <TableCell>{candidate.profile?.name || "N/A"}</TableCell>
+                              <TableCell>
+                                {candidate.demographics?.city}, {candidate.demographics?.state}
+                              </TableCell>
+                              <TableCell>
+                                <Badge variant="secondary">
+                                  {candidate.matchScore?.toFixed(1) || 0}
+                                </Badge>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
                     )}
-                  </CardContent>
-                </Card>
-                
-                {/* Profile Information */}
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-lg">
-                      Psychographic Profile
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
-                    <div className="text-lg font-bold text-primary-600 mb-2">
-                      {selectedAssessment.profile.name}
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Referrals Tab */}
+            <TabsContent value="referrals" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Referral Program</CardTitle>
+                  <CardDescription>Track referral codes and program performance</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {referralsLoading ? (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="h-8 w-8 animate-spin" />
                     </div>
-                    <div className="text-gray-600">
-                      {selectedAssessment.profile.description}
+                  ) : (
+                    <div className="text-center py-8 text-muted-foreground">
+                      Referral data will be displayed here when available
                     </div>
-                  </CardContent>
-                </Card>
-                
-                {/* Scores Breakdown */}
-                <Card className="md:col-span-2">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-lg">
-                      Score Breakdown
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-4">
-                        <div className="flex justify-between">
-                          <div className="text-center py-4">
-                            <span className="text-4xl font-bold">
-                              {selectedAssessment.scores.overallPercentage.toFixed(1)}%
-                            </span>
-                            <p className="text-sm text-gray-500">Assessment Score</p>
-                          </div>
-                          
-                          <div className="text-center py-4">
-                            <span className="text-4xl font-bold text-primary">
-                              {calculateMatchScore(selectedAssessment).toFixed(1)}%
-                            </span>
-                            <p className="text-sm text-gray-500">THM Match Score
-                              <TooltipProvider>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <Info className="h-3.5 w-3.5 text-muted-foreground ml-1 inline cursor-help" />
-                                  </TooltipTrigger>
-                                  <TooltipContent className="max-w-xs">
-                                    <p className="text-xs">Combined match score: 50% assessment, 30% age factors, 20% location</p>
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
-                            </p>
-                          </div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="text-sm font-medium">Total Earned: {selectedAssessment.scores.totalEarned}</div>
-                          <div className="text-sm font-medium">Total Possible: {selectedAssessment.scores.totalPossible}</div>
-                        </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Recovery Tab */}
+            <TabsContent value="recovery" className="space-y-6">
+              <RecoverySection />
+            </TabsContent>
+          </Tabs>
+        </main>
+
+        {/* Assessment Detail Modal */}
+        <Dialog open={detailModalOpen} onOpenChange={setDetailModalOpen}>
+          <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>
+                Assessment Details - {selectedAssessment?.demographics?.firstName} {selectedAssessment?.demographics?.lastName}
+              </DialogTitle>
+              <DialogDescription>
+                Complete assessment information and scoring breakdown
+              </DialogDescription>
+            </DialogHeader>
+
+            {selectedAssessment && (
+              <div className="space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-sm font-medium text-gray-600">Email</Label>
+                    <p className="text-sm">{selectedAssessment.demographics?.email}</p>
+                  </div>
+                  <div>
+                    <Label className="text-sm font-medium text-gray-600">Gender</Label>
+                    <p className="text-sm">{selectedAssessment.demographics?.gender}</p>
+                  </div>
+                  <div>
+                    <Label className="text-sm font-medium text-gray-600">Age</Label>
+                    <p className="text-sm">{calculateAge(selectedAssessment.demographics?.birthday || '')}</p>
+                  </div>
+                  <div>
+                    <Label className="text-sm font-medium text-gray-600">Marriage Status</Label>
+                    <p className="text-sm">{selectedAssessment.demographics?.marriageStatus}</p>
+                  </div>
+                  <div>
+                    <Label className="text-sm font-medium text-gray-600">Location</Label>
+                    <p className="text-sm">
+                      {selectedAssessment.demographics?.city}, {selectedAssessment.demographics?.state} {selectedAssessment.demographics?.zipCode}
+                    </p>
+                  </div>
+                  <div>
+                    <Label className="text-sm font-medium text-gray-600">Ethnicity</Label>
+                    <p className="text-sm">{selectedAssessment.demographics?.ethnicity}</p>
+                  </div>
+                </div>
+
+                <div>
+                  <Label className="text-sm font-medium text-gray-600">Overall Score</Label>
+                  <div className="flex items-center gap-2 mt-1">
+                    <Badge variant="default" className="text-lg px-3 py-1">
+                      {selectedAssessment.scores?.overallPercentage?.toFixed(1) || 0}%
+                    </Badge>
+                  </div>
+                </div>
+
+                <div>
+                  <Label className="text-sm font-medium text-gray-600">Primary Profile</Label>
+                  <div className="mt-2 p-4 bg-gray-50 rounded-lg">
+                    <h4 className="font-medium">{selectedAssessment.profile?.name}</h4>
+                    <p className="text-sm text-gray-600 mt-1">{selectedAssessment.profile?.description}</p>
+                  </div>
+                </div>
+
+                {selectedAssessment.genderProfile && (
+                  <div>
+                    <Label className="text-sm font-medium text-gray-600">Gender-Specific Profile</Label>
+                    <div className="mt-2 p-4 bg-gray-50 rounded-lg">
+                      <h4 className="font-medium">{selectedAssessment.genderProfile.name}</h4>
+                      <p className="text-sm text-gray-600 mt-1">{selectedAssessment.genderProfile.description}</p>
+                    </div>
+                  </div>
+                )}
+
+                <div>
+                  <Label className="text-sm font-medium text-gray-600">Section Scores</Label>
+                  <div className="mt-2 space-y-2">
+                    {selectedAssessment.scores?.sections && Object.entries(selectedAssessment.scores.sections).map(([section, score]) => (
+                      <div key={section} className="flex justify-between items-center">
+                        <span className="text-sm">{section}</span>
+                        <Badge variant="outline">{(score as SectionScore).percentage?.toFixed(1) || 0}%</Badge>
                       </div>
-                      
-                      <div className="space-y-2">
-                        <h4 className="font-medium mb-2">Section Scores:</h4>
-                        {Object.entries(selectedAssessment.scores.sections).map(([section, score]) => {
-                          const sectionScore = score as SectionScore;
-                          return (
-                            <div key={section} className="space-y-1">
-                              <div className="flex justify-between items-center">
-                                <span className="text-sm">{section}</span>
-                                <span className="text-sm font-medium">
-                                  {sectionScore.percentage.toFixed(1)}%
-                                </span>
-                              </div>
-                              <div className="w-full bg-gray-200 rounded-full h-1.5">
-                                <div 
-                                  className="bg-primary h-1.5 rounded-full" 
-                                  style={{ width: `${sectionScore.percentage}%` }}
-                                />
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                    ))}
+                  </div>
+                </div>
               </div>
-              
-              <DialogFooter className="flex justify-between sm:justify-between">
-                <Button 
-                  variant="secondary"
-                  onClick={() => handleDownloadAssessmentData(selectedAssessment.email)}
-                >
-                  <Download className="h-4 w-4 mr-2" />
-                  Download Full Data
-                </Button>
-                <Button variant="outline" onClick={() => setDetailModalOpen(false)}>
-                  Close
-                </Button>
-              </DialogFooter>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
-    </div>
+            )}
+
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => handleDownloadAssessmentData(selectedAssessment!)}
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Download Data
+              </Button>
+              <Button
+                onClick={() => setDetailModalOpen(false)}
+              >
+                Close
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
+    </TooltipProvider>
   );
 }
