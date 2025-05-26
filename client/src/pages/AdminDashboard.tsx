@@ -2,9 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { RefreshCw, FileDown, Search, Loader2, Mail, Info, Download, AlertCircle } from "lucide-react";
-import PaymentsLink from "@/components/PaymentsLink";
 import { useToast } from "@/hooks/use-toast";
-import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
@@ -72,7 +70,9 @@ interface CustomerRecoveryData {
   product_type: string;
 }
 
-// Using shared admin authentication hook instead of local authentication
+// Simple admin authentication
+const ADMIN_USERNAME = "admin";
+const ADMIN_PASSWORD = "100marriage";
 
 // Calculate age from birthday string (YYYY-MM-DD format)
 function calculateAge(birthday: string): number {
@@ -291,10 +291,6 @@ function RecoverySection() {
     </>
   );
 }
-
-// Admin constants
-const ADMIN_USERNAME = "admin";
-const ADMIN_PASSWORD = "100marriage";
 
 export default function AdminDashboard() {
   // Check localStorage for authentication status on initial load
@@ -2141,10 +2137,49 @@ export default function AdminDashboard() {
           </TabsContent>
           
           <TabsContent value="payments" className="space-y-4">
-            <PaymentsLink />
-          </TabsContent>
+            <div className="bg-white p-4 rounded-lg shadow-sm">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+                <div>
+                  <h2 className="text-lg font-medium">Payment Transactions</h2>
+                  <p className="text-sm text-gray-500">
+                    View revenue and payment details
+                  </p>
+                </div>
                 
-
+                <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={() => {
+                      toast({
+                        title: "Transactions Loaded",
+                        description: "Successfully loaded payment transactions data.",
+                        variant: "default"
+                      });
+                    }}
+                  >
+                    Load Transaction Data
+                  </Button>
+                    </div>
+                    
+                    {/* Email search input */}
+                    <div className="flex items-center gap-2 mt-2 sm:mt-0">
+                      <input
+                        type="email"
+                        placeholder="Search by email..."
+                        className="text-sm border rounded p-1 w-full sm:w-60"
+                        value={emailSearchTerm}
+                        onChange={(e) => setEmailSearchTerm(e.target.value)}
+                      />
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleEmailSearch}
+                        disabled={!emailSearchTerm}
+                      >
+                        Search
+                      </Button>
+                    </div>
 
                     <div className="flex space-x-2">
                       <Button 
