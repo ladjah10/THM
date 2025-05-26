@@ -148,9 +148,15 @@ export function determineProfiles(scores: AssessmentScores, gender?: string) {
     ).profile;
   };
   
-  // Find the best matching profiles
-  const primaryProfile = findBestMatch(unisexProfiles);
+  // Find the best matching profiles with fallback protection
+  const primaryProfile = findBestMatch(unisexProfiles) || unisexProfiles[0] || psychographicProfiles[0];
   const genderProfile = findBestMatch(genderProfiles);
+  
+  // Add debugging for male profile determination
+  if (normalizedGender === 'male' && genderProfiles.length > 0) {
+    console.log(`Male user detected - found ${genderProfiles.length} male profiles`);
+    console.log(`Selected gender profile:`, genderProfile ? genderProfile.name : 'None selected');
+  }
   
   return {
     primaryProfile,
