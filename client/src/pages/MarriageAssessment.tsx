@@ -340,37 +340,77 @@ export default function MarriageAssessment() {
     setCurrentView("questionnaire");
   };
 
-  // Calculate scores and determine profiles
+  // Calculate scores and determine profiles with enhanced error handling for gender-specific issues
   const calculateAssessmentResults = async () => {
-    const calculatedScores = calculateScores(questions, userResponses);
-    
-    // Normalize gender for consistent profile determination
-    const normalizedGender = demographicData.gender ? demographicData.gender.toLowerCase().trim() : undefined;
-    console.log(`Original gender value: "${demographicData.gender}", normalized to: "${normalizedGender}"`);
-    
-    const { primaryProfile, genderProfile } = determineProfiles(calculatedScores, normalizedGender);
-    
-    setScores(calculatedScores);
-    setPrimaryProfile(primaryProfile);
-    setGenderProfile(genderProfile);
-    
-    // Save assessment data to the database right away when results are calculated
-    if (demographicData.email) {
+    try {
+      const calculatedScores = calculateScores(questions, userResponses);
+      
+      // Normalize gender for consistent profile determination
+      const normalizedGender = demographicData.gender ? demographicData.gender.toLowerCase().trim() : undefined;
+      console.log(`Original gender value: "${demographicData.gender}", normalized to: "${normalizedGender}"`);
+      
+      // Enhanced profile determination with fallback protection
+      let primaryProfile, genderProfile;
       try {
-        // Send data to server to save assessment even without sending email
-        await apiRequest('POST', '/api/assessment/save', {
-          to: demographicData.email,
-          name: `${demographicData.firstName} ${demographicData.lastName}`,
-          scores: calculatedScores,
-          profile: primaryProfile,
-          genderProfile: genderProfile,
-          responses: userResponses,
-          demographics: demographicData
+        const profiles = determineProfiles(calculatedScores, normalizedGender);
+        primaryProfile = profiles.primaryProfile;
+        genderProfile = profiles.genderProfile;
+        
+        // Extra validation for male users to prevent submission failures
+        if (normalizedGender === 'male' && !primaryProfile) {
+          console.warn('Male user missing primary profile - using fallback');
+          const { psychographicProfiles } = await import('@/data/psychographicProfiles');
+          primaryProfile = psychographicProfiles.find(p => !p.genderSpecific) || psychographicProfiles[0];
+        }
+        
+        console.log(`Profile determination successful - Primary: ${primaryProfile?.name}, Gender: ${genderProfile?.name || 'None'}`);
+        
+      } catch (profileError) {
+        console.error('Profile determination failed:', profileError);
+        // Fallback to first available profile to prevent complete failure
+        const { psychographicProfiles } = await import('@/data/psychographicProfiles');
+        primaryProfile = psychographicProfiles.find(p => !p.genderSpecific) || psychographicProfiles[0];
+        genderProfile = null;
+        
+        toast({
+          title: "Profile Processing Warning",
+          description: "Your assessment was processed successfully, though profile matching encountered an issue.",
+          variant: "default"
         });
-        console.log('Assessment data saved to database');
-      } catch (error) {
-        console.error('Error saving assessment data:', error);
       }
+      
+      setScores(calculatedScores);
+      setPrimaryProfile(primaryProfile);
+      setGenderProfile(genderProfile);
+      
+      // Save assessment data to the database right away when results are calculated
+      if (demographicData.email) {
+        try {
+          // Send data to server to save assessment even without sending email
+          await apiRequest('POST', '/api/assessment/save', {
+            to: demographicData.email,
+            name: `${demographicData.firstName} ${demographicData.lastName}`,
+            scores: calculatedScores,
+            profile: primaryProfile,
+            genderProfile: genderProfile,
+            responses: userResponses,
+            demographics: demographicData
+          });
+          console.log('Assessment data saved to database');
+        } catch (error) {
+          console.error('Error saving assessment data:', error);
+          // Don't throw here - let the user see their results even if saving fails
+        }
+      }
+      
+    } catch (error) {
+      console.error('Critical error in calculateAssessmentResults:', error);
+      toast({
+        title: "Assessment Processing Error",
+        description: "There was an issue processing your assessment. Please contact hello@wgodw.com for assistance.",
+        variant: "destructive"
+      });
+      throw error; // Re-throw to prevent progression to results view
     }
   };
 
