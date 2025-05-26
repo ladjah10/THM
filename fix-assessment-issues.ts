@@ -79,16 +79,16 @@ async function fixAssessmentIssues() {
         // Insert or update the assessment result
         const insertQuery = `
           INSERT INTO assessment_results (
-            id, email, name, scores, profile, "genderProfile", 
-            responses, demographics, timestamp, "transactionId", 
-            "coupleId", "coupleRole", "reportSent"
+            id, email, name, scores, profile, gender_profile, 
+            responses, demographics, timestamp, transaction_id, 
+            couple_id, couple_role, report_sent
           ) VALUES (
             gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
           ) ON CONFLICT (email) DO UPDATE SET
             name = EXCLUDED.name,
             scores = EXCLUDED.scores,
             profile = EXCLUDED.profile,
-            "genderProfile" = EXCLUDED."genderProfile",
+            gender_profile = EXCLUDED.gender_profile,
             responses = EXCLUDED.responses,
             demographics = EXCLUDED.demographics,
             timestamp = EXCLUDED.timestamp
@@ -154,7 +154,7 @@ async function fixAssessmentIssues() {
           UPDATE assessment_results 
           SET scores = $1, 
               profile = $2,
-              "genderProfile" = $3,
+              gender_profile = $3,
               timestamp = $4
           WHERE email = $5
         `, [
