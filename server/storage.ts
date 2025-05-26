@@ -905,6 +905,11 @@ export class DatabaseStorage {
         ORDER BY timestamp DESC
       `);
       
+      console.log(`Database query returned ${results.rows.length} assessment records`);
+      if (results.rows.length > 0) {
+        console.log('Sample assessment from database:', results.rows[0].email);
+      }
+      
       // Transform DB results into AssessmentResult objects
       const assessments: AssessmentResult[] = results.rows.map((row: any) => {
         // Carefully parse the scores to ensure numeric values are properly handled
