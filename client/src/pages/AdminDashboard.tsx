@@ -243,6 +243,13 @@ export default function AdminDashboard() {
   } = useQuery({
     queryKey: ["/api/admin/assessments"],
     enabled: isAuthenticated,
+    onSuccess: (data) => {
+      console.log("Dashboard assessments data:", data);
+      console.log("Assessment count:", data?.length || 0);
+      if (data && data.length > 0) {
+        console.log("Sample assessment:", data[0]);
+      }
+    },
   });
 
   // Fetch analytics data
