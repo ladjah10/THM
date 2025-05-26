@@ -329,7 +329,7 @@ export default function AdminDashboard() {
 
   // Filter assessments based on search and filters
   const filteredAssessments = useMemo(() => {
-    if (!assessments) return [];
+    if (!assessments || !Array.isArray(assessments)) return [];
     
     return assessments.filter((assessment: AssessmentResult) => {
       const matchesSearch = !searchTerm || 
@@ -357,7 +357,7 @@ export default function AdminDashboard() {
 
   // Calculate pool candidates (highly compatible singles)
   const poolCandidates = useMemo(() => {
-    if (!assessments) return [];
+    if (!assessments || !Array.isArray(assessments)) return [];
     
     return assessments
       .filter((assessment: AssessmentResult) => 
@@ -368,30 +368,30 @@ export default function AdminDashboard() {
         ...assessment,
         matchScore: calculateMatchScore(assessment)
       }))
-      .sort((a, b) => b.matchScore - a.matchScore)
+      .sort((a: any, b: any) => b.matchScore - a.matchScore)
       .slice(0, 20);
   }, [assessments]);
 
   // Generate analytics summary
   const analyticsSummary = useMemo(() => {
-    if (!assessments || !analytics) return null;
+    if (!assessments || !Array.isArray(assessments)) return null;
 
     const summary = {
       totalAssessments: assessments.length,
       totalRevenue: 0,
       averageScore: 0,
       completionRate: 0,
-      genderDistribution: {},
-      ageDistribution: {},
-      marriageStatusDistribution: {},
-      profileDistribution: {},
+      genderDistribution: {} as Record<string, number>,
+      ageDistribution: {} as Record<string, number>,
+      marriageStatusDistribution: {} as Record<string, number>,
+      profileDistribution: {} as Record<string, number>,
       monthlyTrends: [],
       topPerformers: [],
       recentActivity: []
     };
 
     // Calculate revenue from payment transactions
-    if (paymentTransactions) {
+    if (paymentTransactions && Array.isArray(paymentTransactions)) {
       summary.totalRevenue = paymentTransactions.reduce((total: number, transaction: PaymentTransaction) => {
         return total + (transaction.amount / 100); // Convert from cents
       }, 0);
@@ -742,7 +742,7 @@ export default function AdminDashboard() {
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {paginatedAssessments.map((assessment: AssessmentResult, index) => (
+                          {paginatedAssessments.map((assessment: AssessmentResult, index: number) => (
                             <TableRow key={index}>
                               <TableCell className="font-medium">
                                 {assessment.demographics?.firstName} {assessment.demographics?.lastName}
@@ -930,7 +930,7 @@ export default function AdminDashboard() {
                     <div className="flex items-center justify-center py-8">
                       <Loader2 className="h-8 w-8 animate-spin" />
                     </div>
-                  ) : paymentTransactions === undefined || paymentTransactions === null ? (
+                  ) : !paymentTransactions || !Array.isArray(paymentTransactions) ? (
                     <div className="flex items-center justify-center py-8 text-muted-foreground">
                       <AlertCircle className="h-5 w-5 mr-2" />
                       No payment transactions available
