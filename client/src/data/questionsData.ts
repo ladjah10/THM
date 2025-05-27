@@ -518,12 +518,12 @@ export const questions: Question[] = [
     section: "Your Parenting Life",
     subsection: "Children: Quantity",
     type: "M",
-    text: "Your Parenting Life: Children: Quantity - How many children do you want?",
+    text: "We commit to the number of children, what is your approach?",
     options: [
-      "0",
-      "1-2",
-      "3-4",
-      "5+"
+      "No children",
+      "1-2 children",
+      "3-4 children",
+      "5+ children"
     ],
     weight: 5
   },
@@ -532,7 +532,7 @@ export const questions: Question[] = [
     section: "Your Parenting Life",
     subsection: "Children: Parenting Style",
     type: "M",
-    text: "Your Parenting Life: Children: Parenting Style - What's your preferred parenting style?",
+    text: "We commit to a parenting style, what is your approach?",
     options: [
       "Authoritative (High expectations & High responsiveness)",
       "Authoritarian (High expectations & Low responsiveness)",
@@ -546,12 +546,12 @@ export const questions: Question[] = [
     section: "Your Parenting Life",
     subsection: "Children: Discipline",
     type: "M",
-    text: "Your Parenting Life: Children: Discipline - What's your approach to discipline?",
+    text: "We commit to a discipline approach, what is your approach?",
     options: [
       "Positive reinforcement only",
       "Verbal correction and time-outs",
-      "Spanking as needed",
-      "Consequences based on behavior"
+      "Spanking when necessary",
+      "Natural consequences based on behavior"
     ],
     weight: 7
   },
@@ -560,12 +560,12 @@ export const questions: Question[] = [
     section: "Your Parenting Life",
     subsection: "Children: Education",
     type: "M",
-    text: "Your Parenting Life: Children: Education - What type of education do you prefer for your children?",
+    text: "We commit to our children's education approach, what is your approach?",
     options: [
-      "Public school",
-      "Private religious school",
-      "Private secular school",
-      "Homeschool"
+      "Public school education",
+      "Private religious school education",
+      "Private secular school education",
+      "Homeschool education"
     ],
     weight: 5
   },
