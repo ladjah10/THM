@@ -1036,6 +1036,271 @@ export const questions: Question[] = [
     ],
     weight: 4
   },
+
+  // YOUR HEALTH AND WELLNESS (Questions 80-89)
+  {
+    id: 80,
+    section: "Your Health and Wellness",
+    subsection: "Approach to Medicine, Illness and Pain Management",
+    type: "M",
+    text: "We commit to a dietary approach for our family, what is your approach?",
+    options: [
+      "We commit to preparing and enjoying healthy meals as a family, as defined by completely restricting fried food, fast food, candy as well as any other non-whole, highly processed junk foods from our family's consumption at least 5 of the 7 days per week",
+      "We commit to preparing and enjoying healthy meals as a family, as defined by completely restricting fried food, fast food, candy as well as any other non-whole, highly processed junk foods from our family's consumption at least 4 of the 7 days per week",
+      "Other: Please detail [input]"
+    ],
+    weight: 4
+  },
+  {
+    id: 81,
+    section: "Your Health and Wellness",
+    subsection: "Specific Consumption Goals [Meal Types]",
+    type: "M",
+    text: "We commit to specific meal consumption goals, what is your approach?",
+    options: [
+      "We commit to a healthy balanced diet with no special restriction on any meats (seafood, chicken, beef, pork), dairy, fruits and vegetables, and whole grains or nuts",
+      "We commit to a healthy balanced diet including all meats except pork (seafood, chicken, beef), dairy, fruits and vegetables, and whole grains or nuts",
+      "We commit to a healthy balanced vegetarian diet",
+      "We commit to a healthy balanced vegan diet",
+      "We commit to a healthy balanced pescatarian diet",
+      "We commit to a healthy balanced carnivore diet",
+      "We commit to a healthy balanced diet which is flexible to individual needs (e.g., husband can pursue carnivore and wife can pursue vegetarian, while children can be unrestricted, for example)"
+    ],
+    weight: 4
+  },
+  {
+    id: 82,
+    section: "Your Health and Wellness",
+    subsection: "New Babies: Nutrition: Breastfeeding",
+    type: "M",
+    text: "We commit to feeding our newborns, what is your approach?",
+    options: [
+      "We commit to breastfeeding primarily and only using formula in rare circumstances",
+      "We commit to breastfeeding whenever possible, still, we do not have any reservations about relying on high quality formula"
+    ],
+    weight: 3
+  },
+  {
+    id: 83,
+    section: "Your Health and Wellness",
+    subsection: "New Babies: Nutrition: Breastfeeding Length",
+    type: "M",
+    text: "We commit to a breastfeeding duration for our children, what is your approach?",
+    options: [
+      "We're committed to breastfeeding along with introducing appropriate complementary foods for up to 2 years for our children",
+      "We're committed to breastfeeding along with introducing appropriate complementary foods whenever possible still, we do not plan to do it beyond 1 year for our children",
+      "We do not have a strong perspective about breastfeeding and will take the guidance of our medical professional when the time comes"
+    ],
+    weight: 3
+  },
+  {
+    id: 84,
+    section: "Your Health and Wellness",
+    subsection: "Approach to Medicine, Illness and Pain Management",
+    type: "M",
+    text: "We commit to an approach to medicine, illness, and pain management, what is your approach?",
+    options: [
+      "We are committed to a more natural, homeopathic approach to the health and wellness of both us and our children, avoiding the use of OTC drugs and medicines outside of extreme and rare circumstances",
+      "We are committed to our health and wellness and have no reservations with leveraging the medication and OTC drugs available to us to manage pain and illness",
+      "We are committed to our health and wellness and each approach this issue very differently, thus we are committed to a model which is flexible to each individual's preferences"
+    ],
+    weight: 4
+  },
+  {
+    id: 85,
+    section: "Your Health and Wellness",
+    subsection: "Approach to Medicine, Illness and Pain Management II",
+    type: "D",
+    text: "We are committed to each doing a full physical and check-up annually, including all pertinent age/risk factor appropriate tests (i.e., prostate, breast, etc.). As such, to establish this shared practice, we plan to go on or by [input] before our wedding day.",
+    options: [
+      "We are committed to each doing a full physical and check-up annually, including all pertinent age/risk factor appropriate tests (i.e., prostate, breast, etc.). As such, to establish this shared practice, we plan to go on or by [input] before our wedding day",
+      "We are committed to each doing a full physical and check-up annually, including all pertinent age/risk factor appropriate tests (i.e., prostate, breast, etc.). We already have completed our individual check-ups for the year and look forward to continuing this annual practice in marriage"
+    ],
+    weight: 4
+  },
+  {
+    id: 86,
+    section: "Your Health and Wellness",
+    subsection: "Approach to Medicine, Illness and Pain Management: Natural Birth or Epidural",
+    type: "M",
+    text: "We commit to an approach for childbirth pain management, what is your approach?",
+    options: [
+      "We are committed to having a natural birth",
+      "We are committed to having an epidural or anything medically available to relieve labor pain",
+      "We're not well educated enough on the subject to make an informed decision on what's best so we plan to research and revisit this when the time comes"
+    ],
+    weight: 3
+  },
+  {
+    id: 87,
+    section: "Your Health & Wellness",
+    subsection: "Psychological / Physical (Individual Therapy)",
+    type: "M",
+    text: "We commit to individual therapy, what is your approach?",
+    options: [
+      "We are each committed to seeing a (faith-aligned) therapist individually, at least 6 times per year during our marriage (as our resources allow)",
+      "We are each committed to seeing a (faith-aligned) therapist individually, at least 4 times per year during our marriage (as our resources allow)",
+      "We are each committed to seeing a (faith-aligned) therapist individually, at least 12 times per year during our marriage (as our resources allow)",
+      "While we believe in seeking counsel for our marriage, we're not ready to commit to long-term individual therapy currently"
+    ],
+    weight: 4
+  },
+  {
+    id: 88,
+    section: "Your Health & Wellness",
+    subsection: "Psychological / Physical (Physical Wellness – Exercise)",
+    type: "M",
+    text: "We commit to physical exercise for sustainable health, what is your approach?",
+    options: [
+      "We are each committed to a goal of sustainable health, through regular exercise, which for us is at least 3x per week individually",
+      "We are each committed to a goal of sustainable health, through regular exercise, which for us is at least 2x per week individually",
+      "We are each committed to a goal of sustainable health, through regular exercise, which for us is at least 4x per week individually",
+      "Other: please detail [input]"
+    ],
+    weight: 4
+  },
+
+  // YOUR MARRIAGE AND BOUNDARIES (Questions 89-99)
+  {
+    id: 89,
+    section: "Your Marriage & Boundaries",
+    subsection: "Marriage Boundaries",
+    type: "D",
+    text: "We commit to never actively keeping / maintaining any secrets from one another.",
+    options: [
+      "We commit to never actively keeping / maintaining any secrets from one another"
+    ],
+    weight: 6
+  },
+  {
+    id: 90,
+    section: "Your Marriage & Boundaries",
+    subsection: "Openness / Technology",
+    type: "M",
+    text: "We commit to openness with technology, what is your approach?",
+    options: [
+      "While we fully trust God and our spouse, we believe in oneness and there being no hidden spaces, thus, we believe in \"transparent access\" which means we each have the passcodes for all our technology (hardware) and digital media accounts",
+      "While we fully trust God and our spouse, and believe in being one, we do not believe in \"transparent access\" and do not believe it is necessary to commit to having the passcodes for all of our technology (hardware) and digital media accounts"
+    ],
+    weight: 5
+  },
+  {
+    id: 91,
+    section: "Your Marriage & Boundaries",
+    subsection: "Holidays Model",
+    type: "M",
+    text: "We commit to managing holidays with family, what is your approach?",
+    options: [
+      "We commit to splitting and rotating visiting family for major holidays between our families (e.g., Thanksgiving, Christmas, Easter) each year",
+      "We commit to doing major holidays at home, with a visit to at least one family for one holiday each year (rotating)",
+      "Other: Please detail [input]"
+    ],
+    weight: 3
+  },
+  {
+    id: 92,
+    section: "Your Marriage & Boundaries",
+    subsection: "In-Laws/Loves in Advanced Age",
+    type: "M",
+    text: "We commit to caring for our spouses' parents in advanced age, what is your approach?",
+    options: [
+      "We're committed to caring for our spouses' parents in advanced age through financial contribution",
+      "We're committed to caring for our spouses' parents in advanced age through welcoming them to move in with us so we can be primary caregivers",
+      "We're committed to caring for our spouses' parents in advanced age yet in the interest of our marriage and honoring their best care, we do not believe a longer-term stay is the best option for us",
+      "Other: Please detail [input]"
+    ],
+    weight: 4
+  },
+  {
+    id: 93,
+    section: "Your Marriage & Boundaries",
+    subsection: "In-Laws/Loves After Having First Child",
+    type: "M",
+    text: "We commit to involving parents after the birth of our first child, what is your approach?",
+    options: [
+      "We're committed to having at least one parent stay with us for a period of a month, after the birth of our first child",
+      "We're committed to setting frequent and intentional early interactions with our new child and our parents, for visits and help with care, still, we prefer not to have anyone stay for an extended length of time in the first month",
+      "We're committed to having at least one parent stay with us for a period of two weeks, after the birth of our first child",
+      "Other: Please detail [input]"
+    ],
+    weight: 3
+  },
+  {
+    id: 94,
+    section: "Your Marriage & Boundaries",
+    subsection: "Interactions with the Opposite Sex (Offline)",
+    type: "M",
+    text: "We commit to managing interactions with the opposite sex, what is your approach?",
+    options: [
+      "We commit to maintaining healthy boundaries with the opposite sex as a married couple, however, we do not believe any unique restrictions on interactions are required for opposite sex interactions that are not present with our same-sex interactions",
+      "We commit to maintaining healthy boundaries with the opposite sex as a married couple, with that said, while we believe in shared interactions with an individual, we do not believe in nurturing/actively maintaining friendships with the opposite sex one on one (outside of work colleagues / family) as measured by: daily / multiple times per week: one on one conversations/text/social media messages, one on one meetups without our spouse, inappropriate conversation you wouldn't be comfortable with your spouse / or anyone else seeing"
+    ],
+    weight: 5
+  },
+  {
+    id: 95,
+    section: "Your Marriage & Boundaries",
+    subsection: "Social Media: Date Night",
+    type: "M",
+    text: "We commit to managing phone use during date nights, what is your approach?",
+    options: [
+      "We're committed to putting our phones away during date nights, with only use for contact with babysitter (if applicable), caregiver or photographs between us",
+      "We commit to exercising discretion, and we do not believe a firm line is necessary",
+      "Other: Please detail [input]"
+    ],
+    weight: 3
+  },
+  {
+    id: 96,
+    section: "Your Marriage & Boundaries",
+    subsection: "Social Media: Interactions with the Opposite Sex",
+    type: "M",
+    text: "We commit to managing social media interactions with the opposite sex, what is your approach?",
+    options: [
+      "While we fully trust God and our spouse, we believe in honoring our covenant in and through all our actions, as such: We commit to ensuring there is no direct communications via message or comments with any member of the opposite sex on any platform, unless it's someone we both unequivocally know and trust",
+      "We commit to exercising discretion and discernment, and we do not believe a firm line is necessary",
+      "Other: Please detail [input]"
+    ],
+    weight: 4
+  },
+  {
+    id: 97,
+    section: "Your Marriage & Boundaries",
+    subsection: "Social Media: Connection/Interaction with Past Significant Others/Romantic Interests",
+    type: "M",
+    text: "We commit to managing social media connections with past significant others/romantic interests, what is your approach?",
+    options: [
+      "While we fully trust God and our spouse, we believe in honoring our covenant in and through all our actions, as such: We commit to ensuring there is no direct connection (via follow / being followed, friendship or connection) and/or direct communications via message or comments with any past significant other(s) / past romantic interests on any platform",
+      "We commit to ensuring all past significant other(s) / past romantic interests are blocked on every platform",
+      "Not Applicable",
+      "Other: Please detail [input]"
+    ],
+    weight: 5
+  },
+  {
+    id: 98,
+    section: "Your Marriage & Boundaries",
+    subsection: "Digital Media & Physical Devices: Private and Public Content (Images & Other Media) with Past Significant Others/Romantic Interests",
+    type: "M",
+    text: "We commit to managing digital media with past significant others/romantic interests, what is your approach?",
+    options: [
+      "While we fully trust God and our spouse, we believe in honoring our covenant in and through all our actions, as such: We commit to deleting all private and public media with any past significant other(s) / past romantic interests from all private devices and public accounts (active or not) by [input]",
+      "Not Applicable",
+      "Other: Please detail [input]"
+    ],
+    weight: 5
+  },
+  {
+    id: 99,
+    section: "Your Marriage & Boundaries",
+    subsection: "Final Commitment",
+    type: "D",
+    text: "We commit to honoring all the commitments we have made in this assessment as we build our marriage together.",
+    options: [
+      "We commit to honoring all the commitments we have made in this assessment as we build our marriage together"
+    ],
+    weight: 6
+  },
   {
     id: 12,
     section: "Your Faith Life",
