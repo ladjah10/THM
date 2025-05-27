@@ -914,12 +914,12 @@ export const questions: Question[] = [
     section: "Your Family/Home Life",
     subsection: "Cleaning Model with Home (Inside)",
     type: "M",
-    text: "Your Family/Home Life: Cleaning Model with Home (Inside)",
+    text: "We commit to a home cleaning model, what is your approach?",
     options: [
-      "We commit to a model of weekly house cleaning taking place on Saturdays or Sundays which includes but is not limited to, cleaning of general living areas, kitchen, bathrooms and bedrooms and laundry (assumption of general tidiness, cleaning after self during the week).",
-      "We commit to a model of bi-weekly house cleaning taking place on Saturdays or Sundays which includes but is not limited to, cleaning of general living areas, kitchen, bathrooms and bedrooms and laundry (assumption of general tidiness, cleaning after self during the week).",
-      "We commit to a model of bi-weekly house cleaning by an outside cleaning vendor which includes but is not limited to, cleaning of general living areas, kitchen, bathrooms and bedrooms and laundry (assumption of general tidiness, cleaning after self during the week).",
-      "Other: Please detail"
+      "We commit to a model of weekly house cleaning taking place on Saturdays or Sundays which includes but is not limited to, cleaning of general living areas, kitchen, bathrooms and bedrooms and laundry (assumption of general tidiness, cleaning after self during the week)",
+      "We commit to a model of bi-weekly house cleaning taking place on Saturdays or Sundays which includes but is not limited to, cleaning of general living areas, kitchen, bathrooms and bedrooms and laundry (assumption of general tidiness, cleaning after self during the week)",
+      "We commit to a model of bi-weekly house cleaning by an outside cleaning vendor which includes but is not limited to, cleaning of general living areas, kitchen, bathrooms and bedrooms and laundry (assumption of general tidiness, cleaning after self during the week)",
+      "Other approach to home cleaning model"
     ],
     weight: 2
   },
@@ -928,12 +928,12 @@ export const questions: Question[] = [
     section: "Your Family/Home Life",
     subsection: "Cleaning Model with Food",
     type: "M",
-    text: "Your Family/Home Life: Cleaning Model with Food",
+    text: "We commit to a food preparation and cleanup model, what is your approach?",
     options: [
-      "We commit to a model where the person who prepares the food is not the person who cleans up the kitchen, sink and table after the food is prepared and consumed. It is the responsibility of the noncooking spouse/children to clean.",
-      "We commit to a model where the person who prepares the food is responsible for cleaning up after the meal is done.",
-      "We commit to a model where the person who prepares the food is responsible for cleaning up as they cook and after the meal is done.",
-      "Other: Please detail"
+      "We commit to a model where the person who prepares the food is not the person who cleans up the kitchen, sink and table after the food is prepared and consumed. It is the responsibility of the noncooking spouse/children to clean",
+      "We commit to a model where the person who prepares the food is responsible for cleaning up after the meal is done",
+      "We commit to a model where the person who prepares the food is responsible for cleaning up as they cook and after the meal is done",
+      "Other approach to food preparation and cleanup model"
     ],
     weight: 2
   },
