@@ -582,85 +582,91 @@ export const questions: Question[] = [
   },
   {
     id: 44,
-    section: "Your Parenting Life",
-    subsection: "Children Decision: To Have Them (Biologically)",
+    section: "Your Finances",
+    subsection: "Payments Execution",
     type: "M",
-    text: "We commit to having children biologically, what is your approach?",
+    text: "We commit to bill payment and financial management, what is your approach?",
     options: [
-      "We commit to having children (according to God's will)",
-      "We do not commit to having children"
+      "Joint account with shared bill payment responsibilities",
+      "Primary earner handles all bill payments",
+      "Divided responsibilities based on expertise",
+      "Automated systems with joint oversight"
     ],
     weight: 4
   },
   {
     id: 45,
-    section: "Your Parenting Life",
-    subsection: "Children Decision: How To Have Them (Method of Delivery Preference)",
+    section: "Your Marriage & Boundaries",
+    subsection: "Openness / Technology",
     type: "M",
-    text: "We commit to a delivery preference approach, what is your approach?",
+    text: "We commit to openness with technology, what is your approach?",
     options: [
-      "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer: A Water Delivery (if medically prudent and possible)",
-      "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer: Vaginal Delivery (with potential for C-Section if medically necessary)"
+      "Complete transparency with all devices and passwords",
+      "Open communication about technology use boundaries", 
+      "Individual privacy with agreed-upon limits",
+      "Periodic check-ins about technology habits"
     ],
-    weight: 3
+    weight: 5
   },
   
   // Add more declaration questions for Marriage Life
   {
     id: 46,
-    section: "Your Family/Home Life",
-    subsection: "Holidays",
+    section: "Your Marriage & Boundaries",
+    subsection: "Extended Family/In-Laws",
     type: "M",
-    text: "We commit to spending holidays together, what is your approach?",
+    text: "We commit to managing extended family relationships, what is your approach?",
     options: [
-      "Alternating between families each year",
-      "Splitting time between both families during each holiday",
-      "Creating our own traditions separate from extended family",
-      "Prioritizing one family due to circumstances (distance, health, etc.)"
+      "Close involvement with both extended families",
+      "Balanced boundaries with respectful engagement",
+      "Limited involvement to protect marriage unit",
+      "Individual relationships managed separately"
     ],
-    weight: 3
+    weight: 6
   },
   {
     id: 47,
-    section: "Your Family/Home Life",
-    subsection: "Home Management: Chores",
+    section: "Your Marriage Life",
+    subsection: "Sex - Initiation",
     type: "M",
-    text: "We commit to dividing household responsibilities, what is your approach?",
+    text: "We commit to physical intimacy initiation, what is your approach?",
     options: [
-      "Traditional gender roles",
-      "Equal division of all tasks",
-      "Division based on skills and preferences",
-      "Outsource most chores (cleaning service, etc.)"
+      "Either spouse can initiate with mutual respect",
+      "Husband primarily initiates with wife's openness",
+      "Scheduled intimate times with spontaneous moments",
+      "Natural flow based on mutual desire and timing"
     ],
-    weight: 5
+    weight: 6
   },
   
   // YOUR FINANCES
   {
     id: 48,
-    section: "Your Finances",
-    subsection: "Financial Philosophy: Combined",
-    type: "D",
-    text: "We commit to combining all finances, what is your approach?",
+    section: "Your Marriage Life",
+    subsection: "Sex - Communication",
+    type: "M",
+    text: "We commit to communicating about physical intimacy, what is your approach?",
     options: [
-      "Agree - all finances should be combined",
-      "Disagree - maintain separate finances"
+      "Open and frequent communication about needs and preferences",
+      "Regular check-ins about satisfaction and concerns",
+      "Address issues as they arise naturally",
+      "Maintain intimacy through non-verbal communication"
     ],
-    weight: 12
+    weight: 5
   },
   {
     id: 49,
-    section: "Your Finances",
-    subsection: "Financial Philosophy: Tithing",
-    type: "D",
-    text: "We commit to tithing and charitable giving, what is your approach?",
+    section: "Your Marriage Life",
+    subsection: "Sex - Contraception",
+    type: "M",
+    text: "We commit to family planning and contraception, what is your approach?",
     options: [
-      "Yes, 10% to church/religious organization",
-      "Yes, regular charitable giving but flexible percentage",
-      "Occasional giving when finances allow",
-      "No regular giving"
+      "Natural family planning methods only",
+      "Hormonal contraception with medical consultation",
+      "Barrier methods as primary approach",
+      "Open to children without contraception"
     ],
-    weight: 5
+    weight: 7
   },
   {
     id: 50,
