@@ -107,7 +107,7 @@ export const questions: Question[] = [
     section: "Your Foundation",
     subsection: "Marriage Mindset: Divorce & Law",
     type: "M",
-    text: "Your Foundation: Marriage Mindset: Divorce & Law - What is your position on prenuptial agreements?",
+    text: "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), what is your position on prenuptial agreements?",
     options: [
       "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), still, in view of the law and the prevalent rates of marriage dissolution, we agree to explore and structure a mutually considerate prenuptial agreement for our marriage.",
       "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), and do not believe any legal agreements beyond our mutual commitments through this life covenant process are necessary for us to explore and structure at this time.",
@@ -120,11 +120,11 @@ export const questions: Question[] = [
     section: "Your Foundation",
     subsection: "Marriage Mindset: Celebrating our Covenant",
     type: "M",
-    text: "Your Foundation: Marriage Mindset: Celebrating our Covenant - How do you plan to celebrate your marriage?",
+    text: "We commit to establishing and celebrating our holy union/covenant through our wedding, how do you plan to celebrate it?",
     options: [
-      "We're committed to celebrating both the anniversary of our first date and the anniversary of our wedding day each and every year.",
-      "We're committed to celebrating the anniversary of our wedding day each and every year.",
-      "We're committed to celebrating whenever we remember and/or when our schedules align, but don't believe anniversaries are as important as the day-to-day love we show to one another."
+      "Celebrate marriage anniversary every year",
+      "Celebrate marriage anniversary every year and do a covenant renewal ceremony every 10 years",
+      "Celebrate marriage anniversary every year and do a covenant renewal ceremony every 5 years"
     ],
     weight: 4
   },
@@ -133,12 +133,9 @@ export const questions: Question[] = [
     section: "Your Foundation",
     subsection: "Marriage Priorities",
     type: "M",
-    text: "Your Marriage Life: Order of Priority before God - What is your order of priority?",
+    text: "We understand and accept the order of relationship priority according to God's highest design, what is your order of priority?",
     options: [
-      "God, Spouse, Children, Work, Extended Family, Friends, Church, Ministry, Hobbies",
-      "God, Children, Spouse, Work, Extended Family, Friends, Church, Ministry, Hobbies",
-      "God, Work, Spouse, Children, Extended Family, Friends, Church, Ministry, Hobbies",
-      "God, Extended Family, Spouse, Children, Work, Friends, Church, Ministry, Hobbies"
+      "God, Spouse, Children, Work, Extended Family, Friends, Church, Ministry, Hobbies"
     ],
     weight: 12
   },
@@ -147,26 +144,26 @@ export const questions: Question[] = [
   {
     id: 11,
     section: "Your Faith Life",
-    subsection: "Church Community",
-    type: "D",
-    text: "Your Faith Life: Church Community - Will you attend the same church as a family?",
+    subsection: "Worship Life: Marriage (Husband and Wife)",
+    type: "M",
+    text: "We commit to prayer as a couple, how often?",
     options: [
-      "We're committed to finding a single church which to attend both individually and as a family.",
-      "We're comfortable with having separate churches to attend individually and as a family."
+      "Daily prayer before sleep",
+      "Weekly prayer during check-in",
+      "Other: Please detail"
     ],
-    weight: 12
+    weight: 4
   },
   {
     id: 12,
     section: "Your Faith Life",
     subsection: "Worship Life: Marriage",
     type: "M",
-    text: "Your Faith Life: Worship Life: Marriage (Husband and Wife) - How often do you plan to pray together?",
+    text: "We commit to prayer as a couple, how often?",
     options: [
-      "Daily",
-      "Weekly",
-      "Monthly",
-      "Whenever we feel like it or the need arises"
+      "Daily prayer before sleep",
+      "Weekly prayer during check-in",
+      "Other: Please detail"
     ],
     weight: 4
   },
@@ -175,12 +172,12 @@ export const questions: Question[] = [
     section: "Your Faith Life",
     subsection: "Worship Life: Family",
     type: "M",
-    text: "Your Faith Life: Worship Life: Family - How often do you plan to have family worship?",
+    text: "We commit to family worship weekly, including what activities?",
     options: [
-      "Daily",
-      "Weekly",
-      "Monthly",
-      "Whenever we feel like it or the need arises"
+      "Weekly, including a dedicated time for prayer and reflection as a family weekly, familial prayer over meals, and weekly corporate worship in a local faith community where we are members",
+      "Weekly, including familial prayer over meals, and weekly corporate worship in a local faith community where we are members",
+      "Weekly, including familial prayer over meals, and weekly corporate worship in a local/remote faith community where we are members",
+      "Other: Please detail"
     ],
     weight: 4
   },
@@ -189,12 +186,12 @@ export const questions: Question[] = [
     section: "Your Faith Life",
     subsection: "Worship Life: Serving",
     type: "M",
-    text: "Your Faith Life: Worship Life: Serving - How do you plan to volunteer in your community?",
+    text: "We commit to each volunteering/serving in our community, what is your approach?",
     options: [
-      "We're committed to actively volunteering in our church community.",
-      "We're committed to actively volunteering in our broader community.",
-      "We're committed to actively volunteering in both our church and broader community.",
-      "We don't believe volunteering is an important activity for us to commit to in advance."
+      "In our faith community in some capacity in every season",
+      "In our faith community in some capacity at least one season/event per year",
+      "Flexibly inside (and outside of) our faith community based on our capacity, but at a minimum, we'll always be serving our faith community through our giving in every season",
+      "Flexibly inside (and outside of) our faith community based on our capacity"
     ],
     weight: 3
   },
@@ -205,13 +202,11 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Family Name",
     type: "M",
-    text: "Your Marriage Life: Family Name - What is your position on family names after marriage?",
+    text: "We commit to sharing the same last name in marriage, what is your approach?",
     options: [
-      "We believe the wife should take the husband's last name and change her current last name to her middle name.",
-      "We believe the wife should take the husband's last name and drop her last name.",
-      "We believe the wife should maintain her own last name and not take the husband's last name.",
-      "We believe the wife should hyphenate her last name with the husband's last name.",
-      "We believe the husband should take the wife's last name."
+      "We commit to sharing the same last name in marriage and for the wife to take the husband's last name",
+      "We commit to each keeping our own last names in marriage",
+      "We commit to the wife hyphenating her last name with her husband's last name in marriage"
     ],
     weight: 7
   },
