@@ -1298,12 +1298,12 @@ export const questions: Question[] = [
     section: "Your Marriage Life with Children",
     subsection: "Children Decision: Naming of Children (Model)",
     type: "M",
-    text: "Your Marriage Life with Children: Children Decision: Naming of Children (Model)",
+    text: "We commit to naming our children, what is your approach?",
     options: [
-      "We commit to naming our children with first names that are from the Bible.",
-      "We commit to naming our children with first names that honor a family member from either side of the family.",
-      "We commit to naming our children with first names that are gender neutral.",
-      "Other: Please detail"
+      "We commit to naming our children with first names that are from the Bible",
+      "We commit to naming our children with first names that honor a family member from either side of the family",
+      "We commit to naming our children with first names that are gender neutral",
+      "Other approach to naming our children"
     ],
     weight: 2
   },
@@ -1312,10 +1312,10 @@ export const questions: Question[] = [
     section: "Your Marriage Life with Children",
     subsection: "Children Decision: Naming of Children (Jr's)",
     type: "M",
-    text: "Your Marriage Life with Children: Children Decision: Naming of Children (Jr's)",
+    text: "We commit to naming children after parents, what is your approach?",
     options: [
-      "We agree that it's an option to name one of our children after a parent.",
-      "We agree that's not an option name one of our children after a parent.",
+      "We agree that it's an option to name one of our children after a parent",
+      "We agree that's not an option to name one of our children after a parent",
       "Not Applicable"
     ],
     weight: 2
@@ -1325,11 +1325,11 @@ export const questions: Question[] = [
     section: "Your Marriage Life with Children",
     subsection: "Pregnancy Announcement",
     type: "M",
-    text: "Your Marriage Life with Children: Pregnancy Announcement",
+    text: "We commit to pregnancy announcement timing, what is your approach?",
     options: [
-      "We commit to keeping the news of our pregnancy private until the end of the 1st trimester.",
-      "We commit to keeping the news of our pregnancy private until the end of the 2nd trimester.",
-      "We do not have a specific guideline around if and when we will share news of a pregnancy.",
+      "We commit to keeping the news of our pregnancy private until the end of the 1st trimester",
+      "We commit to keeping the news of our pregnancy private until the end of the 2nd trimester",
+      "We do not have a specific guideline around if and when we will share news of a pregnancy",
       "Not Applicable"
     ],
     weight: 2
