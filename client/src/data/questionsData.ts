@@ -1159,7 +1159,7 @@ export const questions: Question[] = [
     section: "Your Health and Wellness",
     subsection: "Diet Expectations",
     type: "D",
-    text: "Your Health and Wellness: Diet Expectations - I believe we should follow the same dietary approach.",
+    text: "I believe we should follow the same dietary approach.",
     options: [
       "We do believe spouses should generally follow the same dietary approach",
       "We do not believe spouses need to follow identical diets and can have individual approaches"
@@ -1171,7 +1171,7 @@ export const questions: Question[] = [
     section: "Your Health and Wellness",
     subsection: "Medical Approaches",
     type: "D",
-    text: "Your Health and Wellness: Medical Approaches - I believe in using alternative/holistic medicine alongside conventional medicine.",
+    text: "I believe in using alternative/holistic medicine alongside conventional medicine.",
     options: [
       "We do believe in incorporating alternative/holistic approaches alongside conventional medicine",
       "We do not believe in alternative medicine and prefer to rely solely on conventional medical treatments"
