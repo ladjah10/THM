@@ -1,0 +1,556 @@
+YOUR FOUNDATION (Questions 1–10)
+Issues:
+* Question 1: Incorrect. The provided question ("Biblical Model") doesn’t match the book’s Question 1 ("Your Foundation: Marriage + Family - What is your faith position?").
+* Question 2: Incorrect. The provided question is about children’s faith, but the book’s Question 2 is about accountability.
+* Question 3: Extraneous. It’s a duplicate of Question 2 and not in the book.
+* Questions 4–9: Mostly correct but shifted due to earlier errors. Question 4 should be Question 3, etc.
+* Question 10: Correct but needs title update to “Your Marriage Life: Order of Priority before God” per Table 2.
+Corrective Actions:
+* Replace Question 1 with the book’s faith position question.
+* Replace Question 2 with the book’s accountability question.
+* Remove Question 3 and shift Questions 4–9 up to fill the gap.
+* Update Question 10’s title.
+* Adjust subsequent questions’ IDs to account for the removal of Question 3.
+Corrected Questions:
+Question 1: Your Foundation: Marriage + Family (Multiple Choice)
+* Text: Your Foundation: Marriage + Family - What is your faith position?
+* Options:
+    * Both believe in Jesus Christ as Lord and Savior
+    * Interested in Christian faith but not yet decided
+* Issue: Provided question was about biblical model, not faith position.
+* Corrective Action: Update question text and options.
+* Replit Implementation:
+    * SQL: UPDATE questions SET section = 'Your Foundation: Marriage + Family', type = 'Multiple Choice', weight = 10, question_text = 'Your Foundation: Marriage + Family - What is your faith position?', response_options = '["Both believe in Jesus Christ as Lord and Savior", "Interested in Christian faith but not yet decided"]' WHERE id = 1;
+    * JSON: Update questions[0] with: { "id": 1, "section": "Your Foundation: Marriage + Family", "type": "Multiple Choice", "weight": 10, "question_text": "Your Foundation: Marriage + Family - What is your faith position?", "response_options": ["Both believe in Jesus Christ as Lord and Savior", "Interested in Christian faith but not yet decided"] }.
+Question 2: Your Foundation: Marriage + Family Accountability (Multiple Choice)
+* Text: In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this “life covenant” process, unless mutually revisited and discussed at a later time.
+* Options:
+    * In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this “life covenant” process, unless mutually revisited and discussed at a later time.
+    * Other: Before committing to this we need further discussion with spiritual counsel around how this would operate
+* Issue: Provided question was about children’s faith, not accountability.
+* Corrective Action: Update question text and options.
+* Replit Implementation:
+    * SQL: UPDATE questions SET section = 'Your Foundation: Marriage + Family Accountability', type = 'Multiple Choice', weight = 8, question_text = 'In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this “life covenant” process, unless mutually revisited and discussed at a later time.', response_options = '["In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this “life covenant” process, unless mutually revisited and discussed at a later time.", "Other: Before committing to this we need further discussion with spiritual counsel around how this would operate"]' WHERE id = 2;
+    * JSON: Update questions[1] with: { "id": 2, "section": "Your Foundation: Marriage + Family Accountability", "type": "Multiple Choice", "weight": 8, "question_text": "In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this “life covenant” process, unless mutually revisited and discussed at a later time.", "response_options": ["In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this “life covenant” process, unless mutually revisited and discussed at a later time.", "Other: Before committing to this we need further discussion with spiritual counsel around how this would operate"] }.
+Question 3: Your Foundation: Marriage & Children’s Faith (Multiple Choice)
+* Text: We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ.
+* Options:
+    * We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ
+    * We do not believe we have a responsibility to raise our children according to any specific faith tradition and prefer to let them choose their own spiritual path when they’re old enough to decide
+* Issue: Was Question 4 in the provided list; shifted up due to removal of duplicate Question 3.
+* Corrective Action: Update ID to 3, keep text and options.
+* Replit Implementation:
+    * SQL: UPDATE questions SET id = 3 WHERE id = 4;
+    * JSON: Shift questions[3] to questions[2], updating id to 3.
+Question 4: Your Foundation: Marriage Mindset: Happiness (Multiple Choice)
+* Text: We’re committed to the belief regarding happiness in marriage, what is your primary focus?
+* Options:
+    * We’re committed to the belief: While a marriage relationship can yield happiness, we believe happiness is neither a stable emotion nor a stable foundation to build a marriage upon, as such, we believe each spouse is ultimately responsible for their own happiness
+    * We’re committed to the belief: ‘Happy Wife, Happy Life’ – the husband is ultimately responsible for making his wife happy and this will in turn lead to a successful marriage
+    * We’re committed to the belief: ‘Happy King, Happy Kingdom’ – the wife is ultimately responsible for making her husband happy and this will in turn lead to a successful marriage
+    * We’re committed to the belief: We believe in ‘Happy Spouse, Happy House’ – each spouse is ultimately responsible for the other spouse’s happiness and this will in turn lead to a successful marriage
+* Issue: Was Question 5; shifted up.
+* Corrective Action: Update ID to 4.
+* Replit Implementation:
+    * SQL: UPDATE questions SET id = 4 WHERE id = 5;
+    * JSON: Shift questions[4] to questions[3], updating id to 4.
+Question 5: Your Foundation: Marriage Preparation: Legal (Incapacitation) (Multiple Choice)
+* Text: We’re committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing our spouse as Power of Attorney before our marriage date.
+* Options:
+    * We’re committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing our spouse as Power of Attorney before our marriage date
+    * We do not believe it’s necessary to establish Power of Attorney before marriage and prefer to address this matter later if and when it becomes relevant
+* Issue: Was Question 6; shifted up. Should be Multiple Choice, not Agree/Disagree.
+* Corrective Action: Update ID to 5, change type to Multiple Choice.
+* Replit Implementation:
+    * SQL: UPDATE questions SET id = 5, type = 'Multiple Choice' WHERE id = 6;
+    * JSON: Update questions[5] with id = 5, type = "Multiple Choice".
+Question 6: Your Foundation: Marriage Preparation: Legal (Estate) (Multiple Choice)
+* Text: We’re committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing completing a notarized copy of our will before our marriage date.
+* Options:
+    * We’re committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing completing a notarized copy of our will before our marriage date
+    * We do not believe creating a will is necessary before marriage and prefer to address estate planning at a later stage in our relationship
+* Issue: Was Question 7; shifted up. Should be Multiple Choice.
+* Corrective Action: Update ID to 6, change type to Multiple Choice.
+* Replit Implementation:
+    * SQL: UPDATE questions SET id = 6, type = 'Multiple Choice' WHERE id = 7;
+    * JSON: Update questions[6] with id = 6, type = "Multiple Choice".
+Question 7: Your Foundation: Marriage Mindset: Divorce (Multiple Choice)
+* Text: We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, “Falling Out of Love”, “Growing Apart”, “Irreconcilable Differences”.
+* Options:
+    * We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, “Falling Out of Love”, “Growing Apart”, “Irreconcilable Differences”
+    * We believe that while marriage is intended to be lifelong, divorce may be a reasonable option in a wider range of circumstances, including when personal happiness and fulfillment are severely compromised
+* Issue: Was Question 8; shifted up. Should be Multiple Choice.
+* Corrective Action: Update ID to 7, change type to Multiple Choice.
+* Replit Implementation:
+    * SQL: UPDATE questions SET id = 7, type = 'Multiple Choice' WHERE id = 8;
+    * JSON: Update questions[7] with id = 7, type = "Multiple Choice".
+Question 8: Your Foundation: Marriage Mindset: Divorce & Law (Multiple Choice)
+* Text: We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), what is your position on prenuptial agreements?
+* Options:
+    * We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), still, in view of the law and the prevalent rates of marriage dissolution, we agree to explore and structure a mutually considerate prenuptial agreement for our marriage
+    * We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), and do not believe any legal agreements beyond our mutual commitments through this life covenant process are necessary for us to explore and structure at this time
+    * We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), still, we’d like to be more informed about what prenuptial agreements entail before deciding whether to consider it before our marriage
+* Issue: Was Question 9; shifted up.
+* Corrective Action: Update ID to 8.
+* Replit Implementation:
+    * SQL: UPDATE questions SET id = 8 WHERE id = 9;
+    * JSON: Update questions[8] with id = 8.
+Question 9: Your Foundation: Marriage Mindset: Celebrating our Covenant (Multiple Choice)
+* Text: We commit to establishing and celebrating our holy union/covenant through our wedding, how do you plan to celebrate it?
+* Options:
+    * Celebrate marriage anniversary every year
+    * Celebrate marriage anniversary every year and do a covenant renewal ceremony every 10 years
+    * Celebrate marriage anniversary every year and do a covenant renewal ceremony every 5 years
+* Issue: Was Question 10; shifted up.
+* Corrective Action: Update ID to 9.
+* Replit Implementation:
+    * SQL: UPDATE questions SET id = 9 WHERE id = 10;
+    * JSON: Update questions[9] with id = 9.
+Question 10: Your Marriage Life: Order of Priority before God (Multiple Choice)
+* Text: We understand and accept the order of relationship priority according to God’s highest design, what is your order of priority?
+* Options:
+    * God, Spouse, Children, Work, Extended Family, Friends, Church, Ministry, Hobbies
+* Issue: Title should be “Your Marriage Life: Order of Priority before God” per Table 2.
+* Corrective Action: Update section title.
+* Replit Implementation:
+    * SQL: UPDATE questions SET section = 'Your Marriage Life: Order of Priority before God' WHERE id = 10;
+    * JSON: Update questions[9].section to "Your Marriage Life: Order of Priority before God".
+YOUR FAITH LIFE (Questions 11–14)
+Issues:
+* Question 11: Correct, matches book.
+* Question 12: Incorrect. Provided question is “Sex Perspective: Declaration,” which belongs later (e.g., Question 56 per Table 1). Book’s Question 12 is “Worship Life: Marriage” (prayer frequency).
+* Questions 13–14: Correct, match book.
+Corrective Actions:
+* Replace Question 12 with the book’s prayer frequency question.
+* Shift “Sex Perspective: Declaration” to a later ID (e.g., Question 56).
+Corrected Questions:
+Question 11: Your Faith Life: Worship Life: Marriage (Husband and Wife) (Multiple Choice)
+* Text: We commit to prayer as a couple, how often?
+* Options:
+    * Daily prayer before sleep
+    * Weekly prayer during check-in
+    * Other: Please detail
+* Issue: Correct.
+* Corrective Action: None.
+* Replit Implementation: N/A.
+Question 12: Your Faith Life: Worship Life: Marriage (Multiple Choice)
+* Text: We commit to prayer as a couple, how often?
+* Options:
+    * Daily prayer before sleep
+    * Weekly prayer during check-in
+    * Other: Please detail
+* Issue: Provided question was “Sex Perspective: Declaration,” which is incorrect here.
+* Corrective Action: Update question text and options to match book’s prayer frequency question.
+* Replit Implementation:
+    * SQL: UPDATE questions SET section = 'Your Faith Life: Worship Life: Marriage', type = 'Multiple Choice', weight = 4, question_text = 'We commit to prayer as a couple, how often?', response_options = '["Daily prayer before sleep", "Weekly prayer during check-in", "Other: Please detail"]' WHERE id = 12;
+    * JSON: Update questions[11] with: { "id": 12, "section": "Your Faith Life: Worship Life: Marriage", "type": "Multiple Choice", "weight": 4, "question_text": "We commit to prayer as a couple, how often?", "response_options": ["Daily prayer before sleep", "Weekly prayer during check-in", "Other: Please detail"] }.
+Question 13: Your Faith Life: Worship Life: Family (Multiple Choice)
+* Text: We commit to family worship weekly, including what activities?
+* Options:
+    * Weekly, including a dedicated time for prayer and reflection as a family weekly, familial prayer over meals, and weekly corporate worship in a local faith community where we are members
+    * Weekly, including familial prayer over meals, and weekly corporate worship in a local faith community where we are members
+    * Weekly, including familial prayer over meals, and weekly corporate worship in a local/remote faith community where we are members
+    * Other: Please detail
+* Issue: Correct.
+* Corrective Action: None.
+* Replit Implementation: N/A.
+Question 14: Your Faith Life: Worship Life: Serving (Multiple Choice)
+* Text: We commit to each volunteering/serving in our community, what is your approach?
+* Options:
+    * In our faith community in some capacity in every season
+    * In our faith community in some capacity at least one season/event per year
+    * Flexibly inside (and outside of) our faith community based on our capacity, but at a minimum, we’ll always be serving our faith community through our giving in every season
+    * Flexibly inside (and outside of) our faith community based on our capacity
+* Issue: Correct.
+* Corrective Action: None.
+* Replit Implementation: N/A.
+YOUR MARRIAGE LIFE (Questions 15–35)
+Issues:
+* Questions 15–23: Correct but shifted up by one due to Question 3’s removal (e.g., Question 15 was 16 in the provided list).
+* Question 24: Incorrect options. Provided options don’t match the book’s specific counseling schedule.
+* Questions 25–30: Correct but shifted up.
+* Questions 31–35: Incorrect. These questions (Sex - Frequency, Work Down Time, etc.) don’t match the book’s Questions 31–35 (e.g., Relationship Model: Late Night Work, Marriage: Living).
+Corrective Actions:
+* Shift Questions 15–23 up by one ID.
+* Update Question 24’s options to match the book.
+* Shift Questions 25–30 up.
+* Replace Questions 31–35 with the book’s correct questions (e.g., Late Night Work, Living – City Type).
+Corrected Questions:
+Questions 15–23: Shift IDs down by 1 (e.g., Question 16 becomes 15, etc.). All text, options, and types are correct per the book.
+* Replit Implementation (example for Question 15):
+    * SQL: UPDATE questions SET id = 15 WHERE id = 16;
+    * JSON: Shift questions[15] to questions[14], updating id to 15.
+    * (Repeat for Questions 16–23.)
+Question 24: Your Marriage Life: Communication & Conflict Resolution: Counseling (Multiple Choice)
+* Text: We commit to a minimum of counseling sessions for our marriage, what is your approach?
+* Options:
+    * Monthly counseling sessions for the first year of our marriage, with a minimum of bi-monthly in year 2 and a minimum of quarterly in years 3+
+    * Bi-weekly counseling sessions for the first year of our marriage, with a minimum of monthly in year 2 and a minimum of quarterly in years 3+
+    * Other: Please detail
+* Issue: Provided options were vague (“How often would you attend…”).
+* Corrective Action: Update response options to match book.
+* Replit Implementation:
+    * SQL: UPDATE questions SET response_options = '["Monthly counseling sessions for the first year of our marriage, with a minimum of bi-monthly in year 2 and a minimum of quarterly in years 3+", "Bi-weekly counseling sessions for the first year of our marriage, with a minimum of monthly in year 2 and a minimum of quarterly in years 3+", "Other: Please detail"]' WHERE id = 24;
+    * JSON: Update questions[23].response_options to: ["Monthly counseling sessions for the first year of our marriage, with a minimum of bi-monthly in year 2 and a minimum of quarterly in years 3+", "Bi-weekly counseling sessions for the first year of our marriage, with a minimum of monthly in year 2 and a minimum of quarterly in years 3+", "Other: Please detail"].
+Questions 25–30: Shift IDs down by 1 (e.g., Question 26 becomes 25). All text and options are correct.
+* Replit Implementation (example for Question 25):
+    * SQL: UPDATE questions SET id = 25 WHERE id = 26;
+    * JSON: Shift questions[25] to questions[24], updating id to 25.
+    * (Repeat for Questions 26–30.)
+Question 31: Your Marriage Life: Relationship Model (Late Night Work) (Multiple Choice)
+* Text: We commit to a marriage/work model where we agree to have no more than a certain number of late night workdays, what is your approach?
+* Options:
+    * 2 late night workdays either at the office or at home (i.e., not going to bed with your spouse), per week
+    * 1 late night workday either at the office or at home (i.e., not going to bed with your spouse), per week
+    * Given the nature of our work, we do not believe this commitment would align well for us
+    * Other: Please detail
+* Issue: Provided question was “Sex - Frequency,” which belongs later (e.g., Question 56).
+* Corrective Action: Replace with book’s late night work question.
+* Replit Implementation:
+    * SQL: UPDATE questions SET section = 'Your Marriage Life: Relationship Model (Late Night Work)', type = 'Multiple Choice', weight = 3, question_text = 'We commit to a marriage/work model where we agree to have no more than a certain number of late night workdays, what is your approach?', response_options = '["2 late night workdays either at the office or at home (i.e., not going to bed with your spouse), per week.", "1 late night workday either at the office or at home (i.e., not going to bed with your spouse), per week.", "Given the nature of our work, we do not believe this commitment would align well for us", "Other: Please detail"]' WHERE id = 31;
+    * JSON: Update questions[30] with: { "id": 31, "section": "Your Marriage Life: Relationship Model (Late Night Work)", "type": "Multiple Choice", "weight": 3, "question_text": "We commit to a marriage/work model where we agree to have no more than a certain number of late night workdays, what is your approach?", "response_options": ["2 late night workdays either at the office or at home (i.e., not going to bed with your spouse), per week.", "1 late night workday either at the office or at home (i.e., not going to bed with your spouse), per week.", "Given the nature of our work, we do not believe this commitment would align well for us", "Other: Please detail"] }.
+Question 32: Your Marriage Life: Marriage: Living (Multiple Choice)
+* Text: We’re committed to living in a city relative to our families, what is your approach?
+* Options:
+    * At least one of our families resides, always
+    * At least one of our families resides for up to the next 10 years (with consideration for younger children + childcare, parental care + presence in older age, existing community)
+    * Flexible about our home location, open to living wherever opportunity may lead us, even if it’s not in a city with existing family
+    * At least one of our families resides for up to the next 5 years (with consideration for younger children + childcare, parental care + presence in older age, existing community)
+* Issue: Provided question was “Work Down Time,” incorrect here.
+* Corrective Action: Replace with book’s living location question.
+* Replit Implementation:
+    * SQL: UPDATE questions SET section = 'Your Marriage Life: Marriage: Living', type = 'Multiple Choice', weight = 3, question_text = 'We’re committed to living in a city relative to our families, what is your approach?', response_options = '["At least one of our families resides, always", "At least one of our families resides for up to the next 10 years (with consideration for younger children + childcare, parental care + presence in older age, existing community)", "Flexible about our home location, open to living wherever opportunity may lead us, even if it’s not in a city with existing family", "At least one of our families resides for up to the next 5 years (with consideration for younger children + childcare, parental care + presence in older age, existing community)"]' WHERE id = 32;
+    * JSON: Update questions[31] with: { "id": 32, "section": "Your Marriage Life: Marriage: Living", "type": "Multiple Choice", "weight": 3, "question_text": "We’re committed to living in a city relative to our families, what is your approach?", "response_options": ["At least one of our families resides, always", "At least one of our families resides for up to the next 10 years (with consideration for younger children + childcare, parental care + presence in older age, existing community)", "Flexible about our home location, open to living wherever opportunity may lead us, even if it’s not in a city with existing family", "At least one of our families resides for up to the next 5 years (with consideration for younger children + childcare, parental care + presence in older age, existing community)"] }.
+Question 33: Your Marriage Life: Marriage: Living – City Type (Multiple Choice)
+* Text: We’re committed to living in a certain type of area, what is your preference?
+* Options:
+    * Downtown area of a major city long-term
+    * Suburbs long-term
+    * Remote area, whether domestically or abroad, which is not necessarily connected or proximate to a major city
+    * Flexible about our living area and do not have a particular preference to a city type
+* Issue: Provided question was “Communication & Discipline,” incorrect here.
+* Corrective Action: Replace with book’s city type question.
+* Replit Implementation:
+    * SQL: UPDATE questions SET section = 'Your Marriage Life: Marriage: Living – City Type', type = 'Multiple Choice', weight = 3, question_text = 'We’re committed to living in a certain type of area, what is your preference?', response_options = '["Downtown area of a major city long-term", "Suburbs long-term", "Remote area, whether domestically or abroad, which is not necessarily connected or proximate to a major city", "Flexible about our living area and do not have a particular preference to a city type"]' WHERE id = 33;
+    * JSON: Update questions[32] with: { "id": 33, "section": "Your Marriage Life: Marriage: Living – City Type", "type": "Multiple Choice", "weight": 3, "question_text": "We’re committed to living in a certain type of area, what is your preference?", "response_options": ["Downtown area of a major city long-term", "Suburbs long-term", "Remote area, whether domestically or abroad, which is not necessarily connected or proximate to a major city", "Flexible about our living area and do not have a particular preference to a city type"] }.
+Question 34: Your Marriage Life: Marriage: Living – Home Type (Multiple Choice)
+* Text: We’re committed to living in a certain type of home, what is your preference?
+* Options:
+    * Apartment long-term as our primary residence
+    * Standalone single-family house long-term as our primary residence
+    * Standalone single-family townhouse long-term as our primary residence
+    * Multi-family house long-term
+* Issue: Provided question was “Social Media: New Child,” incorrect here.
+* Corrective Action: Replace with book’s home type question.
+* Replit Implementation:
+    * SQL: UPDATE questions SET section = 'Your Marriage Life: Marriage: Living – Home Type', type = 'Multiple Choice', weight = 3, question_text = 'We’re committed to living in a certain type of home, what is your preference?', response_options = '["Apartment long-term as our primary residence", "Standalone single-family house long-term as our primary residence", "Standalone single-family townhouse long-term as our primary residence", "Multi-family house long-term"]' WHERE id = 34;
+    * JSON: Update questions[33] with: { "id": 34, "section": "Your Marriage Life: Marriage: Living – Home Type", "type": "Multiple Choice", "weight": 3, "question_text": "We’re committed to living in a certain type of home, what is your preference?", "response_options": ["Apartment long-term as our primary residence", "Standalone single-family house long-term as our primary residence", "Standalone single-family townhouse long-term as our primary residence", "Multi-family house long-term"] }.
+Question 35: Your Marriage Life: Marriage: Living – Domestic/International (Multiple Choice)
+* Text: We’re committed to living domestically or internationally, what is your preference?
+* Options:
+    * Domestically long-term
+    * Internationally long-term and plan to eventually move shortly after our marriage
+    * Flexible about our living location and do not have a particular preference around living domestically or internationally
+* Issue: Provided question was “Communication: Sex/Gender,” incorrect here.
+* Corrective Action: Replace with book’s domestic/international question.
+* Replit Implementation:
+    * SQL: UPDATE questions SET section = 'Your Marriage Life: Marriage: Living – Domestic/International', type = 'Multiple Choice', weight = 3, question_text = 'We’re committed to living domestically or internationally, what is your preference?', response_options = '["Domestically long-term", "Internationally long-term and plan to eventually move shortly after our marriage", "Flexible about our living location and do not have a particular preference around living domestically or internationally"]' WHERE id = 35;
+    * JSON: Update questions[34] with: { "id": 35, "section": "Your Marriage Life: Marriage: Living – Domestic/International", "type": "Multiple Choice", "weight": 3, "question_text": "We’re committed to living domestically or internationally, what is your preference?", "response_options": ["Domestically long-term", "Internationally long-term and plan to eventually move shortly after our marriage", "Flexible about our living location and do not have a particular preference around living domestically or internationally"] }.
+YOUR PARENTING LIFE (Questions 36–50)
+Issues:
+* The provided list skips Questions 36–70, jumping to Your Health and Wellness at Question 71. This is a major gap, as the book includes Your Parenting Life and other sections here.
+* Questions 36–50 should cover parenting topics (e.g., Children: Desire, Timing, Quantity) per Table 1.
+Corrective Actions:
+* Insert book questions for Your Parenting Life (Questions 36–50) based on Table 1.
+* Adjust subsequent sections to account for this addition.
+Corrected Questions:
+Question 36: Your Parenting Life: Children: Desire (Multiple Choice)
+* Text: We commit to having children, what is your desire?
+* Options:
+    * We commit to having biological children
+    * We commit to adopting children
+    * We commit to having both biological and adopted children
+    * We do not commit to having children
+* Issue: Missing in provided list.
+* Corrective Action: Add book question.
+* Replit Implementation:
+    * SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (36, 'Your Parenting Life: Children: Desire', 'Multiple Choice', 5, 'We commit to having children, what is your desire?', '["We commit to having biological children", "We commit to adopting children", "We commit to having both biological and adopted children", "We do not commit to having children"]');
+    * JSON: Add to questions at index 35: { "id": 36, "section": "Your Parenting Life: Children: Desire", "type": "Multiple Choice", "weight": 5, "question_text": "We commit to having children, what is your desire?", "response_options": ["We commit to having biological children", "We commit to adopting children", "We commit to having both biological and adopted children", "We do not commit to having children"] }.
+Question 37: Your Parenting Life: Children: Timing (Multiple Choice)
+* Text: We commit to attempting to have children, when?
+* Options:
+    * As soon as possible
+    * After year one
+    * After year two
+    * After this specific milestone
+* Issue: Missing.
+* Corrective Action: Add book question.
+* Replit Implementation:
+    * SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (37, 'Your Parenting Life: Children: Timing', 'Multiple Choice', 5, 'We commit to attempting to have children, when?', '["As soon as possible", "After year one", "After year two", "After this specific milestone"]');
+    * JSON: Add to questions at index 36: { "id": 37, "section": "Your Parenting Life: Children: Timing", "type": "Multiple Choice", "weight": 5, "question_text": "We commit to attempting to have children, when?", "response_options": ["As soon as possible", "After year one", "After year two", "After this specific milestone"] }.
+Question 38: Your Parenting Life: Children: Quantity (Multiple Choice)
+* Text: We commit to having a certain number of children biologically, how many?
+* Options:
+    * As many children as God will allow us to have
+    * One child (according to God’s will)
+    * Two children (according to God’s will)
+    * Three children (according to God’s will)
+    * Not Applicable
+* Issue: Missing.
+* Corrective Action: Add book question.
+* Replit Implementation:
+    * SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (38, 'Your Parenting Life: Children: Quantity', 'Multiple Choice', 5, 'We commit to having a certain number of children biologically, how many?', '["As many children as God will allow us to have", "One child (according to God’s will)", "Two children (according to God’s will)", "Three children (according to God’s will)", "Not Applicable"]');
+    * JSON: Add to questions at index 37: { "id": 38, "section": "Your Parenting Life: Children: Quantity", "type": "Multiple Choice", "weight": 5, "question_text": "We commit to having a certain number of children biologically, how many?", "response_options": ["As many children as God will allow us to have", "One child (according to God’s will)", "Two children (according to God’s will)", "Three children (according to God’s will)", "Not Applicable"] }.
+Question 39: Your Parenting Life: Children: Parenting Style (Multiple Choice)
+* Text: We commit to raising and disciplining our children with Godly wisdom and discernment, what is your approach?
+* Options:
+    * Gentle verbal instruction/warning, firm verbal instruction/warning and in the repeated case of disobedience, disrespect or danger, we are comfortable with physical discipline and other forms of punishments in love
+    * Gentle verbal instruction/warning, firm verbal instruction warning and in the repeated case of disobedience, disrespect or danger, we are comfortable with other forms of punishment in love, which do not include physical discipline
+    * Not Applicable
+* Issue: Missing.
+* Corrective Action: Add book question.
+* Replit Implementation:
+    * SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (39, 'Your Parenting Life: Children: Parenting Style', 'Multiple Choice', 5, 'We commit to raising and disciplining our children with Godly wisdom and discernment, what is your approach?', '["Gentle verbal instruction/warning, firm verbal instruction/warning and in the repeated case of disobedience, disrespect or danger, we are comfortable with physical discipline and other forms of punishments in love", "Gentle verbal instruction/warning, firm verbal instruction warning and in the repeated case of disobedience, disrespect or danger, we are comfortable with other forms of punishment in love, which do not include physical discipline", "Not Applicable"]');
+    * JSON: Add to questions at index 38: { "id": 39, "section": "Your Parenting Life: Children: Parenting Style", "type": "Multiple Choice", "weight": 5, "question_text": "We commit to raising and disciplining our children with Godly wisdom and discernment, what is your approach?", "response_options": ["Gentle verbal instruction/warning, firm verbal instruction/warning and in the repeated case of disobedience, disrespect or danger, we are comfortable with physical discipline and other forms of punishments in love", "Gentle verbal instruction/warning, firm verbal instruction warning and in the repeated case of disobedience, disrespect or danger, we are comfortable with other forms of punishment in love, which do not include physical discipline", "Not Applicable"] }.
+Question 40: Your Parenting Life: Children: Education (Multiple Choice)
+* Text: We are committed to educating our children, what is your approach?
+* Options:
+    * In the public school system
+    * In private school
+    * Homeschooling
+    * Flexible learning experience where we’re committed to the best local educational environment which could vary between all school types based on location, outcomes, pricing and more
+* Issue: Missing.
+* Corrective Action: Add book question.
+* Replit Implementation:
+    * SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (40, 'Your Parenting Life: Children: Education', 'Multiple Choice', 5, 'We are committed to educating our children, what is your approach?', '["In the public school system", "In private school", "Homeschooling", "Flexible learning experience where we’re committed to the best local educational environment which could vary between all school types based on location, outcomes, pricing and more"]');
+    * JSON: Add to questions at index 39: { "id": 40, "section": "Your Parenting Life: Children: Education", "type": "Multiple Choice", "weight": 5, "question_text": "We are committed to educating our children, what is your approach?", "response_options": ["In the public school system", "In private school", "Homeschooling", "Flexible learning experience where we’re committed to the best local educational environment which could vary between all school types based on location, outcomes, pricing and more"] }.
+Question 41: Your Parenting Life: Children Decision: To Have Them (Biologically) (Multiple Choice)
+* Text: We commit to having children biologically (according to God’s will), what is your decision?
+* Options:
+    * Commit to having children (according to God’s will)
+    * Do not commit to having children
+* Issue: Missing.
+* Corrective Action: Add book question.
+* Replit Implementation:
+    * SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (41, 'Your Parenting Life: Children Decision: To Have Them (Biologically)', 'Multiple Choice', 5, 'We commit to having children biologically (according to God’s will), what is your decision?', '["Commit to having children (according to God’s will)", "Do not commit to having children"]');
+    * JSON: Add to questions at index 40: { "id": 41, "section": "Your Parenting Life: Children Decision: To Have Them (Biologically)", "type": "Multiple Choice", "weight": 5, "question_text": "We commit to having children biologically (according to God’s will), what is your decision?", "response_options": ["Commit to having children (according to God’s will)", "Do not commit to having children"] }.
+Question 42: Your Parenting Life: Children Decision: How To Have Them (Method of Delivery Preference) (Multiple Choice)
+* Text: We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, what is your preferred method of delivery?
+* Options:
+    * Water Delivery (if medically prudent and possible)
+    * Vaginal Delivery (with potential for C-Section if medically necessary)
+* Issue: Missing (appears later as Question 94).
+* Corrective Action: Add book question here, move provided Question 94 to this slot.
+* Replit Implementation:
+    * SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (42, 'Your Parenting Life: Children Decision: How To Have Them (Method of Delivery Preference)', 'Multiple Choice', 3, 'We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, what is your preferred method of delivery?', '["Water Delivery (if medically prudent and possible)", "Vaginal Delivery (with potential for C-Section if medically necessary)"]');
+    * JSON: Add to questions at index 41: { "id": 42, "section": "Your Parenting Life: Children Decision: How To Have Them (Method of Delivery Preference)", "type": "Multiple Choice", "weight": 3, "question_text": "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, what is your preferred method of delivery?", "response_options": ["Water Delivery (if medically prudent and possible)", "Vaginal Delivery (with potential for C-Section if medically necessary)"] }.
+Question 43: Your Parenting Life: Children Decision: Where To Have Them (Location/Setting) (Multiple Choice)
+* Text: We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, where would you prefer to have children?
+* Options:
+    * Home Birth (if medically prudent and possible)
+    * Hospital Birth
+    * Birth Center (if medically prudent and possible)
+* Issue: Missing.
+* Corrective Action: Add book question.
+* Replit Implementation:
+    * SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (43, 'Your Parenting Life: Children Decision: Where To Have Them (Location/Setting)', 'Multiple Choice', 3, 'We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, where would you prefer to have children?', '["Home Birth (if medically prudent and possible)", "Hospital Birth", "Birth Center (if medically prudent and possible)"]');
+    * JSON: Add to questions at index 42: { "id": 43, "section": "Your Parenting Life: Children Decision: Where To Have Them (Location/Setting)", "type": "Multiple Choice", "weight": 3, "question_text": "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, where would you prefer to have children?", "response_options": ["Home Birth (if medically prudent and possible)", "Hospital Birth", "Birth Center (if medically prudent and possible)"] }.
+Question 44: Your Parenting Life: Children Decision: Breastfeeding (Multiple Choice)
+* Text: We commit to breastfeeding our children, what is your approach?
+* Options:
+    * Primarily and only using formula in rare circumstances
+    * Whenever possible, still, we do not have any reservations about relying on high quality formula
+* Issue: Missing.
+* Corrective Action: Add book question.
+* Replit Implementation:
+    * SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (44, 'Your Parenting Life: Children Decision: Breastfeeding', 'Multiple Choice', 3, 'We commit to breastfeeding our children, what is your approach?', '["Primarily and only using formula in rare circumstances", "Whenever possible, still, we do not have any reservations about relying on high quality formula"]');
+    * JSON: Add to questions at index 43: { "id": 44, "section": "Your Parenting Life: Children Decision: Breastfeeding", "type": "Multiple Choice", "weight": 3, "question_text": "We commit to breastfeeding our children, what is your approach?", "response_options": ["Primarily and only using formula in rare circumstances", "Whenever possible, still, we do not have any reservations about relying on high quality formula"] }.
+Question 45: Your Parenting Life: Children Decision: Breastfeeding Length (Multiple Choice)
+* Text: We’re committed to breastfeeding our children, for how long?
+* Options:
+    * Breastfeeding along with introducing appropriate complementary foods for up to 2 years for our children
+    * Breastfeeding along with introducing appropriate complementary foods whenever possible still, we do not plan to do it beyond 1 year for our children
+    * No strong perspective about breastfeeding and will take the guidance of our medical professional when the time comes
+* Issue: Missing.
+* Corrective Action: Add book question.
+* Replit Implementation:
+    * SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (45, 'Your Parenting Life: Children Decision: Breastfeeding Length', 'Multiple Choice', 3, 'We’re committed to breastfeeding our children, for how long?', '["Breastfeeding along with introducing appropriate complementary foods for up to 2 years for our children", "Breastfeeding along with introducing appropriate complementary foods whenever possible still, we do not plan to do it beyond 1 year for our children", "No strong perspective about breastfeeding and will take the guidance of our medical professional when the time comes"]');
+    * JSON: Add to questions at index 44: { "id": 45, "section": "Your Parenting Life: Children Decision: Breastfeeding Length", "type": "Multiple Choice", "weight": 3, "question_text": "We’re committed to breastfeeding our children, for how long?", "response_options": ["Breastfeeding along with introducing appropriate complementary foods for up to 2 years for our children", "Breastfeeding along with introducing appropriate complementary foods whenever possible still, we do not plan to do it beyond 1 year for our children", "No strong perspective about breastfeeding and will take the guidance of our medical professional when the time comes"] }.
+Question 46: Your Parenting Life: Children Decision: Crying Response (Multiple Choice)
+* Text: We believe we should respond to our baby’s crying, what is your approach?
+* Options:
+    * Pick the baby up as soon as he or she starts crying
+    * Allow the baby to cry for a few minutes before responding
+    * No specific plan for how to respond to crying and prefer to handle it case by case
+    * Not Applicable
+* Issue: Missing.
+* Corrective Action: Add book question.
+* Replit Implementation:
+    * SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (46, 'Your Parenting Life: Children Decision: Crying Response', 'Multiple Choice', 2, 'We believe we should respond to our baby’s crying, what is your approach?', '["Pick the baby up as soon as he or she starts crying", "Allow the baby to cry for a few minutes before responding", "No specific plan for how to respond to crying and prefer to handle it case by case", "Not Applicable"]');
+    * JSON: Add to questions at index 45: { "id": 46, "section": "Your Parenting Life: Children Decision: Crying Response", "type": "Multiple Choice", "weight": 2, "question_text": "We believe we should respond to our baby’s crying, what is your approach?", "response_options": ["Pick the baby up as soon as he or she starts crying", "Allow the baby to cry for a few minutes before responding", "No specific plan for how to respond to crying and prefer to handle it case by case", "Not Applicable"] }.
+Question 47: Your Parenting Life: Children Decision: Working Parent (Multiple Choice)
+* Text: We commit to a working parent model, what is your approach?
+* Options:
+    * One parent stays home with young children (0-5 years)
+    * Both parents working while children are young and committing to reliable childcare
+    * Other: Please detail
+* Issue: Missing.
+* Corrective Action: Add book question.
+* Replit Implementation:
+    * SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (47, 'Your Parenting Life: Children Decision: Working Parent', 'Multiple Choice', 3, 'We commit to a working parent model, what is your approach?', '["One parent stays home with young children (0-5 years)", "Both parents working while children are young and committing to reliable childcare", "Other: Please detail"]');
+    * JSON: Add to questions at index 46: { "id": 47, "section": "Your Parenting Life: Children Decision: Working Parent", "type": "Multiple Choice", "weight": 3, "question_text": "We commit to a working parent model, what is your approach?", "response_options": ["One parent stays home with young children (0-5 years)", "Both parents working while children are young and committing to reliable childcare", "Other: Please detail"] }.
+Question 48: Your Parenting Life: Children Decision: Childcare (Multiple Choice)
+* Text: We commit to a childcare model, what is your approach?
+* Options:
+    * Rely on a family member for childcare
+    * Hire a nanny for childcare
+    * Use a daycare facility for childcare
+    * Not Applicable
+* Issue: Missing.
+* Corrective Action: Add book question.
+* Replit Implementation:
+    * SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (48, 'Your Parenting Life: Children Decision: Childcare', 'Multiple Choice', 3, 'We commit to a childcare model, what is your approach?', '["Rely on a family member for childcare", "Hire a nanny for childcare", "Use a daycare facility for childcare", "Not Applicable"]');
+    * JSON: Add to questions at index 47: { "id": 48, "section": "Your Parenting Life: Children Decision: Childcare", "type": "Multiple Choice", "weight": 3, "question_text": "We commit to a childcare model, what is your approach?", "response_options": ["Rely on a family member for childcare", "Hire a nanny for childcare", "Use a daycare facility for childcare", "Not Applicable"] }.
+Question 49: Your Parenting Life: Children Decision: Stay-at-Home Parent (Multiple Choice)
+* Text: We commit to a stay-at-home parent model, what is your approach?
+* Options:
+    * Mother stays home with children
+    * Father stays home with children
+    * Flexible based on circumstances
+    * Not Applicable
+* Issue: Missing.
+* Corrective Action: Add book question.
+* Replit Implementation:
+    * SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (49, 'Your Parenting Life: Children Decision: Stay-at-Home Parent', 'Multiple Choice', 3, 'We commit to a stay-at-home parent model, what is your approach?', '["Mother stays home with children", "Father stays home with children", "Flexible based on circumstances", "Not Applicable"]');
+    * JSON: Add to questions at index 48: { "id": 49, "section": "Your Parenting Life: Children Decision: Stay-at-Home Parent", "type": "Multiple Choice", "weight": 3, "question_text": "We commit to a stay-at-home parent model, what is your approach?", "response_options": ["Mother stays home with children", "Father stays home with children", "Flexible based on circumstances", "Not Applicable"] }.
+Question 50: Your Parenting Life: Children Decision: Number of Children (Adopted) (Multiple Choice)
+* Text: We commit to adopting children, what is your approach?
+* Options:
+    * We commit to adopting at least one child during our marriage
+    * We admire and believe in adoption but do not plan to adopt during our marriage
+    * We are committed to having children biologically (according to God’s will), but would consider adoption if we discern it’s not His will for us to have children biologically
+* Issue: Missing.
+* Corrective Action: Add book question.
+* Replit Implementation:
+    * SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (50, 'Your Parenting Life: Children Decision: Number of Children (Adopted)', 'Multiple Choice', 4, 'We commit to adopting children, what is your approach?', '["We commit to adopting at least one child during our marriage", "We admire and believe in adoption but do not plan to adopt during our marriage", "We are committed to having children biologically (according to God’s will), but would consider adoption if we discern it’s not His will for us to have children biologically"]');
+    * JSON: Add to questions at index 49: { "id": 50, "section": "Your Parenting Life: Children Decision: Number of Children (Adopted)", "type": "Multiple Choice", "weight": 4, "question_text": "We commit to adopting children, what is your approach?", "response_options": ["We commit to adopting at least one child during our marriage", "We admire and believe in adoption but do not plan to adopt during our marriage", "We are committed to having children biologically (according to God’s will), but would consider adoption if we discern it’s not His will for us to have children biologically"] }.
+YOUR MARRIAGE LIFE (Questions 51–60)
+Issues:
+* Missing in provided list. Book includes questions like naming children, sex perspective, and work boundaries.
+* Need to insert these to maintain book structure.
+Corrected Questions:
+Question 51: Your Parenting Life: Children Decision: Naming of Children (Model) (Multiple Choice)
+* Text: We commit to naming our children, what is your approach?
+* Options:
+    * We commit to naming our children with first names that are from the Bible
+    * We commit to naming our children with first names that honor a family member from either side of the family
+    * We commit to naming our children with first names that are gender neutral
+    * Other approach to naming our children
+* Issue: Missing (appears later as Question 97).
+* Corrective Action: Add book question here, move provided Question 97 to this slot.
+* Replit Implementation:
+    * SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (51, 'Your Parenting Life: Children Decision: Naming of Children (Model)', 'Multiple Choice', 2, 'We commit to naming our children, what is your approach?', '["We commit to naming our children with first names that are from the Bible", "We commit to naming our children with first names that honor a family member from either side of the family", "We commit to naming our children with first names that are gender neutral", "Other approach to naming our children"]');
+    * JSON: Add to questions at index 50: { "id": 51, "section": "Your Parenting Life: Children Decision: Naming of Children (Model)", "type": "Multiple Choice", "weight": 2, "question_text": "We commit to naming our children, what is your approach?", "response_options": ["We commit to naming our children with first names that are from the Bible", "We commit to naming our children with first names that honor a family member from either side of the family", "We commit to naming our children with first names that are gender neutral", "Other approach to naming our children"] }.
+Question 52: Your Parenting Life: Children Decision: Naming of Children (Jr’s) (Multiple Choice)
+* Text: We commit to naming children after parents, what is your approach?
+* Options:
+    * We agree that it’s an option to name one of our children after a parent
+    * We agree that’s not an option to name one of our children after a parent
+    * Not Applicable
+* Issue: Missing (appears later as Question 98).
+* Corrective Action: Add book question here, move provided Question 98 to this slot.
+* Replit Implementation:
+    * SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (52, 'Your Parenting Life: Children Decision: Naming of Children (Jr’s)', 'Multiple Choice', 2, 'We commit to naming children after parents, what is your approach?', '["We agree that it’s an option to name one of our children after a parent", "We agree that’s not an option to name one of our children after a parent", "Not Applicable"]');
+    * JSON: Add to questions at index 51: { "id": 52, "section": "Your Parenting Life: Children Decision: Naming of Children (Jr’s)", "type": "Multiple Choice", "weight": 2, "question_text": "We commit to naming children after parents, what is your approach?", "response_options": ["We agree that it’s an option to name one of our children after a parent", "We agree that’s not an option to name one of our children after a parent", "Not Applicable"] }.
+Question 53: Your Marriage Life: Sex Perspective: Declaration (Agree/Disagree)
+* Text: We share the belief that sex in marriage is a duty before God and not a conditional expression of love and honor; as such, it is not something to be withheld or manipulated outside of mutually agreed medical or spiritual considerations.
+* Options:
+    * Agree
+    * Disagree
+* Issue: Missing (was incorrectly placed as Question 12).
+* Corrective Action: Add book question here, move provided Question 12 to this slot.
+* Replit Implementation:
+    * SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (53, 'Your Marriage Life: Sex Perspective: Declaration', 'Agree/Disagree', 8, 'We share the belief that sex in marriage is a duty before God and not a conditional expression of love and honor; as such, it is not something to be withheld or manipulated outside of mutually agreed medical or spiritual considerations.', '["Agree", "Disagree"]');
+    * JSON: Add to questions at index 52: { "id": 53, "section": "Your Marriage Life: Sex Perspective: Declaration", "type": "Agree/Disagree", "weight": 8, "question_text": "We share the belief that sex in marriage is a duty before God and not a conditional expression of love and honor; as such, it is not something to be withheld or manipulated outside of mutually agreed medical or spiritual considerations.", "response_options": ["Agree", "Disagree"] }.
+Question 54: Your Marriage Life: Sex - Frequency (Multiple Choice)
+* Text: We commit to having sex at least how often?
+* Options:
+    * 3 times per week
+    * Daily
+    * 2 times per week
+* Issue: Missing (was incorrectly placed as Question 31).
+* Corrective Action: Add book question here, move provided Question 31 to this slot.
+* Replit Implementation:
+    * SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (54, 'Your Marriage Life: Sex - Frequency', 'Multiple Choice', 8, 'We commit to having sex at least how often?', '["3 times per week", "Daily", "2 times per week"]');
+    * JSON: Add to questions at index 53: { "id": 54, "section": "Your Marriage Life: Sex - Frequency", "type": "Multiple Choice", "weight": 8, "question_text": "We commit to having sex at least how often?", "response_options": ["3 times per week", "Daily", "2 times per week"] }.
+Question 55: Your Marriage Life: Relationship Model (Work/Family Life Boundaries – Work Down Time) (Multiple Choice)
+* Text: We commit to a marriage/work model with guarded time, what is your approach?
+* Options:
+    * At least 2 hours daily where it’s our time to connect directly (not including children), and no work is to be done. Our preliminary guarded time is [fill-in] (am/pm)
+    * At least 1.5 hours daily where it’s our time to connect directly (not including children), and no work is to be done. Our preliminary guarded time is [fill-in] (am/pm)
+    * At least 1 hour daily where it’s our time to connect directly (not including children), and no work is to be done. Our preliminary guarded time is [fill-in] (am/pm)
+    * Other: Please detail
+* Issue: Missing (was incorrectly placed as Question 32).
+* Corrective Action: Add book question here, move provided Question 32 to this slot.
+* Replit Implementation:
+    * SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (55, 'Your Marriage Life: Relationship Model (Work/Family Life Boundaries – Work Down Time)', 'Multiple Choice', 3, 'We commit to a marriage/work model with guarded time, what is your approach?', '["At least 2 hours daily where it’s our time to connect directly (not including children), and no work is to be done. Our preliminary guarded time is [fill-in] (am/pm)", "At least 1.5 hours daily where it’s our time to connect directly (not including children), and no work is to be done. Our preliminary guarded time is [fill-in] (am/pm)", "At least 1 hour daily where it’s our time to connect directly (not including children), and no work is to be done. Our preliminary guarded time is [fill-in] (am/pm)", "Other: Please detail"]');
+    * JSON: Add to questions at index 54: { "id": 55, "section": "Your Marriage Life: Relationship Model (Work/Family Life Boundaries – Work Down Time)", "type": "Multiple Choice", "weight": 3, "question_text": "We commit to a marriage/work model with guarded time, what is your approach?", "response_options": ["At least 2 hours daily where it’s our time to connect directly (not including children), and no work is to be done. Our preliminary guarded time is [fill-in] (am/pm)", "At least 1.5 hours daily where it’s our time to connect directly (not including children), and no work is to be done. Our preliminary guarded time is [fill-in] (am/pm)", "At least 1 hour daily where it’s our time to connect directly (not including children), and no work is to be done. Our preliminary guarded time is [fill-in] (am/pm)", "Other: Please detail"] }.
+Question 56: Your Marriage Life: Sex - Contraception (Multiple Choice)
+* Text: We plan to use contraception in our marriage, what is your approach?
+* Options:
+    * We do not plan to use contraception of any form during marriage
+    * We plan to use contraception, but we do not plan to use any which require oral consumption (health concerns/considerations) or invasive surgery (vasectomy, fallopian ‘tubes tied’)
+    * We plan to use all forms of contraception available to us which includes oral consumption and/or invasive surgery as an option (vasectomy, fallopian ‘tubes tied’)
+* Issue: Missing (appears later as Question 92).
+* Corrective Action: Add book question here, move provided Question 92 to this slot.
+* Replit Implementation:
+    * SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (56, 'Your Marriage Life: Sex - Contraception', 'Multiple Choice', 5, 'We plan to use contraception in our marriage, what is your approach?', '["We do not plan to use contraception of any form during marriage", "We plan to use contraception, but we do not plan to use any which require oral consumption (health concerns/considerations) or invasive surgery (vasectomy, fallopian ‘tubes tied’)", "We plan to use all forms of contraception available to us which includes oral consumption and/or invasive surgery as an option (vasectomy, fallopian ‘tubes tied’)"]');
+    * JSON: Add to questions at index 55: { "id": 56, "section": "Your Marriage Life: Sex - Contraception", "type": "Multiple Choice", "weight": 5, "question_text": "We plan to use contraception in our marriage, what is your approach?", "response_options": ["We do not plan to use contraception of any form during marriage", "We plan to use contraception, but we do not plan to use any which require oral consumption (health concerns/considerations) or invasive surgery (vasectomy, fallopian ‘tubes tied’)", "We plan to use all forms of contraception available to us which includes oral consumption and/or invasive surgery as an option (vasectomy, fallopian ‘tubes tied’)"] }.
+Question 57: Your Finances: Financial Planning Model (Multiple Choice)
+* Text: We commit to a financial planning model, what is your approach?
+* Options:
+    * Joint accounts only for all financial matters
+    * Joint accounts for shared expenses and individual accounts for personal spending
+    * Individual accounts only with agreed contributions to shared expenses
+* Issue: Missing.
+* Corrective Action: Add book question.
+* Replit Implementation:
+    * SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (57, 'Your Finances: Financial Planning Model', 'Multiple Choice', 4, 'We commit to a financial planning model, what is your approach?', '["Joint accounts only for all financial matters", "Joint accounts for shared expenses and individual accounts for personal spending", "Individual accounts only with agreed contributions to shared expenses"]');
+    * JSON: Add to questions at index 56: { "id": 57, "section": "Your Finances: Financial Planning Model", "type": "Multiple Choice", "weight": 4, "question_text": "We commit to a financial planning model, what is your approach?", "response_options": ["Joint accounts only for all financial matters", "Joint accounts for shared expenses and individual accounts for personal spending", "Individual accounts only with agreed contributions to shared expenses"] }.
+Question 58: Your Finances: Financial Generosity (in Faith) (Multiple Choice)
+* Text: We commit to giving to our faith community, what is your approach?
+* Options:
+    * At least 10% of net income monthly
+    * At least 2% of net income monthly, increasing 1% yearly
+    * At least 10% to faith community and 2% to causes
+    * Other: Please detail
+* Issue: Missing.
+* Corrective Action: Add book question.
+* Replit Implementation:
+    * SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (58, 'Your Finances: Financial Generosity (in Faith)', 'Multiple Choice', 5, 'We commit to giving to our faith community, what is your approach?', '["At least 10% of net income monthly", "At least 2% of net income monthly, increasing 1% yearly", "At least 10% to faith community and 2% to causes", "Other: Please detail"]');
+    * JSON: Add to questions at index 57: { "id": 58, "section": "Your Finances: Financial Generosity (in Faith)", "type": "Multiple Choice", "weight": 5, "question_text": "We commit to giving to our faith community, what is your approach?", "response_options": ["At least 10% of net income monthly", "At least 2% of net income monthly, increasing 1% yearly", "At least 10% to faith community and 2% to causes", "Other: Please detail"] }.
+Question 59: Your Finances: Financial Management: Payments Execution (Public Social) (Multiple Choice)
+* Text: We commit to handling payments when going out, what is your approach?
+* Options:
+    * [fill-in] pays unless discussed otherwise
+    * Flexible setup, discuss each time
+    * Other: Please detail
+* Issue: Missing.
+* Corrective Action: Add book question.
+* Replit Implementation:
+    * SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (59, 'Your Finances: Financial Management: Payments Execution (Public Social)', 'Multiple Choice', 3, 'We commit to handling payments when going out, what is your approach?', '["[fill-in] pays unless discussed otherwise", "Flexible setup, discuss each time", "Other: Please detail"]');
+    * JSON: Add to questions at index 58: { "id": 59, "section": "Your Finances: Financial Management: Payments Execution (Public Social)", "type": "Multiple Choice", "weight": 3, "question_text": "We commit to handling payments when going out, what is your approach?", "response_options": ["[fill-in] pays unless discussed otherwise", "Flexible setup, discuss each time", "Other: Please detail"] }.
+Question 60: Your Marriage Life with Children: Pregnancy Announcement (Multiple Choice)
+* Text: We commit to keeping the news of our pregnancy private until when, what is your approach?
+* Options:
+    * We commit to keeping the news of our pregnancy private until the end of the 1st trimester
+    * We commit to keeping the news of our pregnancy private until the end of the 2nd trimester
+    * We do not have a specific guideline around if and when we will share news of a pregnancy
+    * Not Applicable
+* Issue: Missing (appears later as Question 99).
+* Corrective Action: Add book question here, move provided Question 99 to this slot.
+* Replit Implementation:
+    * SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (60, 'Your Marriage Life with Children: Pregnancy Announcement', 'Multiple Choice', 2, 'We commit to keeping the news of our pregnancy private until when, what is your approach?', '["We commit to keeping the news of our pregnancy private until the end of the 1st trimester", "We commit to keeping the news of our pregnancy private until the end of the 2nd trimester", "We do not have a specific guideline around if and when we will share news of a pregnancy", "Not Applicable"]');
+    * JSON: Add to questions at index 59: { "id": 60, "section": "Your Marriage Life with Children: Pregnancy Announcement", "type": "Multiple Choice", "weight": 2, "question_text": "We commit to keeping the news of our pregnancy private until when, what is your approach?", "response_options": ["We commit to keeping the news of our pregnancy private until the end of the 1st trimester", "We commit to keeping the news of our pregnancy private until the end of the 2nd trimester", "We do not have a specific guideline around if and when we will share news of a pregnancy", "Not Applicable"] }.
+YOUR MARRI
+

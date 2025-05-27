@@ -44,7 +44,7 @@ export const questions: Question[] = [
     id: 3,
     section: "Your Foundation",
     subsection: "Marriage & Children's Faith",
-    type: "D",
+    type: "M",
     text: "We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ",
     options: [
       "We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ",
@@ -59,10 +59,10 @@ export const questions: Question[] = [
     type: "M",
     text: "We're committed to the belief regarding happiness in marriage, what is your primary focus?",
     options: [
-      "We're committed to the belief: While a marriage relationship can yield happiness, we believe happiness is neither a stable emotion nor a stable foundation to build a marriage upon, as such, we believe each spouse is ultimately responsible for their own happiness.",
-      "We're committed to the belief: 'Happy Wife, Happy Life' – the husband is ultimately responsible for making his wife happy and this will in turn lead to a successful marriage.",
-      "We're committed to the belief: 'Happy King, Happy Kingdom' – the wife is ultimately responsible for making her husband happy and this will in turn lead to a successful marriage.",
-      "We're committed to the belief: We believe in 'Happy Spouse, Happy House' – each spouse is ultimately responsible for the other spouse's happiness and this will in turn lead to a successful marriage."
+      "We're committed to the belief: While a marriage relationship can yield happiness, we believe happiness is neither a stable emotion nor a stable foundation to build a marriage upon, as such, we believe each spouse is ultimately responsible for their own happiness",
+      "We're committed to the belief: 'Happy Wife, Happy Life' – the husband is ultimately responsible for making his wife happy and this will in turn lead to a successful marriage",
+      "We're committed to the belief: 'Happy King, Happy Kingdom' – the wife is ultimately responsible for making her husband happy and this will in turn lead to a successful marriage",
+      "We're committed to the belief: We believe in 'Happy Spouse, Happy House' – each spouse is ultimately responsible for the other spouse's happiness and this will in turn lead to a successful marriage"
     ],
     weight: 5
   },
@@ -70,8 +70,8 @@ export const questions: Question[] = [
     id: 5,
     section: "Your Foundation",
     subsection: "Marriage Preparation: Legal (Incapacitation)",
-    type: "D",
-    text: "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing our spouse as Power of Attorney before our marriage date.",
+    type: "M",
+    text: "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing our spouse as Power of Attorney before our marriage date",
     options: [
       "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing our spouse as Power of Attorney before our marriage date",
       "We do not believe it's necessary to establish Power of Attorney before marriage and prefer to address this matter later if and when it becomes relevant"
@@ -82,8 +82,8 @@ export const questions: Question[] = [
     id: 6,
     section: "Your Foundation",
     subsection: "Marriage Preparation: Legal (Estate)",
-    type: "D",
-    text: "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing completing a notarized copy of our will before our marriage date.",
+    type: "M",
+    text: "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing completing a notarized copy of our will before our marriage date",
     options: [
       "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing completing a notarized copy of our will before our marriage date",
       "We do not believe creating a will is necessary before marriage and prefer to address estate planning at a later stage in our relationship"
@@ -94,8 +94,8 @@ export const questions: Question[] = [
     id: 7,
     section: "Your Foundation",
     subsection: "Marriage Mindset: Divorce",
-    type: "D",
-    text: "We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, \"Falling Out of Love\", \"Growing Apart\", \"Irreconcilable Differences\".",
+    type: "M",
+    text: "We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, \"Falling Out of Love\", \"Growing Apart\", \"Irreconcilable Differences\"",
     options: [
       "We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, 'Falling Out of Love', 'Growing Apart', 'Irreconcilable Differences'",
       "We believe that while marriage is intended to be lifelong, divorce may be a reasonable option in a wider range of circumstances, including when personal happiness and fulfillment are severely compromised"
@@ -109,9 +109,9 @@ export const questions: Question[] = [
     type: "M",
     text: "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), what is your position on prenuptial agreements?",
     options: [
-      "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), still, in view of the law and the prevalent rates of marriage dissolution, we agree to explore and structure a mutually considerate prenuptial agreement for our marriage.",
-      "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), and do not believe any legal agreements beyond our mutual commitments through this life covenant process are necessary for us to explore and structure at this time.",
-      "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), still, we'd like to be more informed about what prenuptial agreements entail before deciding whether to consider it before our marriage."
+      "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), still, in view of the law and the prevalent rates of marriage dissolution, we agree to explore and structure a mutually considerate prenuptial agreement for our marriage",
+      "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), and do not believe any legal agreements beyond our mutual commitments through this life covenant process are necessary for us to explore and structure at this time",
+      "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), still, we'd like to be more informed about what prenuptial agreements entail before deciding whether to consider it before our marriage"
     ],
     weight: 12
   },
@@ -130,7 +130,7 @@ export const questions: Question[] = [
   },
   {
     id: 10,
-    section: "Your Foundation",
+    section: "Your Marriage Life",
     subsection: "Order of Priority before God",
     type: "M",
     text: "We understand and accept the order of relationship priority according to God's highest design, what is your order of priority?",
@@ -156,15 +156,16 @@ export const questions: Question[] = [
   },
   {
     id: 12,
-    section: "Your Marriage Life",
-    subsection: "Sex Perspective: Declaration",
-    type: "D",
-    text: "We share the belief that sex in marriage is a duty before God and not a conditional expression of love and honor.",
+    section: "Your Faith Life",
+    subsection: "Worship Life: Marriage",
+    type: "M",
+    text: "We commit to prayer as a couple, how often?",
     options: [
-      "We agree with this statement",
-      "We disagree with this statement"
+      "Daily prayer before sleep",
+      "Weekly prayer during check-in",
+      "Other: Please detail"
     ],
-    weight: 8
+    weight: 4
   },
   {
     id: 13,
@@ -310,11 +311,11 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Communication & Conflict Resolution: Counseling",
     type: "M",
-    text: "How often would you attend marriage counseling?",
+    text: "We commit to a minimum of counseling sessions for our marriage, what is your approach?",
     options: [
-      "Regularly (at least once every 90 days) via check-in sessions",
-      "Only when there's a problem, disagreement and/or difficulty we can't resolve on our own",
-      "Never, we don't believe in using outside support for our marriage issues"
+      "Monthly counseling sessions for the first year of our marriage, with a minimum of bi-monthly in year 2 and a minimum of quarterly in years 3+",
+      "Bi-weekly counseling sessions for the first year of our marriage, with a minimum of monthly in year 2 and a minimum of quarterly in years 3+",
+      "Other: Please detail"
     ],
     weight: 3
   },
