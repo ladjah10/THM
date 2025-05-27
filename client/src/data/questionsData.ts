@@ -1183,7 +1183,7 @@ export const questions: Question[] = [
     section: "Your Health and Wellness",
     subsection: "Regular Checkups",
     type: "D",
-    text: "Your Health and Wellness: Regular Checkups - I believe in getting regular preventative medical checkups.",
+    text: "I believe in getting regular preventative medical checkups.",
     options: [
       "We do believe in getting regular preventative medical and dental checkups",
       "We do not believe routine checkups are necessary unless specific health concerns arise"
@@ -1195,7 +1195,7 @@ export const questions: Question[] = [
     section: "Your Marriage and Boundaries",
     subsection: "Device-Free Time",
     type: "D",
-    text: "Your Marriage and Boundaries: Device-Free Time - I believe we should have regular device-free time together.",
+    text: "I believe we should have regular device-free time together.",
     options: [
       "We do believe in having regular scheduled device-free time for connection",
       "We do not believe formally scheduling device-free time is necessary"
@@ -1208,11 +1208,11 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Sex - Initiation",
     type: "M",
-    text: "Your Marriage Life: Sex - Initiation",
+    text: "We commit to physical intimacy initiation, what is your approach?",
     options: [
-      "We commit to alternating who initiates sex by week.",
-      "We commit to alternating who initiates sex by day/instance.",
-      "We commit to \"letting it flow\" naturally without a set alternation schedule, with that said, we each willingly acknowledge it is not the responsibility of one spouse to initiate a duty before God."
+      "We commit to alternating who initiates sex by week",
+      "We commit to alternating who initiates sex by day/instance",
+      "We commit to \"letting it flow\" naturally without a set alternation schedule, with that said, we each willingly acknowledge it is not the responsibility of one spouse to initiate a duty before God"
     ],
     weight: 5
   },
@@ -1221,12 +1221,12 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Sex - Communication",
     type: "M",
-    text: "Your Marriage Life: Sex - Communication",
+    text: "We commit to intimate communication, what is your approach?",
     options: [
-      "We commit to having a conversation within the first month about what we individually enjoy in sex with our spouse and what aspect of the experience, if anything, you would each enjoy more of.",
-      "We commit to having a conversation within the first 3 months about what we individually enjoy in sex with our spouse and what aspect of the experience, if anything, you would each enjoy more of.",
-      "We commit to having a conversation within the first 6 months about what we individually enjoy in sex with our spouse and what aspect of the experience, if anything, you would each enjoy more of.",
-      "Other: Before committing to this we need further discussion in our session around how this would operate."
+      "We commit to having a conversation within the first month about what we individually enjoy in sex with our spouse and what aspect of the experience, if anything, you would each enjoy more of",
+      "We commit to having a conversation within the first 3 months about what we individually enjoy in sex with our spouse and what aspect of the experience, if anything, you would each enjoy more of",
+      "We commit to having a conversation within the first 6 months about what we individually enjoy in sex with our spouse and what aspect of the experience, if anything, you would each enjoy more of",
+      "Other: Before committing to this we need further discussion in our session around how this would operate"
     ],
     weight: 5
   },
@@ -1235,11 +1235,11 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Sex - Contraception",
     type: "M",
-    text: "Your Marriage Life: Sex - Contraception",
+    text: "We commit to family planning and contraception, what is your approach?",
     options: [
-      "We do not plan to use contraception of any form during marriage.",
-      "We plan to use contraception, but we do not plan to use any which require oral consumption (health concerns/considerations) or invasive surgery (vasectomy, fallopian \"tubes tied\").",
-      "We plan to use all forms of contraception available to us which includes oral consumption and/or invasive surgery as an option (vasectomy, fallopian \"tubes tied\")."
+      "We do not plan to use contraception of any form during marriage",
+      "We plan to use contraception, but we do not plan to use any which require oral consumption (health concerns/considerations) or invasive surgery (vasectomy, fallopian \"tubes tied\")",
+      "We plan to use all forms of contraception available to us which includes oral consumption and/or invasive surgery as an option (vasectomy, fallopian \"tubes tied\")"
     ],
     weight: 5
   },
@@ -1248,10 +1248,10 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Sex - Boundaries",
     type: "D",
-    text: "Your Marriage Life: Sex - Boundaries (Declarations)",
+    text: "We commit to never discussing our sex lives with anyone (friends, colleagues, and family members) unless we mutually agree to seek outside counsel on that aspect of our relationship.",
     options: [
-      "We commit to never discussing our sex lives with anyone (friends, colleagues, and family members) unless we mutually agree to seek outside counsel on that aspect of our relationship.",
-      "We disagree with this statement."
+      "We commit to never discussing our sex lives with anyone (friends, colleagues, and family members) unless we mutually agree to seek outside counsel on that aspect of our relationship",
+      "We disagree with this statement"
     ],
     weight: 6
   },
@@ -1260,7 +1260,7 @@ export const questions: Question[] = [
     section: "Your Marriage Life with Children",
     subsection: "Children Decision: How To Have Them (Method of Delivery Preference)",
     type: "M",
-    text: "Your Marriage Life with Children: Children Decision: How To Have Them (Method of Delivery Preference)",
+    text: "We commit to childbirth delivery method, what is your preference?",
     options: [
       "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer: A Water Delivery (if medically prudent and possible)",
       "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer: Vaginal Delivery (with potential for C-Section if medically necessary)"
@@ -1272,7 +1272,7 @@ export const questions: Question[] = [
     section: "Your Marriage Life with Children",
     subsection: "Children Decision: Where To Have Them (Location Preference)",
     type: "M",
-    text: "Your Marriage Life with Children: Children Decision: Where To Have Them (Location Preference)",
+    text: "We commit to childbirth location, what is your preference?",
     options: [
       "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer: A Home Birth (if medically prudent and possible)",
       "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer: A Hospital Birth",
@@ -1285,11 +1285,11 @@ export const questions: Question[] = [
     section: "Your Marriage Life with Children",
     subsection: "Children Decision: Number of Children (Adopted)",
     type: "M",
-    text: "Your Marriage Life with Children: Children Decision: Number of Children (Adopted)",
+    text: "We commit to adoption, what is your approach?",
     options: [
-      "We commit to adopting at least one child during our marriage.",
-      "We admire and believe in adoption but do not plan to adopt during our marriage.",
-      "We are committed to having children biologically (according to God's will), but would consider adoption if we discern it's not His will for us to have children biologically."
+      "We commit to adopting at least one child during our marriage",
+      "We admire and believe in adoption but do not plan to adopt during our marriage",
+      "We are committed to having children biologically (according to God's will), but would consider adoption if we discern it's not His will for us to have children biologically"
     ],
     weight: 4
   },
