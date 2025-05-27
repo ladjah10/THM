@@ -403,12 +403,12 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Relationship Model (Late Night Work)",
     type: "M",
-    text: "Your Marriage Life: Relationship Model (Late Night Work) - How many late work nights per week?",
+    text: "We commit to limiting late work nights, what is your approach?",
     options: [
-      "0",
-      "1",
-      "2",
-      "3+"
+      "No late work nights",
+      "Maximum 1 late work night per week",
+      "Maximum 2 late work nights per week",
+      "As needed for work responsibilities"
     ],
     weight: 3
   },
@@ -417,12 +417,12 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Relationship Model (Work Down Time)",
     type: "M",
-    text: "Your Marriage Life: Relationship Model (Work Down Time) - How much daily downtime do you need?",
+    text: "We commit to respecting individual downtime needs, what is your approach?",
     options: [
-      "None (I'm energized by others)",
-      "15-30 minutes",
-      "30-60 minutes",
-      "60+ minutes"
+      "No individual downtime needed",
+      "15-30 minutes daily downtime",
+      "30-60 minutes daily downtime",
+      "60+ minutes daily downtime"
     ],
     weight: 3
   },
@@ -431,13 +431,12 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Marriage: Living – Rooting",
     type: "M",
-    text: "Your Marriage Life: Marriage: Living – Rooting - What is your preference for where to live?",
+    text: "We commit to living in a location, what is your approach?",
     options: [
-      "Near Husband's Family",
-      "Near Wife's Family",
-      "Equidistant to Both Families",
-      "Away from Both Families",
-      "International"
+      "Near husband's family",
+      "Near wife's family", 
+      "Equidistant from both families",
+      "Away from both families for independence"
     ],
     weight: 3
   },
@@ -446,11 +445,11 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Marriage: Living – City Type",
     type: "M",
-    text: "Your Marriage Life: Marriage: Living – City Type - What type of area do you prefer to live in?",
+    text: "We commit to living in a specific type of area, what is your approach?",
     options: [
-      "Urban",
-      "Suburban",
-      "Rural"
+      "Urban area",
+      "Suburban area", 
+      "Rural area"
     ],
     weight: 3
   },
@@ -459,12 +458,12 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Marriage: Living – Home Type",
     type: "M",
-    text: "Your Marriage Life: Marriage: Living – Home Type - What type of home do you prefer?",
+    text: "We commit to living in a specific type of home, what is your approach?",
     options: [
       "Apartment",
       "Townhouse",
-      "Single-Family House",
-      "Multi-Family House"
+      "Single-family house",
+      "Multi-family house"
     ],
     weight: 3
   },
@@ -473,12 +472,12 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Marriage: Living – Domestic/International",
     type: "M",
-    text: "Your Marriage Life: Marriage: Living – Domestic/International - Would you be willing to live internationally?",
+    text: "We commit to considering international living, what is your approach?",
     options: [
-      "Yes, for the long-term",
-      "Yes, for the short-term",
-      "No",
-      "Only for extended vacation"
+      "Yes, willing for long-term international living",
+      "Yes, willing for short-term international living",
+      "No, prefer domestic living only",
+      "Only for extended vacation purposes"
     ],
     weight: 3
   },
@@ -489,13 +488,13 @@ export const questions: Question[] = [
     section: "Your Parenting Life",
     subsection: "Children: Desire",
     type: "M",
-    text: "Your Parenting Life: Children: Desire - Do you want to have children?",
+    text: "We commit to having children, what is your approach?",
     options: [
-      "We both want to have biological children",
-      "We both want to adopt children",
-      "We both want to have both biological and adopted children",
-      "We both don't want to have children",
-      "We are divided on this issue"
+      "Yes, we want biological children",
+      "Yes, we want to adopt children",
+      "Yes, we want both biological and adopted children",
+      "No, we don't want children",
+      "We are divided on this decision"
     ],
     weight: 12
   },
@@ -504,13 +503,13 @@ export const questions: Question[] = [
     section: "Your Parenting Life",
     subsection: "Children: Timing",
     type: "M",
-    text: "Your Parenting Life: Children: Timing - When do you want to have children?",
+    text: "We commit to timing of having children, what is your approach?",
     options: [
       "Immediately after marriage",
       "After 1-2 years of marriage",
       "After 3-5 years of marriage",
-      "Only after we are financially stable",
-      "Never"
+      "Only after financial stability",
+      "Never want children"
     ],
     weight: 5
   },
