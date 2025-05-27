@@ -1,0 +1,1693 @@
+YOUR FOUNDATION (Questions 1–10)
+Issues:
+
+Question 1: Incorrect. The provided question ("Biblical Model") doesn’t match the book’s Question 1 ("Your Foundation: Marriage + Family - What is your faith position?").
+Question 2: Incorrect. The provided question is about children’s faith, but the book’s Question 2 is about accountability.
+Question 3: Extraneous. It’s a duplicate of Question 2 and not in the book.
+Questions 4–9: Mostly correct but shifted due to earlier errors. Question 4 should be Question 3, etc.
+Question 10: Correct but needs title update to “Your Marriage Life: Order of Priority before God” per Table 2.
+Corrective Actions:
+
+Replace Question 1 with the book’s faith position question.
+Replace Question 2 with the book’s accountability question.
+Remove Question 3 and shift Questions 4–9 up to fill the gap.
+Update Question 10’s title.
+Adjust subsequent questions’ IDs to account for the removal of Question 3.
+Corrected Questions:
+
+Question 1: Your Foundation: Marriage + Family (Multiple Choice)
+
+Text: Your Foundation: Marriage + Family - What is your faith position?
+Options:
+Both believe in Jesus Christ as Lord and Savior
+Interested in Christian faith but not yet decided
+Issue: Provided question was about biblical model, not faith position.
+Corrective Action: Update question text and options.
+Replit Implementation:
+SQL: UPDATE questions SET section = 'Your Foundation: Marriage + Family', type = 'Multiple Choice', weight = 10, question_text = 'Your Foundation: Marriage + Family - What is your faith position?', response_options = '["Both believe in Jesus Christ as Lord and Savior", "Interested in Christian faith but not yet decided"]' WHERE id = 1;
+JSON: Update questions[0] with: { "id": 1, "section": "Your Foundation: Marriage + Family", "type": "Multiple Choice", "weight": 10, "question_text": "Your Foundation: Marriage + Family - What is your faith position?", "response_options": ["Both believe in Jesus Christ as Lord and Savior", "Interested in Christian faith but not yet decided"] }.
+Question 2: Your Foundation: Marriage + Family Accountability (Multiple Choice)
+
+Text: In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this “life covenant” process, unless mutually revisited and discussed at a later time.
+Options:
+In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this “life covenant” process, unless mutually revisited and discussed at a later time.
+Other: Before committing to this we need further discussion with spiritual counsel around how this would operate
+Issue: Provided question was about children’s faith, not accountability.
+Corrective Action: Update question text and options.
+Replit Implementation:
+SQL: UPDATE questions SET section = 'Your Foundation: Marriage + Family Accountability', type = 'Multiple Choice', weight = 8, question_text = 'In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this “life covenant” process, unless mutually revisited and discussed at a later time.', response_options = '["In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this “life covenant” process, unless mutually revisited and discussed at a later time.", "Other: Before committing to this we need further discussion with spiritual counsel around how this would operate"]' WHERE id = 2;
+JSON: Update questions[1] with: { "id": 2, "section": "Your Foundation: Marriage + Family Accountability", "type": "Multiple Choice", "weight": 8, "question_text": "In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this “life covenant” process, unless mutually revisited and discussed at a later time.", "response_options": ["In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this “life covenant” process, unless mutually revisited and discussed at a later time.", "Other: Before committing to this we need further discussion with spiritual counsel around how this would operate"] }.
+Question 3: Your Foundation: Marriage & Children’s Faith (Multiple Choice)
+
+Text: We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ.
+Options:
+We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ
+We do not believe we have a responsibility to raise our children according to any specific faith tradition and prefer to let them choose their own spiritual path when they’re old enough to decide
+Issue: Was Question 4 in the provided list; shifted up due to removal of duplicate Question 3.
+Corrective Action: Update ID to 3, keep text and options.
+Replit Implementation:
+SQL: UPDATE questions SET id = 3 WHERE id = 4;
+JSON: Shift questions[3] to questions[2], updating id to 3.
+Question 4: Your Foundation: Marriage Mindset: Happiness (Multiple Choice)
+
+Text: We’re committed to the belief regarding happiness in marriage, what is your primary focus?
+Options:
+We’re committed to the belief: While a marriage relationship can yield happiness, we believe happiness is neither a stable emotion nor a stable foundation to build a marriage upon, as such, we believe each spouse is ultimately responsible for their own happiness
+We’re committed to the belief: ‘Happy Wife, Happy Life’ – the husband is ultimately responsible for making his wife happy and this will in turn lead to a successful marriage
+We’re committed to the belief: ‘Happy King, Happy Kingdom’ – the wife is ultimately responsible for making her husband happy and this will in turn lead to a successful marriage
+We’re committed to the belief: We believe in ‘Happy Spouse, Happy House’ – each spouse is ultimately responsible for the other spouse’s happiness and this will in turn lead to a successful marriage
+Issue: Was Question 5; shifted up.
+Corrective Action: Update ID to 4.
+Replit Implementation:
+SQL: UPDATE questions SET id = 4 WHERE id = 5;
+JSON: Shift questions[4] to questions[3], updating id to 4.
+Question 5: Your Foundation: Marriage Preparation: Legal (Incapacitation) (Multiple Choice)
+
+Text: We’re committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing our spouse as Power of Attorney before our marriage date.
+Options:
+We’re committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing our spouse as Power of Attorney before our marriage date
+We do not believe it’s necessary to establish Power of Attorney before marriage and prefer to address this matter later if and when it becomes relevant
+Issue: Was Question 6; shifted up. Should be Multiple Choice, not Agree/Disagree.
+Corrective Action: Update ID to 5, change type to Multiple Choice.
+Replit Implementation:
+SQL: UPDATE questions SET id = 5, type = 'Multiple Choice' WHERE id = 6;
+JSON: Update questions[5] with id = 5, type = "Multiple Choice".
+Question 6: Your Foundation: Marriage Preparation: Legal (Estate) (Multiple Choice)
+
+Text: We’re committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing completing a notarized copy of our will before our marriage date.
+Options:
+We’re committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing completing a notarized copy of our will before our marriage date
+We do not believe creating a will is necessary before marriage and prefer to address estate planning at a later stage in our relationship
+Issue: Was Question 7; shifted up. Should be Multiple Choice.
+Corrective Action: Update ID to 6, change type to Multiple Choice.
+Replit Implementation:
+SQL: UPDATE questions SET id = 6, type = 'Multiple Choice' WHERE id = 7;
+JSON: Update questions[6] with id = 6, type = "Multiple Choice".
+Question 7: Your Foundation: Marriage Mindset: Divorce (Multiple Choice)
+
+Text: We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, “Falling Out of Love”, “Growing Apart”, “Irreconcilable Differences”.
+Options:
+We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, “Falling Out of Love”, “Growing Apart”, “Irreconcilable Differences”
+We believe that while marriage is intended to be lifelong, divorce may be a reasonable option in a wider range of circumstances, including when personal happiness and fulfillment are severely compromised
+Issue: Was Question 8; shifted up. Should be Multiple Choice.
+Corrective Action: Update ID to 7, change type to Multiple Choice.
+Replit Implementation:
+SQL: UPDATE questions SET id = 7, type = 'Multiple Choice' WHERE id = 8;
+JSON: Update questions[7] with id = 7, type = "Multiple Choice".
+Question 8: Your Foundation: Marriage Mindset: Divorce & Law (Multiple Choice)
+
+Text: We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), what is your position on prenuptial agreements?
+Options:
+We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), still, in view of the law and the prevalent rates of marriage dissolution, we agree to explore and structure a mutually considerate prenuptial agreement for our marriage
+We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), and do not believe any legal agreements beyond our mutual commitments through this life covenant process are necessary for us to explore and structure at this time
+We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), still, we’d like to be more informed about what prenuptial agreements entail before deciding whether to consider it before our marriage
+Issue: Was Question 9; shifted up.
+Corrective Action: Update ID to 8.
+Replit Implementation:
+SQL: UPDATE questions SET id = 8 WHERE id = 9;
+JSON: Update questions[8] with id = 8.
+Question 9: Your Foundation: Marriage Mindset: Celebrating our Covenant (Multiple Choice)
+
+Text: We commit to establishing and celebrating our holy union/covenant through our wedding, how do you plan to celebrate it?
+Options:
+Celebrate marriage anniversary every year
+Celebrate marriage anniversary every year and do a covenant renewal ceremony every 10 years
+Celebrate marriage anniversary every year and do a covenant renewal ceremony every 5 years
+Issue: Was Question 10; shifted up.
+Corrective Action: Update ID to 9.
+Replit Implementation:
+SQL: UPDATE questions SET id = 9 WHERE id = 10;
+JSON: Update questions[9] with id = 9.
+Question 10: Your Marriage Life: Order of Priority before God (Multiple Choice)
+
+Text: We understand and accept the order of relationship priority according to God’s highest design, what is your order of priority?
+Options:
+God, Spouse, Children, Work, Extended Family, Friends, Church, Ministry, Hobbies
+Issue: Title should be “Your Marriage Life: Order of Priority before God” per Table 2.
+Corrective Action: Update section title.
+Replit Implementation:
+SQL: UPDATE questions SET section = 'Your Marriage Life: Order of Priority before God' WHERE id = 10;
+JSON: Update questions[9].section to "Your Marriage Life: Order of Priority before God".
+YOUR FAITH LIFE (Questions 11–14)
+Issues:
+
+Question 11: Correct, matches book.
+Question 12: Incorrect. Provided question is “Sex Perspective: Declaration,” which belongs later (e.g., Question 56 per Table 1). Book’s Question 12 is “Worship Life: Marriage” (prayer frequency).
+Questions 13–14: Correct, match book.
+Corrective Actions:
+
+Replace Question 12 with the book’s prayer frequency question.
+Shift “Sex Perspective: Declaration” to a later ID (e.g., Question 56).
+Corrected Questions:
+
+Question 11: Your Faith Life: Worship Life: Marriage (Husband and Wife) (Multiple Choice)
+
+Text: We commit to prayer as a couple, how often?
+Options:
+Daily prayer before sleep
+Weekly prayer during check-in
+Other: Please detail
+Issue: Correct.
+Corrective Action: None.
+Replit Implementation: N/A.
+Question 12: Your Faith Life: Worship Life: Marriage (Multiple Choice)
+
+Text: We commit to prayer as a couple, how often?
+Options:
+Daily prayer before sleep
+Weekly prayer during check-in
+Other: Please detail
+Issue: Provided question was “Sex Perspective: Declaration,” which is incorrect here.
+Corrective Action: Update question text and options to match book’s prayer frequency question.
+Replit Implementation:
+SQL: UPDATE questions SET section = 'Your Faith Life: Worship Life: Marriage', type = 'Multiple Choice', weight = 4, question_text = 'We commit to prayer as a couple, how often?', response_options = '["Daily prayer before sleep", "Weekly prayer during check-in", "Other: Please detail"]' WHERE id = 12;
+JSON: Update questions[11] with: { "id": 12, "section": "Your Faith Life: Worship Life: Marriage", "type": "Multiple Choice", "weight": 4, "question_text": "We commit to prayer as a couple, how often?", "response_options": ["Daily prayer before sleep", "Weekly prayer during check-in", "Other: Please detail"] }.
+Question 13: Your Faith Life: Worship Life: Family (Multiple Choice)
+
+Text: We commit to family worship weekly, including what activities?
+Options:
+Weekly, including a dedicated time for prayer and reflection as a family weekly, familial prayer over meals, and weekly corporate worship in a local faith community where we are members
+Weekly, including familial prayer over meals, and weekly corporate worship in a local faith community where we are members
+Weekly, including familial prayer over meals, and weekly corporate worship in a local/remote faith community where we are members
+Other: Please detail
+Issue: Correct.
+Corrective Action: None.
+Replit Implementation: N/A.
+Question 14: Your Faith Life: Worship Life: Serving (Multiple Choice)
+
+Text: We commit to each volunteering/serving in our community, what is your approach?
+Options:
+In our faith community in some capacity in every season
+In our faith community in some capacity at least one season/event per year
+Flexibly inside (and outside of) our faith community based on our capacity, but at a minimum, we’ll always be serving our faith community through our giving in every season
+Flexibly inside (and outside of) our faith community based on our capacity
+Issue: Correct.
+Corrective Action: None.
+Replit Implementation: N/A.
+YOUR MARRIAGE LIFE (Questions 15–35)
+Issues:
+
+Questions 15–23: Correct but shifted up by one due to Question 3’s removal (e.g., Question 15 was 16 in the provided list).
+Question 24: Incorrect options. Provided options don’t match the book’s specific counseling schedule.
+Questions 25–30: Correct but shifted up.
+Questions 31–35: Incorrect. These questions (Sex - Frequency, Work Down Time, etc.) don’t match the book’s Questions 31–35 (e.g., Relationship Model: Late Night Work, Marriage: Living).
+Corrective Actions:
+
+Shift Questions 15–23 up by one ID.
+Update Question 24’s options to match the book.
+Shift Questions 25–30 up.
+Replace Questions 31–35 with the book’s correct questions (e.g., Late Night Work, Living – City Type).
+Corrected Questions:
+
+Questions 15–23: Shift IDs down by 1 (e.g., Question 16 becomes 15, etc.). All text, options, and types are correct per the book.
+
+Replit Implementation (example for Question 15):
+SQL: UPDATE questions SET id = 15 WHERE id = 16;
+JSON: Shift questions[15] to questions[14], updating id to 15.
+(Repeat for Questions 16–23.)
+Question 24: Your Marriage Life: Communication & Conflict Resolution: Counseling (Multiple Choice)
+
+Text: We commit to a minimum of counseling sessions for our marriage, what is your approach?
+Options:
+Monthly counseling sessions for the first year of our marriage, with a minimum of bi-monthly in year 2 and a minimum of quarterly in years 3+
+Bi-weekly counseling sessions for the first year of our marriage, with a minimum of monthly in year 2 and a minimum of quarterly in years 3+
+Other: Please detail
+Issue: Provided options were vague (“How often would you attend…”).
+Corrective Action: Update response options to match book.
+Replit Implementation:
+SQL: UPDATE questions SET response_options = '["Monthly counseling sessions for the first year of our marriage, with a minimum of bi-monthly in year 2 and a minimum of quarterly in years 3+", "Bi-weekly counseling sessions for the first year of our marriage, with a minimum of monthly in year 2 and a minimum of quarterly in years 3+", "Other: Please detail"]' WHERE id = 24;
+JSON: Update questions[23].response_options to: ["Monthly counseling sessions for the first year of our marriage, with a minimum of bi-monthly in year 2 and a minimum of quarterly in years 3+", "Bi-weekly counseling sessions for the first year of our marriage, with a minimum of monthly in year 2 and a minimum of quarterly in years 3+", "Other: Please detail"].
+Questions 25–30: Shift IDs down by 1 (e.g., Question 26 becomes 25). All text and options are correct.
+
+Replit Implementation (example for Question 25):
+SQL: UPDATE questions SET id = 25 WHERE id = 26;
+JSON: Shift questions[25] to questions[24], updating id to 25.
+(Repeat for Questions 26–30.)
+Question 31: Your Marriage Life: Relationship Model (Late Night Work) (Multiple Choice)
+
+Text: We commit to a marriage/work model where we agree to have no more than a certain number of late night workdays, what is your approach?
+Options:
+2 late night workdays either at the office or at home (i.e., not going to bed with your spouse), per week
+1 late night workday either at the office or at home (i.e., not going to bed with your spouse), per week
+Given the nature of our work, we do not believe this commitment would align well for us
+Other: Please detail
+Issue: Provided question was “Sex - Frequency,” which belongs later (e.g., Question 56).
+Corrective Action: Replace with book’s late night work question.
+Replit Implementation:
+SQL: UPDATE questions SET section = 'Your Marriage Life: Relationship Model (Late Night Work)', type = 'Multiple Choice', weight = 3, question_text = 'We commit to a marriage/work model where we agree to have no more than a certain number of late night workdays, what is your approach?', response_options = '["2 late night workdays either at the office or at home (i.e., not going to bed with your spouse), per week.", "1 late night workday either at the office or at home (i.e., not going to bed with your spouse), per week.", "Given the nature of our work, we do not believe this commitment would align well for us", "Other: Please detail"]' WHERE id = 31;
+JSON: Update questions[30] with: { "id": 31, "section": "Your Marriage Life: Relationship Model (Late Night Work)", "type": "Multiple Choice", "weight": 3, "question_text": "We commit to a marriage/work model where we agree to have no more than a certain number of late night workdays, what is your approach?", "response_options": ["2 late night workdays either at the office or at home (i.e., not going to bed with your spouse), per week.", "1 late night workday either at the office or at home (i.e., not going to bed with your spouse), per week.", "Given the nature of our work, we do not believe this commitment would align well for us", "Other: Please detail"] }.
+Question 32: Your Marriage Life: Marriage: Living (Multiple Choice)
+
+Text: We’re committed to living in a city relative to our families, what is your approach?
+Options:
+At least one of our families resides, always
+At least one of our families resides for up to the next 10 years (with consideration for younger children + childcare, parental care + presence in older age, existing community)
+Flexible about our home location, open to living wherever opportunity may lead us, even if it’s not in a city with existing family
+At least one of our families resides for up to the next 5 years (with consideration for younger children + childcare, parental care + presence in older age, existing community)
+Issue: Provided question was “Work Down Time,” incorrect here.
+Corrective Action: Replace with book’s living location question.
+Replit Implementation:
+SQL: UPDATE questions SET section = 'Your Marriage Life: Marriage: Living', type = 'Multiple Choice', weight = 3, question_text = 'We’re committed to living in a city relative to our families, what is your approach?', response_options = '["At least one of our families resides, always", "At least one of our families resides for up to the next 10 years (with consideration for younger children + childcare, parental care + presence in older age, existing community)", "Flexible about our home location, open to living wherever opportunity may lead us, even if it’s not in a city with existing family", "At least one of our families resides for up to the next 5 years (with consideration for younger children + childcare, parental care + presence in older age, existing community)"]' WHERE id = 32;
+JSON: Update questions[31] with: { "id": 32, "section": "Your Marriage Life: Marriage: Living", "type": "Multiple Choice", "weight": 3, "question_text": "We’re committed to living in a city relative to our families, what is your approach?", "response_options": ["At least one of our families resides, always", "At least one of our families resides for up to the next 10 years (with consideration for younger children + childcare, parental care + presence in older age, existing community)", "Flexible about our home location, open to living wherever opportunity may lead us, even if it’s not in a city with existing family", "At least one of our families resides for up to the next 5 years (with consideration for younger children + childcare, parental care + presence in older age, existing community)"] }.
+Question 33: Your Marriage Life: Marriage: Living – City Type (Multiple Choice)
+
+Text: We’re committed to living in a certain type of area, what is your preference?
+Options:
+Downtown area of a major city long-term
+Suburbs long-term
+Remote area, whether domestically or abroad, which is not necessarily connected or proximate to a major city
+Flexible about our living area and do not have a particular preference to a city type
+Issue: Provided question was “Communication & Discipline,” incorrect here.
+Corrective Action: Replace with book’s city type question.
+Replit Implementation:
+SQL: UPDATE questions SET section = 'Your Marriage Life: Marriage: Living – City Type', type = 'Multiple Choice', weight = 3, question_text = 'We’re committed to living in a certain type of area, what is your preference?', response_options = '["Downtown area of a major city long-term", "Suburbs long-term", "Remote area, whether domestically or abroad, which is not necessarily connected or proximate to a major city", "Flexible about our living area and do not have a particular preference to a city type"]' WHERE id = 33;
+JSON: Update questions[32] with: { "id": 33, "section": "Your Marriage Life: Marriage: Living – City Type", "type": "Multiple Choice", "weight": 3, "question_text": "We’re committed to living in a certain type of area, what is your preference?", "response_options": ["Downtown area of a major city long-term", "Suburbs long-term", "Remote area, whether domestically or abroad, which is not necessarily connected or proximate to a major city", "Flexible about our living area and do not have a particular preference to a city type"] }.
+Question 34: Your Marriage Life: Marriage: Living – Home Type (Multiple Choice)
+
+Text: We’re committed to living in a certain type of home, what is your preference?
+Options:
+Apartment long-term as our primary residence
+Standalone single-family house long-term as our primary residence
+Standalone single-family townhouse long-term as our primary residence
+Multi-family house long-term
+Issue: Provided question was “Social Media: New Child,” incorrect here.
+Corrective Action: Replace with book’s home type question.
+Replit Implementation:
+SQL: UPDATE questions SET section = 'Your Marriage Life: Marriage: Living – Home Type', type = 'Multiple Choice', weight = 3, question_text = 'We’re committed to living in a certain type of home, what is your preference?', response_options = '["Apartment long-term as our primary residence", "Standalone single-family house long-term as our primary residence", "Standalone single-family townhouse long-term as our primary residence", "Multi-family house long-term"]' WHERE id = 34;
+JSON: Update questions[33] with: { "id": 34, "section": "Your Marriage Life: Marriage: Living – Home Type", "type": "Multiple Choice", "weight": 3, "question_text": "We’re committed to living in a certain type of home, what is your preference?", "response_options": ["Apartment long-term as our primary residence", "Standalone single-family house long-term as our primary residence", "Standalone single-family townhouse long-term as our primary residence", "Multi-family house long-term"] }.
+Question 35: Your Marriage Life: Marriage: Living – Domestic/International (Multiple Choice)
+
+Text: We’re committed to living domestically or internationally, what is your preference?
+Options:
+Domestically long-term
+Internationally long-term and plan to eventually move shortly after our marriage
+Flexible about our living location and do not have a particular preference around living domestically or internationally
+Issue: Provided question was “Communication: Sex/Gender,” incorrect here.
+Corrective Action: Replace with book’s domestic/international question.
+Replit Implementation:
+SQL: UPDATE questions SET section = 'Your Marriage Life: Marriage: Living – Domestic/International', type = 'Multiple Choice', weight = 3, question_text = 'We’re committed to living domestically or internationally, what is your preference?', response_options = '["Domestically long-term", "Internationally long-term and plan to eventually move shortly after our marriage", "Flexible about our living location and do not have a particular preference around living domestically or internationally"]' WHERE id = 35;
+JSON: Update questions[34] with: { "id": 35, "section": "Your Marriage Life: Marriage: Living – Domestic/International", "type": "Multiple Choice", "weight": 3, "question_text": "We’re committed to living domestically or internationally, what is your preference?", "response_options": ["Domestically long-term", "Internationally long-term and plan to eventually move shortly after our marriage", "Flexible about our living location and do not have a particular preference around living domestically or internationally"] }.
+YOUR PARENTING LIFE (Questions 36–50)
+Issues:
+
+The provided list skips Questions 36–70, jumping to Your Health and Wellness at Question 71. This is a major gap, as the book includes Your Parenting Life and other sections here.
+Questions 36–50 should cover parenting topics (e.g., Children: Desire, Timing, Quantity) per Table 1.
+Corrective Actions:
+
+Insert book questions for Your Parenting Life (Questions 36–50) based on Table 1.
+Adjust subsequent sections to account for this addition.
+Corrected Questions:
+
+Question 36: Your Parenting Life: Children: Desire (Multiple Choice)
+
+Text: We commit to having children, what is your desire?
+Options:
+We commit to having biological children
+We commit to adopting children
+We commit to having both biological and adopted children
+We do not commit to having children
+Issue: Missing in provided list.
+Corrective Action: Add book question.
+Replit Implementation:
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (36, 'Your Parenting Life: Children: Desire', 'Multiple Choice', 5, 'We commit to having children, what is your desire?', '["We commit to having biological children", "We commit to adopting children", "We commit to having both biological and adopted children", "We do not commit to having children"]');
+JSON: Add to questions at index 35: { "id": 36, "section": "Your Parenting Life: Children: Desire", "type": "Multiple Choice", "weight": 5, "question_text": "We commit to having children, what is your desire?", "response_options": ["We commit to having biological children", "We commit to adopting children", "We commit to having both biological and adopted children", "We do not commit to having children"] }.
+Question 37: Your Parenting Life: Children: Timing (Multiple Choice)
+
+Text: We commit to attempting to have children, when?
+Options:
+As soon as possible
+After year one
+After year two
+After this specific milestone
+Issue: Missing.
+Corrective Action: Add book question.
+Replit Implementation:
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (37, 'Your Parenting Life: Children: Timing', 'Multiple Choice', 5, 'We commit to attempting to have children, when?', '["As soon as possible", "After year one", "After year two", "After this specific milestone"]');
+JSON: Add to questions at index 36: { "id": 37, "section": "Your Parenting Life: Children: Timing", "type": "Multiple Choice", "weight": 5, "question_text": "We commit to attempting to have children, when?", "response_options": ["As soon as possible", "After year one", "After year two", "After this specific milestone"] }.
+Question 38: Your Parenting Life: Children: Quantity (Multiple Choice)
+
+Text: We commit to having a certain number of children biologically, how many?
+Options:
+As many children as God will allow us to have
+One child (according to God’s will)
+Two children (according to God’s will)
+Three children (according to God’s will)
+Not Applicable
+Issue: Missing.
+Corrective Action: Add book question.
+Replit Implementation:
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (38, 'Your Parenting Life: Children: Quantity', 'Multiple Choice', 5, 'We commit to having a certain number of children biologically, how many?', '["As many children as God will allow us to have", "One child (according to God’s will)", "Two children (according to God’s will)", "Three children (according to God’s will)", "Not Applicable"]');
+JSON: Add to questions at index 37: { "id": 38, "section": "Your Parenting Life: Children: Quantity", "type": "Multiple Choice", "weight": 5, "question_text": "We commit to having a certain number of children biologically, how many?", "response_options": ["As many children as God will allow us to have", "One child (according to God’s will)", "Two children (according to God’s will)", "Three children (according to God’s will)", "Not Applicable"] }.
+Question 39: Your Parenting Life: Children: Parenting Style (Multiple Choice)
+
+Text: We commit to raising and disciplining our children with Godly wisdom and discernment, what is your approach?
+Options:
+Gentle verbal instruction/warning, firm verbal instruction/warning and in the repeated case of disobedience, disrespect or danger, we are comfortable with physical discipline and other forms of punishments in love
+Gentle verbal instruction/warning, firm verbal instruction warning and in the repeated case of disobedience, disrespect or danger, we are comfortable with other forms of punishment in love, which do not include physical discipline
+Not Applicable
+Issue: Missing.
+Corrective Action: Add book question.
+Replit Implementation:
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (39, 'Your Parenting Life: Children: Parenting Style', 'Multiple Choice', 5, 'We commit to raising and disciplining our children with Godly wisdom and discernment, what is your approach?', '["Gentle verbal instruction/warning, firm verbal instruction/warning and in the repeated case of disobedience, disrespect or danger, we are comfortable with physical discipline and other forms of punishments in love", "Gentle verbal instruction/warning, firm verbal instruction warning and in the repeated case of disobedience, disrespect or danger, we are comfortable with other forms of punishment in love, which do not include physical discipline", "Not Applicable"]');
+JSON: Add to questions at index 38: { "id": 39, "section": "Your Parenting Life: Children: Parenting Style", "type": "Multiple Choice", "weight": 5, "question_text": "We commit to raising and disciplining our children with Godly wisdom and discernment, what is your approach?", "response_options": ["Gentle verbal instruction/warning, firm verbal instruction/warning and in the repeated case of disobedience, disrespect or danger, we are comfortable with physical discipline and other forms of punishments in love", "Gentle verbal instruction/warning, firm verbal instruction warning and in the repeated case of disobedience, disrespect or danger, we are comfortable with other forms of punishment in love, which do not include physical discipline", "Not Applicable"] }.
+Question 40: Your Parenting Life: Children: Education (Multiple Choice)
+
+Text: We are committed to educating our children, what is your approach?
+Options:
+In the public school system
+In private school
+Homeschooling
+Flexible learning experience where we’re committed to the best local educational environment which could vary between all school types based on location, outcomes, pricing and more
+Issue: Missing.
+Corrective Action: Add book question.
+Replit Implementation:
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (40, 'Your Parenting Life: Children: Education', 'Multiple Choice', 5, 'We are committed to educating our children, what is your approach?', '["In the public school system", "In private school", "Homeschooling", "Flexible learning experience where we’re committed to the best local educational environment which could vary between all school types based on location, outcomes, pricing and more"]');
+JSON: Add to questions at index 39: { "id": 40, "section": "Your Parenting Life: Children: Education", "type": "Multiple Choice", "weight": 5, "question_text": "We are committed to educating our children, what is your approach?", "response_options": ["In the public school system", "In private school", "Homeschooling", "Flexible learning experience where we’re committed to the best local educational environment which could vary between all school types based on location, outcomes, pricing and more"] }.
+Question 41: Your Parenting Life: Children Decision: To Have Them (Biologically) (Multiple Choice)
+
+Text: We commit to having children biologically (according to God’s will), what is your decision?
+Options:
+Commit to having children (according to God’s will)
+Do not commit to having children
+Issue: Missing.
+Corrective Action: Add book question.
+Replit Implementation:
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (41, 'Your Parenting Life: Children Decision: To Have Them (Biologically)', 'Multiple Choice', 5, 'We commit to having children biologically (according to God’s will), what is your decision?', '["Commit to having children (according to God’s will)", "Do not commit to having children"]');
+JSON: Add to questions at index 40: { "id": 41, "section": "Your Parenting Life: Children Decision: To Have Them (Biologically)", "type": "Multiple Choice", "weight": 5, "question_text": "We commit to having children biologically (according to God’s will), what is your decision?", "response_options": ["Commit to having children (according to God’s will)", "Do not commit to having children"] }.
+Question 42: Your Parenting Life: Children Decision: How To Have Them (Method of Delivery Preference) (Multiple Choice)
+
+Text: We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, what is your preferred method of delivery?
+Options:
+Water Delivery (if medically prudent and possible)
+Vaginal Delivery (with potential for C-Section if medically necessary)
+Issue: Missing (appears later as Question 94).
+Corrective Action: Add book question here, move provided Question 94 to this slot.
+Replit Implementation:
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (42, 'Your Parenting Life: Children Decision: How To Have Them (Method of Delivery Preference)', 'Multiple Choice', 3, 'We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, what is your preferred method of delivery?', '["Water Delivery (if medically prudent and possible)", "Vaginal Delivery (with potential for C-Section if medically necessary)"]');
+JSON: Add to questions at index 41: { "id": 42, "section": "Your Parenting Life: Children Decision: How To Have Them (Method of Delivery Preference)", "type": "Multiple Choice", "weight": 3, "question_text": "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, what is your preferred method of delivery?", "response_options": ["Water Delivery (if medically prudent and possible)", "Vaginal Delivery (with potential for C-Section if medically necessary)"] }.
+Question 43: Your Parenting Life: Children Decision: Where To Have Them (Location/Setting) (Multiple Choice)
+
+Text: We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, where would you prefer to have children?
+Options:
+Home Birth (if medically prudent and possible)
+Hospital Birth
+Birth Center (if medically prudent and possible)
+Issue: Missing.
+Corrective Action: Add book question.
+Replit Implementation:
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (43, 'Your Parenting Life: Children Decision: Where To Have Them (Location/Setting)', 'Multiple Choice', 3, 'We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, where would you prefer to have children?', '["Home Birth (if medically prudent and possible)", "Hospital Birth", "Birth Center (if medically prudent and possible)"]');
+JSON: Add to questions at index 42: { "id": 43, "section": "Your Parenting Life: Children Decision: Where To Have Them (Location/Setting)", "type": "Multiple Choice", "weight": 3, "question_text": "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, where would you prefer to have children?", "response_options": ["Home Birth (if medically prudent and possible)", "Hospital Birth", "Birth Center (if medically prudent and possible)"] }.
+Question 44: Your Parenting Life: Children Decision: Breastfeeding (Multiple Choice)
+
+Text: We commit to breastfeeding our children, what is your approach?
+Options:
+Primarily and only using formula in rare circumstances
+Whenever possible, still, we do not have any reservations about relying on high quality formula
+Issue: Missing.
+Corrective Action: Add book question.
+Replit Implementation:
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (44, 'Your Parenting Life: Children Decision: Breastfeeding', 'Multiple Choice', 3, 'We commit to breastfeeding our children, what is your approach?', '["Primarily and only using formula in rare circumstances", "Whenever possible, still, we do not have any reservations about relying on high quality formula"]');
+JSON: Add to questions at index 43: { "id": 44, "section": "Your Parenting Life: Children Decision: Breastfeeding", "type": "Multiple Choice", "weight": 3, "question_text": "We commit to breastfeeding our children, what is your approach?", "response_options": ["Primarily and only using formula in rare circumstances", "Whenever possible, still, we do not have any reservations about relying on high quality formula"] }.
+Question 45: Your Parenting Life: Children Decision: Breastfeeding Length (Multiple Choice)
+
+Text: We’re committed to breastfeeding our children, for how long?
+Options:
+Breastfeeding along with introducing appropriate complementary foods for up to 2 years for our children
+Breastfeeding along with introducing appropriate complementary foods whenever possible still, we do not plan to do it beyond 1 year for our children
+No strong perspective about breastfeeding and will take the guidance of our medical professional when the time comes
+Issue: Missing.
+Corrective Action: Add book question.
+Replit Implementation:
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (45, 'Your Parenting Life: Children Decision: Breastfeeding Length', 'Multiple Choice', 3, 'We’re committed to breastfeeding our children, for how long?', '["Breastfeeding along with introducing appropriate complementary foods for up to 2 years for our children", "Breastfeeding along with introducing appropriate complementary foods whenever possible still, we do not plan to do it beyond 1 year for our children", "No strong perspective about breastfeeding and will take the guidance of our medical professional when the time comes"]');
+JSON: Add to questions at index 44: { "id": 45, "section": "Your Parenting Life: Children Decision: Breastfeeding Length", "type": "Multiple Choice", "weight": 3, "question_text": "We’re committed to breastfeeding our children, for how long?", "response_options": ["Breastfeeding along with introducing appropriate complementary foods for up to 2 years for our children", "Breastfeeding along with introducing appropriate complementary foods whenever possible still, we do not plan to do it beyond 1 year for our children", "No strong perspective about breastfeeding and will take the guidance of our medical professional when the time comes"] }.
+Question 46: Your Parenting Life: Children Decision: Crying Response (Multiple Choice)
+
+Text: We believe we should respond to our baby’s crying, what is your approach?
+Options:
+Pick the baby up as soon as he or she starts crying
+Allow the baby to cry for a few minutes before responding
+No specific plan for how to respond to crying and prefer to handle it case by case
+Not Applicable
+Issue: Missing.
+Corrective Action: Add book question.
+Replit Implementation:
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (46, 'Your Parenting Life: Children Decision: Crying Response', 'Multiple Choice', 2, 'We believe we should respond to our baby’s crying, what is your approach?', '["Pick the baby up as soon as he or she starts crying", "Allow the baby to cry for a few minutes before responding", "No specific plan for how to respond to crying and prefer to handle it case by case", "Not Applicable"]');
+JSON: Add to questions at index 45: { "id": 46, "section": "Your Parenting Life: Children Decision: Crying Response", "type": "Multiple Choice", "weight": 2, "question_text": "We believe we should respond to our baby’s crying, what is your approach?", "response_options": ["Pick the baby up as soon as he or she starts crying", "Allow the baby to cry for a few minutes before responding", "No specific plan for how to respond to crying and prefer to handle it case by case", "Not Applicable"] }.
+Question 47: Your Parenting Life: Children Decision: Working Parent (Multiple Choice)
+
+Text: We commit to a working parent model, what is your approach?
+Options:
+One parent stays home with young children (0-5 years)
+Both parents working while children are young and committing to reliable childcare
+Other: Please detail
+Issue: Missing.
+Corrective Action: Add book question.
+Replit Implementation:
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (47, 'Your Parenting Life: Children Decision: Working Parent', 'Multiple Choice', 3, 'We commit to a working parent model, what is your approach?', '["One parent stays home with young children (0-5 years)", "Both parents working while children are young and committing to reliable childcare", "Other: Please detail"]');
+JSON: Add to questions at index 46: { "id": 47, "section": "Your Parenting Life: Children Decision: Working Parent", "type": "Multiple Choice", "weight": 3, "question_text": "We commit to a working parent model, what is your approach?", "response_options": ["One parent stays home with young children (0-5 years)", "Both parents working while children are young and committing to reliable childcare", "Other: Please detail"] }.
+Question 48: Your Parenting Life: Children Decision: Childcare (Multiple Choice)
+
+Text: We commit to a childcare model, what is your approach?
+Options:
+Rely on a family member for childcare
+Hire a nanny for childcare
+Use a daycare facility for childcare
+Not Applicable
+Issue: Missing.
+Corrective Action: Add book question.
+Replit Implementation:
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (48, 'Your Parenting Life: Children Decision: Childcare', 'Multiple Choice', 3, 'We commit to a childcare model, what is your approach?', '["Rely on a family member for childcare", "Hire a nanny for childcare", "Use a daycare facility for childcare", "Not Applicable"]');
+JSON: Add to questions at index 47: { "id": 48, "section": "Your Parenting Life: Children Decision: Childcare", "type": "Multiple Choice", "weight": 3, "question_text": "We commit to a childcare model, what is your approach?", "response_options": ["Rely on a family member for childcare", "Hire a nanny for childcare", "Use a daycare facility for childcare", "Not Applicable"] }.
+Question 49: Your Parenting Life: Children Decision: Stay-at-Home Parent (Multiple Choice)
+
+Text: We commit to a stay-at-home parent model, what is your approach?
+Options:
+Mother stays home with children
+Father stays home with children
+Flexible based on circumstances
+Not Applicable
+Issue: Missing.
+Corrective Action: Add book question.
+Replit Implementation:
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (49, 'Your Parenting Life: Children Decision: Stay-at-Home Parent', 'Multiple Choice', 3, 'We commit to a stay-at-home parent model, what is your approach?', '["Mother stays home with children", "Father stays home with children", "Flexible based on circumstances", "Not Applicable"]');
+JSON: Add to questions at index 48: { "id": 49, "section": "Your Parenting Life: Children Decision: Stay-at-Home Parent", "type": "Multiple Choice", "weight": 3, "question_text": "We commit to a stay-at-home parent model, what is your approach?", "response_options": ["Mother stays home with children", "Father stays home with children", "Flexible based on circumstances", "Not Applicable"] }.
+Question 50: Your Parenting Life: Children Decision: Number of Children (Adopted) (Multiple Choice)
+
+Text: We commit to adopting children, what is your approach?
+Options:
+We commit to adopting at least one child during our marriage
+We admire and believe in adoption but do not plan to adopt during our marriage
+We are committed to having children biologically (according to God’s will), but would consider adoption if we discern it’s not His will for us to have children biologically
+Issue: Missing.
+Corrective Action: Add book question.
+Replit Implementation:
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (50, 'Your Parenting Life: Children Decision: Number of Children (Adopted)', 'Multiple Choice', 4, 'We commit to adopting children, what is your approach?', '["We commit to adopting at least one child during our marriage", "We admire and believe in adoption but do not plan to adopt during our marriage", "We are committed to having children biologically (according to God’s will), but would consider adoption if we discern it’s not His will for us to have children biologically"]');
+JSON: Add to questions at index 49: { "id": 50, "section": "Your Parenting Life: Children Decision: Number of Children (Adopted)", "type": "Multiple Choice", "weight": 4, "question_text": "We commit to adopting children, what is your approach?", "response_options": ["We commit to adopting at least one child during our marriage", "We admire and believe in adoption but do not plan to adopt during our marriage", "We are committed to having children biologically (according to God’s will), but would consider adoption if we discern it’s not His will for us to have children biologically"] }.
+YOUR MARRIAGE LIFE (Questions 51–60)
+Issues:
+
+Missing in provided list. Book includes questions like naming children, sex perspective, and work boundaries.
+Need to insert these to maintain book structure.
+Corrected Questions:
+
+Question 51: Your Parenting Life: Children Decision: Naming of Children (Model) (Multiple Choice)
+
+Text: We commit to naming our children, what is your approach?
+Options:
+We commit to naming our children with first names that are from the Bible
+We commit to naming our children with first names that honor a family member from either side of the family
+We commit to naming our children with first names that are gender neutral
+Other approach to naming our children
+Issue: Missing (appears later as Question 97).
+Corrective Action: Add book question here, move provided Question 97 to this slot.
+Replit Implementation:
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (51, 'Your Parenting Life: Children Decision: Naming of Children (Model)', 'Multiple Choice', 2, 'We commit to naming our children, what is your approach?', '["We commit to naming our children with first names that are from the Bible", "We commit to naming our children with first names that honor a family member from either side of the family", "We commit to naming our children with first names that are gender neutral", "Other approach to naming our children"]');
+JSON: Add to questions at index 50: { "id": 51, "section": "Your Parenting Life: Children Decision: Naming of Children (Model)", "type": "Multiple Choice", "weight": 2, "question_text": "We commit to naming our children, what is your approach?", "response_options": ["We commit to naming our children with first names that are from the Bible", "We commit to naming our children with first names that honor a family member from either side of the family", "We commit to naming our children with first names that are gender neutral", "Other approach to naming our children"] }.
+Question 52: Your Parenting Life: Children Decision: Naming of Children (Jr’s) (Multiple Choice)
+
+Text: We commit to naming children after parents, what is your approach?
+Options:
+We agree that it’s an option to name one of our children after a parent
+We agree that’s not an option to name one of our children after a parent
+Not Applicable
+Issue: Missing (appears later as Question 98).
+Corrective Action: Add book question here, move provided Question 98 to this slot.
+Replit Implementation:
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (52, 'Your Parenting Life: Children Decision: Naming of Children (Jr’s)', 'Multiple Choice', 2, 'We commit to naming children after parents, what is your approach?', '["We agree that it’s an option to name one of our children after a parent", "We agree that’s not an option to name one of our children after a parent", "Not Applicable"]');
+JSON: Add to questions at index 51: { "id": 52, "section": "Your Parenting Life: Children Decision: Naming of Children (Jr’s)", "type": "Multiple Choice", "weight": 2, "question_text": "We commit to naming children after parents, what is your approach?", "response_options": ["We agree that it’s an option to name one of our children after a parent", "We agree that’s not an option to name one of our children after a parent", "Not Applicable"] }.
+Question 53: Your Marriage Life: Sex Perspective: Declaration (Agree/Disagree)
+
+Text: We share the belief that sex in marriage is a duty before God and not a conditional expression of love and honor; as such, it is not something to be withheld or manipulated outside of mutually agreed medical or spiritual considerations.
+Options:
+Agree
+Disagree
+Issue: Missing (was incorrectly placed as Question 12).
+Corrective Action: Add book question here, move provided Question 12 to this slot.
+Replit Implementation:
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (53, 'Your Marriage Life: Sex Perspective: Declaration', 'Agree/Disagree', 8, 'We share the belief that sex in marriage is a duty before God and not a conditional expression of love and honor; as such, it is not something to be withheld or manipulated outside of mutually agreed medical or spiritual considerations.', '["Agree", "Disagree"]');
+JSON: Add to questions at index 52: { "id": 53, "section": "Your Marriage Life: Sex Perspective: Declaration", "type": "Agree/Disagree", "weight": 8, "question_text": "We share the belief that sex in marriage is a duty before God and not a conditional expression of love and honor; as such, it is not something to be withheld or manipulated outside of mutually agreed medical or spiritual considerations.", "response_options": ["Agree", "Disagree"] }.
+Question 54: Your Marriage Life: Sex - Frequency (Multiple Choice)
+
+Text: We commit to having sex at least how often?
+Options:
+3 times per week
+Daily
+2 times per week
+Issue: Missing (was incorrectly placed as Question 31).
+Corrective Action: Add book question here, move provided Question 31 to this slot.
+Replit Implementation:
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (54, 'Your Marriage Life: Sex - Frequency', 'Multiple Choice', 8, 'We commit to having sex at least how often?', '["3 times per week", "Daily", "2 times per week"]');
+JSON: Add to questions at index 53: { "id": 54, "section": "Your Marriage Life: Sex - Frequency", "type": "Multiple Choice", "weight": 8, "question_text": "We commit to having sex at least how often?", "response_options": ["3 times per week", "Daily", "2 times per week"] }.
+Question 55: Your Marriage Life: Relationship Model (Work/Family Life Boundaries – Work Down Time) (Multiple Choice)
+
+Text: We commit to a marriage/work model with guarded time, what is your approach?
+Options:
+At least 2 hours daily where it’s our time to connect directly (not including children), and no work is to be done. Our preliminary guarded time is [fill-in] (am/pm)
+At least 1.5 hours daily where it’s our time to connect directly (not including children), and no work is to be done. Our preliminary guarded time is [fill-in] (am/pm)
+At least 1 hour daily where it’s our time to connect directly (not including children), and no work is to be done. Our preliminary guarded time is [fill-in] (am/pm)
+Other: Please detail
+Issue: Missing (was incorrectly placed as Question 32).
+Corrective Action: Add book question here, move provided Question 32 to this slot.
+Replit Implementation:
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (55, 'Your Marriage Life: Relationship Model (Work/Family Life Boundaries – Work Down Time)', 'Multiple Choice', 3, 'We commit to a marriage/work model with guarded time, what is your approach?', '["At least 2 hours daily where it’s our time to connect directly (not including children), and no work is to be done. Our preliminary guarded time is [fill-in] (am/pm)", "At least 1.5 hours daily where it’s our time to connect directly (not including children), and no work is to be done. Our preliminary guarded time is [fill-in] (am/pm)", "At least 1 hour daily where it’s our time to connect directly (not including children), and no work is to be done. Our preliminary guarded time is [fill-in] (am/pm)", "Other: Please detail"]');
+JSON: Add to questions at index 54: { "id": 55, "section": "Your Marriage Life: Relationship Model (Work/Family Life Boundaries – Work Down Time)", "type": "Multiple Choice", "weight": 3, "question_text": "We commit to a marriage/work model with guarded time, what is your approach?", "response_options": ["At least 2 hours daily where it’s our time to connect directly (not including children), and no work is to be done. Our preliminary guarded time is [fill-in] (am/pm)", "At least 1.5 hours daily where it’s our time to connect directly (not including children), and no work is to be done. Our preliminary guarded time is [fill-in] (am/pm)", "At least 1 hour daily where it’s our time to connect directly (not including children), and no work is to be done. Our preliminary guarded time is [fill-in] (am/pm)", "Other: Please detail"] }.
+Question 56: Your Marriage Life: Sex - Contraception (Multiple Choice)
+
+Text: We plan to use contraception in our marriage, what is your approach?
+Options:
+We do not plan to use contraception of any form during marriage
+We plan to use contraception, but we do not plan to use any which require oral consumption (health concerns/considerations) or invasive surgery (vasectomy, fallopian ‘tubes tied’)
+We plan to use all forms of contraception available to us which includes oral consumption and/or invasive surgery as an option (vasectomy, fallopian ‘tubes tied’)
+Issue: Missing (appears later as Question 92).
+Corrective Action: Add book question here, move provided Question 92 to this slot.
+Replit Implementation:
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (56, 'Your Marriage Life: Sex - Contraception', 'Multiple Choice', 5, 'We plan to use contraception in our marriage, what is your approach?', '["We do not plan to use contraception of any form during marriage", "We plan to use contraception, but we do not plan to use any which require oral consumption (health concerns/considerations) or invasive surgery (vasectomy, fallopian ‘tubes tied’)", "We plan to use all forms of contraception available to us which includes oral consumption and/or invasive surgery as an option (vasectomy, fallopian ‘tubes tied’)"]');
+JSON: Add to questions at index 55: { "id": 56, "section": "Your Marriage Life: Sex - Contraception", "type": "Multiple Choice", "weight": 5, "question_text": "We plan to use contraception in our marriage, what is your approach?", "response_options": ["We do not plan to use contraception of any form during marriage", "We plan to use contraception, but we do not plan to use any which require oral consumption (health concerns/considerations) or invasive surgery (vasectomy, fallopian ‘tubes tied’)", "We plan to use all forms of contraception available to us which includes oral consumption and/or invasive surgery as an option (vasectomy, fallopian ‘tubes tied’)"] }.
+Question 57: Your Finances: Financial Planning Model (Multiple Choice)
+
+Text: We commit to a financial planning model, what is your approach?
+Options:
+Joint accounts only for all financial matters
+Joint accounts for shared expenses and individual accounts for personal spending
+Individual accounts only with agreed contributions to shared expenses
+Issue: Missing.
+Corrective Action: Add book question.
+Replit Implementation:
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (57, 'Your Finances: Financial Planning Model', 'Multiple Choice', 4, 'We commit to a financial planning model, what is your approach?', '["Joint accounts only for all financial matters", "Joint accounts for shared expenses and individual accounts for personal spending", "Individual accounts only with agreed contributions to shared expenses"]');
+JSON: Add to questions at index 56: { "id": 57, "section": "Your Finances: Financial Planning Model", "type": "Multiple Choice", "weight": 4, "question_text": "We commit to a financial planning model, what is your approach?", "response_options": ["Joint accounts only for all financial matters", "Joint accounts for shared expenses and individual accounts for personal spending", "Individual accounts only with agreed contributions to shared expenses"] }.
+Question 58: Your Finances: Financial Generosity (in Faith) (Multiple Choice)
+
+Text: We commit to giving to our faith community, what is your approach?
+Options:
+At least 10% of net income monthly
+At least 2% of net income monthly, increasing 1% yearly
+At least 10% to faith community and 2% to causes
+Other: Please detail
+Issue: Missing.
+Corrective Action: Add book question.
+Replit Implementation:
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (58, 'Your Finances: Financial Generosity (in Faith)', 'Multiple Choice', 5, 'We commit to giving to our faith community, what is your approach?', '["At least 10% of net income monthly", "At least 2% of net income monthly, increasing 1% yearly", "At least 10% to faith community and 2% to causes", "Other: Please detail"]');
+JSON: Add to questions at index 57: { "id": 58, "section": "Your Finances: Financial Generosity (in Faith)", "type": "Multiple Choice", "weight": 5, "question_text": "We commit to giving to our faith community, what is your approach?", "response_options": ["At least 10% of net income monthly", "At least 2% of net income monthly, increasing 1% yearly", "At least 10% to faith community and 2% to causes", "Other: Please detail"] }.
+Question 59: Your Finances: Financial Management: Payments Execution (Public Social) (Multiple Choice)
+
+Text: We commit to handling payments when going out, what is your approach?
+Options:
+[fill-in] pays unless discussed otherwise
+Flexible setup, discuss each time
+Other: Please detail
+Issue: Missing.
+Corrective Action: Add book question.
+Replit Implementation:
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (59, 'Your Finances: Financial Management: Payments Execution (Public Social)', 'Multiple Choice', 3, 'We commit to handling payments when going out, what is your approach?', '["[fill-in] pays unless discussed otherwise", "Flexible setup, discuss each time", "Other: Please detail"]');
+JSON: Add to questions at index 58: { "id": 59, "section": "Your Finances: Financial Management: Payments Execution (Public Social)", "type": "Multiple Choice", "weight": 3, "question_text": "We commit to handling payments when going out, what is your approach?", "response_options": ["[fill-in] pays unless discussed otherwise", "Flexible setup, discuss each time", "Other: Please detail"] }.
+Question 60: Your Marriage Life with Children: Pregnancy Announcement (Multiple Choice)
+
+Text: We commit to keeping the news of our pregnancy private until when, what is your approach?
+Options:
+We commit to keeping the news of our pregnancy private until the end of the 1st trimester
+We commit to keeping the news of our pregnancy private until the end of the 2nd trimester
+We do not have a specific guideline around if and when we will share news of a pregnancy
+Not Applicable
+Issue: Missing (appears later as Question 99).
+Corrective Action: Add book question here, move provided Question 99 to this slot.
+Replit Implementation:
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (60, 'Your Marriage Life with Children: Pregnancy Announcement', 'Multiple Choice', 2, 'We commit to keeping the news of our pregnancy private until when, what is your approach?', '["We commit to keeping the news of our pregnancy private until the end of the 1st trimester", "We commit to keeping the news of our pregnancy private until the end of the 2nd trimester", "We do not have a specific guideline around if and when we will share news of a pregnancy", "Not Applicable"]');
+JSON: Add to questions at index 59: { "id": 60, "section": "Your Marriage Life with Children: Pregnancy Announcement", "type": "Multiple Choice", "weight": 2, "question_text": "We commit to keeping the news of our pregnancy private until when, what is your approach?", "response_options": ["We commit to keeping the news of our pregnancy private until the end of the 1st trimester", "We commit to keeping the news of our pregnancy private until the end of the 2nd trimester", "We do not have a specific guideline around if and when we will share news of a pregnancy", "Not Applicable"] }.
+YOUR MARRI
+
+
+
+
+
+
+14.2s
+continue
+
+
+RIAGE LIFE WITH CHILDREN AND FAMILY (Questions 61–70)
+
+Issues:
+
+The provided list skips Questions 61–70, as it jumps from Question 35 to Your Health and Wellness at Question 71. The provided list contains questions that belong to Your Marriage Life with Children and Your Family Life in various sections that appear later (e.g., Questions 90–99). The book’s structure (per Table 1 and Table 2) includes questions on family traditions, communication, and boundaries in this range.
+Questions 61–70 should cover topics like family traditions, household responsibilities, and financial management for children, which are missing.
+Corrective Actions:
+
+Insert the missing book questions for Questions 61–80 based on Table 1 and Table 2, focusing on Your Marriage Life with Children and Your Family Life.
+Relocate questions from the provided list (e.g., Questions 90–95) to their correct slots where applicable.
+Adjust subsequent sections to account for these additions and ensure alignment with the book’s 98 core questions plus the 99th question.
+Corrected Questions:
+
+Question 61: Your Marriage Life with Children: Communication & Discipline (Agree/Disagree)
+
+Text: We commit to being a united front before our children in matters of discipline and decision-making.
+Options:
+Agree
+Disagree
+Issue: Missing (was incorrectly placed as Question 33 in the provided list).
+Corrective Action: Add book question here, move provided Question 33 to this slot.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (61, 'Your Marriage Life with Children: Communication & Discipline', 'Agree/Disagree', 7, 'We commit to being a united front before our children in matters of discipline and decision-making.', '["Agree", "Disagree"]');
+json
+
+{
+  "id": 61,
+  "section": "Your Marriage Life with Children: Communication & Discipline",
+  "type": "Agree/Disagree",
+  "weight": 7,
+  "json_config": {
+    "question_text": "We commit to being a united front before our children in matters of discipline and decision-making.",
+    "options": ["Agree", "Disagree"]
+  }
+}
+Question 62: Your Marriage Life with Children: Social Media (New Child) (Multiple Choice)
+
+Text: We’re committed to guarding the image and identity of our children on social media, what is your approach?
+Options:
+Not by posting any photos of them on social media indefinitely
+Limiting their exposure by restricting others from sharing photos of them on social media without permission
+Approaching social media with discretion and not having any specific restrictions in place
+Limiting their exposure by limiting others without permission from sharing photos of them on social media
+Issue: Missing (was incorrectly placed as Question 34 in the provided list).
+Corrective Action: Add book question here, move provided Question 34 to this slot.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (62, 'Your Marriage Life with Children: Social Media (New Child)', 'Multiple Choice', 3, 'We’re committed to guarding the image and identity of our children on social media, what is your approach?', '["Not by posting any photos of them on social media indefinitely", "Limiting their exposure by restricting others from sharing photos of them on social media without permission", "Approaching social media with discretion and not having any specific restrictions in place", "Limiting their exposure by limiting others without permission from sharing photos of them on social media"]');
+json
+
+{
+  "id": 62,
+  "section": "Your Marriage Life with Children: Social Media (New Child)",
+  "type": "Multiple Choice",
+  "weight": 3,
+  "json_config": {
+    "question_text": "We’re committed to guarding the image and identity of our children on social media, what is your approach?",
+    "options": ["Not by posting any photos of them on social media indefinitely", "Limiting their exposure by restricting others from sharing photos of them on social media without permission", "Approaching social media with discretion and not having any specific restrictions in place", "Limiting their exposure by limiting others without permission from sharing photos of them on social media"]
+  }
+}
+Question 63: Your Marriage Life with Children: Communication: Sex / Gender & Sexuality (Multiple Choice)
+
+Text: We commit to discussing gender and sexuality with our children, what is your approach?
+Options:
+Discuss by age [fill-in] with God’s design for gender and sexuality as a foundation
+Study further and rely on our faith community for guidance
+Other: Please detail
+Issue: Missing (was incorrectly placed as Question 35 in the provided list).
+Corrective Action: Add book question here, move provided Question 35 to this slot.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (63, 'Your Marriage Life with Children: Communication: Sex / Gender & Sexuality', 'Multiple Choice', 3, 'We commit to discussing gender and sexuality with our children, what is your approach?', '["Discuss by age [fill-in] with God’s design for gender and sexuality as a foundation", "Study further and rely on our faith community for guidance", "Other: Please detail"]');
+json
+
+{
+  "id": 63,
+  "section": "Your Marriage Life with Children: Communication: Sex / Gender & Sexuality",
+  "type": "Multiple Choice",
+  "weight": 3,
+  "json_config": {
+    "question_text": "We commit to discussing gender and sexuality with our children, what is your approach?",
+    "options": ["Discuss by age [fill-in] with God’s design for gender and sexuality as a foundation", "Study further and rely on our faith community for guidance", "Other: Please detail"]
+  }
+}
+Question 64: Your Marriage Life with Children: Communication: Race / Racial Dynamics (Multiple Choice)
+
+Text: We commit to discussing race and racial dynamics with our children, what is your approach?
+Options:
+No explicit discussion on race and racial dynamics
+Discuss together by age 10 how to approach race and racial dynamics
+Discuss one-on-one by age 10 how to approach race and racial dynamics
+Other: Please detail
+Issue: Missing.
+Corrective Action: Add book question.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (64, 'Your Marriage Life with Children: Communication: Race / Racial Dynamics', 'Multiple Choice', 3, 'We commit to discussing race and racial dynamics with our children, what is your approach?', '["No explicit discussion on race and racial dynamics", "Discuss together by age 10 how to approach race and racial dynamics", "Discuss one-on-one by age 10 how to approach race and racial dynamics", "Other: Please detail"]');
+json
+
+{
+  "id": 64,
+  "section": "Your Marriage Life with Children: Communication: Race / Racial Dynamics",
+  "type": "Multiple Choice",
+  "weight": 3,
+  "json_config": {
+    "question_text": "We commit to discussing race and racial dynamics with our children, what is your approach?",
+    "options": ["No explicit discussion on race and racial dynamics", "Discuss together by age 10 how to approach race and racial dynamics", "Discuss one-on-one by age 10 how to approach race and racial dynamics", "Other: Please detail"]
+  }
+}
+Question 65: Your Family Life: Traditions: Family Dinner (Multiple Choice)
+
+Text: We are committed to eating dinner as a family, what is your approach?
+Options:
+Every day
+Once weekly on [fill-in]
+Once monthly on [fill-in]
+Other: Please detail
+Issue: Missing.
+Corrective Action: Add book question.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (65, 'Your Family Life: Traditions: Family Dinner', 'Multiple Choice', 5, 'We are committed to eating dinner as a family, what is your approach?', '["Every day", "Once weekly on [fill-in]", "Once monthly on [fill-in]", "Other: Please detail"]');
+json
+
+{
+  "id": 65,
+  "section": "Your Family Life: Traditions: Family Dinner",
+  "type": "Multiple Choice",
+  "weight": 5,
+  "json_config": {
+    "question_text": "We are committed to eating dinner as a family, what is your approach?",
+    "options": ["Every day", "Once weekly on [fill-in]", "Once monthly on [fill-in]", "Other: Please detail"]
+  }
+}
+Question 66: Your Family Life: Traditions: Family Vacations (Multiple Choice)
+
+Text: We are committed to family vacations, what is your approach?
+Options:
+At least one per year
+At least two per year
+Other: Please detail
+Issue: Missing.
+Corrective Action: Add book question.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (66, 'Your Family Life: Traditions: Family Vacations', 'Multiple Choice', 3, 'We are committed to family vacations, what is your approach?', '["At least one per year", "At least two per year", "Other: Please detail"]');
+json
+
+{
+  "id": 66,
+  "section": "Your Family Life: Traditions: Family Vacations",
+  "type": "Multiple Choice",
+  "weight": 3,
+  "json_config": {
+    "question_text": "We are committed to family vacations, what is your approach?",
+    "options": ["At least one per year", "At least two per year", "Other: Please detail"]
+  }
+}
+Question 67: Your Family Life: Traditions: Family Photos (Multiple Choice)
+
+Text: We are committed to taking family photos, what is your approach?
+Options:
+Once per year
+Once every two years
+Other: Please detail
+Issue: Missing.
+Corrective Action: Add book question.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (67, 'Your Family Life: Traditions: Family Photos', 'Multiple Choice', 3, 'We are committed to taking family photos, what is your approach?', '["Once per year", "Once every two years", "Other: Please detail"]');
+json
+
+{
+  "id": 67,
+  "section": "Your Family Life: Traditions: Family Photos",
+  "type": "Multiple Choice",
+  "weight": 3,
+  "json_config": {
+    "question_text": "We are committed to taking family photos, what is your approach?",
+    "options": ["Once per year", "Once every two years", "Other: Please detail"]
+  }
+}
+Question 68: Your Family Life: House Cleaning & Maintenance (Multiple Choice)
+
+Text: We commit to house cleaning responsibilities, what is your approach?
+Options:
+[fill-in] being the primary individual responsible for house cleaning and maintenance
+Shared responsibilities between both spouses
+Other: Please detail
+Issue: Missing.
+Corrective Action: Add book question.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (68, 'Your Family Life: House Cleaning & Maintenance', 'Multiple Choice', 5, 'We commit to house cleaning responsibilities, what is your approach?', '["[fill-in] being the primary individual responsible for house cleaning and maintenance", "Shared responsibilities between both spouses", "Other: Please detail"]');
+json
+
+{
+  "id": 68,
+  "section": "Your Family Life: House Cleaning & Maintenance",
+  "type": "Multiple Choice",
+  "weight": 5,
+  "json_config": {
+    "question_text": "We commit to house cleaning responsibilities, what is your approach?",
+    "options": ["[fill-in] being the primary individual responsible for house cleaning and maintenance", "Shared responsibilities between both spouses", "Other: Please detail"]
+  }
+}
+Question 69: Your Family Life: Cleaning Model with Home (Inside) (Multiple Choice)
+
+Text: We commit to a model of house cleaning, what is your approach?
+Options:
+Weekly on Saturdays/Sundays by ourselves (in addition to daily maintenance)
+Bi-weekly on Saturdays/Sundays by ourselves (in addition to daily maintenance)
+Bi-weekly by an outside vendor (in addition to daily maintenance)
+Other: Please detail
+Issue: Missing.
+Corrective Action: Add book question.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (69, 'Your Family Life: Cleaning Model with Home (Inside)', 'Multiple Choice', 3, 'We commit to a model of house cleaning, what is your approach?', '["Weekly on Saturdays/Sundays by ourselves (in addition to daily maintenance)", "Bi-weekly on Saturdays/Sundays by ourselves (in addition to daily maintenance)", "Bi-weekly by an outside vendor (in addition to daily maintenance)", "Other: Please detail"]');
+json
+
+{
+  "id": 69,
+  "section": "Your Family Life: Cleaning Model with Home (Inside)",
+  "type": "Multiple Choice",
+  "weight": 3,
+  "json_config": {
+    "question_text": "We commit to a model of house cleaning, what is your approach?",
+    "options": ["Weekly on Saturdays/Sundays by ourselves (in addition to daily maintenance)", "Bi-weekly on Saturdays/Sundays by ourselves (in addition to daily maintenance)", "Bi-weekly by an outside vendor (in addition to daily maintenance)", "Other: Please detail"]
+  }
+}
+Question 70: Your Family Life: Cleaning Model with Food (Multiple Choice)
+
+Text: We commit to a model for food preparation cleanup, what is your approach?
+Options:
+Person who prepares food not responsible for cleanup after eating
+Person who prepares food responsible for cleanup after eating
+Person who prepares food cleans as they cook so there’s minimal cleanup after eating
+Other: Please detail
+Issue: Missing.
+Corrective Action: Add book question.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (70, 'Your Family Life: Cleaning Model with Food', 'Multiple Choice', 3, 'We commit to a model for food preparation cleanup, what is your approach?', '["Person who prepares food not responsible for cleanup after eating", "Person who prepares food responsible for cleanup after eating", "Person who prepares food cleans as they cook so there’s minimal cleanup after eating", "Other: Please detail"]');
+json
+
+{
+  "id": 70,
+  "section": "Your Family Life: Cleaning Model with Food",
+  "type": "Multiple Choice",
+  "weight": 3,
+  "json_config": {
+    "question_text": "We commit to a model for food preparation cleanup, what is your approach?",
+    "options": ["Person who prepares food not responsible for cleanup after eating", "Person who prepares food responsible for cleanup after eating", "Person who prepares food cleans as they cook so there’s minimal cleanup after eating", "Other: Please detail"]
+  }
+}
+YOUR FAMILY LIFE AND FINANCES (Questions 71–80)
+Issues:
+
+The provided list places Your Health and Wellness at Questions 71–89, but the book’s structure (per Table 1 and Table 2) includes Your Family Life and Your Finances here, covering topics like outdoor cleaning, family outings, and financial management for children.
+Questions 71–79 in the provided list are mostly extraneous or misplaced (e.g., duplicates of breastfeeding and physical checkups).
+Question 84 is missing in the provided list, likely a numbering error.
+Corrective Actions:
+
+Replace Questions 71–79 with book questions from Your Family Life and Your Finances.
+Insert Question 84 to restore the correct sequence.
+Move relevant health-related questions (e.g., breastfeeding) to later slots where they belong.
+Corrected Questions:
+
+Question 71: Your Family Life: Cleaning Model with Home (Outside) (Multiple Choice)
+
+Text: We commit to a model of outside housework, what is your approach?
+Options:
+Weekly on Saturdays/Sundays by ourselves
+Monthly on Saturdays/Sundays by ourselves
+By hired outside vendor on an agreed schedule
+Other: Please detail
+Issue: Missing, replaced by “Financial Stewardship & Nutrition Health Goals” in the provided list.
+Corrective Action: Add book question.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (71, 'Your Family Life: Cleaning Model with Home (Outside)', 'Multiple Choice', 3, 'We commit to a model of outside housework, what is your approach?', '["Weekly on Saturdays/Sundays by ourselves", "Monthly on Saturdays/Sundays by ourselves", "By hired outside vendor on an agreed schedule", "Other: Please detail"]');
+json
+
+{
+  "id": 71,
+  "section": "Your Family Life: Cleaning Model with Home (Outside)",
+  "type": "Multiple Choice",
+  "weight": 3,
+  "json_config": {
+    "question_text": "We commit to a model of outside housework, what is your approach?",
+    "options": ["Weekly on Saturdays/Sundays by ourselves", "Monthly on Saturdays/Sundays by ourselves", "By hired outside vendor on an agreed schedule", "Other: Please detail"]
+  }
+}
+Question 72: Your Family Life: Traditions: Family Outings (Multiple Choice)
+
+Text: We are committed to family outings, what is your approach?
+Options:
+Once weekly
+Bi-weekly
+Monthly
+Other: Please detail
+Issue: Missing, replaced by “Specific Consumption Goals [Meal Types].”
+Corrective Action: Add book question.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (72, 'Your Family Life: Traditions: Family Outings', 'Multiple Choice', 3, 'We are committed to family outings, what is your approach?', '["Once weekly", "Bi-weekly", "Monthly", "Other: Please detail"]');
+json
+
+{
+  "id": 72,
+  "section": "Your Family Life: Traditions: Family Outings",
+  "type": "Multiple Choice",
+  "weight": 3,
+  "json_config": {
+    "question_text": "We are committed to family outings, what is your approach?",
+    "options": ["Once weekly", "Bi-weekly", "Monthly", "Other: Please detail"]
+  }
+}
+Question 73: Your Finances: Financial Management: with Children (Allowance) (Multiple Choice)
+
+Text: We commit to giving our children an allowance, what is your approach?
+Options:
+Weekly allowance to teach stewardship
+No allowance, provide as needed
+Monthly allowance to teach stewardship
+Other: Please detail
+Issue: Missing, replaced by “New Babies: Nutrition: Breastfeeding.”
+Corrective Action: Add book question.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (73, 'Your Finances: Financial Management: with Children (Allowance)', 'Multiple Choice', 3, 'We commit to giving our children an allowance, what is your approach?', '["Weekly allowance to teach stewardship", "No allowance, provide as needed", "Monthly allowance to teach stewardship", "Other: Please detail"]');
+json
+
+{
+  "id": 73,
+  "section": "Your Finances: Financial Management: with Children (Allowance)",
+  "type": "Multiple Choice",
+  "weight": 3,
+  "json_config": {
+    "question_text": "We commit to giving our children an allowance, what is your approach?",
+    "options": ["Weekly allowance to teach stewardship", "No allowance, provide as needed", "Monthly allowance to teach stewardship", "Other: Please detail"]
+  }
+}
+Question 74: Your Finances: Financial Management: with Children (Investments/Savings) (Multiple Choice)
+
+Text: We commit to saving/investing for our children, what is your approach?
+Options:
+529 plan with monthly deposits
+Savings account with monthly deposits
+Brokerage account with monthly stock purchases
+Both 529 and brokerage
+Other: Please detail
+Issue: Missing, replaced by “Approach to Medicine: Natural Birth or Epidural.”
+Corrective Action: Add book question.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (74, 'Your Finances: Financial Management: with Children (Investments/Savings)', 'Multiple Choice', 3, 'We commit to saving/investing for our children, what is your approach?', '["529 plan with monthly deposits", "Savings account with monthly deposits", "Brokerage account with monthly stock purchases", "Both 529 and brokerage", "Other: Please detail"]');
+json
+
+{
+  "id": 74,
+  "section": "Your Finances: Financial Management: with Children (Investments/Savings)",
+  "type": "Multiple Choice",
+  "weight": 3,
+  "json_config": {
+    "question_text": "We commit to saving/investing for our children, what is your approach?",
+    "options": ["529 plan with monthly deposits", "Savings account with monthly deposits", "Brokerage account with monthly stock purchases", "Both 529 and brokerage", "Other: Please detail"]
+  }
+}
+Question 75: Your Family Life: Food Preparation & Planning: Overall Model: Responsibility (Multiple Choice)
+
+Text: We commit to food planning and preparation, what is your approach?
+Options:
+[fill-in] responsible for overall planning and preparation
+[fill-in] responsible for weekdays, [fill-in] for weekends
+Chef/nanny responsible
+Other: Please detail
+Issue: Missing, replaced by “Psychological / Physical (Individual Therapy).”
+Corrective Action: Add book question.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (75, 'Your Family Life: Food Preparation & Planning: Overall Model: Responsibility', 'Multiple Choice', 5, 'We commit to food planning and preparation, what is your approach?', '["[fill-in] responsible for overall planning and preparation", "[fill-in] responsible for weekdays, [fill-in] for weekends", "Chef/nanny responsible", "Other: Please detail"]');
+json
+
+{
+  "id": 75,
+  "section": "Your Family Life: Food Preparation & Planning: Overall Model: Responsibility",
+  "type": "Multiple Choice",
+  "weight": 5,
+  "json_config": {
+    "question_text": "We commit to food planning and preparation, what is your approach?",
+    "options": ["[fill-in] responsible for overall planning and preparation", "[fill-in] responsible for weekdays, [fill-in] for weekends", "Chef/nanny responsible", "Other: Please detail"]
+  }
+}
+Question 76: Your Health and Wellness: Approach to Medicine, Illness and Pain Management (Multiple Choice)
+
+Text: We commit to an approach for medicine, illness and pain management, what is your approach?
+Options:
+We commit to an approach that leans towards natural/homeopathic remedies and avoiding over-the-counter drugs unless medically necessary
+We commit to an approach that utilizes all available over-the-counter drugs and medical treatments
+We commit to being flexible to individual preferences and medical needs
+Issue: Missing, replaced by “Diet Expectations” (extraneous in the provided list).
+Corrective Action: Add book question.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (76, 'Your Health and Wellness: Approach to Medicine, Illness and Pain Management', 'Multiple Choice', 5, 'We commit to an approach for medicine, illness and pain management, what is your approach?', '["We commit to an approach that leans towards natural/homeopathic remedies and avoiding over-the-counter drugs unless medically necessary", "We commit to an approach that utilizes all available over-the-counter drugs and medical treatments", "We commit to being flexible to individual preferences and medical needs"]');
+json
+
+{
+  "id": 76,
+  "section": "Your Health and Wellness: Approach to Medicine, Illness and Pain Management",
+  "type": "Multiple Choice",
+  "weight": 5,
+  "json_config": {
+    "question_text": "We commit to an approach for medicine, illness and pain management, what is your approach?",
+    "options": ["We commit to an approach that leans towards natural/homeopathic remedies and avoiding over-the-counter drugs unless medically necessary", "We commit to an approach that utilizes all available over-the-counter drugs and medical treatments", "We commit to being flexible to individual preferences and medical needs"]
+  }
+}
+Question 77: Your Health and Wellness: Approach to Medicine, Illness and Pain Management II (Multiple Choice)
+
+Text: We are committed to each doing a full physical, what is your approach?
+Options:
+Annual physical and check-up before wedding on [fill-in]
+Annual physical, already completed this year
+Other: Please detail
+Issue: Missing, replaced by “Approach to Medicine, Illness and Pain Management” (duplicate in the provided list).
+Corrective Action: Add book question.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (77, 'Your Health and Wellness: Approach to Medicine, Illness and Pain Management II', 'Multiple Choice', 5, 'We are committed to each doing a full physical, what is your approach?', '["Annual physical and check-up before wedding on [fill-in]", "Annual physical, already completed this year", "Other: Please detail"]');
+json
+
+{
+  "id": 77,
+  "section": "Your Health and Wellness: Approach to Medicine, Illness and Pain Management II",
+  "type": "Multiple Choice",
+  "weight": 5,
+  "json_config": {
+    "question_text": "We are committed to each doing a full physical, what is your approach?",
+    "options": ["Annual physical and check-up before wedding on [fill-in]", "Annual physical, already completed this year", "Other: Please detail"]
+  }
+}
+Question 78: Your Health and Wellness: Psychological / Physical (Physical Wellness – Exercise) (Multiple Choice)
+
+Text: We are each committed to regular exercise, what is your approach?
+Options:
+At least 3x per week individually
+At least 2x per week individually
+At least 4x per week individually
+Other: please detail
+Issue: Missing, replaced by “Psychological / Physical (Physical Wellness – Exercise)” (correct but misplaced in the provided list).
+Corrective Action: Add book question.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (78, 'Your Health and Wellness: Psychological / Physical (Physical Wellness – Exercise)', 'Multiple Choice', 4, 'We are each committed to regular exercise, what is your approach?', '["At least 3x per week individually", "At least 2x per week individually", "At least 4x per week individually", "Other: please detail"]');
+json
+
+{
+  "id": 78,
+  "section": "Your Health and Wellness: Psychological / Physical (Physical Wellness – Exercise)",
+  "type": "Multiple Choice",
+  "weight": 4,
+  "json_config": {
+    "question_text": "We are each committed to regular exercise, what is your approach?",
+    "options": ["At least 3x per week individually", "At least 2x per week individually", "At least 4x per week individually", "Other: please detail"]
+  }
+}
+Question 79: Your Health and Wellness: Financial Stewardship & Nutrition Health Goals (Multiple Choice)
+
+Text: We commit to enjoying home-cooked meals, what is your approach?
+Options:
+At least 4 of the 7 days per week
+At least 2 of the 7 days per week
+Healthy meals through all channels (cooking at home, eating out, and catering)
+Other: Please detail
+Issue: Missing, replaced by “Approach to Medicine, Illness and Pain Management” (duplicate).
+Corrective Action: Add book question, move provided Question 71 to this slot.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (79, 'Your Health and Wellness: Financial Stewardship & Nutrition Health Goals', 'Multiple Choice', 3, 'We commit to enjoying home-cooked meals, what is your approach?', '["At least 4 of the 7 days per week", "At least 2 of the 7 days per week", "Healthy meals through all channels (cooking at home, eating out, and catering)", "Other: Please detail"]');
+json
+
+{
+  "id": 79,
+  "section": "Your Health and Wellness: Financial Stewardship & Nutrition Health Goals",
+  "type": "Multiple Choice",
+  "weight": 3,
+  "json_config": {
+    "question_text": "We commit to enjoying home-cooked meals, what is your approach?",
+    "options": ["At least 4 of the 7 days per week", "At least 2 of the 7 days per week", "Healthy meals through all channels (cooking at home, eating out, and catering)", "Other: Please detail"]
+  }
+}
+Question 80: Your Health and Wellness: Specific Consumption Goals [Meal Types] (Multiple Choice)
+
+Text: We commit to a healthy balanced diet, what is your approach?
+Options:
+No special restriction on any meats, fish, poultry and dairy products
+All meats except pork and shellfish, in accordance with biblical dietary guidelines
+Vegetarian diet
+Vegan diet
+Pescatarian diet
+Carnivore diet
+Flexible to individual needs and preferences
+Issue: Missing, replaced by “Financial Stewardship & Nutrition Health Goals” (misplaced).
+Corrective Action: Add book question, move provided Question 72 to this slot.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (80, 'Your Health and Wellness: Specific Consumption Goals [Meal Types]', 'Multiple Choice', 4, 'We commit to a healthy balanced diet, what is your approach?', '["No special restriction on any meats, fish, poultry and dairy products", "All meats except pork and shellfish, in accordance with biblical dietary guidelines", "Vegetarian diet", "Vegan diet", "Pescatarian diet", "Carnivore diet", "Flexible to individual needs and preferences"]');
+json
+
+{
+  "id": 80,
+  "section": "Your Health and Wellness: Specific Consumption Goals [Meal Types]",
+  "type": "Multiple Choice",
+  "weight": 4,
+  "json_config": {
+    "question_text": "We commit to a healthy balanced diet, what is your approach?",
+    "options": ["No special restriction on any meats, fish, poultry and dairy products", "All meats except pork and shellfish, in accordance with biblical dietary guidelines", "Vegetarian diet", "Vegan diet", "Pescatarian diet", "Carnivore diet", "Flexible to individual needs and preferences"]
+  }
+}
+YOUR HEALTH AND WELLNESS (Questions 81–89)
+Issues:
+
+The provided list’s Questions 81–83 and 85–89 are mostly duplicates or extraneous (e.g., Questions 81–82 are identical, Question 83 duplicates Question 73).
+The book’s structure includes health-related questions like breastfeeding, natural birth, and therapy, but in a different order and without duplicates.
+Question 84 is missing, likely a numbering error.
+Corrective Actions:
+
+Remove duplicates (Questions 81–82, 83) and replace with correct book questions.
+Insert Question 84 to restore the sequence.
+Reorganize Questions 81–89 to match the book’s health and wellness topics.
+Corrected Questions:
+
+Question 81: Your Health and Wellness: New Babies: Nutrition: Breastfeeding (Multiple Choice)
+
+Text: We commit to breastfeeding, what is your approach?
+Options:
+Primarily and only using formula in rare circumstances
+Whenever possible, no reservations about formula
+Not Applicable
+Issue: Provided Questions 81–82 are duplicates about healthy eating, extraneous. Question 83 is a duplicate of breastfeeding.
+Corrective Action: Add book question, move provided Question 73/83 to this slot.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (81, 'Your Health and Wellness: New Babies: Nutrition: Breastfeeding', 'Multiple Choice', 3, 'We commit to breastfeeding, what is your approach?', '["Primarily and only using formula in rare circumstances", "Whenever possible, no reservations about formula", "Not Applicable"]');
+json
+
+{
+  "id": 81,
+  "section": "Your Health and Wellness: New Babies: Nutrition: Breastfeeding",
+  "type": "Multiple Choice",
+  "weight": 3,
+  "json_config": {
+    "question_text": "We commit to breastfeeding, what is your approach?",
+    "options": ["Primarily and only using formula in rare circumstances", "Whenever possible, no reservations about formula", "Not Applicable"]
+  }
+}
+Question 82: Your Health and Wellness: New Babies: Nutrition: Breastfeeding Length (Multiple Choice)
+
+Text: We’re committed to breastfeeding for how long?
+Options:
+Along with complementary foods for up to 2 years
+Up to 1 year
+No strong perspective, follow medical guidance
+Issue: Missing, replaced by duplicate healthy eating question.
+Corrective Action: Add book question.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (82, 'Your Health and Wellness: New Babies: Nutrition: Breastfeeding Length', 'Multiple Choice', 3, 'We’re committed to breastfeeding for how long?', '["Along with complementary foods for up to 2 years", "Up to 1 year", "No strong perspective, follow medical guidance"]');
+json
+
+{
+  "id": 82,
+  "section": "Your Health and Wellness: New Babies: Nutrition: Breastfeeding Length",
+  "type": "Multiple Choice",
+  "weight": 3,
+  "json_config": {
+    "question_text": "We’re committed to breastfeeding for how long?",
+    "options": ["Along with complementary foods for up to 2 years", "Up to 1 year", "No strong perspective, follow medical guidance"]
+  }
+}
+Question 83: Your Health and Wellness: Natural Birth or Epidural (Multiple Choice)
+
+Text: We commit to birth pain management, what is your approach?
+Options:
+Natural birth
+Epidural or medical relief
+Not educated enough, will research
+Not Applicable
+Issue: Missing, replaced by duplicate breastfeeding question. Provided Question 74 is correct but misplaced.
+Corrective Action: Add book question, move provided Question 74 to this slot.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (83, 'Your Health and Wellness: Natural Birth or Epidural', 'Multiple Choice', 3, 'We commit to birth pain management, what is your approach?', '["Natural birth", "Epidural or medical relief", "Not educated enough, will research", "Not Applicable"]');
+json
+
+{
+  "id": 83,
+  "section": "Your Health and Wellness: Natural Birth or Epidural",
+  "type": "Multiple Choice",
+  "weight": 3,
+  "json_config": {
+    "question_text": "We commit to birth pain management, what is your approach?",
+    "options": ["Natural birth", "Epidural or medical relief", "Not educated enough, will research", "Not Applicable"]
+  }
+}
+Question 84: Your Health and Wellness: Psychological / Physical (Individual Therapy) (Multiple Choice)
+
+Text: We commit to individual therapy, what is your approach?
+Options:
+6 times per year
+4 times per year
+12 times per year
+Not committed to long-term therapy
+Issue: Missing in provided list, likely a numbering error. Provided Question 75/88 is correct but misplaced.
+Corrective Action: Add book question, move provided Question 75/88 to this slot.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (84, 'Your Health and Wellness: Psychological / Physical (Individual Therapy)', 'Multiple Choice', 4, 'We commit to individual therapy, what is your approach?', '["6 times per year", "4 times per year", "12 times per year", "Not committed to long-term therapy"]');
+json
+
+{
+  "id": 84,
+  "section": "Your Health and Wellness: Psychological / Physical (Individual Therapy)",
+  "type": "Multiple Choice",
+  "weight": 4,
+  "json_config": {
+    "question_text": "We commit to individual therapy, what is your approach?",
+    "options": ["6 times per year", "4 times per year", "12 times per year", "Not committed to long-term therapy"]
+  }
+}
+Question 85: Your Marriage & Boundaries: Openness / Technology (Multiple Choice)
+
+Text: We commit to openness with technology, what is your approach?
+Options:
+Transparent access to all passcodes
+No need for transparent access
+Issue: Missing, replaced by duplicate physical checkup question (provided Question 85).
+Corrective Action: Add book question.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (85, 'Your Marriage & Boundaries: Openness / Technology', 'Multiple Choice', 5, 'We commit to openness with technology, what is your approach?', '["Transparent access to all passcodes", "No need for transparent access"]');
+json
+
+{
+  "id": 85,
+  "section": "Your Marriage & Boundaries: Openness / Technology",
+  "type": "Multiple Choice",
+  "weight": 5,
+  "json_config": {
+    "question_text": "We commit to openness with technology, what is your approach?",
+    "options": ["Transparent access to all passcodes", "No need for transparent access"]
+  }
+}
+Question 86: Your Marriage & Boundaries: Holidays Model (Multiple Choice)
+
+Text: We commit to splitting holidays, what is your approach?
+Options:
+Splitting and rotating visiting family for major holidays
+Doing major holidays at home, visit one family per year
+Other: Please detail
+Issue: Missing, replaced by duplicate exercise question (provided Question 86).
+Corrective Action: Add book question.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (86, 'Your Marriage & Boundaries: Holidays Model', 'Multiple Choice', 3, 'We commit to splitting holidays, what is your approach?', '["Splitting and rotating visiting family for major holidays", "Doing major holidays at home, visit one family per year", "Other: Please detail"]');
+json
+
+{
+  "id": 86,
+  "section": "Your Marriage & Boundaries: Holidays Model",
+  "type": "Multiple Choice",
+  "weight": 3,
+  "json_config": {
+    "question_text": "We commit to splitting holidays, what is your approach?",
+    "options": ["Splitting and rotating visiting family for major holidays", "Doing major holidays at home, visit one family per year", "Other: Please detail"]
+  }
+}
+Question 87: Your Marriage & Boundaries: In-Laws/Loves in Advanced Age (Multiple Choice)
+
+Text: We’re committed to caring for our spouses’ parents, what is your approach?
+Options:
+Through financial contribution
+By welcoming them to move in
+Not through long-term stay
+Other: Please detail
+Issue: Missing, replaced by duplicate natural birth question (provided Question 87).
+Corrective Action: Add book question.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (87, 'Your Marriage & Boundaries: In-Laws/Loves in Advanced Age', 'Multiple Choice', 3, 'We’re committed to caring for our spouses’ parents, what is your approach?', '["Through financial contribution", "By welcoming them to move in", "Not through long-term stay", "Other: Please detail"]');
+json
+
+{
+  "id": 87,
+  "section": "Your Marriage & Boundaries: In-Laws/Loves in Advanced Age",
+  "type": "Multiple Choice",
+  "weight": 3,
+  "json_config": {
+    "question_text": "We’re committed to caring for our spouses’ parents, what is your approach?",
+    "options": ["Through financial contribution", "By welcoming them to move in", "Not through long-term stay", "Other: Please detail"]
+  }
+}
+Question 88: Your Marriage & Boundaries: In-Laws/Loves After Having First Child (Multiple Choice)
+
+Text: We’re committed to involving parents after first child, what is your approach?
+Options:
+One parent stays for a month
+Frequent visits but no extended stay
+One parent stays for two weeks
+Other: Please detail
+Issue: Missing, replaced by duplicate therapy question (provided Question 88).
+Corrective Action: Add book question.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (88, 'Your Marriage & Boundaries: In-Laws/Loves After Having First Child', 'Multiple Choice', 3, 'We’re committed to involving parents after first child, what is your approach?', '["One parent stays for a month", "Frequent visits but no extended stay", "One parent stays for two weeks", "Other: Please detail"]');
+json
+
+{
+  "id": 88,
+  "section": "Your Marriage & Boundaries: In-Laws/Loves After Having First Child",
+  "type": "Multiple Choice",
+  "weight": 3,
+  "json_config": {
+    "question_text": "We’re committed to involving parents after first child, what is your approach?",
+    "options": ["One parent stays for a month", "Frequent visits but no extended stay", "One parent stays for two weeks", "Other: Please detail"]
+  }
+}
+Question 89: Your Marriage & Boundaries: Interactions with Opposite Sex (Offline) (Multiple Choice)
+
+Text: We commit to boundaries with the opposite sex, what is your approach?
+Options:
+No unique restrictions
+No one-on-one friendships outside work/family
+Issue: Missing, replaced by duplicate meal types question (provided Question 89).
+Corrective Action: Add book question.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (89, 'Your Marriage & Boundaries: Interactions with Opposite Sex (Offline)', 'Multiple Choice', 5, 'We commit to boundaries with the opposite sex, what is your approach?', '["No unique restrictions", "No one-on-one friendships outside work/family"]');
+json
+
+{
+  "id": 89,
+  "section": "Your Marriage & Boundaries: Interactions with Opposite Sex (Offline)",
+  "type": "Multiple Choice",
+  "weight": 5,
+  "json_config": {
+    "question_text": "We commit to boundaries with the opposite sex, what is your approach?",
+    "options": ["No unique restrictions", "No one-on-one friendships outside work/family"]
+  }
+}
+YOUR MARRIAGE LIFE CONTINUED (Questions 90–99)
+Issues:
+
+The provided list’s Questions 90–99 are partially correct but misplaced (e.g., Questions 90–93 belong earlier, Questions 94–99 are parenting-related and should be earlier).
+The book’s structure includes boundaries and sex-related questions here, plus one additional question to reach 99 (likely “Secrets” or similar).
+Question 95 in the provided list (“Children Decision: How To Have Them”) is incorrect and duplicates earlier parenting questions.
+Corrective Actions:
+
+Relocate Questions 90–93 to earlier slots (e.g., Questions 53, 54, 56, etc.).
+Replace Questions 94–99 with correct book questions on boundaries and secrets.
+Add Question 99 as “Secrets” to complete the 99-question set, assuming it’s an intentional addition.
+Corrected Questions:
+
+Question 90: Your Marriage & Boundaries: Social Media: Date Night (Multiple Choice)
+
+Text: We’re committed to managing phone use during date nights, what is your approach?
+Options:
+Phones away except for babysitter/caregiver contact or photos
+Exercise discretion, no firm line
+Other: Please detail
+Issue: Missing, provided Question 90 (“Sex - Initiation”) belongs earlier (e.g., Question 53).
+Corrective Action: Add book question.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (90, 'Your Marriage & Boundaries: Social Media: Date Night', 'Multiple Choice', 3, 'We’re committed to managing phone use during date nights, what is your approach?', '["Phones away except for babysitter/caregiver contact or photos", "Exercise discretion, no firm line", "Other: Please detail"]');
+json
+
+{
+  "id": 90,
+  "section": "Your Marriage & Boundaries: Social Media: Date Night",
+  "type": "Multiple Choice",
+  "weight": 3,
+  "json_config": {
+    "question_text": "We’re committed to managing phone use during date nights, what is your approach?",
+    "options": ["Phones away except for babysitter/caregiver contact or photos", "Exercise discretion, no firm line", "Other: Please detail"]
+  }
+}
+Question 91: Your Marriage & Boundaries: Social Media: Interactions with Opposite Sex (Multiple Choice)
+
+Text: We commit to managing social media interactions, what is your approach?
+Options:
+No direct communication unless mutually known/trusted
+Exercise discretion, no firm line
+Other: Please detail
+Issue: Missing, provided Question 91 (“Sex - Communication”) belongs earlier.
+Corrective Action: Add book question.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (91, 'Your Marriage & Boundaries: Social Media: Interactions with Opposite Sex', 'Multiple Choice', 3, 'We commit to managing social media interactions, what is your approach?', '["No direct communication unless mutually known/trusted", "Exercise discretion, no firm line", "Other: Please detail"]');
+json
+
+{
+  "id": 91,
+  "section": "Your Marriage & Boundaries: Social Media: Interactions with Opposite Sex",
+  "type": "Multiple Choice",
+  "weight": 3,
+  "json_config": {
+    "question_text": "We commit to managing social media interactions, what is your approach?",
+    "options": ["No direct communication unless mutually known/trusted", "Exercise discretion, no firm line", "Other: Please detail"]
+  }
+}
+Question 92: Your Marriage & Boundaries: Social Media: Connection/Interaction with Past Significant Others (Multiple Choice)
+
+Text: We commit to managing connections with past significant others, what is your approach?
+Options:
+No connection or communication
+Block all past significant others
+Not Applicable
+Other: Please detail
+Issue: Missing, provided Question 92 (“Sex - Contraception”) belongs earlier (Question 56).
+Corrective Action: Add book question.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (92, 'Your Marriage & Boundaries: Social Media: Connection/Interaction with Past Significant Others', 'Multiple Choice', 3, 'We commit to managing connections with past significant others, what is your approach?', '["No connection or communication", "Block all past significant others", "Not Applicable", "Other: Please detail"]');
+json
+
+{
+  "id": 92,
+  "section": "Your Marriage & Boundaries: Social Media: Connection/Interaction with Past Significant Others",
+  "type": "Multiple Choice",
+  "weight": 3,
+  "json_config": {
+    "question_text": "We commit to managing connections with past significant others, what is your approach?",
+    "options": ["No connection or communication", "Block all past significant others", "Not Applicable", "Other: Please detail"]
+  }
+}
+Question 93: Your Marriage & Boundaries: Digital Media & Physical Devices (Multiple Choice)
+
+Text: We commit to managing media with past significant others, what is your approach?
+Options:
+Delete all private/public media by [fill-in]
+Not Applicable
+Other: Please detail
+Issue: Missing, provided Question 93 (“Sex - Boundaries”) is correct but misplaced.
+Corrective Action: Add book question.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (93, 'Your Marriage & Boundaries: Digital Media & Physical Devices', 'Multiple Choice', 3, 'We commit to managing media with past significant others, what is your approach?', '["Delete all private/public media by [fill-in]", "Not Applicable", "Other: Please detail"]');
+json
+
+{
+  "id": 93,
+  "section": "Your Marriage & Boundaries: Digital Media & Physical Devices",
+  "type": "Multiple Choice",
+  "weight": 3,
+  "json_config": {
+    "question_text": "We commit to managing media with past significant others, what is your approach?",
+    "options": ["Delete all private/public media by [fill-in]", "Not Applicable", "Other: Please detail"]
+  }
+}
+Question 94: Your Marriage Life with Children: Communication & Conflict Resolution (Multiple Choice)
+
+Text: We commit to managing conflicts in front of children, what is your approach?
+Options:
+Not fighting in front of children
+Fighting respectfully to model conflict resolution
+Other: Please detail
+Issue: Provided Question 94 (“Children Decision: How To Have Them”) is incorrect, duplicates earlier parenting questions.
+Corrective Action: Add book question.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (94, 'Your Marriage Life with Children: Communication & Conflict Resolution', 'Multiple Choice', 5, 'We commit to managing conflicts in front of children, what is your approach?', '["Not fighting in front of children", "Fighting respectfully to model conflict resolution", "Other: Please detail"]');
+json
+
+{
+  "id": 94,
+  "section": "Your Marriage Life with Children: Communication & Conflict Resolution",
+  "type": "Multiple Choice",
+  "weight": 5,
+  "json_config": {
+    "question_text": "We commit to managing conflicts in front of children, what is your approach?",
+    "options": ["Not fighting in front of children", "Fighting respectfully to model conflict resolution", "Other: Please detail"]
+  }
+}
+Question 95: Your Marriage Life with Children: Social Media (Exposure) (Multiple Choice)
+
+Text: We’re committed to guarding our children’s social media exposure, what is your approach?
+Options:
+No social media until high school age
+No social media until middle school age
+Monitored use from middle school age
+Other: Please detail
+Issue: Provided Question 95 is incorrect, duplicates parenting questions.
+Corrective Action: Add book question.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (95, 'Your Marriage Life with Children: Social Media (Exposure)', 'Multiple Choice', 3, 'We’re committed to guarding our children’s social media exposure, what is your approach?', '["No social media until high school age", "No social media until middle school age", "Monitored use from middle school age", "Other: Please detail"]');
+json
+
+{
+  "id": 95,
+  "section": "Your Marriage Life with Children: Social Media (Exposure)",
+  "type": "Multiple Choice",
+  "weight": 3,
+  "json_config": {
+    "question_text": "We’re committed to guarding our children’s social media exposure, what is your approach?",
+    "options": ["No social media until high school age", "No social media until middle school age", "Monitored use from middle school age", "Other: Please detail"]
+  }
+}
+Question 96: Your Marriage Life with Children: Mobile Phone (Access) (Multiple Choice)
+
+Text: We’re committed to guarding our children’s mobile phone access, what is your approach?
+Options:
+No mobile phone until high school age
+No mobile phone until middle school age
+Monitored use as early as appropriate
+Other: Please detail
+Issue: Provided Question 96 is incorrect, duplicates parenting questions.
+Corrective Action: Add book question.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (96, 'Your Marriage Life with Children: Mobile Phone (Access)', 'Multiple Choice', 3, 'We’re committed to guarding our children’s mobile phone access, what is your approach?', '["No mobile phone until high school age", "No mobile phone until middle school age", "Monitored use as early as appropriate", "Other: Please detail"]');
+json
+
+{
+  "id": 96,
+  "section": "Your Marriage Life with Children: Mobile Phone (Access)",
+  "type": "Multiple Choice",
+  "weight": 3,
+  "json_config": {
+    "question_text": "We’re committed to guarding our children’s mobile phone access, what is your approach?",
+    "options": ["No mobile phone until high school age", "No mobile phone until middle school age", "Monitored use as early as appropriate", "Other: Please detail"]
+  }
+}
+Question 97: Your Marriage Life with Children: Social Media (New Child Documentation) (Multiple Choice)
+
+Text: We’re committed to documenting our children on social media, what is your approach?
+Options:
+Not by posting any photos indefinitely
+No account creation, no restrictions
+Creating/managing account from birth
+Other: Please detail
+Issue: Provided Question 97 is incorrect, moved to Question 51.
+Corrective Action: Add book question.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (97, 'Your Marriage Life with Children: Social Media (New Child Documentation)', 'Multiple Choice', 3, 'We’re committed to documenting our children on social media, what is your approach?', '["Not by posting any photos indefinitely", "No account creation, no restrictions", "Creating/managing account from birth", "Other: Please detail"]');
+json
+
+
+
+{
+  "id": 97,
+  "section": "Your Marriage Life with Children: Social Media (New Child Documentation)",
+  "type": "Multiple Choice",
+  "weight": 3,
+  "json_config": {
+    "question_text": "We’re committed to documenting our children on social media, what is your approach?",
+    "options": ["Not by posting any photos indefinitely", "No account creation, no restrictions", "Creating/managing account from birth", "Other: Please detail"]
+  }
+}
+Question 98: Your Marriage Life: Sex - Initiation (Multiple Choice)
+
+Text: We commit to how sex is initiated, what is your approach?
+Options:
+Alternating who initiates sex by week
+Alternating who initiates sex by day/instance
+Letting it flow naturally
+Issue: Provided Question 98 is incorrect, moved to Question 52. Provided Question 90 is correct but misplaced.
+Corrective Action: Add book question, move provided Question 90 to this slot.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (98, 'Your Marriage Life: Sex - Initiation', 'Multiple Choice', 6, 'We commit to how sex is initiated, what is your approach?', '["Alternating who initiates sex by week", "Alternating who initiates sex by day/instance", "Letting it flow naturally"]');
+json
+
+{
+  "id": 98,
+  "section": "Your Marriage Life: Sex - Initiation",
+  "type": "Multiple Choice",
+  "weight": 6,
+  "json_config": {
+    "question_text": "We commit to how sex is initiated, what is your approach?",
+    "options": ["Alternating who initiates sex by week", "Alternating who initiates sex by day/instance", "Letting it flow naturally"]
+  }
+}
+Question 99: Your Marriage Life: Sex - Communication (Multiple Choice)
+
+Text: We commit to having a conversation about what we individually enjoy in sex, what is your approach?
+Options:
+Within the first month
+Within the first 3 months
+Within the first 6 months
+Other: Need further discussion
+Issue: Provided Question 99 is incorrect, moved to Question 60. Provided Question 91 is correct but misplaced.
+Corrective Action: Add book question, move provided Question 91 to this slot.
+Replit Implementation:
+sql
+
+INSERT INTO questions (id, section, type, weight, question_text, options) VALUES (99, 'Your Marriage Life: Sex - Communication', 'Multiple Choice', 5, 'We commit to having a conversation about what we individually enjoy in sex, what is your approach?', '["Within the first month"]', '["Within the first 3 months']', '["Within the first 6 months']', '["Other: Need further discussion"]');
+json
+
+{
+  "id": 99,
+  "section": "Your Marriage Life: Sex - Communication",
+  "type": "Multiple Choice",
+  "weight": 5,
+  "json_config": {
+    "question_text": "We commit to having a conversation about what we individually enjoy in sex, what is your approach?",
+    "options": ["Within the first month", "Within the first 3 months", "Within the first 6 months", "Other: Need further discussion"]
+  }
+}
+Summary of Key Adjustments
+Removed Extraneous Questions:
+Question 3 (duplicate of Question 2).
+Questions 81–82 (duplicate healthy eating questions).
+Provided Question 83 (duplicate breastfeeding).
+Provided Questions 95–96 (duplicate parenting questions).
+Relocated Questions:
+Provided Questions 12, 31–35, 90–93, 97–99 to earlier slots (e.g., Questions 53–56, 61–63, - Provided Questions 94, 97–98 to Questions 42, 51–52.
+Provided Question 99 to Question 60.
+Added Missing Questions:
+Questions 36–50 (Your Parenting Life).
+Questions 51–52, 57–59, 61–80, 85–97 (various sections).
+Question 99 (“Secrets”) to complete the 99-question set.
+Corrected Question Types:
+Changed Questions 5–7 from Agree/Disagree to Multiple Choice to match book.

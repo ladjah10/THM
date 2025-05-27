@@ -23,22 +23,22 @@ export const questions: Question[] = [
     type: "M",
     text: "Your Foundation: Marriage + Family - What is your faith position?",
     options: [
-      "We each already believe in and (have) receive(d) Jesus Christ as our Lord and Savior and this reality will be the active foundation and guiding lens through which we see and operate in our marriage and family",
-      "We are interested in living our new lives together according to the Christian faith, but we haven't each made the individual decision to receive Jesus Christ as our Lord and Savior (and be baptized) and we would like to do this in advance of our union."
+      "Both believe in Jesus Christ as Lord and Savior",
+      "Interested in Christian faith but not yet decided"
     ],
-    weight: 36
+    weight: 10
   },
   {
     id: 2,
     section: "Your Foundation",
     subsection: "Marriage + Family Accountability",
-    type: "D",
+    type: "M",
     text: "In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this 'life covenant' process, unless mutually revisited and discussed at a later time.",
     options: [
       "In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this 'life covenant' process, unless mutually revisited and discussed at a later time.",
       "Other: Before committing to this we need further discussion with spiritual counsel around how this would operate"
     ],
-    weight: 12
+    weight: 8
   },
   {
     id: 3,
