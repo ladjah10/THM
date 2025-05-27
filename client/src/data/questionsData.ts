@@ -215,10 +215,10 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Communication & Conflict Resolution",
     type: "D",
-    text: "Your Marriage Life: Communication & Conflict Resolution - I believe we should not fight in front of others.",
+    text: "We commit to not fighting or having serious arguments in front of others, rather, we'd wait for time alone and away from company, either in our check-in time or immediately after to discuss things away from them.",
     options: [
-      "We do believe disagreements should be kept private and not conducted in front of others",
-      "We do not believe all disagreements need to be hidden from others and some can be respectfully discussed in public"
+      "Agree",
+      "Disagree"
     ],
     weight: 6
   },
@@ -227,10 +227,10 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Communication & Conflict Resolution (Discuss with others)",
     type: "D",
-    text: "Your Marriage Life: Communication & Conflict Resolution (Discuss with others) - I believe we should never discuss issues with others before discussing with spouse.",
+    text: "We commit to never discussing conflict/issues in our marriage with anyone, before (1) addressing the issue with our spouse and (2) mutually agreeing to seek approved counsel on the issue.",
     options: [
-      "We do believe all marital issues should be discussed with our spouse before sharing with others",
-      "We do not believe it's always necessary to discuss issues with our spouse first before seeking outside perspective"
+      "Agree",
+      "Disagree"
     ],
     weight: 10
   },
@@ -239,10 +239,10 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Communication & Conflict Resolution:2 (24 hours)",
     type: "D",
-    text: "Your Marriage Life: Communication & Conflict Resolution:2 (24 hours) - I believe we should not go more than 24 hours without speaking.",
+    text: "We commit to not going more than 24 hours without speaking with one another under any circumstances.",
     options: [
-      "We do believe couples should resolve conflicts and resume communication within 24 hours",
-      "We do not believe there should be a strict timeframe for resolving conflicts and resuming communication"
+      "Agree",
+      "Disagree"
     ],
     weight: 5
   },
@@ -251,10 +251,10 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Communication & Conflict Resolution:3 (Text)",
     type: "D",
-    text: "Your Marriage Life: Communication & Conflict Resolution:3 (Text) - I believe we should not discuss serious issues via text.",
+    text: "We commit to not discussing serious issues/conflicts/debates via text message. Rather, we'll always discuss them in person or in a live conversation on a phone given the importance of conveying the proper tone and honoring wise boundaries for the marriage.",
     options: [
-      "We do believe serious relationship issues should be discussed in person rather than through text messages",
-      "We do not believe the medium of communication matters as much as clear expression of thoughts and feelings"
+      "Agree",
+      "Disagree"
     ],
     weight: 3
   },
@@ -263,10 +263,10 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Communication & Conflict Resolution:4 (Sleep angry)",
     type: "D",
-    text: "Your Marriage Life: Communication & Conflict Resolution:4 (Sleep angry) - I believe we should not sleep angry.",
+    text: "We commit to not going to sleep while still angry with one another [not to be confused with resolving the issue, but committing to find common ground to discuss further, prayer and then coming together as one].",
     options: [
-      "We do believe couples should resolve conflicts before going to bed and not sleep while angry",
-      "We do not believe every conflict must be resolved before sleeping and sometimes rest can provide needed perspective"
+      "Agree",
+      "Disagree"
     ],
     weight: 3
   },
@@ -275,10 +275,10 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Communication & Conflict Resolution:5 (Same bed)",
     type: "D",
-    text: "Your Marriage Life: Communication & Conflict Resolution:5 (Same bed) - I believe we should always sleep in the same bed.",
+    text: "We commit to sharing the same bed every night.",
     options: [
-      "We do believe couples should always sleep in the same bed to maintain intimacy and connection",
-      "We do not believe sleeping in separate beds occasionally compromises the marriage relationship"
+      "Agree",
+      "Disagree"
     ],
     weight: 3
   },
@@ -287,7 +287,7 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Communication & Conflict Resolution:6 (Sex as weapon)",
     type: "D",
-    text: "Your Marriage Life: Communication & Conflict Resolution:6 (Sex as weapon) - I believe we should never withhold sex as punishment.",
+    text: "We commit to never withholding sex as a tactic during conflict in our marriage.",
     options: [
       "Agree",
       "Disagree"
@@ -299,7 +299,7 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Communication & Conflict Resolution:7 (Silence as weapon)",
     type: "D",
-    text: "Your Marriage Life: Communication & Conflict Resolution:7 (Silence as weapon) - I believe we should never use silence as punishment.",
+    text: "We commit to never using silence as a tactic during conflict in our marriage.",
     options: [
       "Agree",
       "Disagree"
