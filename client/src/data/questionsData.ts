@@ -1123,7 +1123,8 @@ export const questions: Question[] = [
     text: "We commit to infant nutrition and breastfeeding, what is your approach?",
     options: [
       "We commit to breastfeeding primarily and only using formula in rare circumstances",
-      "We commit to breastfeeding whenever possible, still, we do not have any reservations about relying on high quality formula"
+      "We commit to breastfeeding whenever possible, still, we do not have any reservations about relying on high quality formula",
+      "Not Applicable"
     ],
     weight: 3
   },
@@ -1136,7 +1137,8 @@ export const questions: Question[] = [
     options: [
       "We are committed to having a natural birth",
       "We are committed to having an epidural or anything medically available to relieve labor pain",
-      "We're not well educated enough on the subject to make an informed decision on what's best so we plan to research and revisit this when the time comes"
+      "We're not well educated enough on the subject to make an informed decision on what's best so we plan to research and revisit this when the time comes",
+      "Not Applicable"
     ],
     weight: 3
   },
@@ -1263,7 +1265,8 @@ export const questions: Question[] = [
     text: "We commit to childbirth delivery method, what is your preference?",
     options: [
       "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer: A Water Delivery (if medically prudent and possible)",
-      "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer: Vaginal Delivery (with potential for C-Section if medically necessary)"
+      "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer: Vaginal Delivery (with potential for C-Section if medically necessary)",
+      "Not Applicable"
     ],
     weight: 3
   },
@@ -1276,7 +1279,8 @@ export const questions: Question[] = [
     options: [
       "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer: A Home Birth (if medically prudent and possible)",
       "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer: A Hospital Birth",
-      "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer: A Birth Center (if medically prudent and possible)"
+      "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer: A Birth Center (if medically prudent and possible)",
+      "Not Applicable"
     ],
     weight: 3
   },
@@ -1289,7 +1293,8 @@ export const questions: Question[] = [
     options: [
       "We commit to adopting at least one child during our marriage",
       "We admire and believe in adoption but do not plan to adopt during our marriage",
-      "We are committed to having children biologically (according to God's will), but would consider adoption if we discern it's not His will for us to have children biologically"
+      "We are committed to having children biologically (according to God's will), but would consider adoption if we discern it's not His will for us to have children biologically",
+      "Not Applicable"
     ],
     weight: 4
   },
@@ -1303,7 +1308,8 @@ export const questions: Question[] = [
       "We commit to naming our children with first names that are from the Bible",
       "We commit to naming our children with first names that honor a family member from either side of the family",
       "We commit to naming our children with first names that are gender neutral",
-      "Other approach to naming our children"
+      "Other approach to naming our children",
+      "Not Applicable"
     ],
     weight: 2
   },
