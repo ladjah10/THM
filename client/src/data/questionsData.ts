@@ -1166,51 +1166,53 @@ export const questions: Question[] = [
   },
   {
     id: 84,
-    section: "Your Health and Wellness",
-    subsection: "Diet Expectations",
-    type: "D",
-    text: "I believe we should follow the same dietary approach.",
+    section: "Your Marriage & Boundaries",
+    subsection: "Openness / Technology",
+    type: "M",
+    text: "We commit to openness with technology, what is your approach?",
     options: [
-      "We do believe spouses should generally follow the same dietary approach",
-      "We do not believe spouses need to follow identical diets and can have individual approaches"
+      "Transparent access to all passcodes",
+      "No need for transparent access"
     ],
-    weight: 3
+    weight: 5
   },
   {
     id: 85,
-    section: "Your Health and Wellness",
-    subsection: "Medical Approaches",
-    type: "D",
-    text: "I believe in using alternative/holistic medicine alongside conventional medicine.",
+    section: "Your Marriage & Boundaries",
+    subsection: "Interactions with the Opposite Sex (Offline)",
+    type: "M",
+    text: "We commit to boundaries with the opposite sex, what is your approach?",
     options: [
-      "We do believe in incorporating alternative/holistic approaches alongside conventional medicine",
-      "We do not believe in alternative medicine and prefer to rely solely on conventional medical treatments"
+      "No unique restrictions",
+      "No one-on-one friendships outside work/family"
     ],
-    weight: 4
+    weight: 5
   },
   {
     id: 86,
-    section: "Your Health and Wellness",
-    subsection: "Regular Checkups",
+    section: "Your Marriage & Boundaries",
+    subsection: "Secrets",
     type: "D",
-    text: "I believe in getting regular preventative medical checkups.",
+    text: "We commit to never actively keeping / maintaining any secrets from one another.",
     options: [
-      "We do believe in getting regular preventative medical and dental checkups",
-      "We do not believe routine checkups are necessary unless specific health concerns arise"
+      "Agree",
+      "Disagree"
     ],
-    weight: 4
+    weight: 8
   },
   {
     id: 89,
-    section: "Your Marriage and Boundaries",
-    subsection: "Device-Free Time",
-    type: "D",
-    text: "I believe we should have regular device-free time together.",
+    section: "Your Marriage & Boundaries",
+    subsection: "In-Laws/Loves After Having First Child",
+    type: "M",
+    text: "We're committed to involving parents after first child, what is your approach?",
     options: [
-      "We do believe in having regular scheduled device-free time for connection",
-      "We do not believe formally scheduling device-free time is necessary"
+      "One parent stays for a month",
+      "Frequent visits but no extended stay",
+      "One parent stays for two weeks",
+      "Other: Please detail"
     ],
-    weight: 4
+    weight: 3
   },
   // Next, adding additional authentic questions to reach the full 100
   {
