@@ -1161,18 +1161,7 @@ export const questions: Question[] = [
     ],
     weight: 4
   },
-  {
-    id: 84,
-    section: "Your Health and Wellness",
-    subsection: "Diet Expectations",
-    type: "D",
-    text: "I believe we should follow the same dietary approach.",
-    options: [
-      "We do believe spouses should generally follow the same dietary approach",
-      "We do not believe spouses need to follow identical diets and can have individual approaches"
-    ],
-    weight: 3
-  },
+
   {
     id: 85,
     section: "Your Health and Wellness",
