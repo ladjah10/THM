@@ -468,119 +468,117 @@ export const questions: Question[] = [
   },
   {
     id: 36,
-    section: "Your Marriage Life",
-    subsection: "Marriage: Living – Domestic/International",
+    section: "Your Marriage Life with Children",
+    subsection: "Communication: Race",
     type: "M",
-    text: "We commit to considering international living, what is your approach?",
+    text: "We commit to discussing race and cultural identity with our children, what is your approach?",
     options: [
-      "Yes, willing for long-term international living",
-      "Yes, willing for short-term international living",
-      "No, prefer domestic living only",
-      "Only for extended vacation purposes"
+      "Open discussions about racial identity and heritage",
+      "Focus on unity and equality principles",
+      "Address issues as they arise naturally",
+      "Emphasize character over race"
     ],
-    weight: 3
+    weight: 4
   },
   
   // YOUR PARENTING LIFE
   {
     id: 37,
-    section: "Your Parenting Life",
-    subsection: "Children: Desire",
+    section: "Your Marriage Life with Children",
+    subsection: "Pregnancy Announcement",
     type: "M",
-    text: "We commit to having children, what is your approach?",
+    text: "We commit to pregnancy announcement timing, what is your approach?",
     options: [
-      "Yes, we want biological children",
-      "Yes, we want to adopt children",
-      "Yes, we want both biological and adopted children",
-      "No, we don't want children",
-      "We are divided on this decision"
+      "Keep private until end of 1st trimester",
+      "Keep private until end of 2nd trimester", 
+      "Share immediately with close family",
+      "No specific guideline for sharing"
     ],
-    weight: 12
+    weight: 3
   },
   {
     id: 38,
-    section: "Your Parenting Life",
-    subsection: "Children: Timing",
+    section: "Your Family Life",
+    subsection: "Traditions: Family Dinner",
     type: "M",
-    text: "We commit to timing of having children, what is your approach?",
+    text: "We commit to family dinner traditions, what is your approach?",
     options: [
-      "Immediately after marriage",
-      "After 1-2 years of marriage",
-      "After 3-5 years of marriage",
-      "Only after financial stability",
-      "Never want children"
+      "Daily family dinners together",
+      "Weekly family dinners on specific days",
+      "Special occasion family dinners only",
+      "Flexible family meal arrangements"
     ],
-    weight: 5
+    weight: 4
   },
   {
     id: 39,
-    section: "Your Parenting Life",
-    subsection: "Children: Quantity",
+    section: "Your Family Life",
+    subsection: "House Cleaning & Maintenance",
     type: "M",
-    text: "We commit to the number of children, what is your approach?",
+    text: "We commit to household responsibilities, what is your approach?",
     options: [
-      "No children",
-      "1-2 children",
-      "3-4 children",
-      "5+ children"
+      "Shared responsibilities based on availability",
+      "Traditional gender-based role division",
+      "Hired help for major cleaning tasks",
+      "Rotating weekly responsibility assignments"
     ],
-    weight: 5
+    weight: 3
   },
   {
     id: 40,
-    section: "Your Parenting Life",
-    subsection: "Children: Parenting Style",
+    section: "Your Health and Wellness",
+    subsection: "Approach to Medicine, Illness and Pain Management",
     type: "M",
-    text: "We commit to a parenting style, what is your approach?",
+    text: "We commit to healthcare and medical treatment approach, what is your preference?",
     options: [
-      "Authoritative (High expectations & High responsiveness)",
-      "Authoritarian (High expectations & Low responsiveness)",
-      "Permissive (Low expectations & High responsiveness)",
-      "Uninvolved (Low expectations & Low responsiveness)"
-    ],
-    weight: 7
-  },
-  {
-    id: 41,
-    section: "Your Parenting Life",
-    subsection: "Children: Discipline",
-    type: "M",
-    text: "We commit to a discipline approach, what is your approach?",
-    options: [
-      "Positive reinforcement only",
-      "Verbal correction and time-outs",
-      "Spanking when necessary",
-      "Natural consequences based on behavior"
-    ],
-    weight: 7
-  },
-  {
-    id: 42,
-    section: "Your Parenting Life",
-    subsection: "Children: Education",
-    type: "M",
-    text: "We commit to our children's education approach, what is your approach?",
-    options: [
-      "Public school education",
-      "Private religious school education",
-      "Private secular school education",
-      "Homeschool education"
+      "Traditional western medicine as primary approach",
+      "Holistic and natural remedies when possible",
+      "Combination of traditional and alternative medicine",
+      "Faith-based healing with medical consultation"
     ],
     weight: 5
   },
   {
-    id: 43,
-    section: "Your Marriage Life",
-    subsection: "Marriage: Living - Home Type",
+    id: 41,
+    section: "Your Health and Wellness",
+    subsection: "Exercise",
     type: "M",
-    text: "We commit to living in a specific type of home, what is your approach?",
+    text: "We commit to physical fitness and exercise, what is your approach?",
     options: [
-      "We're committed to living in an apartment long-term as our primary residence",
-      "We're committed to living in a standalone single-family house long-term as our primary residence",
-      "We're committed to living in a standalone single-family townhouse long-term as our primary residence",
-      "We're committed to living in a multi-family house long-term"
+      "Daily exercise routine together",
+      "Individual exercise with weekly couple activities",
+      "Seasonal sports and outdoor activities",
+      "Minimal structured exercise approach"
+    ],
+    weight: 4
+  },
+  {
+    id: 42,
+    section: "Your Health and Wellness",
+    subsection: "Financial Stewardship & Nutrition Health Goals",
+    type: "M",
+    text: "We commit to enjoying home-cooked meals, what is your approach?",
+    options: [
+      "Daily home-cooked meals with fresh ingredients",
+      "Weekly meal planning with mostly home cooking",
+      "Combination of home cooking and occasional dining out",
+      "Flexible approach based on schedule and preferences"
     ],
     weight: 3
+  },
+  {
+    id: 43,
+    section: "Your Finances",
+    subsection: "Financial Generosity",
+    type: "M",
+    text: "We commit to financial generosity and giving, what is your approach?",
+    options: [
+      "Tithing 10% of gross income to church",
+      "Giving based on net income after taxes",
+      "Flexible giving based on financial situation",
+      "Contributing to multiple charitable causes"
+    ],
+    weight: 5
   },
   {
     id: 44,
