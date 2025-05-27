@@ -1038,44 +1038,45 @@ export const questions: Question[] = [
   },
   {
     id: 77,
-    section: "Your Health and Wellness",
-    subsection: "Psychological / Physical (Physical Wellness – Exercise)",
+    section: "Your Finances",
+    subsection: "Investing: Emergency Fund",
     type: "M",
-    text: "We are each committed to regular exercise, what is your approach?",
+    text: "We commit to having an emergency fund, what is your approach?",
     options: [
-      "At least 3x per week individually",
-      "At least 2x per week individually",
-      "At least 4x per week individually",
-      "Other: please detail"
+      "We commit to maintaining an emergency fund of 3-6 months of living expenses",
+      "We commit to maintaining an emergency fund of 1-3 months of living expenses",
+      "We will build an emergency fund gradually over time",
+      "Other approach: Please detail"
+    ],
+    weight: 5
+  },
+  {
+    id: 78,
+    section: "Your Finances",
+    subsection: "Investing: Savings Goals",
+    type: "M",
+    text: "We commit to savings goals beyond emergency fund, what is your approach?",
+    options: [
+      "We commit to saving at least 10% of our income for long-term goals",
+      "We commit to saving at least 20% of our income for long-term goals",
+      "We will save what we can after essential expenses are covered",
+      "Other approach: Please detail"
     ],
     weight: 4
   },
   {
-    id: 78,
-    section: "Your Marriage & Boundaries",
-    subsection: "Holidays Model",
-    type: "M",
-    text: "We commit to splitting holidays, what is your approach?",
-    options: [
-      "Splitting and rotating visiting family for major holidays",
-      "Doing major holidays at home, visit one family per year",
-      "Other: Please detail"
-    ],
-    weight: 3
-  },
-  {
     id: 79,
-    section: "Your Marriage & Boundaries",
-    subsection: "In-Laws/Loves in Advanced Age",
+    section: "Your Finances",
+    subsection: "Investing: Retirement/Future Planning",
     type: "M",
-    text: "We're committed to caring for our spouses' parents in advanced age, what is your approach?",
+    text: "We commit to retirement and future planning, what is your approach?",
     options: [
-      "Through financial contribution",
-      "By welcoming them to move in with us",
-      "Not through long-term stay",
-      "Other: Please detail"
+      "We commit to maximizing retirement contributions and long-term investment planning",
+      "We will contribute to retirement but prioritize current financial goals",
+      "We will start retirement planning once we establish our emergency fund",
+      "Other approach: Please detail"
     ],
-    weight: 3
+    weight: 5
   },
   {
     id: 80,
@@ -1174,41 +1175,46 @@ export const questions: Question[] = [
   },
   {
     id: 85,
-    section: "Your Marriage & Boundaries",
-    subsection: "Interactions with the Opposite Sex (Offline)",
+    section: "Your Health and Wellness",
+    subsection: "Approach to Medicine, Illness and Pain Management",
     type: "M",
-    text: "We commit to boundaries with the opposite sex, what is your approach?",
+    text: "We are committed to each doing a full physical, what is your approach?",
     options: [
-      "No unique restrictions",
-      "No one-on-one friendships outside work/family"
+      "Annual physical and check-up before wedding",
+      "Annual physical, already completed this year",
+      "Other: Please detail"
     ],
     weight: 5
   },
   {
     id: 86,
-    section: "Your Marriage & Boundaries",
-    subsection: "Secrets",
-    type: "D",
-    text: "We commit to never actively keeping / maintaining any secrets from one another.",
+    section: "Your Health and Wellness",
+    subsection: "Psychological / Physical (Physical Wellness – Exercise)",
+    type: "M",
+    text: "We are each committed to regular exercise, what is your approach?",
     options: [
-      "Agree",
-      "Disagree"
+      "At least 3x per week individually",
+      "At least 2x per week individually",
+      "At least 4x per week individually",
+      "Other: please detail"
     ],
-    weight: 8
+    weight: 4
   },
   {
     id: 89,
-    section: "Your Marriage & Boundaries",
-    subsection: "In-Laws/Loves After Having First Child",
+    section: "Your Health and Wellness",
+    subsection: "Specific Consumption Goals [Meal Types]",
     type: "M",
-    text: "We're committed to involving parents after first child, what is your approach?",
+    text: "We commit to a healthy balanced diet, what is your approach?",
     options: [
-      "One parent stays for a month",
-      "Frequent visits but no extended stay",
-      "One parent stays for two weeks",
-      "Other: Please detail"
+      "No special restriction on any meats, fish, poultry and dairy products",
+      "All meats except pork and shellfish, in accordance with biblical dietary guidelines",
+      "Vegetarian diet",
+      "Vegan diet",
+      "Pescatarian diet",
+      "Other dietary approach"
     ],
-    weight: 3
+    weight: 4
   },
   // Next, adding additional authentic questions to reach the full 100
   {
