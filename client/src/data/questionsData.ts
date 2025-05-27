@@ -311,11 +311,12 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Communication & Conflict Resolution: Counseling",
     type: "M",
-    text: "Your Marriage Life: Communication & Conflict Resolution: Counseling - How often would you attend marriage counseling?",
+    text: "We commit to meeting with a marriage coach/counselor, what is your approach?",
     options: [
-      "Regularly (at least once every 90 days) via check-in sessions",
-      "Only when there's a problem, disagreement and/or difficulty we can't resolve on our own",
-      "Never, we don't believe in using outside support for our marriage issues"
+      "At least once per quarter as a check-in whether there are issues or not",
+      "At least once per year as a check-in whether there are issues or not",
+      "Only when there is an issue we can't resolve independently",
+      "Never, we don't believe in outside counsel for marriage"
     ],
     weight: 3
   },
@@ -324,7 +325,7 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Decision Making",
     type: "D",
-    text: "Your Marriage Life: Decision Making - I believe the husband should be the final authority in decision making.",
+    text: "We commit to the husband being the final decision maker for the family after discussion and prayer with his wife.",
     options: [
       "Agree",
       "Disagree"
@@ -336,12 +337,11 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Dedicated Time (Fellowship)",
     type: "M",
-    text: "Your Marriage Life: Dedicated Time (Fellowship) - How often do you plan to have date nights?",
+    text: "We commit to weekly date nights, what is your approach?",
     options: [
-      "Weekly",
-      "Bi-weekly",
-      "Monthly",
-      "When our schedule allows"
+      "Weekly date nights",
+      "Bi-weekly date nights",
+      "Monthly date nights"
     ],
     weight: 7
   },
@@ -350,13 +350,11 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Marriage: Dedicated Time",
     type: "M",
-    text: "Your Marriage Life: Marriage: Dedicated Time - How often would you have marriage check-ins?",
+    text: "We commit to marriage check-ins, what is your approach?",
     options: [
-      "Weekly",
-      "Monthly",
-      "Quarterly",
-      "Annually",
-      "Never"
+      "Weekly marriage check-ins",
+      "Monthly marriage check-ins",
+      "Quarterly marriage check-ins"
     ],
     weight: 5
   },
@@ -365,7 +363,7 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Living – Room Boundaries (Electronics)",
     type: "D",
-    text: "Your Marriage Life: Living – Room Boundaries (Electronics) - I believe we should not have electronics in the bedroom.",
+    text: "We commit to not having any electronics in our bedroom.",
     options: [
       "Agree",
       "Disagree"
@@ -377,12 +375,12 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Relationship Model (Work/Home)",
     type: "M",
-    text: "Your Marriage Life: Relationship Model (Work/Home) - What is your preferred work arrangement?",
+    text: "We commit to a work/home model, what is your approach?",
     options: [
-      "One Spouse Stays Home",
-      "Both Spouses Work Outside Home",
-      "One Spouse Work from Home",
-      "Both Spouses Work from Home"
+      "One spouse stays home with children",
+      "Both spouses work outside the home",
+      "One spouse works from home",
+      "Both spouses work from home"
     ],
     weight: 3
   },
@@ -391,12 +389,12 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Relationship Model (Travel)",
     type: "M",
-    text: "Your Marriage Life: Relationship Model (Travel) - What is your maximum time apart due to travel?",
+    text: "We commit to a maximum time apart due to travel, what is your approach?",
     options: [
-      "No more than 2 days",
-      "No more than 4 days",
-      "No more than 7 days",
-      "No more than 14 days"
+      "No more than 2 days apart",
+      "No more than 4 days apart", 
+      "No more than 7 days apart",
+      "No more than 14 days apart"
     ],
     weight: 3
   },
