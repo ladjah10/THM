@@ -426,44 +426,45 @@ export const questions: Question[] = [
   },
   {
     id: 33,
-    section: "Your Marriage Life",
-    subsection: "Marriage: Living – Rooting",
+    section: "Your Marriage Life with Children",
+    subsection: "Communication & Discipline",
     type: "M",
-    text: "We commit to living in a location, what is your approach?",
+    text: "We commit to child discipline and communication approach, what is your method?",
     options: [
-      "Near husband's family",
-      "Near wife's family", 
-      "Equidistant from both families",
-      "Away from both families for independence"
+      "Biblical discipline with clear communication",
+      "Positive reinforcement with structured boundaries",
+      "Natural consequences with open dialogue",
+      "Collaborative approach with mutual agreement"
     ],
-    weight: 3
+    weight: 7
   },
   {
     id: 34,
-    section: "Your Marriage Life",
-    subsection: "Marriage: Living – City Type",
+    section: "Your Marriage Life with Children",
+    subsection: "Social Media: New Child",
     type: "M",
-    text: "We commit to living in a specific type of area, what is your approach?",
+    text: "We commit to social media sharing regarding our children, what is your approach?",
     options: [
-      "Urban area",
-      "Suburban area", 
-      "Rural area"
+      "No social media sharing of children's images or information",
+      "Limited sharing with family and close friends only",
+      "Occasional sharing with privacy settings enabled",
+      "Open sharing as we feel comfortable"
     ],
-    weight: 3
+    weight: 4
   },
   {
     id: 35,
-    section: "Your Marriage Life",
-    subsection: "Marriage: Living – Home Type",
+    section: "Your Marriage Life with Children",
+    subsection: "Communication: Sex/Gender",
     type: "M",
-    text: "We commit to living in a specific type of home, what is your approach?",
+    text: "We commit to discussing sex and gender topics with our children, what is your approach?",
     options: [
-      "Apartment",
-      "Townhouse",
-      "Single-family house",
-      "Multi-family house"
+      "Biblical perspective on sexuality and gender roles",
+      "Age-appropriate scientific and moral education",
+      "Open dialogue with traditional values",
+      "Comprehensive education with family values"
     ],
-    weight: 3
+    weight: 5
   },
   {
     id: 36,
