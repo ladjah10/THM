@@ -1166,15 +1166,15 @@ export const questions: Question[] = [
   },
   {
     id: 84,
-    section: "Your Marriage & Boundaries",
-    subsection: "Openness / Technology",
-    type: "M",
-    text: "We commit to openness with technology, what is your approach?",
+    section: "Your Health and Wellness",
+    subsection: "Diet Expectations",
+    type: "D",
+    text: "I believe we should follow the same dietary approach.",
     options: [
-      "Transparent access to all passcodes",
-      "No need for transparent access"
+      "We do believe spouses should generally follow the same dietary approach",
+      "We do not believe spouses need to follow identical diets and can have individual approaches"
     ],
-    weight: 5
+    weight: 3
   },
   {
     id: 85,
