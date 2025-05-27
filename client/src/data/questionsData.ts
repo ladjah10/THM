@@ -1064,12 +1064,12 @@ export const questions: Question[] = [
     section: "Your Family/Home Life",
     subsection: "Food Preparation & Planning: Overall Model: Responsibility",
     type: "M",
-    text: "Your Family/Home Life: Food Preparation & Planning: Overall Model: Responsibility",
+    text: "We commit to food preparation and planning responsibilities, what is your approach?",
     options: [
       "We commit to having be responsible for the overall food planning and preparation for the family, with considerations made for date night, family outings and circumstances when one is unable to do. (80/20)",
-      "We commit to having be responsible for the overall food planning and preparation for the family, with a split of being responsible for meals during the week (M-Fri) and being responsible for meals during the weekend.",
-      "We commit to having a chef / nanny be responsible for the overall food planning and preparation for the family.",
-      "Other: Please detail"
+      "We commit to having be responsible for the overall food planning and preparation for the family, with a split of being responsible for meals during the week (M-Fri) and being responsible for meals during the weekend",
+      "We commit to having a chef / nanny be responsible for the overall food planning and preparation for the family",
+      "Other approach to food preparation and planning responsibilities"
     ],
     weight: 4
   },
@@ -1078,12 +1078,12 @@ export const questions: Question[] = [
     section: "Your Family/Home Life",
     subsection: "Financial Stewardship & Nutrition Health Goals",
     type: "M",
-    text: "Your Family/Home Life: Financial Stewardship & Nutrition Health Goals",
+    text: "We commit to financial stewardship and nutrition health goals, what is your approach?",
     options: [
       "We commit to meal planning weekly and batch cooking (if doing it ourselves) with a goal of minimizing eating out to 1x per week for both stewardship and health benefits",
       "We commit to meal planning weekly and batch cooking (if doing it ourselves) with a goal of minimizing eating out to 2x per week for both stewardship and health benefits",
       "We commit to meal planning weekly and batch cooking (if doing it ourselves) with a goal of minimizing eating out to 3x per week for both stewardship and health benefits",
-      "Other: Please detail"
+      "Other approach to financial stewardship and nutrition health goals"
     ],
     weight: 3
   },
@@ -1092,11 +1092,11 @@ export const questions: Question[] = [
     section: "Your Health and Wellness",
     subsection: "Approach to Medicine, Illness and Pain Management",
     type: "M",
-    text: "Your Health and Wellness: Approach to Medicine, Illness and Pain Management",
+    text: "We commit to healthy eating as a family, what is your approach?",
     options: [
-      "We commit to preparing and enjoying healthy meals as a family, as defined by completely restricting fried food, fast food, candy as well as any other non-whole, highly processed junk foods from our family's consumption at least 5 of the 7 days per week.",
-      "We commit to preparing and enjoying healthy meals as a family, as defined by completely restricting fried food, fast food, candy as well as any other non-whole, highly processed junk foods from our family's consumption at least 4 of the 7 days per week.",
-      "Other: Please detail"
+      "We commit to preparing and enjoying healthy meals as a family, as defined by completely restricting fried food, fast food, candy as well as any other non-whole, highly processed junk foods from our family's consumption at least 5 of the 7 days per week",
+      "We commit to preparing and enjoying healthy meals as a family, as defined by completely restricting fried food, fast food, candy as well as any other non-whole, highly processed junk foods from our family's consumption at least 4 of the 7 days per week",
+      "Other approach to healthy eating as a family"
     ],
     weight: 4
   },
@@ -1105,12 +1105,12 @@ export const questions: Question[] = [
     section: "Your Health and Wellness",
     subsection: "Specific Consumption Goals [Meal Types]",
     type: "M",
-    text: "Your Health and Wellness: Specific Consumption Goals [Meal Types]",
+    text: "We commit to specific dietary choices, what is your approach?",
     options: [
       "We commit to a healthy balanced diet with no special restriction on any meats (seafood, chicken, beef, pork), dairy, fruits and vegetables, and whole grains or nuts",
       "We commit to a healthy balanced diet including all meats except pork (seafood, chicken, beef), dairy, fruits and vegetables, and whole grains or nuts",
       "We commit to a healthy balanced vegetarian diet",
-      "We commit to a healthy balanced ascertain diet",
+      "We commit to a healthy balanced pescatarian diet",
       "We commit to a healthy balanced diet which is flexible to individual needs (e.g., husband can pursue carnivore and wife can pursue vegetarian, while children can be unrestricted, for example)"
     ],
     weight: 4
@@ -1120,10 +1120,10 @@ export const questions: Question[] = [
     section: "Your Health and Wellness",
     subsection: "New Babies: Nutrition: Breastfeeding",
     type: "M",
-    text: "Your Health and Wellness: New Babies: Nutrition: Breastfeeding",
+    text: "We commit to infant nutrition and breastfeeding, what is your approach?",
     options: [
-      "We commit to breastfeeding primarily and only using formula in rare circumstances.",
-      "We commit to breastfeeding whenever possible, still, we do not have any reservations about relying on high quality formula."
+      "We commit to breastfeeding primarily and only using formula in rare circumstances",
+      "We commit to breastfeeding whenever possible, still, we do not have any reservations about relying on high quality formula"
     ],
     weight: 3
   },
@@ -1132,11 +1132,11 @@ export const questions: Question[] = [
     section: "Your Health and Wellness",
     subsection: "Approach to Medicine, Illness and Pain Management: Natural Birth or Epidural",
     type: "M",
-    text: "Your Health and Wellness: Approach to Medicine, Illness and Pain Management: Natural Birth or Epidural",
+    text: "We commit to birth pain management approach, what is your approach?",
     options: [
-      "We are committed to having a natural birth.",
-      "We are committed to having an epidural or anything medically available to relieve labor pain.",
-      "We're not well educated enough on the subject to make an informed decision on what's best so we plan to research and revisit this when the time comes."
+      "We are committed to having a natural birth",
+      "We are committed to having an epidural or anything medically available to relieve labor pain",
+      "We're not well educated enough on the subject to make an informed decision on what's best so we plan to research and revisit this when the time comes"
     ],
     weight: 3
   },
@@ -1145,12 +1145,12 @@ export const questions: Question[] = [
     section: "Your Health and Wellness",
     subsection: "Psychological / Physical (Individual Therapy)",
     type: "M",
-    text: "Your Health and Wellness: Psychological / Physical (Individual Therapy)",
+    text: "We commit to individual therapy for personal wellness, what is your approach?",
     options: [
-      "We are each committed to seeing a (faith-aligned) therapist individually, at least 6 times per year during our marriage (as our resources allow).",
-      "We are each committed to seeing a (faith-aligned) therapist individually, at least 4 times per year during our marriage (as our resources allow).",
-      "We are each committed to seeing a (faith-aligned) therapist individually, at least 12 times per year during our marriage (as our resources allow).",
-      "While we believe in seeking counsel for our marriage, we're not ready to commit to long-term individual therapy currently."
+      "We are each committed to seeing a (faith-aligned) therapist individually, at least 6 times per year during our marriage (as our resources allow)",
+      "We are each committed to seeing a (faith-aligned) therapist individually, at least 4 times per year during our marriage (as our resources allow)",
+      "We are each committed to seeing a (faith-aligned) therapist individually, at least 12 times per year during our marriage (as our resources allow)",
+      "While we believe in seeking counsel for our marriage, we're not ready to commit to long-term individual therapy currently"
     ],
     weight: 4
   },
