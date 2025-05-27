@@ -1,0 +1,625 @@
+
+
+
+Action
+Question ID
+Section
+Current Question (Database)
+Book Question
+Details/Changes Needed
+Replit Implementation
+
+
+
+Update
+1
+Your Foundation: Marriage + Family
+What is your faith position? Options: 1. Both believe in Jesus Christ as Lord and Savior 2. Interested in Christian faith but not yet decided
+We each already believe in and (have) receive(d) Jesus Christ... Options: 1. We each already believe in and (have) receive(d) Jesus Christ as our Lord and Savior... 2. We are interested in living our new lives together according to the Christian faith...
+Update question text to match book exactly. Response options are identical. Weight: 36, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'Your Foundation: Marriage + Family - What is your faith position?' WHERE id = 1; JSON: Update questions[0].question_text to "Your Foundation: Marriage + Family - What is your faith position?".
+
+
+Update
+2
+Your Foundation: Marriage + Family Accountability
+I believe in accountability for my marriage. Options: 1. Committed to accountability to God, scripture, and covenant 2. Need further discussion with spiritual counsel
+In view of the previous question, we are committed to living our lives together being accountable... Options: 1. In view of the previous question, we are committed to living our lives together being accountable... 2. Other: Before committing to this we need further discussion with spiritual counsel...
+Update question text to match book. Response options are similar but update to exact book wording. Weight: 12, Type: Agree/Disagree
+SQL: UPDATE questions SET question_text = 'In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this “life covenant” process, unless mutually revisited and discussed at a later time.', response_options = '["In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this “life covenant” process, unless mutually revisited and discussed at a later time.", "Other: Before committing to this we need further discussion with spiritual counsel around how this would operate"]' WHERE id = 2; JSON: Update questions[1] with new question_text and response_options.
+
+
+Update
+3
+Your Foundation: Marriage & Children’s Faith
+How do you plan to raise your children? Options: 1. Raise according to Christian faith 2. Let children choose their own path
+We believe we have a responsibility to raise our children according to the Christian faith... Options: 1. We believe we have a responsibility to raise our children according to the Christian faith... 2. We do not believe we have a responsibility to raise our children according to any specific faith tradition...
+Update question text to match book. Response options are similar but update to exact book wording. Weight: 12, Type: Agree/Disagree
+SQL: UPDATE questions SET question_text = 'We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ.', response_options = '["We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ", "We do not believe we have a responsibility to raise our children according to any specific faith tradition and prefer to let them choose their own spiritual path when they’re old enough to decide"]' WHERE id = 3; JSON: Update questions[2] with new question_text and response_options.
+
+
+Update
+4
+Your Foundation: Marriage Mindset: Happiness
+What is your primary focus in marriage? Options: 1. Each spouse responsible for own happiness 2. Happy Wife, Happy Life 3. Happy King, Happy Kingdom 4. Happy Spouse, Happy House
+We’re committed to the belief: While a marriage relationship can yield happiness... Options: 1. We’re committed to the belief: While a marriage relationship can yield happiness... 2. We’re committed to the belief: “Happy Wife, Happy Life”... 3. We’re committed to the belief: “Happy King, Happy Kingdom”... 4. We’re committed to the belief: We believe in “Happy Spouse, Happy House”...
+Update question text to match book. Response options are identical. Weight: 5, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We’re committed to the belief regarding happiness in marriage, what is your primary focus?' WHERE id = 4; JSON: Update questions[3].question_text to "We’re committed to the belief regarding happiness in marriage, what is your primary focus?".
+
+
+Update
+5
+Your Foundation: Marriage Preparation: Legal (Incapacitation)
+What is your position on Power of Attorney? Options: 1. Establish spouse as Power of Attorney before marriage 2. Address later if relevant
+We’re committed to preparing in advance of our marriage to ensuring we are each well cared for... Options: 1. We’re committed to preparing in advance of our marriage to ensuring we are each well cared for... 2. We do not believe it’s necessary to establish Power of Attorney before marriage...
+Update question text to match book. Response options are similar but update to exact book wording. Weight: 5, Type: Agree/Disagree
+SQL: UPDATE questions SET question_text = 'We’re committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing our spouse as Power of Attorney before our marriage date.', response_options = '["We’re committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing our spouse as Power of Attorney before our marriage date", "We do not believe it’s necessary to establish Power of Attorney before marriage and prefer to address this matter later if and when it becomes relevant"]' WHERE id = 5; JSON: Update questions[4] with new question_text and response_options.
+
+
+Update
+6
+Your Foundation: Marriage Preparation: Legal (Estate)
+What is your position on creating a will? Options: 1. Complete a notarized will before marriage 2. Address estate planning later
+We’re committed to preparing in advance of our marriage to ensuring we are each well cared for... Options: 1. We’re committed to preparing in advance of our marriage to ensuring we are each well cared for... 2. We do not believe creating a will is necessary before marriage...
+Update question text to match book. Response options are similar but update to exact book wording. Weight: 5, Type: Agree/Disagree
+SQL: UPDATE questions SET question_text = 'We’re committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing completing a notarized copy of our will before our marriage date.', response_options = '["We’re committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing completing a notarized copy of our will before our marriage date", "We do not believe creating a will is necessary before marriage and prefer to address estate planning at a later stage in our relationship"]' WHERE id = 6; JSON: Update questions[5] with new question_text and response_options.
+
+
+Update
+7
+Your Foundation: Marriage Mindset: Divorce
+What is your position on divorce? Options: 1. Lifelong marriage, divorce only for biblical/safety reasons 2. Divorce reasonable in wider circumstances
+We are committed to a lifelong marriage and do not see divorce as an exercisable option... Options: 1. We are committed to a lifelong marriage and do not see divorce as an exercisable option... 2. We believe that while marriage is intended to be lifelong, divorce may be a reasonable option...
+Update question text to match book. Response options are identical. Weight: 12, Type: Agree/Disagree
+SQL: UPDATE questions SET question_text = 'We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, “Falling Out of Love”, “Growing Apart”, “Irreconcilable Differences”.' WHERE id = 7; JSON: Update questions[6].question_text to "We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, “Falling Out of Love”, “Growing Apart”, “Irreconcilable Differences”.".
+
+
+Update
+8
+Your Foundation: Marriage Mindset: Divorce & Law
+What is your position on prenuptial agreements? Options: 1. Explore prenuptial agreement 2. No legal agreements needed 3. Need more information
+We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option... Options: 1. We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option... 2. We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option... 3. We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option...
+Update question text to match book. Response options are similar but update to exact book wording. Weight: 12, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), what is your position on prenuptial agreements?', response_options = '["We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), still, in view of the law and the prevalent rates of marriage dissolution, we agree to explore and structure a mutually considerate prenuptial agreement for our marriage", "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), and do not believe any legal agreements beyond our mutual commitments through this life covenant process are necessary for us to explore and structure at this time", "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), still, we’d like to be more informed about what prenuptial agreements entail before deciding whether to consider it before our marriage"]' WHERE id = 8; JSON: Update questions[7] with new question_text and response_options.
+
+
+Update
+9
+Your Foundation: Marriage Mindset: Celebrating our Covenant
+How do you plan to celebrate your marriage? Options: 1. Both first date and wedding anniversary 2. Wedding anniversary only 3. Whenever schedules align
+We commit to establishing and celebrating our holy union/covenant... Options: 1. Celebrate marriage anniversary every year 2. Celebrate anniversary + covenant renewal every 10 years 3. Celebrate anniversary + covenant renewal every 5 years
+Update question text to match book. Update response options to match book. Weight: 4, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We commit to establishing and celebrating our holy union/covenant through our wedding, how do you plan to celebrate it?', response_options = '["Celebrate marriage anniversary every year", "Celebrate marriage anniversary every year and do a covenant renewal ceremony every 10 years", "Celebrate marriage anniversary every year and do a covenant renewal ceremony every 5 years"]' WHERE id = 9; JSON: Update questions[8] with new question_text and response_options.
+
+
+Update
+10
+Your Marriage Life: Order of Priority before God
+What is your order of priority? Options: 1. God, Spouse, Children, Work... 2. God, Children, Spouse, Work... 3. God, Work, Spouse, Children... 4. God, Extended Family, Spouse, Children...
+We understand and accept the order of relationship priority according to God’s highest design... Options: 1. God, Spouse, Children, Work, Extended Family, Friends, Church, Ministry, Hobbies
+Update question text to match book. Update response options to include only the single correct order from the book. Weight: 12, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We understand and accept the order of relationship priority according to God’s highest design, what is your order of priority?', response_options = '["God, Spouse, Children, Work, Extended Family, Friends, Church, Ministry, Hobbies"]' WHERE id = 10; JSON: Update questions[9] with new question_text and response_options.
+
+
+Remove
+11
+Church Community
+Will you attend the same church as a family? Options: 1. Single church 2. Separate churches
+N/A
+No equivalent in book. Remove and replace with book question “Your Faith Life: Worship Life: Marriage (Husband and Wife)”.
+SQL: DELETE FROM questions WHERE id = 11; JSON: Remove questions[10].
+
+
+Add
+11
+Your Faith Life: Worship Life: Marriage (Husband and Wife)
+N/A
+We commit to prayer as a couple, how often? Options: 1. Daily prayer before sleep 2. Weekly prayer during check-in 3. Other: Please detail
+Add book question to replace deleted ID 11. Weight: 4 (based on Question 12), Type: Multiple Choice
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (11, 'Your Faith Life: Worship Life: Marriage (Husband and Wife)', 'Multiple Choice', 4, 'We commit to prayer as a couple, how often?', '["Daily prayer before sleep", "Weekly prayer during check-in", "Other: Please detail"]'); JSON: Add new object to questions at index 10.
+
+
+Update
+12
+Your Faith Life: Worship Life: Marriage
+How often do you plan to pray together? Options: 1. Daily 2. Weekly 3. Monthly 4. Whenever needed
+We commit to prayer as a couple, how often? Options: 1. Daily prayer before sleep 2. Weekly prayer during check-in 3. Other: Please detail
+Update question text to match book. Update response options to match book (remove Monthly, Whenever needed; add Other). Weight: 4, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We commit to prayer as a couple, how often?', response_options = '["Daily prayer before sleep", "Weekly prayer during check-in", "Other: Please detail"]' WHERE id = 12; JSON: Update questions[11] with new question_text and response_options.
+
+
+Update
+13
+Your Faith Life: Worship Life: Family
+How often do you plan to have family worship? Options: 1. Daily 2. Weekly 3. Monthly 4. Whenever needed
+We commit to family worship weekly, including... Options: 1. Weekly, with prayer, meals, and local church 2. Weekly, with meals and local church 3. Weekly, with meals and local/remote church 4. Other: Please detail
+Update question text to match book. Update response options to match book. Weight: 4, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We commit to family worship weekly, including what activities?', response_options = '["Weekly, including a dedicated time for prayer and reflection as a family weekly, familial prayer over meals, and weekly corporate worship in a local faith community where we are members", "Weekly, including familial prayer over meals, and weekly corporate worship in a local faith community where we are members", "Weekly, including familial prayer over meals, and weekly corporate worship in a local/remote faith community where we are members", "Other: Please detail"]' WHERE id = 13; JSON: Update questions[12] with new question_text and response_options.
+
+
+Update
+14
+Your Faith Life: Worship Life: Serving
+How do you plan to volunteer in your community? Options: 1. Church community 2. Broader community 3. Both 4. Not important
+We commit to each volunteering/serving... Options: 1. In our faith community every season 2. In our faith community one season/event per year 3. Flexibly inside/outside faith community, minimum giving 4. Flexibly inside/outside based on capacity
+Update question text to match book. Update response options to match book. Weight: 3, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We commit to each volunteering/serving in our community, what is your approach?', response_options = '["In our faith community in some capacity in every season", "In our faith community in some capacity at least one season/event per year", "Flexibly inside (and outside of) our faith community based on our capacity, but at a minimum, we’ll always be serving our faith community through our giving in every season", "Flexibly inside (and outside of) our faith community based on our capacity"]' WHERE id = 14; JSON: Update questions[13] with new question_text and response_options.
+
+
+Update
+15
+Your Marriage Life: Family Name
+What is your position on family names after marriage? Options: 1. Wife takes husband’s last name, current as middle 2. Wife takes husband’s last name 3. Wife keeps own last name 4. Wife hyphenates 5. Husband takes wife’s last name
+We commit to sharing the same last name in marriage... Options: 1. Wife takes husband’s last name 2. Each keeps own last name 3. Wife hyphenates
+Update question text to match book. Update response options to match book (remove options 1 and 5). Weight: 7, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We commit to sharing the same last name in marriage, what is your approach?', response_options = '["We commit to sharing the same last name in marriage and for the wife to take the husband’s last name", "We commit to each keeping our own last names in marriage", "We commit to the wife hyphenating her last name with her husband’s last name in marriage"]' WHERE id = 15; JSON: Update questions[14] with new question_text and response_options.
+
+
+Update
+16
+Your Marriage Life: Communication & Conflict Resolution
+I believe we should not fight in front of others. Options: 1. Keep disagreements private 2. Some can be discussed publicly
+We commit to not fighting or having serious arguments in front of others... Options: 1. Agree 2. Disagree
+Update question text to match book. Update response options to Agree/Disagree format. Weight: 6, Type: Agree/Disagree
+SQL: UPDATE questions SET question_text = 'We commit to not fighting or having serious arguments in front of others, rather, we’d wait for time alone and away from company, either in our check-in time or immediately after to discuss things away from them.', response_options = '["Agree", "Disagree"]' WHERE id = 16; JSON: Update questions[15] with new question_text and response_options.
+
+
+Update
+17
+Your Marriage Life: Communication & Conflict Resolution (Discuss with others)
+I believe we should never discuss issues with others before discussing with spouse. Options: 1. Discuss with spouse first 2. Not always necessary
+We commit to never discussing conflict/issues in our marriage with anyone, before... Options: 1. Agree 2. Disagree
+Update question text to match book. Update response options to Agree/Disagree format. Weight: 10, Type: Agree/Disagree
+SQL: UPDATE questions SET question_text = 'We commit to never discussing conflict/issues in our marriage with anyone, before (1) addressing the issue with our spouse and (2) mutually agreeing to seek approved counsel on the issue.', response_options = '["Agree", "Disagree"]' WHERE id = 17; JSON: Update questions[16] with new question_text and response_options.
+
+
+Update
+18
+Your Marriage Life: Communication & Conflict Resolution:2 (24 hours)
+I believe we should not go more than 24 hours without speaking. Options: 1. Resolve within 24 hours 2. No strict timeframe
+We commit to not going more than 24 hours without speaking with one another... Options: 1. Agree 2. Disagree
+Update question text to match book. Update response options to Agree/Disagree format. Weight: 5, Type: Agree/Disagree
+SQL: UPDATE questions SET question_text = 'We commit to not going more than 24 hours without speaking with one another under any circumstances.', response_options = '["Agree", "Disagree"]' WHERE id = 18; JSON: Update questions[17] with new question_text and response_options.
+
+
+Update
+19
+Your Marriage Life: Communication & Conflict Resolution:3 (Text)
+I believe we should not discuss serious issues via text. Options: 1. Discuss in person 2. Medium doesn’t matter
+We commit to not discussing serious issues/conflicts/debates via text message... Options: 1. Agree 2. Disagree
+Update question text to match book. Update response options to Agree/Disagree format. Weight: 3, Type: Agree/Disagree
+SQL: UPDATE questions SET question_text = 'We commit to not discussing serious issues/conflicts/debates via text message. Rather, we’ll always discuss them in person or in a live conversation on a phone given the importance of conveying the proper tone and honoring wise boundaries for the marriage.', response_options = '["Agree", "Disagree"]' WHERE id = 19; JSON: Update questions[18] with new question_text and response_options.
+
+
+Update
+20
+Your Marriage Life: Communication & Conflict Resolution:4 (Sleep angry)
+I believe we should not sleep angry. Options: 1. Resolve before bed 2. Rest can provide perspective
+We commit to not going to sleep while still angry with one another... Options: 1. Agree 2. Disagree
+Update question text to match book. Update response options to Agree/Disagree format. Weight: 3, Type: Agree/Disagree
+SQL: UPDATE questions SET question_text = 'We commit to not going to sleep while still angry with one another [not to be confused with resolving the issue, but committing to find common ground to discuss further, prayer and then coming together as one].', response_options = '["Agree", "Disagree"]' WHERE id = 20; JSON: Update questions[19] with new question_text and response_options.
+
+
+Update
+21
+Your Marriage Life: Communication & Conflict Resolution:5 (Same bed)
+I believe we should always sleep in the same bed. Options: 1. Always sleep together 2. Separate beds occasionally OK
+We commit to always sleeping together in the same bed, no matter the issue. Options: 1. Agree 2. Disagree
+Update question text to match book. Update response options to Agree/Disagree format. Weight: 3, Type: Agree/Disagree
+SQL: UPDATE questions SET question_text = 'We commit to always sleeping together in the same bed, no matter the issue.', response_options = '["Agree", "Disagree"]' WHERE id = 21; JSON: Update questions[20] with new question_text and response_options.
+
+
+Update
+22
+Your Marriage Life: Communication & Conflict Resolution:6 (Sex as weapon)
+I believe we should never withhold sex as punishment. Options: 1. Agree 2. Disagree
+We commit to never using sex as a weapon by withholding it due to conflict... Options: 1. Agree 2. Disagree
+Update question text to match book. Response options are identical. Weight: 5, Type: Agree/Disagree
+SQL: UPDATE questions SET question_text = 'We commit to never using sex as a weapon by withholding it due to conflict [Unless mutually acknowledged and agreed due to medical considerations, prayer and/or fasting].' WHERE id = 22; JSON: Update questions[21].question_text to "We commit to never using sex as a weapon by withholding it due to conflict [Unless mutually acknowledged and agreed due to medical considerations, prayer and/or fasting].".
+
+
+Update
+23
+Your Marriage Life: Communication & Conflict Resolution:7 (Silence as weapon)
+I believe we should never use silence as punishment. Options: 1. Agree 2. Disagree
+We commit to never using silence as a weapon by withholding presence or communication... Options: 1. Agree 2. Disagree
+Update question text to match book. Response options are identical. Weight: 5, Type: Agree/Disagree
+SQL: UPDATE questions SET question_text = 'We commit to never using silence as a weapon by withholding presence or communication due to conflict [Unless mutually acknowledged and agreed for a set amount of time for prayer and reflection].' WHERE id = 23; JSON: Update questions[22].question_text to "We commit to never using silence as a weapon by withholding presence or communication due to conflict [Unless mutually acknowledged and agreed for a set amount of time for prayer and reflection].".
+
+
+Update
+24
+Your Marriage Life: Communication & Conflict Resolution: Counseling
+How often would you attend marriage counseling? Options: 1. Every 90 days 2. Only when needed 3. Never
+We commit to a minimum of... Options: 1. Monthly counseling for year 1, bi-monthly year 2, quarterly year 3+ 2. Bi-weekly year 1, monthly year 2, quarterly year 3+ 3. Other: Please detail
+Update question text to match book. Update response options to match book. Weight: 3, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We commit to a minimum of counseling sessions for our marriage, what is your approach?', response_options = '["Monthly counseling sessions for the first year of our marriage, with a minimum of bi-monthly in year 2 and a minimum of quarterly in years 3+", "Bi-weekly counseling sessions for the first year of our marriage, with a minimum of monthly in year 2 and a minimum of quarterly in years 3+", "Other: Please detail"]' WHERE id = 24; JSON: Update questions[23] with new question_text and response_options.
+
+
+Update
+25
+Your Marriage Life: Decision Making
+I believe the husband should be the final authority in decision making. Options: 1. Agree 2. Disagree
+We commit to honoring the husband as the head and the final decision-making authority... Options: 1. Agree 2. Disagree
+Update question text to match book. Response options are identical. Weight: 5, Type: Agree/Disagree
+SQL: UPDATE questions SET question_text = 'We commit to honoring the husband as the head and the final decision-making authority on all decisions, with trust in his submission to God and prayerful consideration of his wife’s and family’s interests.' WHERE id = 25; JSON: Update questions[24].question_text to "We commit to honoring the husband as the head and the final decision-making authority on all decisions, with trust in his submission to God and prayerful consideration of his wife’s and family’s interests.".
+
+
+Update
+26
+Your Marriage Life: Dedicated Time (Fellowship)
+How often do you plan to have date nights? Options: 1. Weekly 2. Bi-weekly 3. Monthly 4. When schedule allows
+We commit to a... Options: 1. Weekly date night on [fill-in] 2. Bi-weekly date night on [fill-in]
+Update question text to match book. Update response options to match book (remove Monthly, When schedule allows). Weight: 7, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We commit to a date night schedule, how often?', response_options = '["Weekly date night on [fill-in]", "Bi-weekly date night on [fill-in]"]' WHERE id = 26; JSON: Update questions[25] with new question_text and response_options.
+
+
+Update
+27
+Your Marriage Life: Marriage: Dedicated Time
+How often would you have marriage check-ins? Options: 1. Weekly 2. Monthly 3. Quarterly 4. Annually 5. Never
+We commit to having a weekly check-in on... Options: 1. Weekly check-in on [fill-in] at [fill-in]
+Update question text to match book. Update response options to match book (single option). Weight: 5, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We commit to having a weekly check-in, when?', response_options = '["Weekly check-in on [fill-in] at [fill-in]"]' WHERE id = 27; JSON: Update questions[26] with new question_text and response_options.
+
+
+Update
+28
+Your Marriage Life: Living – Room Boundaries (Electronics)
+I believe we should not have electronics in the bedroom. Options: 1. Agree 2. Disagree
+We’re committed to not having any mobile electronics in our bedroom... Options: 1. Agree 2. Disagree
+Update question text to match book. Response options are identical. Weight: 5, Type: Agree/Disagree
+SQL: UPDATE questions SET question_text = 'We’re committed to not having any mobile electronics in our bedroom, specifically, TV’s, laptops and/or phones at night’s end to ensure our bedroom is a place of intimacy.' WHERE id = 28; JSON: Update questions[27].question_text to "We’re committed to not having any mobile electronics in our bedroom, specifically, TV’s, laptops and/or phones at night’s end to ensure our bedroom is a place of intimacy.".
+
+
+Update
+29
+Your Marriage Life: Relationship Model (Work/Home)
+What is your preferred work arrangement? Options: 1. One spouse stays home 2. Both work outside 3. One works from home 4. Both work from home
+We commit to a marriage model where... Options: 1. Both work full-time 2. Husband primary provider, wife stays home 3. Both work until children, then wife stays home for [fill-in] 4. Both work until children, then wife stays home indefinitely
+Update question text to match book. Update response options to match book. Weight: 3, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We commit to a marriage model for work and home life, what is your approach?', response_options = '["Both work full-time for as long as we both can consistently honor our commitments to God, our spouse and our children (If applicable)", "Husband is the primary provider and works full-time and the wife stays at home as full-time housewife/homemaker", "Both work full-time until we have children and then we will transition to a model where the wife stays at home for an extended period (beyond standard parental leave) until the children reach age [fill-in]", "Both work full-time until we have children and then we will transition to a model where the wife stays at home indefinitely as full-time housewife/homemaker"]' WHERE id = 29; JSON: Update questions[28] with new question_text and response_options.
+
+
+Update
+30
+Your Marriage Life: Relationship Model (Travel)
+What is your maximum time apart due to travel? Options: 1. No more than 2 days 2. No more than 4 days 3. No more than 7 days 4. No more than 14 days
+We commit to a marriage/work model where we agree to never be away from one another for more than... Options: 1. 7-day period 2. 10-day period 3. 3-day period 4. Other: Please detail
+Update question text to match book. Update response options to match book. Weight: 3, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We commit to a marriage/work model where we agree to never be away from one another for more than a certain period, what is your approach?', response_options = '["7-day period, regardless of the commitment/project scope. If necessary, we will set a “Come to me or I’ll come to you” plan", "10-day period, regardless of the commitment/project scope. If necessary, we will set a “Come to me or I’ll come to you” plan", "3-day period, regardless of the commitment/project scope. If necessary, we will set a “Come to me or I’ll come to you” plan", "Other: Please detail"]' WHERE id = 30; JSON: Update questions[29] with new question_text and response_options.
+
+
+Update
+31
+Your Marriage Life: Relationship Model (Late Night Work)
+How often is it acceptable to work past 8 PM? Options: 1. Never 2. Once a week 3. A few times a week 4. Daily
+We commit to a marriage/work model where we agree to have no more than... Options: 1. 2 late night workdays per week 2. 1 late night workday per week 3. Not applicable due to work nature 4. Other: Please detail
+Update question text to match book. Update response options to match book. Weight: 3, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We commit to a marriage/work model where we agree to have no more than a certain number of late night workdays, what is your approach?', response_options = '["2 late night workdays either at the office or at home (i.e., not going to bed with your spouse), per week", "1 late night workday either at the office or at home (i.e., not going to bed with your spouse), per week", "Given the nature of our work, we do not believe this commitment would align well for us", "Other: Please detail"]' WHERE id = 31; JSON: Update questions[30] with new question_text and response_options.
+
+
+Update
+32
+Your Marriage Life: Marriage: Living
+Where would you like to live relative to both sets of parents? Options: 1. Same city as both 2. Same city as one 3. Different city, same state 4. Different state
+We’re committed to living in a city where... Options: 1. At least one family resides, always 2. At least one family resides for 10 years 3. Flexible, open to any location 4. At least one family resides for 5 years
+Update question text to match book. Update response options to match book. Weight: 3, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We’re committed to living in a city relative to our families, what is your approach?', response_options = '["At least one of our families resides, always", "At least one of our families resides for up to the next 10 years (with consideration for younger children + childcare, parental care + presence in older age, existing community)", "Flexible about our home location, open to living wherever opportunity may lead us, even if it’s not in a city with existing family", "At least one of our families resides for up to the next 5 years (with consideration for younger children + childcare, parental care + presence in older age, existing community)"]' WHERE id = 32; JSON: Update questions[31] with new question_text and response_options.
+
+
+Update
+33
+Your Marriage Life: Marriage: Living – Parent Proximity
+How close should you live to parents? Options: 1. Within 30 minutes 2. Within 1 hour 3. Within 2 hours 4. Distance doesn’t matter
+We’re committed to living in a city where... Options: 1. At least one family resides, always 2. At least one family resides for 10 years 3. Flexible, open to any location 4. At least one family resides for 5 years
+Update question text to match book. Update response options to match book (use same as ID 32, as book combines these). Weight: 3, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We’re committed to living in a city relative to our families, what is your approach?', response_options = '["At least one of our families resides, always", "At least one of our families resides for up to the next 10 years (with consideration for younger children + childcare, parental care + presence in older age, existing community)", "Flexible about our home location, open to living wherever opportunity may lead us, even if it’s not in a city with existing family", "At least one of our families resides for up to the next 5 years (with consideration for younger children + childcare, parental care + presence in older age, existing community)"]' WHERE id = 33; JSON: Update questions[32] with new question_text and response_options.
+
+
+Update
+34
+Your Marriage Life: Marriage: Living – City Type
+What type of area do you prefer to live in? Options: 1. Urban 2. Suburban 3. Rural
+We’re committed to living in... Options: 1. Downtown area of a major city long-term 2. Suburbs long-term 3. Remote area, domestic or abroad 4. Flexible, no preference
+Update question text to match book. Update response options to match book. Weight: 3, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We’re committed to living in a certain type of area, what is your preference?', response_options = '["Downtown area of a major city long-term", "Suburbs long-term", "Remote area, whether domestically or abroad, which is not necessarily connected or proximate to a major city", "Flexible about our living area and do not have a particular preference to a city type"]' WHERE id = 34; JSON: Update questions[33] with new question_text and response_options.
+
+
+Update
+35
+Your Marriage Life: Marriage: Living – Home Type
+What type of home do you prefer? Options: 1. Apartment 2. Townhouse 3. Single-Family House 4. Multi-Family House
+We’re committed to living in... Options: 1. Apartment long-term 2. Standalone single-family house long-term 3. Standalone single-family townhouse long-term 4. Multi-family house long-term
+Update question text to match book. Update response options to match book. Weight: 3, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We’re committed to living in a certain type of home, what is your preference?', response_options = '["Apartment long-term as our primary residence", "Standalone single-family house long-term as our primary residence", "Standalone single-family townhouse long-term as our primary residence", "Multi-family house long-term"]' WHERE id = 35; JSON: Update questions[34] with new question_text and response_options.
+
+
+Update
+36
+Your Marriage Life: Marriage: Living – Domestic/International
+Would you be willing to live internationally? Options: 1. Yes, long-term 2. Yes, short-term 3. No 4. Only for extended vacation
+We’re committed to living... Options: 1. Domestically long-term 2. Internationally long-term 3. Flexible, no preference
+Update question text to match book. Update response options to match book (remove short-term, vacation options). Weight: 3, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We’re committed to living domestically or internationally, what is your preference?', response_options = '["Domestically long-term", "Internationally long-term and plan to eventually move shortly after our marriage", "Flexible about our living location and do not have a particular preference around living domestically or internationally"]' WHERE id = 36; JSON: Update questions[35] with new question_text and response_options.
+
+
+Update
+37
+Your Parenting Life: Children: Desire
+Do you want to have children? Options: 1. Biological children 2. Adopt children 3. Both 4. No children 5. Divided
+We commit to having children... Options: 1. Biological children 2. Adopt children 3. Both 4. No children
+Update question text to match book. Update response options to match book (remove Divided). Weight: 12, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We commit to having children, what is your desire?', response_options = '["We commit to having biological children", "We commit to adopting children", "We commit to having both biological and adopted children", "We do not commit to having children"]' WHERE id = 37; JSON: Update questions[36] with new question_text and response_options.
+
+
+Update
+38
+Your Parenting Life: Children: Timing
+When do you want to have children? Options: 1. Immediately 2. 1-2 years 3. 3-5 years 4. Financially stable 5. Never
+We commit to attempting to have them... Options: 1. As soon as possible 2. After year one 3. After year two 4. After this specific milestone
+Update question text to match book. Update response options to match book. Weight: 5, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We commit to attempting to have children, when?', response_options = '["As soon as possible", "After year one", "After year two", "After this specific milestone"]' WHERE id = 38; JSON: Update questions[37] with new question_text and response_options.
+
+
+Update
+39
+Your Parenting Life: Children: Quantity
+How many children do you want? Options: 1. 0 2. 1-2 3. 3-4 4. 5+
+We commit to having... Options: 1. As many as God allows 2. One child 3. Two children 4. Three children 5. Not Applicable
+Update question text to match book. Update response options to match book. Weight: 5, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We commit to having a certain number of children biologically, how many?', response_options = '["As many children as God will allow us to have", "One child (according to God’s will)", "Two children (according to God’s will)", "Three children (according to God’s will)", "Not Applicable"]' WHERE id = 39; JSON: Update questions[38] with new question_text and response_options.
+
+
+Update
+40
+Your Parenting Life: Children: Parenting Style
+What’s your preferred parenting style? Options: 1. Authoritative 2. Authoritarian 3. Permissive 4. Uninvolved
+We commit to raising and disciplining our children with Godly wisdom... Options: 1. Gentle/firm verbal, physical discipline if needed 2. Gentle/firm verbal, no physical discipline 3. Not Applicable
+Update question text to match book. Update response options to match book. Weight: 7, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We commit to raising and disciplining our children with Godly wisdom and discernment, what is your approach?', response_options = '["Gentle verbal instruction/warning, firm verbal instruction/warning and in the repeated case of disobedience, disrespect or danger, we are comfortable with physical discipline and other forms of punishments in love", "Gentle verbal instruction/warning, firm verbal instruction warning and in the repeated case of disobedience, disrespect or danger, we are comfortable with other forms of punishment in love, which do not include physical discipline", "Not Applicable"]' WHERE id = 40; JSON: Update questions[39] with new question_text and response_options.
+
+
+Update
+41
+Your Parenting Life: Children: Discipline
+What’s your approach to discipline? Options: 1. Positive reinforcement 2. Verbal correction/time-outs 3. Spanking 4. Consequences
+We commit to raising and disciplining our children with Godly wisdom... Options: 1. Gentle/firm verbal, physical discipline if needed 2. Gentle/firm verbal, no physical discipline 3. Not Applicable
+Update question text to match book. Update response options to match book (same as ID 40). Weight: 7, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We commit to raising and disciplining our children with Godly wisdom and discernment, what is your approach?', response_options = '["Gentle verbal instruction/warning, firm verbal instruction/warning and in the repeated case of disobedience, disrespect or danger, we are comfortable with physical discipline and other forms of punishments in love", "Gentle verbal instruction/warning, firm verbal instruction warning and in the repeated case of disobedience, disrespect or danger, we are comfortable with other forms of punishment in love, which do not include physical discipline", "Not Applicable"]' WHERE id = 41; JSON: Update questions[40] with new question_text and response_options.
+
+
+Update
+42
+Your Parenting Life: Children: Education
+What type of education do you prefer for your children? Options: 1. Public school 2. Private religious school 3. Private secular school 4. Homeschool
+We are committed to educating our children... Options: 1. Public school system 2. Private school 3. Homeschooling 4. Flexible based on location/outcomes
+Update question text to match book. Update response options to match book. Weight: 5, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We are committed to educating our children, what is your approach?', response_options = '["In the public school system", "In private school", "Homeschooling", "Flexible learning experience where we’re committed to the best local educational environment which could vary between all school types based on location, outcomes, pricing and more"]' WHERE id = 42; JSON: Update questions[41] with new question_text and response_options.
+
+
+Update
+43
+Your Marriage Life: Marriage: Living - Home Type
+[Duplicate of ID 35] Options: 1. Apartment 2. Single-family house 3. Townhouse 4. Multi-family house
+We’re committed to living in... Options: 1. Apartment long-term 2. Standalone single-family house long-term 3. Standalone single-family townhouse long-term 4. Multi-family house long-term
+Update question text to match book. Response options are identical. Weight: 3, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We’re committed to living in a certain type of home, what is your preference?' WHERE id = 43; JSON: Update questions[42].question_text to "We’re committed to living in a certain type of home, what is your preference?".
+
+
+Update
+44
+Your Parenting Life: Children Decision: To Have Them (Biologically)
+[To Have Them Biologically] Options: 1. Commit to having children 2. Do not commit
+We commit to having children... Options: 1. Commit to having children (according to God’s will) 2. Do not commit to having children
+Update question text to match book. Update response options to match book. Weight: 4, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We commit to having children biologically (according to God’s will), what is your decision?', response_options = '["Commit to having children (according to God’s will)", "Do not commit to having children"]' WHERE id = 44; JSON: Update questions[43] with new question_text and response_options.
+
+
+Update
+45
+Your Parenting Life: Children Decision: How To Have Them (Method of Delivery Preference)
+[Method of Delivery Preference] Options: 1. Natural birth unless medically necessary 2. Decision left to mother 3. Other
+We recognize the most important outcome is a healthy delivery... Options: 1. Water Delivery (if medically prudent) 2. Vaginal Delivery (with C-Section if necessary)
+Update question text to match book. Update response options to match book (remove mother’s decision, Other). Weight: 3, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, what is your preferred method of delivery?', response_options = '["Water Delivery (if medically prudent and possible)", "Vaginal Delivery (with potential for C-Section if medically necessary)"]' WHERE id = 45; JSON: Update questions[44] with new question_text and response_options.
+
+
+Update
+46
+Your Parenting Life: Children Decision: Where To Have Them (Location/Setting)
+[Where To Have Them] Options: 1. Hospital 2. Home with midwife 3. Birth center
+We recognize the most important outcome is a healthy delivery... Options: 1. Home Birth (if medically prudent) 2. Hospital Birth 3. Birth Center (if medically prudent)
+Update question text to match book. Update response options to match book. Weight: 3, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, where would you prefer to have children?', response_options = '["Home Birth (if medically prudent and possible)", "Hospital Birth", "Birth Center (if medically prudent and possible)"]' WHERE id = 46; JSON: Update questions[45] with new question_text and response_options.
+
+
+Update
+47
+Your Parenting Life: Children Decision: Breastfeeding
+[Breastfeeding] Options: 1. Breastfeed 1+ years 2. Breastfeed 6 months 3. Mother’s decision 4. Not Applicable
+We commit to breastfeeding... Options: 1. Primarily, only formula in rare cases 2. Whenever possible, no reservations about formula
+Update question text to match book. Update response options to match book (remove 6 months, mother’s decision). Weight: 3, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We commit to breastfeeding our children, what is your approach?', response_options = '["Primarily and only using formula in rare circumstances", "Whenever possible, still, we do not have any reservations about relying on high quality formula"]' WHERE id = 47; JSON: Update questions[46] with new question_text and response_options.
+
+
+Update
+48
+Your Parenting Life: Children Decision: Baby Sleeping Arrangements
+[Baby Sleeping Arrangements] Options: 1. Baby in bedroom, own crib 2. Baby in own room 3. Co-sleeping 4. Not Applicable
+We’re committed to breastfeeding... Options: 1. Breastfeeding along with complementary foods for up to 2 years 2. Breastfeeding up to 1 year 3. No strong perspective, follow medical guidance
+Update question text to match book’s breastfeeding length question (since ID 47 already covers breastfeeding). Update response options to match book. Weight: 3, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We’re committed to breastfeeding our children, for how long?', response_options = '["Breastfeeding along with introducing appropriate complementary foods for up to 2 years for our children", "Breastfeeding along with introducing appropriate complementary foods whenever possible still, we do not plan to do it beyond 1 year for our children", "No strong perspective about breastfeeding and will take the guidance of our medical professional when the time comes"]' WHERE id = 48; JSON: Update questions[47] with new question_text and response_options.
+
+
+Add
+49
+Your Parenting Life: Children Decision: Crying Response
+N/A
+We believe we should respond to our baby’s crying, what is your approach? Options: 1. Pick up as soon as crying starts 2. Allow crying for a few minutes 3. No specific plan, case by case 4. Not Applicable
+Add book question to replace ID 49 (no direct database equivalent). Weight: 2 (based on database Question 49), Type: Multiple Choice
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (49, 'Your Parenting Life: Children Decision: Crying Response', 'Multiple Choice', 2, 'We believe we should respond to our baby’s crying, what is your approach?', '["Pick the baby up as soon as he or she starts crying", "Allow the baby to cry for a few minutes before responding", "No specific plan for how to respond to crying and prefer to handle it case by case", "Not Applicable"]'); JSON: Add new object to questions at index 48.
+
+
+Add
+50
+Your Parenting Life: Children Decision: Working Parent
+N/A
+We commit to a working parent model, what is your approach? Options: 1. One parent stays home with young children (0-5 years) 2. Both parents work, use childcare 3. Other: Please detail
+Add book question to replace ID 50 (no direct database equivalent). Weight: 3 (based on similar parenting questions), Type: Multiple Choice
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (50, 'Your Parenting Life: Children Decision: Working Parent', 'Multiple Choice', 3, 'We commit to a working parent model, what is your approach?', '["One parent stays home with young children (0-5 years)", "Both parents working while children are young and using childcare services", "Other: Please detail"]'); JSON: Add new object to questions at index 49.
+
+
+Add
+51
+Your Parenting Life: Children Decision: School Decisions
+N/A
+We are committed to school decisions for our children, what is your approach? Options: 1. Homeschooling 2. Public school 3. Private school 4. Explore options based on needs
+Add book question to replace ID 51 (no direct database equivalent). Weight: 3 (based on Question 42), Type: Multiple Choice
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (51, 'Your Parenting Life: Children Decision: School Decisions', 'Multiple Choice', 3, 'We are committed to school decisions for our children, what is your approach?', '["Homeschooling", "Public school", "Private school", "Explore options based on our children’s individual needs"]'); JSON: Add new object to questions at index 50.
+
+
+Update
+52
+Your Parenting Life: Children Decision: Sex Education
+[Sex Education] Options: 1. Teach according to Christian principles 2. Allow school system 3. Other
+We commit to discussing sex with our children... Options: 1. Together at no later than 5 years old, inappropriate touch 2. One-on-one at 5 years, touch + anatomy 3. Together by 5, touch by 7, anatomy by puberty 4. One-on-one by 5, touch by 7, anatomy by puberty 5. Other
+Update question text to match book. Update response options to match book. Weight: 3, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We commit to discussing sex with our children, what is your approach?', response_options = '["Together at no later than 5 years old, specifically, discussing appropriate/inappropriate touch and expectations of communication if it happens", "One on one (each parent has their own talk) at no later than 5 years old specifically, discussing appropriate/inappropriate touch and expectations of communication if it happens and talking through anatomy and what sex is", "Together at no later than 5 years old; however, we’ll discuss appropriate/inappropriate touch and expectations of communication if it happens, between by age 7 and we’ll talk through anatomy, what sex is and its purpose, by puberty (10-13)", "One on one (each parent has their own talk) at no later than 5 years old; however, we’ll discuss appropriate/inappropriate touch and expectations of communication if it happens, between by age 7 and we’ll talk through anatomy, what sex is and its purpose, by puberty (10-13)", "Other: Please detail"]' WHERE id = 52; JSON: Update questions[51] with new question_text and response_options.
+
+
+Update
+53
+Your Parenting Life: Children Decision: Social Media/Technology
+[Social Media/Technology] Options: 1. No social media until 16 2. Monitored accounts at 13 3. Undecided
+We’re committed to guarding the psychological development... Options: 1. No social media until high school age 2. No social media until middle school age 3. Monitored use from middle school
+Update question text to match book. Update response options to match book. Weight: 3, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We’re committed to guarding the psychological development and physical safety of our children while allowing them to be socially connected and technologically adept, what is your approach to social media?', response_options = '["No social media until they become high school age", "No social media until they become middle school age", "Closely monitored social media use from middle school age on"]' WHERE id = 53; JSON: Update questions[52] with new question_text and response_options.
+
+
+Update
+54
+Your Parenting Life: Children Decision: Allowance/Money
+[Allowance/Money] Options: 1. Allowance tied to chores 2. Allowance not tied to chores 3. No allowance
+We commit to giving our children... Options: 1. Weekly allowance tied to chores 2. No allowance, provide as needed 3. Monthly allowance
+Update question text to match book. Update response options to match book. Weight: 2, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We commit to giving our children an allowance, what is your approach?', response_options = '["Weekly allowance as an opportunity to teach financial stewardship", "No allowance, provide resources as needed and available", "Monthly allowance as an opportunity to teach stewardship"]' WHERE id = 54; JSON: Update questions[53] with new question_text and response_options.
+
+
+Update
+55
+Your Physical Life: Physical Intimacy: Frequency
+[Physical Intimacy: Frequency] Options: 1. Daily 2. 3-4 times per week 3. 1-2 times per week 4. A few times per month 5. Once a month or less
+We commit to having sex at least... Options: 1. 3 times per week 2. Daily 3. 2 times per week
+Update question text to match book. Update response options to match book. Weight: 8, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We commit to having sex at least how often?', response_options = '["3 times per week", "Daily", "2 times per week"]' WHERE id = 55; JSON: Update questions[54] with new question_text and response_options.
+
+
+Update
+56
+Your Physical Life: Physical Intimacy: Initiation
+[Physical Intimacy: Initiation] Options: 1. Husband primarily initiates 2. Wife primarily initiates 3. Both initiate equally 4. Whoever feels like it
+We commit to... Options: 1. Alternating who initiates by week 2. Alternating who initiates by day/instance 3. Letting it flow naturally
+Update question text to match book. Update response options to match book. Weight: 6, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We commit to how sex is initiated in our marriage, what is your approach?', response_options = '["Alternating who initiates sex by week", "Alternating who initiates sex by day/instance", "Letting it flow naturally without a set alternation schedule, with that said, we each willingly acknowledge it is not the responsibility of one spouse to initiate a duty before God"]' WHERE id = 56; JSON: Update questions[55] with new question_text and response_options.
+
+
+Update
+57
+Your Physical Life: Physical Intimacy: Communication
+I believe we should openly discuss our physical needs and desires. Options: 1. Agree 2. Disagree
+We commit to having a conversation... Options: 1. Within first month about what we enjoy 2. Within first 3 months 3. Within first 6 months 4. Other: Need further discussion
+Update question text to match book. Update response options to Multiple Choice format. Weight: 5, Type: Multiple Choice
+SQL: UPDATE questions SET question_text = 'We commit to having a conversation about what we individually enjoy in sex with our spouse, when?', response_options = '["Within the first month about what we individually enjoy in sex with our spouse and what aspect of the experience, if anything, you would each enjoy more of", "Within the first 3 months about what we individually enjoy in sex with our spouse and what aspect of the experience, if anything, you would each enjoy more of", "Within the first 6 months about what we individually enjoy in sex with our spouse and what aspect of the experience, if anything, you would each enjoy more of", "Other: Before committing to this we need further discussion in our session around how this would operate"]' WHERE id = 57; JSON: Update questions[56] with new question_text, response_options, and type to "Multiple Choice".
+
+
+Update
+58
+Your Physical Life: Physical Intimacy: Boundaries
+I believe there should be no sexual activities that are off-limits in marriage. Options: 1. Agree 2. Disagree
+We commit to never discussing our sex lives with anyone... Options: 1. Agree 2. Disagree
+Update question text to match book. Response options are identical. Weight: 5, Type: Agree/Disagree
+SQL: UPDATE questions SET question_text = 'We commit to never discussing our sex lives with anyone (friends, colleagues, and family members) unless we mutually agree to seek outside counsel on that aspect of our relationship.' WHERE id = 58; JSON: Update questions[57].question_text to "We commit to never discussing our sex lives with anyone (friends, colleagues, and family members) unless we mutually agree to seek outside counsel on that aspect of our relationship.".
+
+
+Remove
+59
+Physical Affection: Public Display
+[Public Display] Options: 1. All forms 2. Holding hands/brief kisses 3. Keep private 4. Hand-holding only
+N/A
+No equivalent in book. Remove and replace with book question “Your Marriage Life: Sex - Contraception”.
+SQL: DELETE FROM questions WHERE id = 59; JSON: Remove questions[58].
+
+
+Add
+59
+Your Marriage Life: Sex - Contraception
+N/A
+We plan to use contraception in our marriage, what is your approach? Options: 1. No contraception 2. Contraception, not oral/surgical 3. All forms including oral/surgical
+Add book question to replace deleted ID 59. Weight: 5 (based on similar questions), Type: Multiple Choice
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (59, 'Your Marriage Life: Sex - Contraception', 'Multiple Choice', 5, 'We plan to use contraception in our marriage, what is your approach?', '["We do not plan to use contraception of any form during marriage", "We plan to use contraception, but we do not plan to use any which require oral consumption (health concerns/considerations) or invasive surgery (vasectomy, fallopian “tubes tied”)", "We plan to use all forms of contraception available to us which includes oral consumption and/or invasive surgery as an option (vasectomy, fallopian “tubes tied”)]'); JSON: Add new object to questions at index 58.
+
+
+Remove
+60
+Financial: Income Approach
+[Income Approach] Options: 1. Joint accounts only 2. Separate + joint accounts 3. Completely separate 4. Undecided
+N/A
+No equivalent in book. Remove and replace with book question “Your Finances: The Overall Model”.
+SQL: DELETE FROM questions WHERE id = 60; JSON: Remove questions[59].
+
+
+Add
+60
+Your Finances: The Overall Model
+N/A
+We commit to a financial model, what is your approach? Options: 1. “One Flesh, One Financial” model 2. Other: Need further discussion
+Add book question to replace deleted ID 60. Weight: 10 (based on Question 60), Type: Agree/Disagree
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (60, 'Your Finances: The Overall Model', 'Agree/Disagree', 10, 'We commit to a financial model, what is your approach?', '["“One Flesh, One Financial” model where any and every amount of income generated by either spouse is considered the family’s resources and is budgeted and apportioned against our prayerfully planned annual budget", "Other: Before committing to this we need further discussion in our session around how this would operate"]'); JSON: Add new object to questions at index 59.
+
+
+Remove
+61
+Financial: Spending Decisions
+[Spending Decisions] Options: 1. Over $100 2. Over $500 3. Over $1000 4. All significant purchases
+N/A
+No equivalent in book. Remove and replace with book question “Your Finances: Financial Planning Model”.
+SQL: DELETE FROM questions WHERE id = 61; JSON: Remove questions[60].
+
+
+Add
+61
+Your Finances: Financial Planning Model
+N/A
+We commit to financial planning, what is your approach? Options: 1. Annual budget, monthly discussions on [fill-in] 2. Work with financial advisor 3. Annual budget, bi-monthly discussions 4. Other: Please detail
+Add book question to replace deleted ID 61. Weight: 8 (based on Question 61), Type: Multiple Choice
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (61, 'Your Finances: Financial Planning Model', 'Multiple Choice', 8, 'We commit to financial planning, what is your approach?', '["Annual budget, with monthly discussions on the [fill-in] of each month, around our status (actuals) against our goals", "Work with a financial advisor, who will help us develop an annual budget, with monthly discussion around our status (actuals) against our goals", "Annual budget, with bi-monthly discussions on the [fill-in] of every other month, around our status (actuals) against our goals", "Other: Please detail"]'); JSON: Add new object to questions at index 60.
+
+
+Remove
+62
+Financial: Debt Management
+[Debt Management] Options: 1. Pay off aggressively 2. Minimum payments 3. Balanced approach 4. Undecided
+N/A
+No equivalent in book. Remove and replace with book question “Your Finances: Financial Management Model”.
+SQL: DELETE FROM questions WHERE id = 62; JSON: Remove questions[61].
+
+
+Add
+62
+Your Finances: Financial Management Model
+N/A
+We commit to managing our finances, who is responsible? Options: 1. [fill-in] manages budget, bills, investments 2. Licensed financial professional 3. Other: Please detail
+Add book question to replace deleted ID 62. Weight: 8 (based on Question 62), Type: Multiple Choice
+SQL: INSERT INTO questions (id, section, type, weight, question_text, response_options) VALUES (62, 'Your Finances: Financial Management Model', 'Multiple Choice', 8, 'We commit to managing our finances, who is responsible?', '["[fill-in] being the primary individual in our family who manages the periodic functions of our finances, which includes but is not limited to, developing the budget, financial reconciliations, bill-payment and investment related asset management and allocation", "Having a licensed financial professional handle and manage all of our financial matters with at least monthly updates (indefinitely)", "Other: Please detail"]'); JSON: Add new object to questions at index 61.
+
+
+Remove
+63
+Financial: Saving Goals
+[Saving Goals] Options: 1
+
+
+
+
+

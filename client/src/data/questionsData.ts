@@ -33,7 +33,7 @@ export const questions: Question[] = [
     section: "Your Foundation",
     subsection: "Marriage + Family Accountability",
     type: "D",
-    text: "Your Foundation: Marriage + Family Accountability - I believe in accountability for my marriage.",
+    text: "In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this 'life covenant' process, unless mutually revisited and discussed at a later time.",
     options: [
       "In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this 'life covenant' process, unless mutually revisited and discussed at a later time.",
       "Other: Before committing to this we need further discussion with spiritual counsel around how this would operate"
@@ -45,7 +45,7 @@ export const questions: Question[] = [
     section: "Your Foundation",
     subsection: "Marriage & Children's Faith",
     type: "D",
-    text: "Your Foundation: Marriage & Your Children's Faith - How do you plan to raise your children?",
+    text: "We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ",
     options: [
       "We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ",
       "We do not believe we have a responsibility to raise our children according to any specific faith tradition and prefer to let them choose their own spiritual path when they're old enough to decide"
@@ -57,7 +57,7 @@ export const questions: Question[] = [
     section: "Your Foundation",
     subsection: "Marriage Mindset: Happiness",
     type: "M",
-    text: "Your Foundation: Marriage Mindset: Happiness - What is your primary focus in marriage?",
+    text: "We're committed to the belief regarding happiness in marriage, what is your primary focus?",
     options: [
       "We're committed to the belief: While a marriage relationship can yield happiness, we believe happiness is neither a stable emotion nor a stable foundation to build a marriage upon, as such, we believe each spouse is ultimately responsible for their own happiness.",
       "We're committed to the belief: 'Happy Wife, Happy Life' – the husband is ultimately responsible for making his wife happy and this will in turn lead to a successful marriage.",
@@ -71,7 +71,7 @@ export const questions: Question[] = [
     section: "Your Foundation",
     subsection: "Marriage Preparation: Legal (Incapacitation)",
     type: "D",
-    text: "Your Foundation: Marriage Preparation: Legal (Incapacitation) - What is your position on Power of Attorney?",
+    text: "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing our spouse as Power of Attorney before our marriage date.",
     options: [
       "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing our spouse as Power of Attorney before our marriage date",
       "We do not believe it's necessary to establish Power of Attorney before marriage and prefer to address this matter later if and when it becomes relevant"
@@ -83,7 +83,7 @@ export const questions: Question[] = [
     section: "Your Foundation",
     subsection: "Marriage Preparation: Legal (Estate)",
     type: "D",
-    text: "Your Foundation: Marriage Preparation: Legal (Estate) - What is your position on creating a will?",
+    text: "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing completing a notarized copy of our will before our marriage date.",
     options: [
       "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing completing a notarized copy of our will before our marriage date",
       "We do not believe creating a will is necessary before marriage and prefer to address estate planning at a later stage in our relationship"
@@ -95,7 +95,7 @@ export const questions: Question[] = [
     section: "Your Foundation",
     subsection: "Marriage Mindset: Divorce",
     type: "D",
-    text: "Your Foundation: Marriage Mindset: Divorce - What is your position on divorce?",
+    text: "We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, \"Falling Out of Love\", \"Growing Apart\", \"Irreconcilable Differences\".",
     options: [
       "We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, 'Falling Out of Love', 'Growing Apart', 'Irreconcilable Differences'",
       "We believe that while marriage is intended to be lifelong, divorce may be a reasonable option in a wider range of circumstances, including when personal happiness and fulfillment are severely compromised"
