@@ -739,10 +739,10 @@ export const questions: Question[] = [
     section: "Your Parenting Life",
     subsection: "Communication & Conflict Resolution",
     type: "M",
-    text: "Your Parenting Life: Communication & Conflict Resolution",
+    text: "We commit to communication and conflict resolution around children, what is your approach?",
     options: [
-      "We commit to not fighting or having serious arguments in front of the children, rather, we'd wait for time alone and away from the children, either in our check-in time or immediately after to discuss things away from them.",
-      "We commit to fighting respectfully, even if it's a serious disagreement, in front of the children, because we believe it's healthy and constructive to model positive conflict resolution and to set realistic expectations for them in a marriage."
+      "We commit to not fighting or having serious arguments in front of the children, rather, we'd wait for time alone and away from the children, either in our check-in time or immediately after to discuss things away from them",
+      "We commit to fighting respectfully, even if it's a serious disagreement, in front of the children, because we believe it's healthy and constructive to model positive conflict resolution and to set realistic expectations for them in a marriage"
     ],
     weight: 4
   },
@@ -751,13 +751,13 @@ export const questions: Question[] = [
     section: "Your Parenting Life",
     subsection: "Communication: Sex",
     type: "M",
-    text: "Your Parenting Life: Communication: Sex",
+    text: "We commit to discussing sex education with our children, what is your approach?",
     options: [
-      "We commit to discussing sex with our children together at no later than 5 years old, specifically, discussing appropriate/inappropriate touch and expectations of communication if it happens.",
-      "We commit to discussing sex with our children one on one (each parent has their own talk) at no later than 5 years old specifically, discussing appropriate/inappropriate touch and expectations of communication if it happens and talking through anatomy and what sex is.",
-      "We commit to discussing sex with our children together at no later than 5 years old; however, we'll discuss appropriate/inappropriate touch and expectations of communication if it happens, between by age 7 and we'll talk through anatomy, what sex is and its purpose, by puberty (10-13).",
-      "We commit to discussing sex with our children one on one (each parent has their own talk) at no later than 5 years old; however, we'll discuss appropriate/inappropriate touch and expectations of communication if it happens, between by age 7 and we'll talk through anatomy, what sex is and its purpose, by puberty (10-13).",
-      "Other: Please detail"
+      "We commit to discussing sex with our children together at no later than 5 years old, specifically, discussing appropriate/inappropriate touch and expectations of communication if it happens",
+      "We commit to discussing sex with our children one on one (each parent has their own talk) at no later than 5 years old specifically, discussing appropriate/inappropriate touch and expectations of communication if it happens and talking through anatomy and what sex is",
+      "We commit to discussing sex with our children together at no later than 5 years old; however, we'll discuss appropriate/inappropriate touch and expectations of communication if it happens, between by age 7 and we'll talk through anatomy, what sex is and its purpose, by puberty (10-13)",
+      "We commit to discussing sex with our children one on one (each parent has their own talk) at no later than 5 years old; however, we'll discuss appropriate/inappropriate touch and expectations of communication if it happens, between by age 7 and we'll talk through anatomy, what sex is and its purpose, by puberty (10-13)",
+      "Other approach to sex education"
     ],
     weight: 4
   },
@@ -766,7 +766,7 @@ export const questions: Question[] = [
     section: "Your Marriage and Boundaries",
     subsection: "Opposite Sex Friendships",
     type: "M",
-    text: "Your Marriage and Boundaries: Opposite Sex Friendships - What boundaries do you expect for opposite-sex friendships?",
+    text: "We commit to boundaries for opposite-sex friendships, what is your approach?",
     options: [
       "No one-on-one time with opposite sex",
       "Group settings only for opposite sex friendships",
@@ -780,12 +780,12 @@ export const questions: Question[] = [
     section: "Your Parenting Life",
     subsection: "Social Media (Exposure)",
     type: "M",
-    text: "Your Parenting Life: Social Media (Exposure)",
+    text: "We commit to managing our children's social media exposure, what is your approach?",
     options: [
       "We're committed to guarding the psychological development and physical safety of our children while allowing them to be socially connected and technologically adept, with that said, we do not believe it is appropriate for our children to be on any form of social media until they become high school age",
       "We're committed to guarding the psychological development and physical safety of our children while allowing them to be socially connected and technologically adept, with that said, we do not believe it is appropriate for our children to be on any form of social media until they become middle school age",
       "We're committed to guarding the psychological development and physical safety of our children while allowing them to be socially connected and technologically adept, with that said, we will allow closely monitored social media use from middle school age on",
-      "Other: Please detail"
+      "Other approach to social media management"
     ],
     weight: 3
   },
@@ -794,7 +794,7 @@ export const questions: Question[] = [
     section: "Your Marriage and Boundaries",
     subsection: "Personal Privacy",
     type: "M",
-    text: "Your Marriage and Boundaries: Personal Privacy - What level of personal privacy do you expect in marriage?",
+    text: "We commit to personal privacy boundaries in marriage, what is your approach?",
     options: [
       "Complete transparency in all areas (phone, email, etc.)",
       "General transparency but some personal space",
