@@ -574,12 +574,12 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Marriage: Living - Home Type",
     type: "M",
-    text: "Your Marriage Life: Marriage: Living - Home Type",
+    text: "We commit to living in a specific type of home, what is your approach?",
     options: [
-      "We're committed to living in an apartment long-term as our primary residence.",
-      "We're committed to living in a standalone single-family house long-term as our primary residence.",
-      "We're committed to living in a standalone single-family townhouse long-term as our primary residence.",
-      "We're committed to living in a multi-family house long-term."
+      "We're committed to living in an apartment long-term as our primary residence",
+      "We're committed to living in a standalone single-family house long-term as our primary residence",
+      "We're committed to living in a standalone single-family townhouse long-term as our primary residence",
+      "We're committed to living in a multi-family house long-term"
     ],
     weight: 3
   },
@@ -588,10 +588,10 @@ export const questions: Question[] = [
     section: "Your Parenting Life",
     subsection: "Children Decision: To Have Them (Biologically)",
     type: "M",
-    text: "Your Parenting Life: Children Decision: To Have Them (Biologically)",
+    text: "We commit to having children biologically, what is your approach?",
     options: [
-      "We commit to having children (according to God's will).",
-      "We do not commit to having children."
+      "We commit to having children (according to God's will)",
+      "We do not commit to having children"
     ],
     weight: 4
   },
@@ -600,7 +600,7 @@ export const questions: Question[] = [
     section: "Your Parenting Life",
     subsection: "Children Decision: How To Have Them (Method of Delivery Preference)",
     type: "M",
-    text: "Your Parenting Life: Children Decision: How To Have Them (Method of Delivery Preference)",
+    text: "We commit to a delivery preference approach, what is your approach?",
     options: [
       "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer: A Water Delivery (if medically prudent and possible)",
       "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer: Vaginal Delivery (with potential for C-Section if medically necessary)"
@@ -614,7 +614,7 @@ export const questions: Question[] = [
     section: "Your Family/Home Life",
     subsection: "Holidays",
     type: "M",
-    text: "Your Family/Home Life: Holidays - How do you prefer to spend holidays?",
+    text: "We commit to spending holidays together, what is your approach?",
     options: [
       "Alternating between families each year",
       "Splitting time between both families during each holiday",
@@ -628,7 +628,7 @@ export const questions: Question[] = [
     section: "Your Family/Home Life",
     subsection: "Home Management: Chores",
     type: "M",
-    text: "Your Family/Home Life: Home Management: Chores - How will you divide household responsibilities?",
+    text: "We commit to dividing household responsibilities, what is your approach?",
     options: [
       "Traditional gender roles",
       "Equal division of all tasks",
@@ -644,10 +644,10 @@ export const questions: Question[] = [
     section: "Your Finances",
     subsection: "Financial Philosophy: Combined",
     type: "D",
-    text: "Your Finances: Financial Philosophy: Combined - Do you agree all finances should be combined?",
+    text: "We commit to combining all finances, what is your approach?",
     options: [
-      "Agree",
-      "Disagree"
+      "Agree - all finances should be combined",
+      "Disagree - maintain separate finances"
     ],
     weight: 12
   },
@@ -656,7 +656,7 @@ export const questions: Question[] = [
     section: "Your Finances",
     subsection: "Financial Philosophy: Tithing",
     type: "D",
-    text: "Your Finances: Financial Philosophy: Tithing - Do you believe in tithing/giving to charity?",
+    text: "We commit to tithing and charitable giving, what is your approach?",
     options: [
       "Yes, 10% to church/religious organization",
       "Yes, regular charitable giving but flexible percentage",
