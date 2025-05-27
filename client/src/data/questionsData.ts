@@ -808,10 +808,10 @@ export const questions: Question[] = [
     section: "Your Marriage and Boundaries",
     subsection: "Sexual Boundaries",
     type: "D",
-    text: "Your Marriage and Boundaries: Sexual Boundaries - Do you agree that sexual intimacy is exclusive to marriage?",
+    text: "We commit to sexual intimacy being exclusive to marriage, what is your approach?",
     options: [
-      "Agree",
-      "Disagree"
+      "Agree - sexual intimacy is exclusive to marriage",
+      "Disagree - other approaches to sexual intimacy"
     ],
     weight: 12
   },
@@ -820,7 +820,7 @@ export const questions: Question[] = [
     section: "Your Marriage and Boundaries",
     subsection: "Sexual Frequency",
     type: "M",
-    text: "Your Marriage and Boundaries: Sexual Frequency - What are your expectations for sexual frequency?",
+    text: "We commit to sexual frequency expectations, what is your approach?",
     options: [
       "Multiple times per week",
       "About once per week",
@@ -834,12 +834,12 @@ export const questions: Question[] = [
     section: "Your Parenting Life",
     subsection: "Communication: Race / Racial Dynamics",
     type: "M",
-    text: "Your Parenting Life: Communication: Race / Racial Dynamics",
+    text: "We commit to discussing race and racial dynamics with our children, what is your approach?",
     options: [
       "We recognize the reality of race as well as its role and history still we don't believe we should have an explicit discussion about race / racial dynamics in the world and in our country with our children",
       "We commit to discussing race with our children together at no later than 10 years old, specifically, discussing the history of race / racial dynamics, where it stems from a biblical perspective (Genesis 3), and expectations you have of them around their approach to engaging the issue in this world",
       "We commit to discussing race with our children one on one (each parent has their own talk) at no later than 10 years old, specifically, discussing the history of race / racial dynamics, where it stems from a biblical perspective (Genesis 3), and expectations you have of them around their approach to engaging the issue in this world",
-      "Other: Please detail"
+      "Other approach to discussing race and racial dynamics"
     ],
     weight: 3
   },
@@ -848,12 +848,12 @@ export const questions: Question[] = [
     section: "Your Parenting Life",
     subsection: "Education (Institution)",
     type: "M",
-    text: "Your Parenting Life: Education (Institution)",
+    text: "We commit to our children's educational institution, what is your approach?",
     options: [
-      "We are committed to educating our children in the public school system.",
-      "We are committed to educating our children in private school.",
-      "We are committed to homeschooling our children.",
-      "We are committed to a flexible learning experience where we're committed to the best local educational environment which could vary between all school types based on location, outcomes, pricing and more."
+      "We are committed to educating our children in the public school system",
+      "We are committed to educating our children in private school",
+      "We are committed to homeschooling our children",
+      "We are committed to a flexible learning experience where we're committed to the best local educational environment which could vary between all school types based on location, outcomes, pricing and more"
     ],
     weight: 4
   },
@@ -862,12 +862,12 @@ export const questions: Question[] = [
     section: "Your Family/Home Life",
     subsection: "Traditions: Family Dinner [Excludes Date Night]",
     type: "M",
-    text: "Your Family/Home Life: Traditions: Family Dinner [Excludes Date Night]",
+    text: "We commit to family dinner traditions, what is your approach?",
     options: [
       "We are committed to eating dinner as a family every single day, outside of unique and rare circumstances",
       "We are committed to eating dinner as a family at least once weekly",
       "We are committed to eating dinner as a family at least once monthly",
-      "Other: Please detail"
+      "Other approach to family dinner traditions"
     ],
     weight: 3
   },
@@ -876,11 +876,11 @@ export const questions: Question[] = [
     section: "Your Family/Home Life",
     subsection: "Traditions: Family Vacations",
     type: "M",
-    text: "Your Family/Home Life: Traditions: Family Vacations",
+    text: "We commit to family vacation traditions, what is your approach?",
     options: [
       "We are committed to budgeting, planning and going on at least one family vacation per year",
       "We are committed to budgeting, planning and going on at least two family vacations per year",
-      "Other: Please detail"
+      "Other approach to family vacation traditions"
     ],
     weight: 2
   },
@@ -889,11 +889,11 @@ export const questions: Question[] = [
     section: "Your Family/Home Life",
     subsection: "Traditions: Family Photos",
     type: "M",
-    text: "Your Family/Home Life: Traditions: Family Photos",
+    text: "We commit to family photo traditions, what is your approach?",
     options: [
       "We are committed to taking a full immediate family photo at least once per year",
       "We are committed to taking a full immediate family photo at least once every two years",
-      "Other: Please detail"
+      "Other approach to family photo traditions"
     ],
     weight: 1
   },
@@ -902,10 +902,10 @@ export const questions: Question[] = [
     section: "Your Family/Home Life",
     subsection: "House Cleaning & Maintenance",
     type: "M",
-    text: "Your Family/Home Life: House Cleaning & Maintenance",
+    text: "We commit to house cleaning and maintenance responsibilities, what is your approach?",
     options: [
-      "In view of gifting and capacity, we commit to being the primary individual in our family who manages and executes the periodic functions of our house cleaning and maintenance, which includes but is not limited to cleaning and maintenance of living space, laundry and dry cleaning.",
-      "We commit to not conflating this role and responsibility with function as always being the one executing the function/ responsibility day to day. What this means is is primarily and ultimately responsible and accountable for seeing it get done, within the financial and capacity constraints of the family."
+      "In view of gifting and capacity, we commit to being the primary individual in our family who manages and executes the periodic functions of our house cleaning and maintenance, which includes but is not limited to cleaning and maintenance of living space, laundry and dry cleaning",
+      "We commit to not conflating this role and responsibility with function as always being the one executing the function/ responsibility day to day. What this means is is primarily and ultimately responsible and accountable for seeing it get done, within the financial and capacity constraints of the family"
     ],
     weight: 3
   },
