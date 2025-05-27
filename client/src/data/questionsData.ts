@@ -1069,17 +1069,17 @@ export const questions: Question[] = [
   },
   {
     id: 79,
-    section: "Your Family/Home Life",
-    subsection: "Food Preparation & Planning: Overall Model: Responsibility",
+    section: "Your Marriage & Boundaries",
+    subsection: "In-Laws/Loves in Advanced Age",
     type: "M",
-    text: "We commit to food preparation and planning responsibilities, what is your approach?",
+    text: "We're committed to caring for our spouses' parents in advanced age, what is your approach?",
     options: [
-      "We commit to having be responsible for the overall food planning and preparation for the family, with considerations made for date night, family outings and circumstances when one is unable to do. (80/20)",
-      "We commit to having be responsible for the overall food planning and preparation for the family, with a split of being responsible for meals during the week (M-Fri) and being responsible for meals during the weekend",
-      "We commit to having a chef / nanny be responsible for the overall food planning and preparation for the family",
-      "Other approach to food preparation and planning responsibilities"
+      "Through financial contribution",
+      "By welcoming them to move in with us",
+      "Not through long-term stay",
+      "Other: Please detail"
     ],
-    weight: 4
+    weight: 3
   },
   {
     id: 80,
