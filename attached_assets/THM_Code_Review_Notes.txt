@@ -1,0 +1,103 @@
+
+✅ Code Review Notes: THM Assessment System
+
+📌 Summary
+This file contains a breakdown of bugs, logic issues, and recommended fixes across key scripts in the THM assessment project.
+
+---
+
+1. fix-assessment-issues.ts
+
+Purpose:  
+Processes incomplete assessments and recalculates scores using full responses.
+
+Issues + Fixes:
+- ⚠️ Missing per-record try/catch. Add inside the for-loop to isolate failures.
+- ⚠️ No pagination — add LIMIT and OFFSET in queries to prevent memory overload.
+- ⚠️ Weak logging — log email, timestamp, and error message for each failure.
+
+Example Fix:
+for (const row of rows) {
+  try {
+    // process...
+  } catch (err) {
+    console.error(`Failed to process ${row.email} at ${row.timestamp}:`, err.message);
+  }
+}
+
+---
+
+2. fix-assessment-scores.ts
+
+Purpose:  
+Fixes scoring bug where many users showed a default 67.3% score.
+
+Issues + Fixes:
+- ⚠️ Question mappings are hardcoded — extract to config or schema file.
+- ⚠️ No input validation — check that response values exist and are numbers.
+- ⚠️ No change log — consider writing updated results to a .json or DB audit table.
+
+Example Fix:
+if (!response || typeof response.value !== 'number') {
+  console.warn(`Invalid response detected for user ${email}. Skipping.`);
+  continue;
+}
+
+---
+
+3. fix-assessment-scores-v2.ts
+
+Purpose:  
+Improved scoring system based on profile logic and section weighting.
+
+Issues + Fixes:
+- ✅ Uses frontend-aligned psychographicProfiles (great!)
+- ⚠️ Still lacks fallbacks if a profile isn’t matched.
+- ⚠️ Paths may break in builds — use path.resolve() for safe loading.
+
+Extra Suggestion:  
+Allow passing a profile as CLI input or reading dynamic JSON.
+
+---
+
+4. generate-real-couple-pdf.ts
+
+Purpose:  
+Generates a couple’s PDF report for testing layout and accuracy.
+
+Issues + Fixes:
+- ⚠️ Hardcoded name/email/PII — abstract these or scrub in commits.
+- ⚠️ No error handling for PDF generation — wrap in try/catch.
+- ⚠️ No output path confirmation — log file location after write.
+
+Example Fix:
+try {
+  await generateCoupleAssessmentPDF(assessment, outputPath);
+  console.log(`✅ PDF saved at: ${outputPath}`);
+} catch (err) {
+  console.error("PDF generation failed:", err);
+}
+
+---
+
+5. drizzle.config.ts
+
+Purpose:  
+Drizzle ORM setup for schema and migrations.
+
+Issues + Fixes:
+- ⚠️ Assumes process.env is preloaded — add dotenv.config() at top of file.
+- ✅ Good validation of DATABASE_URL.
+- ⚠️ Consider using path.resolve(__dirname, 'shared/schema.ts') for portability.
+
+---
+
+✅ Next Steps
+
+- [ ] Add per-record error handling
+- [ ] Implement batch/pagination for large queries
+- [ ] Replace hardcoded mappings with dynamic config
+- [ ] Add audit trail/logging for scoring changes
+- [ ] Sanitize or abstract static test data
+
+Prepared for Replit by: ChatGPT Code Review Assistant
