@@ -240,68 +240,8 @@ async function fixAssessmentIssues() {
   } finally {
     await pool.end();
   }
-}
-      
-      console.log(`\n🔄 Recalculating ${demographicData.firstName} ${demographicData.lastName} (${email})`);
-      
-      const assessmentResult = await calculateAssessmentWithResponses(
-        email,
-        demographicData,
-        responsesData
-      );
-      
-      if (assessmentResult) {
-        await pool.query(`
-          UPDATE assessment_results 
-          SET scores = $1, 
-              profile = $2,
-              gender_profile = $3,
-              timestamp = $4
-          WHERE email = $5
-        `, [
-          JSON.stringify(assessmentResult.scores),
-          JSON.stringify(assessmentResult.profile),
-          assessmentResult.genderProfile ? JSON.stringify(assessmentResult.genderProfile) : null,
-          new Date(assessmentResult.timestamp),
-          email
-        ]);
-        
-        console.log(`   ✅ Recalculated - New Score: ${assessmentResult.scores.overallPercentage}%`);
-        recalculatedCount++;
-      }
-    }
-    
-    // Summary
-    console.log('\n📊 SUMMARY');
-    console.log('='.repeat(50));
-    console.log(`✅ Processed incomplete assessments: ${processedCount}`);
-    console.log(`⚠️  Skipped incomplete assessments: ${skippedCount}`);
-    console.log(`🔄 Recalculated existing assessments: ${recalculatedCount}`);
-    
-    // Verify results
-    const finalResult = await pool.query(`
-      SELECT 
-        email,
-        name,
-        scores::json->>'overallPercentage' as score
-      FROM assessment_results 
-      ORDER BY timestamp DESC
-    `);
-    
-    console.log('\n📋 CURRENT ASSESSMENT RESULTS:');
-    console.log('-'.repeat(60));
-    finalResult.rows.forEach(row => {
-      console.log(`${row.name.padEnd(25)} ${row.email.padEnd(25)} ${row.score}%`);
-    });
-    
-    console.log('\n🎉 Assessment fixes completed successfully!');
-    
-  } catch (error) {
-    console.error('❌ Error fixing assessments:', error);
-  } finally {
-    await pool.end();
-  }
-}
 
-// Run the fix
-fixAssessmentIssues();
+// Add main execution
+if (require.main === module) {
+  fixAssessmentIssues().catch(console.error);
+}
