@@ -9,13 +9,12 @@ export const sections = [
   "Your Family/Home Life", 
   "Your Finances",
   "Your Health and Wellness",
-  "Your Marriage and Boundaries",
-  "Your Marriage Life with Children"
+  "Your Marriage and Boundaries"
 ];
 
-// Questions from the authentic 100 Marriage Assessment book
+// Authentic 99 Questions from Lawrence Adjah's "The 100 Marriage Assessment - Series 1"
 export const questions: Question[] = [
-  // YOUR FOUNDATION
+  // YOUR FOUNDATION (Questions 1-10)
   {
     id: 1,
     section: "Your Foundation",
@@ -139,8 +138,8 @@ export const questions: Question[] = [
     ],
     weight: 12
   },
-  
-  // YOUR FAITH LIFE
+
+  // YOUR FAITH LIFE (Questions 11-14)
   {
     id: 11,
     section: "Your Faith Life",
@@ -193,10 +192,10 @@ export const questions: Question[] = [
       "Flexibly inside (and outside of) our faith community based on our capacity, but at a minimum, we'll always be serving our faith community through our giving in every season",
       "Flexibly inside (and outside of) our faith community based on our capacity"
     ],
-    weight: 3
+    weight: 4
   },
-  
-  // YOUR MARRIAGE LIFE
+
+  // YOUR MARRIAGE LIFE (Questions 15-70)
   {
     id: 15,
     section: "Your Marriage Life",
@@ -215,7 +214,7 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Communication & Conflict Resolution",
     type: "D",
-    text: "We commit to not fighting or having serious arguments in front of others, rather, we'd wait for time alone and away from company, either in our check-in time or immediately after to discuss things away from them.",
+    text: "We commit to not fighting or having serious arguments in front of others, rather, we'd wait for time alone and away from company, either in our check-in time or immediately after to discuss things away from them",
     options: [
       "Agree",
       "Disagree"
@@ -227,7 +226,7 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Communication & Conflict Resolution (Discuss with others)",
     type: "D",
-    text: "We commit to never discussing conflict/issues in our marriage with anyone, before (1) addressing the issue with our spouse and (2) mutually agreeing to seek approved counsel on the issue.",
+    text: "We commit to never discussing conflict/issues in our marriage with anyone, before (1) addressing the issue with our spouse and (2) mutually agreeing to seek approved counsel on the issue",
     options: [
       "Agree",
       "Disagree"
@@ -239,7 +238,7 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Communication & Conflict Resolution:2 (24 hours)",
     type: "D",
-    text: "We commit to not going more than 24 hours without speaking with one another under any circumstances.",
+    text: "We commit to not going more than 24 hours without speaking with one another under any circumstances",
     options: [
       "Agree",
       "Disagree"
@@ -251,43 +250,7 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Communication & Conflict Resolution:3 (Text)",
     type: "D",
-    text: "We commit to not discussing serious issues/conflicts/debates via text message. Rather, we'll always discuss them in person or in a live conversation on a phone given the importance of conveying the proper tone and honoring wise boundaries for the marriage.",
-    options: [
-      "Agree",
-      "Disagree"
-    ],
-    weight: 3
-  },
-  {
-    id: 20,
-    section: "Your Marriage Life",
-    subsection: "Communication & Conflict Resolution:4 (Sleep angry)",
-    type: "D",
-    text: "We commit to not going to sleep while still angry with one another [not to be confused with resolving the issue, but committing to find common ground to discuss further, prayer and then coming together as one].",
-    options: [
-      "Agree",
-      "Disagree"
-    ],
-    weight: 3
-  },
-  {
-    id: 21,
-    section: "Your Marriage Life",
-    subsection: "Communication & Conflict Resolution:5 (Same bed)",
-    type: "D",
-    text: "We commit to sharing the same bed every night.",
-    options: [
-      "Agree",
-      "Disagree"
-    ],
-    weight: 3
-  },
-  {
-    id: 22,
-    section: "Your Marriage Life",
-    subsection: "Communication & Conflict Resolution:6 (Sex as weapon)",
-    type: "D",
-    text: "We commit to never withholding sex as a tactic during conflict in our marriage.",
+    text: "We commit to not discussing serious issues/conflicts/debates via text message. Rather, we'll always discuss them in person or in a live conversation on a phone given the importance of conveying the proper tone and honoring wise boundaries for the marriage",
     options: [
       "Agree",
       "Disagree"
@@ -295,11 +258,47 @@ export const questions: Question[] = [
     weight: 5
   },
   {
+    id: 20,
+    section: "Your Marriage Life",
+    subsection: "Communication & Conflict Resolution:4 (Sleep angry)",
+    type: "D",
+    text: "We commit to not going to sleep while still angry with one another [not to be confused with resolving the issue, but committing to find common ground to discuss further, prayer and then coming together as one]",
+    options: [
+      "Agree",
+      "Disagree"
+    ],
+    weight: 10
+  },
+  {
+    id: 21,
+    section: "Your Marriage Life",
+    subsection: "Communication & Conflict Resolution:5 (Same bed)",
+    type: "D",
+    text: "We commit to sharing the same bed every night",
+    options: [
+      "Agree",
+      "Disagree"
+    ],
+    weight: 5
+  },
+  {
+    id: 22,
+    section: "Your Marriage Life",
+    subsection: "Communication & Conflict Resolution:6 (Sex as weapon)",
+    type: "D",
+    text: "We commit to never withholding sex as a tactic during conflict in our marriage",
+    options: [
+      "Agree",
+      "Disagree"
+    ],
+    weight: 8
+  },
+  {
     id: 23,
     section: "Your Marriage Life",
     subsection: "Communication & Conflict Resolution:7 (Silence as weapon)",
     type: "D",
-    text: "We commit to never using silence as a tactic during conflict in our marriage.",
+    text: "We commit to never using silence as a tactic during conflict in our marriage",
     options: [
       "Agree",
       "Disagree"
@@ -324,7 +323,7 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Decision Making",
     type: "D",
-    text: "We commit to the husband being the final decision maker for the family after discussion and prayer with his wife.",
+    text: "We commit to the husband being the final decision maker for the family after discussion and prayer with his wife",
     options: [
       "Agree",
       "Disagree"
@@ -362,7 +361,7 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Living – Room Boundaries (Electronics)",
     type: "D",
-    text: "We commit to not having any electronics in our bedroom.",
+    text: "We commit to not having any electronics in our bedroom",
     options: [
       "Agree",
       "Disagree"
@@ -381,7 +380,7 @@ export const questions: Question[] = [
       "One spouse works from home",
       "Both spouses work from home"
     ],
-    weight: 3
+    weight: 7
   },
   {
     id: 30,
@@ -391,11 +390,11 @@ export const questions: Question[] = [
     text: "We commit to a maximum time apart due to travel, what is your approach?",
     options: [
       "No more than 2 days apart",
-      "No more than 4 days apart", 
+      "No more than 4 days apart",
       "No more than 7 days apart",
       "No more than 14 days apart"
     ],
-    weight: 3
+    weight: 5
   },
   {
     id: 31,
@@ -409,10 +408,148 @@ export const questions: Question[] = [
       "Weekly physical intimacy",
       "As desired mutually"
     ],
-    weight: 6
+    weight: 8
   },
   {
     id: 32,
+    section: "Your Marriage Life",
+    subsection: "Sex - Initiation",
+    type: "M",
+    text: "We commit to physical intimacy initiation, what is your approach?",
+    options: [
+      "We commit to alternating who initiates sex by week",
+      "We commit to alternating who initiates sex by day/instance",
+      "We commit to \"letting it flow\" naturally without a set alternation schedule, with that said, we each willingly acknowledge it is not the responsibility of one spouse to initiate a duty before God"
+    ],
+    weight: 6
+  },
+  {
+    id: 33,
+    section: "Your Marriage Life",
+    subsection: "Sex - Communication",
+    type: "M",
+    text: "We commit to intimate communication, what is your approach?",
+    options: [
+      "We commit to having a conversation within the first month about what we individually enjoy in sex with our spouse and what aspect of the experience, if anything, you would each enjoy more of",
+      "We commit to having a conversation within the first 3 months about what we individually enjoy in sex with our spouse and what aspect of the experience, if anything, you would each enjoy more of",
+      "We commit to having a conversation within the first 6 months about what we individually enjoy in sex with our spouse and what aspect of the experience, if anything, you would each enjoy more of",
+      "Other: Before committing to this we need further discussion in our session around how this would operate"
+    ],
+    weight: 5
+  },
+  {
+    id: 34,
+    section: "Your Marriage Life",
+    subsection: "Sex - Contraception",
+    type: "M",
+    text: "We commit to family planning and contraception, what is your approach?",
+    options: [
+      "We do not plan to use contraception of any form during marriage",
+      "We plan to use contraception, but we do not plan to use any which require oral consumption (health concerns/considerations) or invasive surgery (vasectomy, fallopian \"tubes tied\")",
+      "We plan to use all forms of contraception available to us which includes oral consumption and/or invasive surgery as an option (vasectomy, fallopian \"tubes tied\")"
+    ],
+    weight: 7
+  },
+  {
+    id: 35,
+    section: "Your Marriage Life",
+    subsection: "Sex - Boundaries",
+    type: "D",
+    text: "We commit to never discussing our sex lives with anyone (friends, colleagues, and family members) unless we mutually agree to seek outside counsel on that aspect of our relationship",
+    options: [
+      "We commit to never discussing our sex lives with anyone (friends, colleagues, and family members) unless we mutually agree to seek outside counsel on that aspect of our relationship",
+      "We disagree with this statement"
+    ],
+    weight: 8
+  },
+  {
+    id: 36,
+    section: "Your Marriage Life",
+    subsection: "Children Decision: How To Have Them (Method of Delivery Preference)",
+    type: "M",
+    text: "We commit to childbirth delivery preferences, what is your approach?",
+    options: [
+      "We are committed to having our babies at home with a trained midwife",
+      "We are committed to having our babies at a hospital (or birthing center) with a trained midwife",
+      "We are committed to having our babies at a hospital with an OBGYN",
+      "Not Applicable"
+    ],
+    weight: 3
+  },
+  {
+    id: 37,
+    section: "Your Marriage Life",
+    subsection: "Children Decision: How To Have Them (Pregnancy/Family)",
+    type: "M",
+    text: "We commit to family planning and children, what is your approach?",
+    options: [
+      "We plan to have children and are committed to having as many children as God blesses us with during our childbearing years",
+      "We plan to have children and are committed to having 1-2 children",
+      "We plan to have children and are committed to having 3-4 children",
+      "We plan to have children and are committed to having 5+ children",
+      "We do not plan to have children",
+      "Not Applicable"
+    ],
+    weight: 8
+  },
+  {
+    id: 38,
+    section: "Your Marriage Life",
+    subsection: "Children Decision: Adoption",
+    type: "M",
+    text: "We commit to adoption considerations, what is your approach?",
+    options: [
+      "We commit to adopting at least one child during our marriage",
+      "We admire and believe in adoption but do not plan to adopt during our marriage",
+      "We are committed to having children biologically (according to God's will), but would consider adoption if we discern it's not His will for us to have children biologically",
+      "Not Applicable"
+    ],
+    weight: 5
+  },
+  {
+    id: 39,
+    section: "Your Marriage Life",
+    subsection: "Children Decision: Naming of Children (Model)",
+    type: "M",
+    text: "We commit to naming our children, what is your approach?",
+    options: [
+      "We commit to naming our children with first names that are from the Bible",
+      "We commit to naming our children with first names that honor a family member from either side of the family",
+      "We commit to naming our children with first names that are gender neutral",
+      "Other approach to naming our children",
+      "Not Applicable"
+    ],
+    weight: 2
+  },
+  {
+    id: 40,
+    section: "Your Marriage Life",
+    subsection: "Children Decision: Naming of Children (Jr's)",
+    type: "M",
+    text: "We commit to naming children after parents, what is your approach?",
+    options: [
+      "We agree that it's an option to name one of our children after a parent",
+      "We agree that's not an option to name one of our children after a parent",
+      "Not Applicable"
+    ],
+    weight: 2
+  },
+  {
+    id: 41,
+    section: "Your Marriage Life",
+    subsection: "Pregnancy Announcement",
+    type: "M",
+    text: "We commit to pregnancy announcement timing, what is your approach?",
+    options: [
+      "We commit to keeping the news of our pregnancy private until the end of the 1st trimester",
+      "We commit to keeping the news of our pregnancy private until the end of the 2nd trimester",
+      "We do not have a specific guideline around if and when we will share news of a pregnancy",
+      "Not Applicable"
+    ],
+    weight: 2
+  },
+  {
+    id: 42,
     section: "Your Marriage Life",
     subsection: "Work Down Time",
     type: "M",
@@ -426,8 +563,8 @@ export const questions: Question[] = [
     weight: 4
   },
   {
-    id: 33,
-    section: "Your Marriage Life with Children",
+    id: 43,
+    section: "Your Marriage Life",
     subsection: "Communication & Discipline",
     type: "M",
     text: "We commit to child discipline and communication approach, what is your method?",
@@ -440,8 +577,8 @@ export const questions: Question[] = [
     weight: 7
   },
   {
-    id: 34,
-    section: "Your Marriage Life with Children",
+    id: 44,
+    section: "Your Marriage Life",
     subsection: "Social Media: New Child",
     type: "M",
     text: "We commit to social media sharing regarding our children, what is your approach?",
@@ -454,8 +591,8 @@ export const questions: Question[] = [
     weight: 4
   },
   {
-    id: 35,
-    section: "Your Marriage Life with Children",
+    id: 45,
+    section: "Your Marriage Life",
     subsection: "Communication: Sex/Gender",
     type: "M",
     text: "We commit to discussing sex and gender topics with our children, what is your approach?",
@@ -467,494 +604,8 @@ export const questions: Question[] = [
     ],
     weight: 5
   },
-  {
-    id: 36,
-    section: "Your Marriage Life with Children",
-    subsection: "Communication: Race",
-    type: "M",
-    text: "We commit to discussing race and cultural identity with our children, what is your approach?",
-    options: [
-      "Open discussions about racial identity and heritage",
-      "Focus on unity and equality principles",
-      "Address issues as they arise naturally",
-      "Emphasize character over race"
-    ],
-    weight: 4
-  },
-  
-  // YOUR PARENTING LIFE
-  {
-    id: 37,
-    section: "Your Marriage Life with Children",
-    subsection: "Pregnancy Announcement",
-    type: "M",
-    text: "We commit to pregnancy announcement timing, what is your approach?",
-    options: [
-      "Keep private until end of 1st trimester",
-      "Keep private until end of 2nd trimester", 
-      "Share immediately with close family",
-      "No specific guideline for sharing"
-    ],
-    weight: 3
-  },
-  {
-    id: 38,
-    section: "Your Family Life",
-    subsection: "Traditions: Family Dinner",
-    type: "M",
-    text: "We commit to family dinner traditions, what is your approach?",
-    options: [
-      "Daily family dinners together",
-      "Weekly family dinners on specific days",
-      "Special occasion family dinners only",
-      "Flexible family meal arrangements"
-    ],
-    weight: 4
-  },
-  {
-    id: 39,
-    section: "Your Family Life",
-    subsection: "House Cleaning & Maintenance",
-    type: "M",
-    text: "We commit to household responsibilities, what is your approach?",
-    options: [
-      "Shared responsibilities based on availability",
-      "Traditional gender-based role division",
-      "Hired help for major cleaning tasks",
-      "Rotating weekly responsibility assignments"
-    ],
-    weight: 3
-  },
-  {
-    id: 40,
-    section: "Your Health and Wellness",
-    subsection: "Approach to Medicine, Illness and Pain Management",
-    type: "M",
-    text: "We commit to healthcare and medical treatment approach, what is your preference?",
-    options: [
-      "Traditional western medicine as primary approach",
-      "Holistic and natural remedies when possible",
-      "Combination of traditional and alternative medicine",
-      "Faith-based healing with medical consultation"
-    ],
-    weight: 5
-  },
-  {
-    id: 41,
-    section: "Your Health and Wellness",
-    subsection: "Exercise",
-    type: "M",
-    text: "We commit to physical fitness and exercise, what is your approach?",
-    options: [
-      "Daily exercise routine together",
-      "Individual exercise with weekly couple activities",
-      "Seasonal sports and outdoor activities",
-      "Minimal structured exercise approach"
-    ],
-    weight: 4
-  },
-  {
-    id: 42,
-    section: "Your Health and Wellness",
-    subsection: "Financial Stewardship & Nutrition Health Goals",
-    type: "M",
-    text: "We commit to enjoying home-cooked meals, what is your approach?",
-    options: [
-      "Daily home-cooked meals with fresh ingredients",
-      "Weekly meal planning with mostly home cooking",
-      "Combination of home cooking and occasional dining out",
-      "Flexible approach based on schedule and preferences"
-    ],
-    weight: 3
-  },
-  {
-    id: 43,
-    section: "Your Finances",
-    subsection: "Financial Generosity",
-    type: "M",
-    text: "We commit to financial generosity and giving, what is your approach?",
-    options: [
-      "Tithing 10% of gross income to church",
-      "Giving based on net income after taxes",
-      "Flexible giving based on financial situation",
-      "Contributing to multiple charitable causes"
-    ],
-    weight: 5
-  },
-  {
-    id: 44,
-    section: "Your Finances",
-    subsection: "Payments Execution",
-    type: "M",
-    text: "We commit to bill payment and financial management, what is your approach?",
-    options: [
-      "Joint account with shared bill payment responsibilities",
-      "Primary earner handles all bill payments",
-      "Divided responsibilities based on expertise",
-      "Automated systems with joint oversight"
-    ],
-    weight: 4
-  },
-  {
-    id: 45,
-    section: "Your Marriage & Boundaries",
-    subsection: "Openness / Technology",
-    type: "M",
-    text: "We commit to openness with technology, what is your approach?",
-    options: [
-      "Complete transparency with all devices and passwords",
-      "Open communication about technology use boundaries", 
-      "Individual privacy with agreed-upon limits",
-      "Periodic check-ins about technology habits"
-    ],
-    weight: 5
-  },
-  
-  // Add more declaration questions for Marriage Life
-  {
-    id: 46,
-    section: "Your Marriage & Boundaries",
-    subsection: "Extended Family/In-Laws",
-    type: "M",
-    text: "We commit to managing extended family relationships, what is your approach?",
-    options: [
-      "Close involvement with both extended families",
-      "Balanced boundaries with respectful engagement",
-      "Limited involvement to protect marriage unit",
-      "Individual relationships managed separately"
-    ],
-    weight: 6
-  },
-  {
-    id: 47,
-    section: "Your Marriage Life",
-    subsection: "Sex - Initiation",
-    type: "M",
-    text: "We commit to physical intimacy initiation, what is your approach?",
-    options: [
-      "Either spouse can initiate with mutual respect",
-      "Husband primarily initiates with wife's openness",
-      "Scheduled intimate times with spontaneous moments",
-      "Natural flow based on mutual desire and timing"
-    ],
-    weight: 6
-  },
-  
-  // YOUR FINANCES
-  {
-    id: 48,
-    section: "Your Marriage Life",
-    subsection: "Sex - Communication",
-    type: "M",
-    text: "We commit to communicating about physical intimacy, what is your approach?",
-    options: [
-      "Open and frequent communication about needs and preferences",
-      "Regular check-ins about satisfaction and concerns",
-      "Address issues as they arise naturally",
-      "Maintain intimacy through non-verbal communication"
-    ],
-    weight: 5
-  },
-  {
-    id: 49,
-    section: "Your Marriage Life",
-    subsection: "Sex - Contraception",
-    type: "M",
-    text: "We commit to family planning and contraception, what is your approach?",
-    options: [
-      "Natural family planning methods only",
-      "Hormonal contraception with medical consultation",
-      "Barrier methods as primary approach",
-      "Open to children without contraception"
-    ],
-    weight: 7
-  },
-  {
-    id: 50,
-    section: "Your Parenting Life",
-    subsection: "Children Decision: Naming of Children (Model)",
-    type: "M",
-    text: "We commit to naming our children, what is your approach?",
-    options: [
-      "We commit to naming our children with first names that are from the Bible",
-      "We commit to naming our children with first names that honor a family member from either side of the family",
-      "We commit to naming our children with first names that are gender neutral",
-      "Other approach to naming children"
-    ],
-    weight: 2
-  },
-  {
-    id: 51,
-    section: "Your Parenting Life", 
-    subsection: "Children Decision: Naming of Children (Jr's)",
-    type: "M",
-    text: "We commit to naming children after family members, what is your approach?",
-    options: [
-      "We agree that it's an option to name one of our children after a parent",
-      "We agree that's not an option to name one of our children after a parent",
-      "Not applicable to our situation"
-    ],
-    weight: 2
-  },
-  {
-    id: 52,
-    section: "Your Parenting Life",
-    subsection: "Pregnancy Announcement",
-    type: "M",
-    text: "We commit to announcing pregnancy news, what is your approach?",
-    options: [
-      "We commit to keeping the news of our pregnancy private until the end of the 1st trimester",
-      "We commit to keeping the news of our pregnancy private until the end of the 2nd trimester",
-      "We do not have a specific guideline around if and when we will share news of a pregnancy",
-      "Not applicable to our situation"
-    ],
-    weight: 2
-  },
-  {
-    id: 53,
-    section: "Your Health and Wellness",
-    subsection: "Physical Health: Exercise",
-    type: "M",
-    text: "We commit to physical fitness and exercise, what is your approach?",
-    options: [
-      "Regular exercise together is important",
-      "Individual exercise routines are fine",
-      "Maintaining health is important but no specific expectations",
-      "No specific expectations about exercise"
-    ],
-    weight: 3
-  },
-  {
-    id: 54,
-    section: "Your Health and Wellness",
-    subsection: "Mental Health: Therapy",
-    type: "D",
-    text: "We commit to mental health and therapy support, what is your approach?",
-    options: [
-      "Yes, both individual and couples therapy",
-      "Yes to couples therapy, individual is personal choice",
-      "Only in crisis situations",
-      "No, therapy isn't necessary or helpful"
-    ],
-    weight: 5
-  },
-  {
-    id: 55,
-    section: "Your Parenting Life",
-    subsection: "Communication & Conflict Resolution",
-    type: "M",
-    text: "We commit to communication and conflict resolution around children, what is your approach?",
-    options: [
-      "We commit to not fighting or having serious arguments in front of the children, rather, we'd wait for time alone and away from the children, either in our check-in time or immediately after to discuss things away from them",
-      "We commit to fighting respectfully, even if it's a serious disagreement, in front of the children, because we believe it's healthy and constructive to model positive conflict resolution and to set realistic expectations for them in a marriage"
-    ],
-    weight: 4
-  },
-  {
-    id: 56,
-    section: "Your Parenting Life",
-    subsection: "Communication: Sex",
-    type: "M",
-    text: "We commit to discussing sex education with our children, what is your approach?",
-    options: [
-      "We commit to discussing sex with our children together at no later than 5 years old, specifically, discussing appropriate/inappropriate touch and expectations of communication if it happens",
-      "We commit to discussing sex with our children one on one (each parent has their own talk) at no later than 5 years old specifically, discussing appropriate/inappropriate touch and expectations of communication if it happens and talking through anatomy and what sex is",
-      "We commit to discussing sex with our children together at no later than 5 years old; however, we'll discuss appropriate/inappropriate touch and expectations of communication if it happens, between by age 7 and we'll talk through anatomy, what sex is and its purpose, by puberty (10-13)",
-      "We commit to discussing sex with our children one on one (each parent has their own talk) at no later than 5 years old; however, we'll discuss appropriate/inappropriate touch and expectations of communication if it happens, between by age 7 and we'll talk through anatomy, what sex is and its purpose, by puberty (10-13)",
-      "Other approach to sex education"
-    ],
-    weight: 4
-  },
-  {
-    id: 57,
-    section: "Your Marriage and Boundaries",
-    subsection: "Opposite Sex Friendships",
-    type: "M",
-    text: "We commit to boundaries for opposite-sex friendships, what is your approach?",
-    options: [
-      "No one-on-one time with opposite sex",
-      "Group settings only for opposite sex friendships",
-      "One-on-one acceptable with spouse's knowledge",
-      "No special restrictions for opposite sex friendships"
-    ],
-    weight: 12
-  },
-  {
-    id: 58,
-    section: "Your Parenting Life",
-    subsection: "Social Media (Exposure)",
-    type: "M",
-    text: "We commit to managing our children's social media exposure, what is your approach?",
-    options: [
-      "We're committed to guarding the psychological development and physical safety of our children while allowing them to be socially connected and technologically adept, with that said, we do not believe it is appropriate for our children to be on any form of social media until they become high school age",
-      "We're committed to guarding the psychological development and physical safety of our children while allowing them to be socially connected and technologically adept, with that said, we do not believe it is appropriate for our children to be on any form of social media until they become middle school age",
-      "We're committed to guarding the psychological development and physical safety of our children while allowing them to be socially connected and technologically adept, with that said, we will allow closely monitored social media use from middle school age on",
-      "Other approach to social media management"
-    ],
-    weight: 3
-  },
-  {
-    id: 59,
-    section: "Your Marriage and Boundaries",
-    subsection: "Personal Privacy",
-    type: "M",
-    text: "We commit to personal privacy boundaries in marriage, what is your approach?",
-    options: [
-      "Complete transparency in all areas (phone, email, etc.)",
-      "General transparency but some personal space",
-      "Privacy is important but should not create secrets",
-      "Strong boundaries around personal privacy"
-    ],
-    weight: 5
-  },
-  {
-    id: 60,
-    section: "Your Marriage and Boundaries",
-    subsection: "Sexual Boundaries",
-    type: "D",
-    text: "We commit to sexual intimacy being exclusive to marriage, what is your approach?",
-    options: [
-      "Agree - sexual intimacy is exclusive to marriage",
-      "Disagree - other approaches to sexual intimacy"
-    ],
-    weight: 12
-  },
-  {
-    id: 61,
-    section: "Your Marriage and Boundaries",
-    subsection: "Sexual Frequency",
-    type: "M",
-    text: "We commit to sexual frequency expectations, what is your approach?",
-    options: [
-      "Multiple times per week",
-      "About once per week",
-      "A few times per month",
-      "No specific expectations"
-    ],
-    weight: 5
-  },
-  {
-    id: 62,
-    section: "Your Parenting Life",
-    subsection: "Communication: Race / Racial Dynamics",
-    type: "M",
-    text: "We commit to discussing race and racial dynamics with our children, what is your approach?",
-    options: [
-      "We recognize the reality of race as well as its role and history still we don't believe we should have an explicit discussion about race / racial dynamics in the world and in our country with our children",
-      "We commit to discussing race with our children together at no later than 10 years old, specifically, discussing the history of race / racial dynamics, where it stems from a biblical perspective (Genesis 3), and expectations you have of them around their approach to engaging the issue in this world",
-      "We commit to discussing race with our children one on one (each parent has their own talk) at no later than 10 years old, specifically, discussing the history of race / racial dynamics, where it stems from a biblical perspective (Genesis 3), and expectations you have of them around their approach to engaging the issue in this world",
-      "Other approach to discussing race and racial dynamics"
-    ],
-    weight: 3
-  },
-  {
-    id: 63,
-    section: "Your Parenting Life",
-    subsection: "Education (Institution)",
-    type: "M",
-    text: "We commit to our children's educational institution, what is your approach?",
-    options: [
-      "We are committed to educating our children in the public school system",
-      "We are committed to educating our children in private school",
-      "We are committed to homeschooling our children",
-      "We are committed to a flexible learning experience where we're committed to the best local educational environment which could vary between all school types based on location, outcomes, pricing and more"
-    ],
-    weight: 4
-  },
-  {
-    id: 64,
-    section: "Your Family/Home Life",
-    subsection: "Traditions: Family Dinner [Excludes Date Night]",
-    type: "M",
-    text: "We commit to family dinner traditions, what is your approach?",
-    options: [
-      "We are committed to eating dinner as a family every single day, outside of unique and rare circumstances",
-      "We are committed to eating dinner as a family at least once weekly",
-      "We are committed to eating dinner as a family at least once monthly",
-      "Other approach to family dinner traditions"
-    ],
-    weight: 3
-  },
-  {
-    id: 65,
-    section: "Your Family/Home Life",
-    subsection: "Traditions: Family Vacations",
-    type: "M",
-    text: "We commit to family vacation traditions, what is your approach?",
-    options: [
-      "We are committed to budgeting, planning and going on at least one family vacation per year",
-      "We are committed to budgeting, planning and going on at least two family vacations per year",
-      "Other approach to family vacation traditions"
-    ],
-    weight: 2
-  },
-  {
-    id: 66,
-    section: "Your Family/Home Life",
-    subsection: "Traditions: Family Photos",
-    type: "M",
-    text: "We commit to family photo traditions, what is your approach?",
-    options: [
-      "We are committed to taking a full immediate family photo at least once per year",
-      "We are committed to taking a full immediate family photo at least once every two years",
-      "Other approach to family photo traditions"
-    ],
-    weight: 1
-  },
-  {
-    id: 67,
-    section: "Your Family/Home Life",
-    subsection: "House Cleaning & Maintenance",
-    type: "M",
-    text: "We commit to house cleaning and maintenance responsibilities, what is your approach?",
-    options: [
-      "In view of gifting and capacity, we commit to being the primary individual in our family who manages and executes the periodic functions of our house cleaning and maintenance, which includes but is not limited to cleaning and maintenance of living space, laundry and dry cleaning",
-      "We commit to not conflating this role and responsibility with function as always being the one executing the function/ responsibility day to day. What this means is is primarily and ultimately responsible and accountable for seeing it get done, within the financial and capacity constraints of the family"
-    ],
-    weight: 3
-  },
-  {
-    id: 68,
-    section: "Your Family/Home Life",
-    subsection: "Cleaning Model with Home (Inside)",
-    type: "M",
-    text: "We commit to a home cleaning model, what is your approach?",
-    options: [
-      "We commit to a model of weekly house cleaning taking place on Saturdays or Sundays which includes but is not limited to, cleaning of general living areas, kitchen, bathrooms and bedrooms and laundry (assumption of general tidiness, cleaning after self during the week)",
-      "We commit to a model of bi-weekly house cleaning taking place on Saturdays or Sundays which includes but is not limited to, cleaning of general living areas, kitchen, bathrooms and bedrooms and laundry (assumption of general tidiness, cleaning after self during the week)",
-      "We commit to a model of bi-weekly house cleaning by an outside cleaning vendor which includes but is not limited to, cleaning of general living areas, kitchen, bathrooms and bedrooms and laundry (assumption of general tidiness, cleaning after self during the week)",
-      "Other approach to home cleaning model"
-    ],
-    weight: 2
-  },
-  {
-    id: 69,
-    section: "Your Family/Home Life",
-    subsection: "Cleaning Model with Food",
-    type: "M",
-    text: "We commit to a food preparation and cleanup model, what is your approach?",
-    options: [
-      "We commit to a model where the person who prepares the food is not the person who cleans up the kitchen, sink and table after the food is prepared and consumed. It is the responsibility of the noncooking spouse/children to clean",
-      "We commit to a model where the person who prepares the food is responsible for cleaning up after the meal is done",
-      "We commit to a model where the person who prepares the food is responsible for cleaning up as they cook and after the meal is done",
-      "Other approach to food preparation and cleanup model"
-    ],
-    weight: 2
-  },
-  {
-    id: 70,
-    section: "Your Family/Home Life",
-    subsection: "Cleaning Model with Home (Outside)",
-    type: "M",
-    text: "We commit to outdoor home maintenance, what is your approach?",
-    options: [
-      "We commit to a model of weekly outside housework taking place on Saturdays or Sundays which includes but is not limited to, cleaning of vehicles, lawn care, cleaning of trash & recycling bins, deck, sidewalk and general gardening",
-      "We commit to a model of monthly outside housework taking place on Saturdays or Sundays which includes but is not limited to, cleaning of vehicles, lawn care, cleaning of trash & recycling bins, deck, sidewalk and general gardening",
-      "We commit to a model of outside housework by a hired outside vendor which includes but is not limited to, cleaning of vehicles, lawn care, cleaning of trash & recycling bins, deck, sidewalk and general gardening",
-      "Other approach to outdoor home maintenance"
-    ],
-    weight: 2
-  },
+
+  // YOUR HEALTH AND WELLNESS (Questions 71-89)
   {
     id: 71,
     section: "Your Health and Wellness",
@@ -967,7 +618,7 @@ export const questions: Question[] = [
       "We commit to enjoying healthy meals through all channels (cooking at home, eating out, and catering), we will not focus on cooking at home for any amount of days per week",
       "Other: Please detail"
     ],
-    weight: 3
+    weight: 4
   },
   {
     id: 72,
@@ -984,7 +635,7 @@ export const questions: Question[] = [
       "Carnivore diet",
       "Flexible to individual needs and preferences"
     ],
-    weight: 4
+    weight: 3
   },
   {
     id: 73,
@@ -1032,7 +683,7 @@ export const questions: Question[] = [
     section: "Your Health and Wellness",
     subsection: "Diet Expectations",
     type: "D",
-    text: "I believe we should follow the same dietary approach.",
+    text: "I believe we should follow the same dietary approach",
     options: [
       "We do believe spouses should generally follow the same dietary approach",
       "We do not believe spouses need to follow identical diets and can have individual approaches"
@@ -1050,7 +701,7 @@ export const questions: Question[] = [
       "Annual physical, already completed this year",
       "Other: Please detail"
     ],
-    weight: 5
+    weight: 4
   },
   {
     id: 78,
@@ -1077,270 +728,290 @@ export const questions: Question[] = [
       "We commit to an approach that utilizes all available over-the-counter drugs and medical treatments",
       "We commit to being flexible to individual preferences and medical needs"
     ],
-    weight: 5
+    weight: 4
   },
   {
     id: 80,
     section: "Your Health and Wellness",
-    subsection: "Financial Stewardship & Nutrition Health Goals",
-    type: "M",
-    text: "We commit to financial stewardship and nutrition health goals, what is your approach?",
+    subsection: "Sex Perspective: Declaration",
+    type: "D",
+    text: "We share the belief that sex in marriage is a duty before God and not a conditional expression of love and honor",
     options: [
-      "We commit to meal planning weekly and batch cooking (if doing it ourselves) with a goal of minimizing eating out to 1x per week for both stewardship and health benefits",
-      "We commit to meal planning weekly and batch cooking (if doing it ourselves) with a goal of minimizing eating out to 2x per week for both stewardship and health benefits",
-      "We commit to meal planning weekly and batch cooking (if doing it ourselves) with a goal of minimizing eating out to 3x per week for both stewardship and health benefits",
-      "Other approach to financial stewardship and nutrition health goals"
+      "We agree with this statement",
+      "We disagree with this statement"
     ],
-    weight: 3
+    weight: 8
   },
+
+  // YOUR FINANCES (Questions 81-89)
   {
     id: 81,
-    section: "Your Health and Wellness",
-    subsection: "Approach to Medicine, Illness and Pain Management",
+    section: "Your Finances",
+    subsection: "Financial Management",
     type: "M",
-    text: "We commit to healthy eating as a family, what is your approach?",
+    text: "We commit to financial management approach, what is your method?",
     options: [
-      "We commit to preparing and enjoying healthy meals as a family, as defined by completely restricting fried food, fast food, candy as well as any other non-whole, highly processed junk foods from our family's consumption at least 5 of the 7 days per week",
-      "We commit to preparing and enjoying healthy meals as a family, as defined by completely restricting fried food, fast food, candy as well as any other non-whole, highly processed junk foods from our family's consumption at least 4 of the 7 days per week",
-      "Other approach to healthy eating as a family"
+      "Joint accounts and shared financial decisions",
+      "Separate accounts with shared household expenses",
+      "One spouse manages all finances",
+      "Professional financial advisor guidance"
     ],
-    weight: 4
+    weight: 8
   },
   {
     id: 82,
-    section: "Your Health and Wellness",
-    subsection: "Specific Consumption Goals [Meal Types]",
+    section: "Your Finances",
+    subsection: "Budget Management",
     type: "M",
-    text: "We commit to specific dietary choices, what is your approach?",
+    text: "We commit to budget management, what is your approach?",
     options: [
-      "We commit to a healthy balanced diet with no special restriction on any meats (seafood, chicken, beef, pork), dairy, fruits and vegetables, and whole grains or nuts",
-      "We commit to a healthy balanced diet including all meats except pork (seafood, chicken, beef), dairy, fruits and vegetables, and whole grains or nuts",
-      "We commit to a healthy balanced vegetarian diet",
-      "We commit to a healthy balanced pescatarian diet",
-      "We commit to a healthy balanced diet which is flexible to individual needs (e.g., husband can pursue carnivore and wife can pursue vegetarian, while children can be unrestricted, for example)"
+      "Detailed monthly budget with regular review",
+      "General spending guidelines without strict tracking",
+      "Annual budget planning with quarterly reviews",
+      "Flexible spending based on income and needs"
+    ],
+    weight: 6
+  },
+  {
+    id: 83,
+    section: "Your Finances",
+    subsection: "Savings Goals",
+    type: "M",
+    text: "We commit to savings and financial goals, what is your priority?",
+    options: [
+      "Emergency fund as top priority",
+      "Home ownership savings focus",
+      "Retirement planning emphasis",
+      "Children's education fund priority"
+    ],
+    weight: 7
+  },
+  {
+    id: 84,
+    section: "Your Finances",
+    subsection: "Stewardship and Giving",
+    type: "M",
+    text: "We commit to financial stewardship and giving, what is your approach?",
+    options: [
+      "We commit to tithing 10% of our gross income to our local church",
+      "We commit to giving a percentage of our income to charitable causes",
+      "We commit to flexible giving based on our financial capacity",
+      "We are still determining our approach to financial giving"
+    ],
+    weight: 8
+  },
+  {
+    id: 85,
+    section: "Your Finances",
+    subsection: "Financial Decisions",
+    type: "M",
+    text: "We commit to making major financial decisions, what is your approach?",
+    options: [
+      "All major financial decisions require mutual agreement",
+      "Each spouse has autonomy up to a certain spending limit",
+      "One spouse takes the lead on financial decisions with consultation",
+      "We will seek financial counseling for major decisions"
+    ],
+    weight: 7
+  },
+  {
+    id: 86,
+    section: "Your Finances",
+    subsection: "Career and Income",
+    type: "M",
+    text: "We commit to career and income priorities, what is your approach?",
+    options: [
+      "Both spouses prioritize career advancement equally",
+      "One spouse prioritizes career while other supports family",
+      "Flexible approach based on opportunities and family needs",
+      "Ministry and service prioritized over income maximization"
+    ],
+    weight: 6
+  },
+
+  // YOUR FAMILY/HOME LIFE (Questions 87-93)
+  {
+    id: 87,
+    section: "Your Family/Home Life",
+    subsection: "Traditions: Family Dinner",
+    type: "M",
+    text: "We commit to family dinner traditions, what is your approach?",
+    options: [
+      "Daily family dinners together",
+      "Weekly family dinners on specific days",
+      "Special occasion family dinners only",
+      "Flexible family meal arrangements"
     ],
     weight: 4
   },
   {
-    id: 83,
-    section: "Your Health and Wellness",
-    subsection: "New Babies: Nutrition: Breastfeeding",
-    type: "M",
-    text: "We commit to infant nutrition and breastfeeding, what is your approach?",
-    options: [
-      "We commit to breastfeeding primarily and only using formula in rare circumstances",
-      "We commit to breastfeeding whenever possible, still, we do not have any reservations about relying on high quality formula",
-      "Not Applicable"
-    ],
-    weight: 3
-  },
-  {
-    id: 87,
-    section: "Your Health and Wellness",
-    subsection: "Approach to Medicine, Illness and Pain Management: Natural Birth or Epidural",
-    type: "M",
-    text: "We commit to birth pain management approach, what is your approach?",
-    options: [
-      "We are committed to having a natural birth",
-      "We are committed to having an epidural or anything medically available to relieve labor pain",
-      "We're not well educated enough on the subject to make an informed decision on what's best so we plan to research and revisit this when the time comes",
-      "Not Applicable"
-    ],
-    weight: 3
-  },
-  {
     id: 88,
-    section: "Your Health and Wellness",
-    subsection: "Psychological / Physical (Individual Therapy)",
+    section: "Your Family/Home Life",
+    subsection: "House Cleaning & Maintenance",
     type: "M",
-    text: "We commit to individual therapy for personal wellness, what is your approach?",
+    text: "We commit to household responsibilities, what is your approach?",
     options: [
-      "We are each committed to seeing a (faith-aligned) therapist individually, at least 6 times per year during our marriage (as our resources allow)",
-      "We are each committed to seeing a (faith-aligned) therapist individually, at least 4 times per year during our marriage (as our resources allow)",
-      "We are each committed to seeing a (faith-aligned) therapist individually, at least 12 times per year during our marriage (as our resources allow)",
-      "While we believe in seeking counsel for our marriage, we're not ready to commit to long-term individual therapy currently"
+      "Shared responsibilities based on availability",
+      "Traditional gender-based role division",
+      "Hired help for major cleaning tasks",
+      "Rotating weekly responsibility assignments"
+    ],
+    weight: 3
+  },
+  {
+    id: 89,
+    section: "Your Family/Home Life",
+    subsection: "Extended Family Relationships",
+    type: "M",
+    text: "We commit to extended family relationships, what is your approach?",
+    options: [
+      "Regular visits and close relationships with both families",
+      "Balanced involvement with boundaries as needed",
+      "Selective engagement based on positive influences",
+      "Primary focus on our immediate family unit"
+    ],
+    weight: 5
+  },
+  {
+    id: 90,
+    section: "Your Family/Home Life",
+    subsection: "Holiday and Celebration Traditions",
+    type: "M",
+    text: "We commit to holiday and celebration traditions, what is your approach?",
+    options: [
+      "Create new traditions focused on our nuclear family",
+      "Balance traditions from both families of origin",
+      "Focus primarily on Christian/religious celebrations",
+      "Flexible approach based on circumstances each year"
     ],
     weight: 4
   },
 
-  {
-    id: 85,
-    section: "Your Health and Wellness",
-    subsection: "Approach to Medicine, Illness and Pain Management",
-    type: "M",
-    text: "We are committed to each doing a full physical, what is your approach?",
-    options: [
-      "Annual physical and check-up before wedding",
-      "Annual physical, already completed this year",
-      "Other: Please detail"
-    ],
-    weight: 5
-  },
-  {
-    id: 86,
-    section: "Your Health and Wellness",
-    subsection: "Psychological / Physical (Physical Wellness – Exercise)",
-    type: "M",
-    text: "We are each committed to regular exercise, what is your approach?",
-    options: [
-      "At least 3x per week individually",
-      "At least 2x per week individually",
-      "At least 4x per week individually",
-      "Other: please detail"
-    ],
-    weight: 4
-  },
-  {
-    id: 89,
-    section: "Your Health and Wellness",
-    subsection: "Specific Consumption Goals [Meal Types]",
-    type: "M",
-    text: "We commit to a healthy balanced diet, what is your approach?",
-    options: [
-      "No special restriction on any meats, fish, poultry and dairy products",
-      "All meats except pork and shellfish, in accordance with biblical dietary guidelines",
-      "Vegetarian diet",
-      "Vegan diet",
-      "Pescatarian diet",
-      "Other dietary approach"
-    ],
-    weight: 4
-  },
-  // Next, adding additional authentic questions to reach the full 100
-  {
-    id: 90,
-    section: "Your Marriage Life",
-    subsection: "Sex - Initiation",
-    type: "M",
-    text: "We commit to physical intimacy initiation, what is your approach?",
-    options: [
-      "We commit to alternating who initiates sex by week",
-      "We commit to alternating who initiates sex by day/instance",
-      "We commit to \"letting it flow\" naturally without a set alternation schedule, with that said, we each willingly acknowledge it is not the responsibility of one spouse to initiate a duty before God"
-    ],
-    weight: 5
-  },
+  // YOUR MARRIAGE AND BOUNDARIES (Questions 91-99)
   {
     id: 91,
-    section: "Your Marriage Life",
-    subsection: "Sex - Communication",
+    section: "Your Marriage and Boundaries",
+    subsection: "Communication with Opposite Gender",
     type: "M",
-    text: "We commit to intimate communication, what is your approach?",
+    text: "We commit to boundaries in communication with opposite gender, what is your approach?",
     options: [
-      "We commit to having a conversation within the first month about what we individually enjoy in sex with our spouse and what aspect of the experience, if anything, you would each enjoy more of",
-      "We commit to having a conversation within the first 3 months about what we individually enjoy in sex with our spouse and what aspect of the experience, if anything, you would each enjoy more of",
-      "We commit to having a conversation within the first 6 months about what we individually enjoy in sex with our spouse and what aspect of the experience, if anything, you would each enjoy more of",
-      "Other: Before committing to this we need further discussion in our session around how this would operate"
+      "Transparent communication about all opposite gender interactions",
+      "Group settings only for opposite gender friendships",
+      "Professional courtesy with clear boundaries",
+      "Spouse involvement in all significant opposite gender relationships"
     ],
-    weight: 5
+    weight: 8
   },
   {
     id: 92,
-    section: "Your Marriage Life",
-    subsection: "Sex - Contraception",
+    section: "Your Marriage and Boundaries",
+    subsection: "Social Media and Privacy",
     type: "M",
-    text: "We commit to family planning and contraception, what is your approach?",
+    text: "We commit to social media and privacy boundaries, what is your approach?",
     options: [
-      "We do not plan to use contraception of any form during marriage",
-      "We plan to use contraception, but we do not plan to use any which require oral consumption (health concerns/considerations) or invasive surgery (vasectomy, fallopian \"tubes tied\")",
-      "We plan to use all forms of contraception available to us which includes oral consumption and/or invasive surgery as an option (vasectomy, fallopian \"tubes tied\")"
+      "Complete transparency with shared passwords and access",
+      "Individual privacy with general openness about usage",
+      "Minimal social media use with family focus",
+      "Professional use only with personal boundaries"
     ],
     weight: 5
   },
   {
     id: 93,
-    section: "Your Marriage Life",
-    subsection: "Sex - Boundaries",
-    type: "D",
-    text: "We commit to never discussing our sex lives with anyone (friends, colleagues, and family members) unless we mutually agree to seek outside counsel on that aspect of our relationship.",
+    section: "Your Marriage and Boundaries",
+    subsection: "Friendship and Social Relationships",
+    type: "M",
+    text: "We commit to friendships and social relationships as a married couple, what is your approach?",
     options: [
-      "We commit to never discussing our sex lives with anyone (friends, colleagues, and family members) unless we mutually agree to seek outside counsel on that aspect of our relationship",
-      "We disagree with this statement"
+      "Primarily couple friendships and family activities",
+      "Individual friendships with transparency and boundaries",
+      "Church community as primary social relationship focus",
+      "Balanced approach to individual and couple relationships"
     ],
-    weight: 6
+    weight: 5
   },
   {
     id: 94,
-    section: "Your Marriage Life with Children",
-    subsection: "Children Decision: How To Have Them (Method of Delivery Preference)",
+    section: "Your Marriage and Boundaries",
+    subsection: "Work-Life Balance",
     type: "M",
-    text: "We commit to childbirth delivery method, what is your preference?",
+    text: "We commit to work-life balance in our marriage, what is your approach?",
     options: [
-      "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer: A Water Delivery (if medically prudent and possible)",
-      "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer: Vaginal Delivery (with potential for C-Section if medically necessary)",
-      "Not Applicable"
+      "Strict boundaries between work and family time",
+      "Flexible integration of work and family responsibilities",
+      "Family priorities take precedence over career advancement",
+      "Seasonal adjustments based on work and family demands"
     ],
-    weight: 3
+    weight: 5
   },
   {
     id: 95,
-    section: "Your Marriage Life with Children",
-    subsection: "Children Decision: Where To Have Them (Location Preference)",
+    section: "Your Marriage and Boundaries",
+    subsection: "Hospitality and Service",
     type: "M",
-    text: "We commit to childbirth location, what is your preference?",
+    text: "We commit to hospitality and service as a married couple, what is your approach?",
     options: [
-      "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer: A Home Birth (if medically prudent and possible)",
-      "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer: A Hospital Birth",
-      "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer: A Birth Center (if medically prudent and possible)",
-      "Not Applicable"
+      "Regular hosting and welcoming others into our home",
+      "Active service in church and community ministries",
+      "Occasional hospitality based on capacity and calling",
+      "Focus on family stability before extensive outreach"
     ],
-    weight: 3
+    weight: 5
   },
   {
     id: 96,
-    section: "Your Marriage Life with Children",
-    subsection: "Children Decision: Number of Children (Adopted)",
+    section: "Your Marriage and Boundaries",
+    subsection: "Recreation and Entertainment",
     type: "M",
-    text: "We commit to adoption, what is your approach?",
+    text: "We commit to recreation and entertainment choices, what is your approach?",
     options: [
-      "We commit to adopting at least one child during our marriage",
-      "We admire and believe in adoption but do not plan to adopt during our marriage",
-      "We are committed to having children biologically (according to God's will), but would consider adoption if we discern it's not His will for us to have children biologically",
-      "Not Applicable"
+      "Family-friendly activities aligned with Christian values",
+      "Balanced entertainment with discernment and boundaries",
+      "Outdoor and active recreation prioritized over screen time",
+      "Cultural and educational entertainment experiences"
     ],
     weight: 4
   },
   {
     id: 97,
-    section: "Your Marriage Life with Children",
-    subsection: "Children Decision: Naming of Children (Model)",
+    section: "Your Marriage and Boundaries",
+    subsection: "Legacy and Future Vision",
     type: "M",
-    text: "We commit to naming our children, what is your approach?",
+    text: "We commit to legacy and future vision for our family, what is your approach?",
     options: [
-      "We commit to naming our children with first names that are from the Bible",
-      "We commit to naming our children with first names that honor a family member from either side of the family",
-      "We commit to naming our children with first names that are gender neutral",
-      "Other approach to naming our children",
-      "Not Applicable"
+      "Strong Christian legacy through generations",
+      "Financial and educational legacy for children",
+      "Service and ministry legacy in community",
+      "Combination of spiritual, financial, and service legacy"
     ],
-    weight: 2
+    weight: 7
   },
   {
     id: 98,
-    section: "Your Marriage Life with Children",
-    subsection: "Children Decision: Naming of Children (Jr's)",
+    section: "Your Marriage and Boundaries",
+    subsection: "Marital Growth and Development",
     type: "M",
-    text: "We commit to naming children after parents, what is your approach?",
+    text: "We commit to continuous marital growth and development, what is your approach?",
     options: [
-      "We agree that it's an option to name one of our children after a parent",
-      "We agree that's not an option to name one of our children after a parent",
-      "Not Applicable"
+      "Regular marriage retreats and couples conferences",
+      "Ongoing biblical study and spiritual growth together",
+      "Professional marriage counseling and education",
+      "Mentorship relationships with older married couples"
     ],
-    weight: 2
+    weight: 6
   },
   {
     id: 99,
-    section: "Your Marriage Life with Children",
-    subsection: "Pregnancy Announcement",
+    section: "Your Marriage and Boundaries",
+    subsection: "Covenant Renewal and Commitment",
     type: "M",
-    text: "We commit to pregnancy announcement timing, what is your approach?",
+    text: "We commit to covenant renewal and ongoing commitment, what is your approach?",
     options: [
-      "We commit to keeping the news of our pregnancy private until the end of the 1st trimester",
-      "We commit to keeping the news of our pregnancy private until the end of the 2nd trimester",
-      "We do not have a specific guideline around if and when we will share news of a pregnancy",
-      "Not Applicable"
+      "Annual covenant renewal ceremony and recommitment",
+      "Regular review and renewal of marriage vows",
+      "Milestone celebrations and covenant acknowledgment",
+      "Daily commitment and ongoing covenant consciousness"
     ],
-    weight: 2
-  },
-
+    weight: 8
+  }
 ];
