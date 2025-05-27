@@ -670,12 +670,12 @@ export const questions: Question[] = [
     section: "Your Parenting Life",
     subsection: "Children Decision: Naming of Children (Model)",
     type: "M",
-    text: "Your Parenting Life: Children Decision: Naming of Children (Model)",
+    text: "We commit to naming our children, what is your approach?",
     options: [
-      "We commit to naming our children with first names that are from the Bible.",
-      "We commit to naming our children with first names that honor a family member from either side of the family.",
-      "We commit to naming our children with first names that are gender neutral.",
-      "Other: Please detail"
+      "We commit to naming our children with first names that are from the Bible",
+      "We commit to naming our children with first names that honor a family member from either side of the family",
+      "We commit to naming our children with first names that are gender neutral",
+      "Other approach to naming children"
     ],
     weight: 2
   },
@@ -684,11 +684,11 @@ export const questions: Question[] = [
     section: "Your Parenting Life", 
     subsection: "Children Decision: Naming of Children (Jr's)",
     type: "M",
-    text: "Your Parenting Life: Children Decision: Naming of Children (Jr's)",
+    text: "We commit to naming children after family members, what is your approach?",
     options: [
-      "We agree that it's an option to name one of our children after a parent.",
-      "We agree that's not an option name one of our children after a parent.",
-      "Not Applicable"
+      "We agree that it's an option to name one of our children after a parent",
+      "We agree that's not an option to name one of our children after a parent",
+      "Not applicable to our situation"
     ],
     weight: 2
   },
@@ -697,12 +697,12 @@ export const questions: Question[] = [
     section: "Your Parenting Life",
     subsection: "Pregnancy Announcement",
     type: "M",
-    text: "Your Parenting Life: Pregnancy Announcement",
+    text: "We commit to announcing pregnancy news, what is your approach?",
     options: [
-      "We commit to keeping the news of our pregnancy private until the end of the 1st trimester.",
-      "We commit to keeping the news of our pregnancy private until the end of the 2nd trimester.",
-      "We do not have a specific guideline around if and when we will share news of a pregnancy.",
-      "Not Applicable"
+      "We commit to keeping the news of our pregnancy private until the end of the 1st trimester",
+      "We commit to keeping the news of our pregnancy private until the end of the 2nd trimester",
+      "We do not have a specific guideline around if and when we will share news of a pregnancy",
+      "Not applicable to our situation"
     ],
     weight: 2
   },
@@ -711,7 +711,7 @@ export const questions: Question[] = [
     section: "Your Health and Wellness",
     subsection: "Physical Health: Exercise",
     type: "M",
-    text: "Your Health and Wellness: Physical Health: Exercise - What are your expectations for physical fitness?",
+    text: "We commit to physical fitness and exercise, what is your approach?",
     options: [
       "Regular exercise together is important",
       "Individual exercise routines are fine",
@@ -725,7 +725,7 @@ export const questions: Question[] = [
     section: "Your Health and Wellness",
     subsection: "Mental Health: Therapy",
     type: "D",
-    text: "Your Health and Wellness: Mental Health: Therapy - Are you open to individual or couples therapy?",
+    text: "We commit to mental health and therapy support, what is your approach?",
     options: [
       "Yes, both individual and couples therapy",
       "Yes to couples therapy, individual is personal choice",
