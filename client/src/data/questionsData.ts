@@ -131,7 +131,7 @@ export const questions: Question[] = [
   {
     id: 10,
     section: "Your Foundation",
-    subsection: "Marriage Priorities",
+    subsection: "Order of Priority before God",
     type: "M",
     text: "We understand and accept the order of relationship priority according to God's highest design, what is your order of priority?",
     options: [
@@ -156,16 +156,15 @@ export const questions: Question[] = [
   },
   {
     id: 12,
-    section: "Your Faith Life",
-    subsection: "Worship Life: Marriage",
-    type: "M",
-    text: "We commit to prayer as a couple, how often?",
+    section: "Your Marriage Life",
+    subsection: "Sex Perspective: Declaration",
+    type: "D",
+    text: "We share the belief that sex in marriage is a duty before God and not a conditional expression of love and honor.",
     options: [
-      "Daily prayer before sleep",
-      "Weekly prayer during check-in",
-      "Other: Please detail"
+      "We agree with this statement",
+      "We disagree with this statement"
     ],
-    weight: 4
+    weight: 8
   },
   {
     id: 13,
@@ -311,12 +310,11 @@ export const questions: Question[] = [
     section: "Your Marriage Life",
     subsection: "Communication & Conflict Resolution: Counseling",
     type: "M",
-    text: "We commit to meeting with a marriage coach/counselor, what is your approach?",
+    text: "How often would you attend marriage counseling?",
     options: [
-      "At least once per quarter as a check-in whether there are issues or not",
-      "At least once per year as a check-in whether there are issues or not",
-      "Only when there is an issue we can't resolve independently",
-      "Never, we don't believe in outside counsel for marriage"
+      "Regularly (at least once every 90 days) via check-in sessions",
+      "Only when there's a problem, disagreement and/or difficulty we can't resolve on our own",
+      "Never, we don't believe in using outside support for our marriage issues"
     ],
     weight: 3
   },
@@ -401,30 +399,30 @@ export const questions: Question[] = [
   {
     id: 31,
     section: "Your Marriage Life",
-    subsection: "Relationship Model (Late Night Work)",
+    subsection: "Sex - Frequency",
     type: "M",
-    text: "We commit to limiting late work nights, what is your approach?",
+    text: "We commit to physical intimacy frequency, what is your approach?",
     options: [
-      "No late work nights",
-      "Maximum 1 late work night per week",
-      "Maximum 2 late work nights per week",
-      "As needed for work responsibilities"
+      "Daily physical intimacy",
+      "Multiple times per week",
+      "Weekly physical intimacy",
+      "As desired mutually"
     ],
-    weight: 3
+    weight: 6
   },
   {
     id: 32,
     section: "Your Marriage Life",
-    subsection: "Relationship Model (Work Down Time)",
+    subsection: "Work Down Time",
     type: "M",
-    text: "We commit to respecting individual downtime needs, what is your approach?",
+    text: "We commit to managing work stress and downtime, what is your approach?",
     options: [
-      "No individual downtime needed",
-      "15-30 minutes daily downtime",
-      "30-60 minutes daily downtime",
-      "60+ minutes daily downtime"
+      "Complete separation of work and home life",
+      "Limited work discussion at home",
+      "Open communication about work challenges",
+      "Shared work responsibilities and support"
     ],
-    weight: 3
+    weight: 4
   },
   {
     id: 33,

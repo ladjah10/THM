@@ -1,0 +1,45 @@
+The current assessment is partially aligned with the book and chart, but several discrepancies exist. Below, I summarize the status for each section, followed by a detailed discrepancy table.
+
+Section-by-Section Status
+Your Foundation (1–10):
+Order/Numbering: Matches the book’s sequence.
+Content: Questions 1–9 are correctly updated per the chart, with exact book text and options. Question 10 is updated but titled “Marriage Priorities” instead of “Order of Priority before God.”
+Chart Implementation: All updates applied correctly.
+Issues: Minor title mismatch for Question 10.
+Your Faith Life (11–14):
+Order/Numbering: Matches book sequence.
+Content: Question 11 is correctly added per the chart. Questions 12–14 are updated but Question 12 is a duplicate of 11 (both “Worship Life: Marriage”).
+Chart Implementation: Question 11 addition is correct, but Question 12 should be removed or reassigned to a unique book question.
+Issues: Duplicate Question 12; needs replacement with a distinct book question.
+Your Marriage Life (15–35):
+Order/Numbering: Partially matches book. Questions 15–23 align, but 24–35 deviate significantly.
+Content: Questions 15–23 are correctly updated per the chart. Questions 24–35 include extraneous financial questions (31–35) not in the book, and Question 24’s options don’t match the book’s counseling question.
+Chart Implementation: Updates for 15–23 are correct, but 24–35 were not updated/removed as recommended. The chart suggested removing financial questions (e.g., 31–35) and adding book questions like “Sex - Contraception.”
+Issues: Incorrect options for Question 24; extraneous questions 31–35; missing book questions (e.g., Sex Perspective, Work Down Time).
+Your Parenting Life (36–50):
+Order/Numbering: Does not match book’s “Your Marriage Life with Children” section.
+Content: Questions 36–50 cover parenting but include extraneous topics (e.g., Higher Education, Sports) not in the book. Book questions like “Communication & Discipline” and “Social Media (New Child)” are missing.
+Chart Implementation: The chart recommended adding book questions (e.g., Communication & Discipline) at IDs like 60, but these are not present, and extraneous questions remain.
+Issues: Entire section is misaligned; needs replacement with book questions.
+Your Family/Home Life (51–70):
+Order/Numbering: Does not match book’s “Your Family Life” section.
+Content: Questions 51–70 include extraneous topics (e.g., Pets, Emergency Preparedness) not in the book. Book questions like “Traditions: Family Dinner” and “House Cleaning & Maintenance” are missing.
+Chart Implementation: The chart recommended adding book questions (e.g., Family Dinner at ID 63), but these are not present.
+Issues: Section is mostly extraneous; needs replacement with book questions.
+Your Finances (71–79):
+Order/Numbering: Partially matches book’s “Your Finances” section.
+Content: Questions 71–79 are extraneous (e.g., Retirement Planning, Insurance) except for potential overlap with “Financial Planning Model” (book ID 61). Book questions like “Financial Generosity” and “Payments Execution” are missing.
+Chart Implementation: The chart recommended adding book financial questions (e.g., ID 60–62), but only ID 60 was added, and extraneous questions remain.
+Issues: Mostly extraneous; needs replacement with book questions.
+Your Health and Wellness (80–89):
+Order/Numbering: Partially matches book’s “Your Health and Wellness” section.
+Content: Questions 80–83 and 87–88 align with book questions (e.g., Nutrition, Therapy), but 84–86 and 89 are extraneous (e.g., Diet Expectations, Device-Free Time).
+Chart Implementation: Questions 81 and 88 were added per the chart, but extraneous questions were not removed.
+Issues: Extraneous questions 84–86, 89; missing book questions (e.g., Exercise).
+Your Marriage Life with Children (90–99):
+Order/Numbering: Partially matches book’s “Your Marriage Life with Children” section.
+Content: Questions 90–93 and 94–99 align with book questions (e.g., Sex - Initiation, Children Decisions), but their placement at 90–99 is incorrect (should be earlier, e.g., with Sex Life questions).
+Chart Implementation: Question 59 (Sex - Contraception) was added, but its placement should be earlier (e.g., ID 48, per book order).
+Issues: Misplaced questions; missing book questions (e.g., Communication: Sex/Gender).
+Discrepancy Table
+The table below lists discrepancies, confirms chart implementation, and provides corrective actions for Replit. I’ve mapped book questions to their intended IDs based on their sequence, adjusting for the 99-question limit. Extraneous questions are replaced with missing book questions in their correct order.
