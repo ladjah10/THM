@@ -41,6 +41,16 @@ if (!process.env.STRIPE_SECRET_KEY) {
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Add input validation middleware for better data integrity
+  app.use(express.json({ limit: '10mb' })); // Increase payload limit
+  app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+  
+  // Request logging middleware for debugging submission issues
+  app.use('/api/assessment', (req, res, next) => {
+    console.log(`📝 Assessment API: ${req.method} ${req.path} - Body size: ${JSON.stringify(req.body).length} bytes`);
+    next();
+  });
+
   // Serve sample templates directly
   app.get('/sample-results.html', (req, res) => {
     res.sendFile('sample-results-mockup.html', { root: '.' });

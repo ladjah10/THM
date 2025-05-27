@@ -1,0 +1,100 @@
+
+🔍 CODE REVIEW & IMPROVEMENT PLAN FOR THM REPOSITORY
+
+✅ Objective
+Identify bugs, logical errors, and areas for improvement across the THM repo.
+
+---
+
+🐞 BUGS & LOGICAL ERRORS
+
+1. Incomplete or Truncated Submissions
+- Issue: Some male respondents' submissions are not being saved completely.
+- Recommendation:
+  - Check form input length limits and ensure all POST/PUT requests correctly serialize and store data.
+  - Add logging at submission and storage points to trace data flow.
+  - Validate that backend saves payload consistently, especially gender-linked branching.
+
+2. Duplicate Scores Despite Different Inputs
+- Issue: Multiple users show same scores even with differing answers.
+- Recommendation:
+  - Check scoring logic inside fix-assessment-scores.ts and any scoring utils.
+  - Verify input parsing and mapping – especially indexing of question-to-weight mappings.
+  - Add unit tests to compare different answer combinations for output divergence.
+
+---
+
+🛠️ CODE IMPROVEMENTS
+
+1. Input Validation
+- Add express-validator or Joi to sanitize and validate form data server-side.
+- Ensure assessment scores are calculated from verified, trusted input only.
+
+2. Dynamic Configs
+- Replace hardcoded paths (e.g., in create-simple-csv.cjs) with environment-based configs using .env and dotenv.
+
+3. Consolidate Score Fix Scripts
+- Scripts like fix-assessment-scores.ts and fix-assessment-scores-v2.ts should be unified.
+- Use reusable functions and expose as a module for testing and DRYness.
+
+---
+
+🧪 TESTING
+
+1. Add Unit and Integration Tests
+- Install jest, ts-jest, and supertest.
+- Suggested tests:
+  - Assessment submission and storage flow
+  - Score calculation from sample inputs
+  - Admin dashboard retrievals and filters
+
+2. Add Test Coverage Badge
+- Use jest --coverage and display code coverage in README
+
+---
+
+🧱 CODE STYLE
+
+1. Standardize with ESLint & Prettier
+npm install eslint prettier eslint-config-prettier eslint-plugin-prettier --save-dev
+npx eslint --init
+- Add .eslintrc.js and .prettierrc configs
+
+---
+
+🚀 DEPLOYMENT & ADMIN FIXES
+
+1. Admin Dashboard Fix
+- Issue: Admin dashboard does not show paid/arranged pool respondents.
+- Steps:
+  - Ensure users in the arranged pool and paid list are correctly linked in DB (user.assessment?.paid === true)
+  - Fix filters in admin page query (likely in a find or filter clause in server route)
+
+2. Show Full Report Data in Admin
+- Ensure reports join across tables/models: User, Assessment, Payment, etc.
+- If using MongoDB/Mongoose, use .populate() or aggregation
+- If SQL/Prisma, use .include or .join
+
+---
+
+🧾 DOCUMENTATION
+
+1. Expand README.md
+Add:
+- Project overview
+- Setup instructions (local + deployment)
+- API routes (admin, assessment, etc.)
+- Contact/support info
+
+---
+
+✅ NEXT STEPS CHECKLIST
+
+- [ ] Fix submission save bug
+- [ ] Debug scoring logic and duplication issue
+- [ ] Unify assessment scoring utilities
+- [ ] Add input validation middleware
+- [ ] Enable test coverage and CI
+- [ ] Audit Admin dashboard data join logic
+- [ ] Setup Prettier + ESLint config
+- [ ] Update README
