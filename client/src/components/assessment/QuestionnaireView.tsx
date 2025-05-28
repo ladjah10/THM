@@ -36,9 +36,22 @@ export default function QuestionnaireView({
 }: QuestionnaireViewProps) {
   // Memoized option selection handler to prevent re-renders
   const handleOptionChange = useCallback((option: string) => {
-    // For multiple choice questions, the value is fixed (1)
-    // For declarations, we use the weight provided
-    const value = question.type === "M" ? 1 : question.weight || 1;
+    let value: number;
+    
+    if (question.type === "M") {
+      // Multiple choice questions use fixed value of 1
+      value = 1;
+    } else if (question.type === "D") {
+      // Declaration questions: affirmative gets full weight, antithesis gets 0
+      if (option === "I do not agree with this statement") {
+        value = 0;
+      } else {
+        value = question.weight || 1;
+      }
+    } else {
+      value = question.weight || 1;
+    }
+    
     onOptionSelect(question.id, option, value);
   }, [question.id, question.type, question.weight, onOptionSelect]);
 

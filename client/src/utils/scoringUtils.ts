@@ -27,9 +27,20 @@ export function calculateScores(
       sectionScores[question.section] = { earned: 0, possible: 0, percentage: 0 };
     }
     
-    // Calculate earned value based on weight
-    const earned = response.value * (question.weight || 1);
-    const possible = 5 * (question.weight || 1); // Max value is 5 (strongly agree)
+    // Calculate earned and possible values based on question type
+    let earned: number;
+    let possible: number;
+    
+    if (question.type === "D") {
+      // Declaration questions: earned is the response value (full weight or 0)
+      // Possible is always the full weight
+      earned = response.value;
+      possible = question.weight || 1;
+    } else {
+      // Multiple choice and other questions
+      earned = response.value * (question.weight || 1);
+      possible = 5 * (question.weight || 1); // Max value is 5
+    }
     
     // Add to section scores
     sectionScores[question.section].earned += earned;
