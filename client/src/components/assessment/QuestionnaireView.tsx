@@ -36,11 +36,13 @@ export default function QuestionnaireView({
 }: QuestionnaireViewProps) {
   // Memoized option selection handler to prevent re-renders
   const handleOptionChange = useCallback((option: string) => {
+    // Find the option index for consistent scoring
+    const optionIndex = (question.options || []).indexOf(option);
     let value: number;
     
     if (question.type === "M") {
-      // Multiple choice questions use fixed value of 1
-      value = 1;
+      // Multiple choice questions use option index + 1 for consistent scoring
+      value = optionIndex + 1;
     } else if (question.type === "D") {
       // Declaration questions: affirmative gets full weight, antithesis gets 0
       if (option === "I do not agree with this statement") {
@@ -53,16 +55,16 @@ export default function QuestionnaireView({
     }
     
     onOptionSelect(question.id, option, value);
-  }, [question.id, question.type, question.weight, onOptionSelect]);
+  }, [question.id, question.type, question.weight, question.options, onOptionSelect]);
 
   // Calculate progress percentage
   const progressPercentage = useMemo(() => {
     return Math.round(((questionIndex + 1) / totalQuestions) * 100);
   }, [questionIndex, totalQuestions]);
 
-  // Memoized options to prevent unnecessary re-renders
+  // Memoized options to prevent unnecessary re-renders with null safety
   const memoizedOptions = useMemo(() => 
-    question.options.map((option, index) => {
+    (question.options || []).map((option, index) => {
       const uniqueOptionId = `q${question.id}-opt${index}`;
       return { option, index, uniqueOptionId };
     }), 

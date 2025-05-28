@@ -19,8 +19,11 @@ export function calculateScores(
   questions.forEach(question => {
     const response = responses[question.id];
     
-    // Skip if no response
-    if (!response) return;
+    // Skip if no response or invalid response format
+    if (!response || typeof response.value !== "number") {
+      console.warn("Skipped question ID:", question.id, "- Missing or invalid response");
+      return;
+    }
     
     // Initialize section if not exists
     if (!sectionScores[question.section]) {
@@ -34,12 +37,14 @@ export function calculateScores(
     if (question.type === "D") {
       // Declaration questions: earned is the response value (full weight or 0)
       // Possible is always the full weight
+      const weight = question.weight ?? 1;
       earned = response.value;
-      possible = question.weight || 1;
+      possible = weight;
     } else {
       // Multiple choice and other questions
-      earned = response.value * (question.weight || 1);
-      possible = 5 * (question.weight || 1); // Max value is 5
+      const weight = question.weight ?? 1;
+      earned = response.value * weight;
+      possible = 5 * weight; // Max value is 5
     }
     
     // Add to section scores

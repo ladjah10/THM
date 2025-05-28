@@ -1,0 +1,56 @@
+# Fix Recommendations for THM Replit Codebase
+
+## File: client/src/components/assessment/QuestionnaireView.tsx
+
+1. **Prevent Runtime Crash from Undefined Options**
+   - Change:
+     ```tsx
+     {question.options.map(...)}
+     ```
+   - To:
+     ```tsx
+     {(question.options || []).map((option, index) => (
+       <RadioGroupItem key={index} value={option} id={option} />
+     ))}
+     ```
+
+2. **Ensure Option Values Are Associated for Scoring**
+   - Modify `onOptionSelect` handler to include a consistent value:
+     ```tsx
+     onOptionSelect(question.id, option, index + 1)
+     ```
+
+3. **Accessibility Enhancement**
+   - Consider supporting keyboard navigation and screen readers for improved UX.
+
+---
+
+## File: client/src/utils/scoringUtils.ts
+
+1. **Add Default Weight Fallback**
+   - Change:
+     ```ts
+     const earned = response.value * question.weight;
+     ```
+   - To:
+     ```ts
+     const weight = question.weight ?? 1;
+     const earned = response.value * weight;
+     ```
+
+2. **Validate Response Format Before Scoring**
+   - Insert check before accessing response:
+     ```ts
+     if (!response || typeof response.value !== "number") return;
+     ```
+
+3. **Add Logging for Skipped Questions (Optional but Helpful)**
+   - After skip condition:
+     ```ts
+     if (!response) {
+       console.warn("Skipped question ID:", question.id);
+       return;
+     }
+     ```
+
+Save this as `replit_fix_prompt.txt` and use it as a step-by-step implementation guide.
