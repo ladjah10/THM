@@ -54,13 +54,14 @@ export async function calculateAssessmentWithResponses(
       }
 
       totalEarned += response.value;
-      totalPossible += question.weight ?? 12; // Use 12 as default weight
+      totalPossible += question.weight || 12; // Ensure proper weight handling
       matchedResponses++;
     }
 
-    // Ensure sufficient responses for reliable scoring
-    if (matchedResponses < 10) {
-      console.warn(`⚠️ Only ${matchedResponses} matched responses found for ${email}. Skipping.`);
+    // Ensure sufficient responses for reliable scoring - require minimum 50 responses for valid assessment
+    const minimumResponses = 50;
+    if (matchedResponses < minimumResponses) {
+      console.warn(`⚠️ Only ${matchedResponses} matched responses found for ${email}. Need at least ${minimumResponses}. Skipping.`);
       return null;
     }
 
@@ -121,7 +122,7 @@ export async function calculateAssessmentWithResponses(
       .slice(-2)
       .map(s => `${s.section} alignment can be improved (${s.percentage}%)`);
 
-    // Simple profile determination
+    // Enhanced profile determination with proper fallback
     const defaultProfile = {
       id: "balanced",
       name: "Balanced Individual",
@@ -132,7 +133,9 @@ export async function calculateAssessmentWithResponses(
       managementStyle: "Balanced",
       leadershipStyle: "Adaptable",
       communicationStyle: "Flexible",
-      primaryMotivation: "Harmony"
+      primaryMotivation: "Harmony",
+      genderSpecific: null,
+      criteria: []
     };
 
     const result: AssessmentResult = {
