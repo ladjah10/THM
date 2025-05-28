@@ -2189,7 +2189,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const marriageStatus = demographics?.marriageStatus?.toLowerCase();
         const poolParticipant = demographics?.interestedInArrangedMarriage === true &&
                                demographics?.thmPoolApplied === true;
-        const eligibleStatus = ['single', 'divorced', 'widowed'].includes(marriageStatus);
+        const eligibleStatus = ['single', 'divorced', 'widowed', 'no'].includes(marriageStatus);
         
         return poolParticipant && eligibleStatus;
       }).map(assessment => ({
