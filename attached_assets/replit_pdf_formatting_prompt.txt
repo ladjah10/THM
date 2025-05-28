@@ -1,0 +1,80 @@
+# Replit Developer Prompt: Ensure Professional PDF Report Formatting (PDFKit)
+
+## 🎯 Objective
+Fix and standardize formatting issues in the generated assessment PDF reports using PDFKit.
+
+---
+
+## ✅ 1. Refactor Into Reusable Layout Sections
+Create reusable layout functions in `improved-pdf-report.ts`:
+- `drawHeader(doc, title)`
+- `drawSectionHeader(doc, text)`
+- `drawParagraph(doc, text)`
+- `drawScoreBar(doc, label, score)`
+
+Use these instead of repeating `.text()` calls to maintain spacing and style.
+
+---
+
+## ✅ 2. Implement a Grid or Layout System
+Define layout anchors:
+```ts
+const MARGIN = 50;
+const COLUMN_WIDTH = 250;
+const ROW_HEIGHT = 24;
+```
+Use fixed coordinates (`x`, `y`) for layout consistency and cleaner formatting.
+
+---
+
+## ✅ 3. Standardize Fonts and Styles
+Declare consistent font usage:
+```ts
+doc.font('Helvetica-Bold').fontSize(14).text('Title');
+doc.font('Helvetica').fontSize(12).text('Body content.');
+```
+Centralize all font size and type declarations to reduce inconsistency.
+
+---
+
+## ✅ 4. Add Static Images for Branding
+Insert header or footer images:
+```ts
+doc.image('client/public/header-banner.png', 0, 0, { width: 612 });
+```
+This ensures visual alignment with your polished sample reports.
+
+---
+
+## ✅ 5. Build a Local Test Generator
+Create a test file (e.g. `test-generate-report.ts`):
+```ts
+import { generateImprovedPDF } from './improved-pdf-report';
+fs.writeFileSync('test-report.pdf', await generateImprovedPDF());
+```
+Use sample user data to generate a PDF locally for manual inspection.
+
+---
+
+## ✅ 6. Add Width and Alignment to All `.text()` Blocks
+Update every `.text()` call:
+```ts
+doc.text(content, {
+  width: 500,
+  align: 'left',
+  continued: false
+});
+```
+This prevents line overflow and improves readability.
+
+---
+
+## ✅ 7. Optional – Snapshot Testing for Layout Consistency
+Use Puppeteer or a visual snapshot tool:
+- Render PDF to PNG
+- Compare visual diff across commits
+(This helps automate layout regression testing)
+
+---
+
+✅ Follow this prompt to upgrade your PDF quality and eliminate layout issues before users see them.
