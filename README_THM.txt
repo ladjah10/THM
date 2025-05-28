@@ -1,7 +1,7 @@
 
 The 100 Marriage Assessment - Series 1
 
-Build Status: passing | Coverage: 85% | License: MIT
+Build Status: passing | Coverage: 85% | License: Watch God Work
 
 Description:
 The 100 Marriage Assessment (Series 1) is a comprehensive relationship compatibility and marriage readiness evaluation platform. It provides a scientifically-based assessment tool that analyzes individuals and couples through a set of psychological questions (100 in total), delivering personalized insights and recommendations based on scoring algorithms and psychological profiles.
@@ -62,7 +62,7 @@ Contributing:
 5. Open a Pull Request.
 
 License:
-MIT License - see LICENSE file for details.
+Watch God Work
 
 Contact:
-For support or inquiries, contact: contact@example.com (replace with actual contact)
+For support or inquiries, contact: hello@wgodw.com
