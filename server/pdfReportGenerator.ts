@@ -196,7 +196,7 @@ export class ProfessionalPDFGenerator {
     // Parse JSON strings if needed
     const demographics = typeof assessment.demographics === 'string' 
       ? JSON.parse(assessment.demographics) 
-      : assessment.demographics;
+      : assessment.demographics || assessment.demographicData;
     
     const scores = typeof assessment.scores === 'string' 
       ? JSON.parse(assessment.scores) 
