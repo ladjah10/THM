@@ -1,0 +1,60 @@
+// File: runAssessmentTestFlow.ts
+// 📌 Simulates a full test submission for The 100 Marriage Assessment
+
+import { generateReport } from './improved-pdf-report';
+import { sendEmailReport } from './emailUtils';
+import fs from 'fs';
+import path from 'path';
+
+const testUser = {
+  email: "la@lawrenceadjah.com",
+  firstName: "Test",
+  lastName: "User THM",
+  gender: "male",
+  promoCode: "FREE100"
+};
+
+// Simulated question data (replace with actual import or DB call)
+import questions from './questionsdata'; // adjust path if needed
+
+// Weighted randomness for selecting answers
+function generateWeightedResponse(options: string[]): string {
+  const weights = options.map((_, i) => options.length - i);
+  const total = weights.reduce((sum, w) => sum + w, 0);
+  const rand = Math.floor(Math.random() * total);
+  let cumulative = 0;
+  for (let i = 0; i < options.length; i++) {
+    cumulative += weights[i];
+    if (rand < cumulative) return options[i];
+  }
+  return options[0];
+}
+
+// Generate fake responses
+const responses = questions.map(q => ({
+  questionId: q.id,
+  answer: generateWeightedResponse(q.options)
+}));
+
+async function runTestFlow() {
+  console.log("🚀 Running simulated assessment flow...");
+
+  // Generate report
+  const pdfBuffer = await generateReport(testUser, responses);
+  const reportPath = path.join("test-outputs", `report-${Date.now()}.pdf`);
+  fs.writeFileSync(reportPath, pdfBuffer);
+  console.log("✅ PDF report generated:", reportPath);
+
+  // Send email
+  const emailStatus = await sendEmailReport({
+    email: testUser.email,
+    name: `${testUser.firstName} ${testUser.lastName}`,
+    gender: testUser.gender,
+    responses,
+    pdfBuffer
+  });
+
+  console.log("📩 Email sent status:", emailStatus);
+}
+
+runTestFlow().catch(console.error);
