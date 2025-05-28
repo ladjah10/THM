@@ -36,6 +36,11 @@ export default function PaywallView({
   const handlePaymentSuccess = async () => {
     onChange("hasPaid", true);
     
+    // If user is interested in arranged marriage, mark them as applied when payment succeeds
+    if (demographicData.interestedInArrangedMarriage) {
+      onChange("thmPoolApplied", true);
+    }
+    
     onPaymentComplete();
   };
   

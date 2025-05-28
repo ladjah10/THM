@@ -348,14 +348,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.log(`Received final submission for assessment: ${validatedData.email}`);
       }
       
-      // Save progress to database
+      // Save progress to database with merged responses and completion status
       await storage.saveAssessmentProgress({
         email: validatedData.email,
         demographicData: validatedData.demographicData,
-        responses: validatedData.responses || {},
+        responses: mergedResponses,
         assessmentType: validatedData.assessmentType || 'individual',
         timestamp: validatedData.timestamp,
-        completed: validatedData.completed || false
+        completed: isFinalSubmission
       });
       
       // If promo code is present and valid, record it

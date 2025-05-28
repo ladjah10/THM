@@ -1111,9 +1111,76 @@ export default function AdminDashboard() {
                     <div className="flex items-center justify-center py-8">
                       <Loader2 className="h-8 w-8 animate-spin" />
                     </div>
+                  ) : referralData && referralData.length > 0 ? (
+                    <div className="overflow-x-auto">
+                      <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                          <tr>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Referrer
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Invitee
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Promo Code
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Status
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Sent Date
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Completed Date
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                          {referralData.map((referral) => (
+                            <tr key={referral.id}>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                <div>
+                                  <div className="font-medium">{referral.referrerName || 'N/A'}</div>
+                                  <div className="text-gray-500">{referral.referrerEmail}</div>
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                <div>
+                                  <div className="font-medium">{referral.invitedName || 'N/A'}</div>
+                                  <div className="text-gray-500">{referral.invitedEmail}</div>
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                  {referral.promoCode || 'N/A'}
+                                </span>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                                  referral.status === 'completed' 
+                                    ? 'bg-green-100 text-green-800' 
+                                    : referral.status === 'expired'
+                                    ? 'bg-red-100 text-red-800'
+                                    : 'bg-yellow-100 text-yellow-800'
+                                }`}>
+                                  {referral.status}
+                                </span>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {referral.timestamp ? new Date(referral.timestamp).toLocaleDateString() : 'N/A'}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {referral.completedTimestamp ? new Date(referral.completedTimestamp).toLocaleDateString() : 'N/A'}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   ) : (
                     <div className="text-center py-8 text-muted-foreground">
-                      Referral data will be displayed here when available
+                      No referrals found. Referral data will appear here when users send invitations.
                     </div>
                   )}
                 </CardContent>

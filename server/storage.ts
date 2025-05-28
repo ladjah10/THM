@@ -1105,8 +1105,8 @@ export class DatabaseStorage {
         .from(assessmentResults)
         .where(
           and(
-            eq(assessmentResults.couple_id, coupleId),
-            eq(assessmentResults.couple_role, role)
+            eq(assessmentResults.coupleId, coupleId),
+            eq(assessmentResults.coupleRole, role)
           )
         );
       

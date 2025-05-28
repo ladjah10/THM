@@ -1,0 +1,52 @@
+
+✅ REPLIT TASK PROMPT: FIX EMPTY ADMIN DASHBOARD DISPLAY
+
+Apply the following updates to restore functionality to the admin dashboard at /admin. The Marriage Assessment, Pool, Payments, and Referrals sections are currently broken due to missing data, incorrect linkage, and frontend display bugs.
+
+---
+
+🧩 1. Fix Marriage Assessment Data Not Showing
+- Ensure all saved assessments are inserted into the DB with a valid `transactionId` when payment is completed.
+- On assessment completion, lookup the payment transaction by user email or session and store its ID in `assessment_results.transaction_id`.
+- Remove the unsupported `genderProfile` property from `assessment_results` inserts; use only `gender_profile`.
+- Ensure all assessments get marked as `completed=true` and inserted into the database.
+- Re-test the admin "Marriage Assessments" tab to confirm assessments appear with name, email, and score.
+
+---
+
+💍 2. Fix Arranged Marriage Pool Filter Logic
+- When a user pays for the pool (either separately or as part of the assessment), set `thmPoolApplied = true` in their demographic data before saving.
+- Update the success callback in `PaywallView.tsx` to do:
+  if (interestedInArrangedMarriage) onChange("thmPoolApplied", true);
+- Ensure both `interestedInArrangedMarriage` and `thmPoolApplied` are true for pool candidates.
+- Re-check the Pool Candidates tab — paid and eligible users should now appear.
+
+---
+
+💳 3. Fix Payments Section Not Showing Transactions
+- Confirm the Stripe webhook is active and `savePaymentTransaction()` is being called.
+- Ensure `STRIPE_WEBHOOK_SECRET` is set correctly in production.
+- Optionally trigger a manual backfill of past Stripe payments via `/api/admin/stripe/sync-payments` to populate the `payment_transactions` table.
+- Confirm new payments are being recorded and appear in the “Payments” tab.
+
+---
+
+📨 4. Fix Referrals Section Display
+- Backend `/api/admin/referrals` is returning data, but frontend isn't rendering it.
+- Update AdminDashboard.tsx to loop through `referralData` and display rows with referrer name/email, invitee name/email, promo code, status, and timestamps.
+- Use the same conditional logic pattern as “Payments” and “Assessments” tabs.
+
+---
+
+🔐 5. Confirm Admin Auth and API Access
+- Ensure admin login form is working and populates `isAuthenticated=true` in React state.
+- Test by logging in at /admin with default credentials ("admin" / "100marriage").
+- Once logged in, all data tabs should attempt to load via React Query.
+
+---
+
+After fixes are applied, verify:
+- Assessments appear in Marriage Assessments tab.
+- Pool Candidates tab shows eligible singles.
+- Payments tab shows Stripe transactions with totals.
+- Referrals tab lists invites and status.
