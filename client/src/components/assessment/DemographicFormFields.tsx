@@ -223,9 +223,9 @@ export default function DemographicFormFields({
               <SelectValue placeholder="Select an option" />
             </SelectTrigger>
             <SelectContent>
-              {demographicQuestions.hasPurchasedBook.map((option) => (
-                <SelectItem key={option} value={option}>
-                  {option}
+              {demographicQuestions.hasPurchasedBook.options.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
                 </SelectItem>
               ))}
             </SelectContent>
