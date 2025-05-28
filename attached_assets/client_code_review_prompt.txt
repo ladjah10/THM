@@ -1,0 +1,72 @@
+
+CODE REVIEW & FIX PROMPT – MARRIAGEMATCHMAKER CLIENT DIRECTORY
+
+This review focuses on the following client-side files:
+- App.tsx
+- DemographicView.tsx
+- QuestionnaireView.tsx
+- PaywallView.tsx
+
+------------------------
+✅ STRENGTHS
+------------------------
+- Clean component-based structure using React + TypeScript
+- Strong prop typing, good separation of UI concerns
+- Thoughtful support for intermediate actions like onSaveProgress and onSubmitAssessment
+
+------------------------
+❗ BUGS & LOGICAL ISSUES
+------------------------
+1. isLastQuestion logic in QuestionnaireView.tsx:
+   - Issue: “Submit” button logic doesn’t prevent repeated triggering of onNextQuestion
+   - Fix: Add a guard clause to block onNextQuestion when isLastQuestion === true
+
+2. Option selection mismatch:
+   - Issue: Uses label text for selection matching, may cause issues with non-unique labels
+   - Fix: Use a unique ID for options instead of relying on the label string
+
+------------------------
+🔁 REFACTORING & STRUCTURE
+------------------------
+1. DemographicView.tsx is too large:
+   - Fix: Split into subcomponents like:
+     a. DemographicFormFields.tsx
+     b. PaymentSection.tsx
+     c. InvitePartnerBlock.tsx
+
+2. Extract logic into custom hooks:
+   - Fix: Move repeated logic to:
+     a. useAssessmentNavigation()
+     b. usePromoCodeValidation()
+
+------------------------
+⚙️ PERFORMANCE FIXES
+------------------------
+1. Prevent full re-renders on option selection:
+   - Fix: Wrap onOptionSelect with useCallback in parent component
+   - Memoize option list if rendering large lists of questions
+
+------------------------
+🎨 UI/UX FIXES
+------------------------
+1. Add a visible progress indicator:
+   - Fix: Use questionIndex and totalQuestions to render a progress bar or steps
+
+2. Save & Continue Later:
+   - Fix: Activate onSaveProgress and add a visible button for users to resume
+
+3. Prevent invalid submissions:
+   - Fix: If selectedOption is empty on last question, disable or hide “Submit”
+
+------------------------
+✅ SUMMARY CHECKLIST FOR FIXES
+------------------------
+- [ ] Add guard for onNextQuestion on last question
+- [ ] Refactor DemographicView.tsx into smaller components
+- [ ] Replace label-based matching with unique IDs for options
+- [ ] Memoize option selection rendering
+- [ ] Show progress feedback (progress bar or text)
+- [ ] Add “Save and Continue Later” button
+- [ ] Prevent form submission if unanswered
+
+Implement these changes directly in Replit under the /client/src/components/assessment directory and re-test flow.

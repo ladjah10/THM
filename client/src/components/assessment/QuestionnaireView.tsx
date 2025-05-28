@@ -2,6 +2,8 @@ import { Question, UserResponse } from "@/types/assessment";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { useCallback, useMemo } from "react";
+import { Progress } from "@/components/ui/progress";
 
 interface QuestionnaireViewProps {
   question: Question;
@@ -32,13 +34,27 @@ export default function QuestionnaireView({
   showSaveButton = false,
   isLastQuestion = false
 }: QuestionnaireViewProps) {
-  // Handle option selection
-  const handleOptionChange = (option: string) => {
+  // Memoized option selection handler to prevent re-renders
+  const handleOptionChange = useCallback((option: string) => {
     // For multiple choice questions, the value is fixed (1)
     // For declarations, we use the weight provided
     const value = question.type === "M" ? 1 : question.weight || 1;
     onOptionSelect(question.id, option, value);
-  };
+  }, [question.id, question.type, question.weight, onOptionSelect]);
+
+  // Calculate progress percentage
+  const progressPercentage = useMemo(() => {
+    return Math.round(((questionIndex + 1) / totalQuestions) * 100);
+  }, [questionIndex, totalQuestions]);
+
+  // Memoized options to prevent unnecessary re-renders
+  const memoizedOptions = useMemo(() => 
+    question.options.map((option, index) => {
+      const uniqueOptionId = `q${question.id}-opt${index}`;
+      return { option, index, uniqueOptionId };
+    }), 
+    [question.options, question.id]
+  );
 
   // If this is the final submission screen
   if (isLastQuestion) {
@@ -114,11 +130,19 @@ export default function QuestionnaireView({
         <h3 className="text-xl font-semibold text-blue-900">
           {question.subsection ? `${question.section}: ${question.subsection}` : question.section}
         </h3>
-        <div className="flex items-center justify-between mt-2">
+        <div className="flex items-center justify-between mt-2 mb-3">
           <p className="text-sm text-gray-600">Question {questionIndex + 1} of {totalQuestions}</p>
           <div className="text-xs px-3 py-1 bg-blue-50 text-blue-700 rounded-full">
             {question.type === "M" ? "Multiple Choice" : "Declaration"}
           </div>
+        </div>
+        {/* Progress Bar */}
+        <div className="space-y-2">
+          <div className="flex justify-between text-xs text-gray-500">
+            <span>Progress</span>
+            <span>{progressPercentage}% Complete</span>
+          </div>
+          <Progress value={progressPercentage} className="h-2" />
         </div>
       </div>
 
@@ -130,14 +154,14 @@ export default function QuestionnaireView({
           onValueChange={handleOptionChange} 
           className="space-y-4"
         >
-          {question.options.map((option, index) => (
+          {memoizedOptions.map(({ option, index, uniqueOptionId }) => (
             <div 
-              key={index} 
+              key={uniqueOptionId} 
               className="flex items-start space-x-3 p-3 rounded-md hover:bg-gray-50 transition-colors"
             >
-              <RadioGroupItem id={`option-${index}`} value={option} className="mt-0.5" />
+              <RadioGroupItem id={uniqueOptionId} value={option} className="mt-0.5" />
               <Label 
-                htmlFor={`option-${index}`} 
+                htmlFor={uniqueOptionId} 
                 className="font-normal text-gray-700 cursor-pointer"
               >
                 {option}
@@ -169,7 +193,13 @@ export default function QuestionnaireView({
         )}
         
         <Button
-          onClick={onNextQuestion}
+          onClick={() => {
+            // Guard clause: prevent onNextQuestion on last question
+            if (questionIndex === totalQuestions - 1) {
+              return;
+            }
+            onNextQuestion();
+          }}
           disabled={!selectedOption}
           className="px-5 py-2 text-sm font-medium bg-blue-600 hover:bg-blue-500 text-white"
         >
