@@ -204,12 +204,15 @@ async function runAssessmentTest(): Promise<void> {
         lastName: testUser.lastName,
         email: testUser.email,
         gender: testUser.gender,
+        birthday: '1990-01-01', // Default for testing
+        lifeStage: 'single',
         marriageStatus: testUser.marriageStatus,
         desireChildren: testUser.desireChildren,
         ethnicity: testUser.ethnicity,
         city: testUser.city,
         state: testUser.state,
-        zipCode: testUser.zipCode
+        zipCode: testUser.zipCode,
+        hasPurchasedBook: false
       },
       responses,
       scores,
@@ -316,7 +319,13 @@ async function runFullTestSuite(): Promise<void> {
 export { runAssessmentTest, runFemaleAssessmentTest, runFullTestSuite };
 
 // Run test if this file is executed directly
-if (require.main === module) {
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+if (import.meta.url === `file://${process.argv[1]}`) {
   const testType = process.argv[2] || 'single';
   
   switch (testType) {
