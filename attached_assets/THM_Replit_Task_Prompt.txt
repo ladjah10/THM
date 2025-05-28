@@ -1,0 +1,86 @@
+
+✅ REPLIT DEV TASK PROMPT: THM CODEBASE AUDIT IMPLEMENTATION
+
+Please address the following high-priority updates across the entire codebase:
+
+---
+
+🔧 1. Code Cleanup and Optimization
+- ✅ Remove all duplicate endpoints in `routes.ts` – especially consolidate `/api/assessment/save-progress` into a single unified handler that handles both autosave (no email) and final submission (requires email).
+- ✅ Delete or archive outdated scripts and backup files:
+  - `sendgrid.ts.bak`
+  - `routes-payment-fix.ts` (merge its admin auth logic into main routes)
+  - `fix-assessment-scores.ts`, `fix-assessment-scores-v2.ts`
+  - Files inside `/temp/`
+- ✅ Eliminate any unnecessary or unused variables, constants, or console logs throughout `server/` and `client/`.
+
+---
+
+🧠 2. Scoring & Profile Logic Fixes
+- ✅ Update `calculateAssessmentWithResponses()`:
+  - Treat unanswered questions as zero, or enforce complete submissions with a minimum threshold or required count.
+  - Confirm weights are correctly used and not defaulting unnecessarily to `12`. Ensure DB values are complete.
+- ✅ Finalize psychographic profile matching: loop through all profile criteria and assign profile based on score thresholds. Add a clear fallback profile.
+- ✅ Fix couple-assessment logic: ensure `saveCoupleAssessment()` and `/submit-spouse` trigger compatibility analysis only after both partners submit.
+
+---
+
+🧪 3. Error Handling Consistency
+- ✅ Use proper HTTP status codes:
+  - `400` for client validation errors (e.g. Zod failures)
+  - `500` only for internal server exceptions
+- ✅ Fix all places where responses are sent but execution continues — use `return res.status(...).json(...)` style.
+- ✅ In `server/index.ts`, remove `throw err;` after the global error handler response to avoid crashing the app.
+- ✅ Use transactions for multi-step DB operations (e.g., moving data from `assessment_progress` to `assessment_results`).
+- ✅ For batch operations, use per-item try/catch so one bad record doesn’t halt the loop (especially for referrals, emails).
+
+---
+
+🔒 4. Security Fixes
+- ✅ Lock down all `/api/admin/*` routes with authentication. Use either:
+  - `req.session.user.role === 'admin'`
+  - Or the fixed method from `routes-payment-fix.ts` (`isUserAdmin()` + `req.isAuthenticated()`)
+- ✅ Fix admin auth logic bug: update `if (!req.session?.user?.role === 'admin')` → `if (!req.session?.user || req.session.user.role !== 'admin')`
+- ✅ Enforce payment requirement before sending final reports:
+  - Check for `transactionId` or valid promo in `transferCompletedAssessments()`
+  - Delay email/send logic until payment confirmation (consider webhook-based triggers)
+- ✅ Add basic rate-limiting or abuse prevention to `send-referrals` and assessment email endpoints
+- ✅ Ensure any future password storage uses bcrypt hashing
+
+---
+
+🗂 5. MVC Refactor + Project Structure
+- ✅ Break up `routes.ts` (huge file) into modular route files:
+  - `assessmentRoutes.ts`
+  - `adminRoutes.ts`
+  - `coupleRoutes.ts`
+  - `emailRoutes.ts`
+- ✅ Group server folders:
+  - `routes/` → all API route files
+  - `controllers/` or `services/` → logic functions
+  - `utils/` → helpers like `nodemailer.ts`, scoring logic
+- ✅ Move hardcoded email HTML into actual templates if possible
+
+---
+
+🧼 6. Readability & Maintainability
+- ✅ Use consistent response format (e.g. `{ success: false, message: "..." }`) for errors across routes
+- ✅ Standardize function naming and variable casing
+- ✅ Add README notes that outline:
+  - User journey from assessment to report
+  - Admin flow
+  - Stripe and DB integration steps
+
+---
+
+🚀 7. Deployment Compatibility (Non-Replit)
+- ✅ Replace hardcoded port `5000` in `index.ts` with `process.env.PORT || 5000`
+- ✅ Confirm `serveStatic(app)` in production correctly serves React files from `server/public` (adjust Vite build path if needed)
+- ✅ Remove `.replit` and `replit.nix` if not deploying on Replit
+- ✅ Add `.env.example` with required keys:
+  DATABASE_URL=
+  STRIPE_SECRET_KEY=
+  STRIPE_WEBHOOK_SECRET=
+  SENDGRID_API_KEY=
+  NODE_ENV=production
+- ✅ Ensure all tables are created via `drizzle-kit push` before app runs (don’t rely on `CREATE TABLE IF NOT EXISTS` at runtime)
