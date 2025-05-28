@@ -1,0 +1,88 @@
+# Replit Setup: SendGrid Email Delivery for The 100 Marriage Assessment
+
+## 1. 🔐 Set Environment Variables
+
+In your Replit project:
+1. Open the "Secrets" tab (🔐 icon or `.env` editor)
+2. Add the following:
+
+SENDGRID_API_KEY=REMOVED_SENDGRID_API_KEY
+EMAIL_SENDER=hello@wgodw.com
+
+---
+
+## 2. 🛠️ Update SendGrid Config (server/sendgrid.ts)
+
+Replace your current `sendgrid.ts` setup with:
+
+```ts
+import * as fs from 'fs';
+import * as path from 'path';
+import { MailService } from '@sendgrid/mail';
+
+const mailService = new MailService();
+
+const apiKey = process.env.SENDGRID_API_KEY;
+const senderEmail = process.env.EMAIL_SENDER;
+
+if (!apiKey) {
+  console.warn("⚠️ SendGrid API key not set.");
+} else {
+  mailService.setApiKey(apiKey);
+}
+
+export const sendAssessmentEmail = async (to: string, subject: string, text: string, pdfBuffer: Buffer) => {
+  if (!senderEmail) {
+    throw new Error("Sender email not configured in EMAIL_SENDER");
+  }
+
+  const msg = {
+    to,
+    from: senderEmail,
+    subject,
+    text,
+    attachments: [
+      {
+        content: pdfBuffer.toString("base64"),
+        filename: "AssessmentReport.pdf",
+        type: "application/pdf",
+        disposition: "attachment",
+      },
+    ],
+  };
+
+  try {
+    await mailService.send(msg);
+    console.log("✅ Email sent to", to);
+  } catch (err) {
+    console.error("❌ Email failed:", err);
+  }
+};
+```
+
+---
+
+## 3. ✅ Use the `sendAssessmentEmail` Function
+
+In your test script or backend email flow:
+```ts
+import { sendAssessmentEmail } from './sendgrid';
+
+await sendAssessmentEmail(
+  "la@lawrenceadjah.com",
+  "Your Assessment Report",
+  "Thank you for completing The 100 Marriage Assessment. Your report is attached.",
+  pdfBuffer
+);
+```
+
+---
+
+## 4. 🚀 Run the Test Again
+
+Use:
+```bash
+ts-node runAssessmentTestFlow.ts
+```
+
+You should now receive a properly sent PDF to your inbox.

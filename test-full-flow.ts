@@ -3,7 +3,7 @@
 import { questions } from './client/src/data/questionsData';
 import { calculateScores, determineProfiles } from './client/src/utils/scoringUtils';
 import { ProfessionalPDFGenerator } from './server/pdfReportGenerator';
-import { sendAssessmentEmail } from './server/nodemailer';
+import { sendAssessmentEmail } from './server/sendgrid';
 import fs from 'fs';
 import path from 'path';
 
@@ -94,7 +94,12 @@ async function runTestFlow() {
     console.log("✅ PDF report generated:", reportPath);
 
     // Send email
-    const emailStatus = await sendAssessmentEmail(testUser.email, assessment);
+    const emailStatus = await sendAssessmentEmail(
+      testUser.email,
+      "Your 100 Marriage Assessment Results",
+      "Thank you for completing The 100 Marriage Assessment. Your personalized report is attached.",
+      pdfBuffer
+    );
     console.log("📩 Email sent status:", emailStatus);
 
     console.log("🎉 Full test flow completed successfully!");
