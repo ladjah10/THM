@@ -1,0 +1,58 @@
+# THM Profile Matching + Scoring Review – Replit Implementation Prompt
+
+## 🔧 Recommended Fixes + Enhancements
+
+### 1. Default Weight Handling (in scoringUtils.ts)
+Ensure scoring logic includes a fallback weight to prevent NaN issues:
+```ts
+const weight = question.weight ?? 1;
+const earned = response.value * weight;
+```
+
+---
+
+### 2. Validate Response Format Before Calculating Score
+Add type check to make sure response values are numeric:
+```ts
+if (!response || typeof response.value !== "number") return;
+```
+
+---
+
+### 3. Add Near-Match Profile Feedback (UI or Scoring Utils)
+If a user misses one section threshold by a small margin, provide helpful output:
+- Example: “You’re closest to [Profile X] but missed the [Your Faith Life] threshold.”
+
+Can be implemented by:
+```ts
+const nearMatches = profiles.filter(profile =>
+  profile.criteria.filter(c =>
+    sectionScores[c.section] >= (c.min - 5) && sectionScores[c.section] < c.min
+  ).length > 0
+);
+```
+
+---
+
+### 4. Handle Multiple Matched Profiles (Priority or User Selection)
+When a user matches multiple profiles:
+- Return all profiles OR
+- Rank by specificity (e.g., total min score required) OR
+- Let user select the best fit in UI
+
+---
+
+### 5. Normalize or Validate Section Weight Totals
+Ensure each section’s total question weight is balanced OR
+normalize scoring by total points possible per section.
+
+---
+
+### 6. Add Developer Debug Tool (Optional)
+Create a debug output (e.g., console.log or route) to:
+- Show raw section scores
+- List all profiles attempted and reasons for pass/fail
+
+---
+
+Save this file as `replit_profile_scoring_prompt.txt` and apply these steps in your project.
