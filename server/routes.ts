@@ -2103,6 +2103,66 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // New endpoint to handle assessment completion
+  app.post('/api/assessment/complete', async (req, res) => {
+    try {
+      const completionSchema = z.object({
+        email: z.string().email(),
+        sessionId: z.string().optional(),
+        finalResponse: z.object({
+          questionId: z.string(),
+          option: z.string(),
+          value: z.number()
+        }).optional()
+      });
+
+      const { email, sessionId, finalResponse } = completionSchema.parse(req.body);
+      
+      console.log(`🏁 Completing assessment for ${email}`);
+
+      // Get the assessment progress
+      const progressData = await storage.getAssessmentProgress(email);
+      
+      if (!progressData) {
+        return res.status(404).json({
+          success: false,
+          message: 'Assessment progress not found'
+        });
+      }
+
+      // Add final response if provided
+      if (finalResponse) {
+        const currentResponses = progressData.responses || {};
+        currentResponses[finalResponse.questionId] = {
+          option: finalResponse.option,
+          value: finalResponse.value
+        };
+        progressData.responses = currentResponses;
+      }
+
+      // Mark as completed and transfer to results
+      await storage.saveAssessmentProgress({
+        ...progressData,
+        completed: true
+      });
+
+      // Trigger immediate transfer to results
+      await storage.transferCompletedAssessments();
+
+      return res.status(200).json({
+        success: true,
+        message: 'Assessment completed successfully'
+      });
+
+    } catch (error) {
+      console.error('Error completing assessment:', error);
+      return res.status(500).json({
+        success: false,
+        message: error instanceof Error ? error.message : 'Failed to complete assessment'
+      });
+    }
+  });
+
   // Admin API to fetch pool candidates (arranged marriage pool participants)
   app.get('/api/admin/pool-candidates', async (req: Request, res: Response) => {
     try {

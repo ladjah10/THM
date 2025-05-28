@@ -1,0 +1,72 @@
+
+✅ REPLIT TASK PROMPT: THM CRITICAL FIXES IMPLEMENTATION
+
+Please apply the following changes across the THM project to address urgent bugs affecting assessment completion, payment linkage, admin dashboard data, and report formatting:
+
+---
+
+🔧 1. Fix Incomplete Assessments Not Saving (e.g., Male Users)
+- Automatically mark assessments as `completed = true` when question 99 is answered.
+- On final answer or form submission, POST to a new `/api/assessment/complete` endpoint to save final results.
+- In `handleSubmitAssessment`, call this endpoint and ensure result is written to `assessment_results`.
+- On the backend, also set `completed=true` and insert into `assessment_results` if not already present.
+- Optionally, safeguard `save-progress` route to check if question 99 is answered and finalize if true.
+
+---
+
+📊 2. Fix Admin Dashboard Not Showing Arranged Marriage Pool Participants
+- When a user pays for the pool (via Stripe), update their assessment data: set `thmPoolApplied = true`.
+- Use email or session ID to locate their assessment and set this flag.
+- Update the admin filter logic to detect `interestedInArrangedMarriage = true` AND `thmPoolApplied = true`.
+- Re-test that paid pool members now show on the dashboard under “Pool Candidates”.
+
+---
+
+💳 3. Fix Stripe Payments Not Linking to Assessments
+- Include a `sessionId` or UUID in Stripe `PaymentIntent` metadata and in `assessment_progress`.
+- Modify the Stripe webhook to find assessments by sessionId or email, and attach `transaction_id`.
+- On assessment submission, query the latest Stripe payment by email and store its ID on the result.
+- Use Stripe metadata (`email`, `sessionId`, `productType`) to reliably correlate payment to user.
+- Ensure `assessment_results` gets populated with the corresponding `transactionId`.
+
+---
+
+🧾 4. Fix PDF/HTML Report Layout (Centering + Overflow)
+- In the report template CSS, add:
+  @media print {
+    .container { width: 100% !important; margin: 0 auto; }
+    .pdf-page { page-break-after: always; page-break-inside: avoid; }
+    p, li, td { word-wrap: break-word; }
+  }
+- Ensure `.compatibility-circle` and page headers use `margin: 0 auto` or flexbox to center.
+- Set `text-align: center` for key headings and circular score graphics.
+- Test printed/exported reports on standard A4/Letter to confirm proper alignment.
+
+---
+
+📨 5. Fix Referral/Invite Functionality Persistence + Tracking
+- Create a new `referrals` table in the DB with fields: `referrer_email`, `invited_email`, `promo_code`, `status`, etc.
+- Save all referrals to the database via `storage.saveReferral()` and `pool.query(...)`.
+- When an invited person completes the assessment (matched via email or promo code), mark referral as `completed`.
+- Optionally store `referred_by` in `assessment_results` for tracking.
+- Update admin `/api/admin/referrals` to query the DB instead of in-memory list.
+
+---
+
+💾 6. Implement Real-Time Autosaving of Assessment Answers
+- In `handleOptionSelect`, after updating state, call the `/api/assessment/save-progress` endpoint immediately.
+- On backend, merge responses instead of overwriting:
+  UPDATE assessment_progress SET responses = responses || EXCLUDED.responses ...
+- Ensure autosaves do NOT wipe previous answers (merge JSON).
+- Optionally, debounce save calls (e.g., 1–2 sec delay) to avoid flooding server.
+- Test recovery flow: answer 10 questions, refresh browser, ensure those answers reload on resume.
+
+---
+
+After completing the above, verify that:
+- Male users’ assessments are now saved and visible
+- Pool participants display in the admin dashboard
+- Payments are linked to completed assessments
+- Reports are clean and centered
+- Referrals are stored and correlated
+- Autosave works in real time without overwriting data

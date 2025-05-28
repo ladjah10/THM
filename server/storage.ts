@@ -116,8 +116,30 @@ class MemStorage {
   }
 
   // Method to get assessment progress for the continue feature
-  async getAssessmentProgress(tempId: string): Promise<Partial<AssessmentResult> | null> {
-    return this.partialAssessments.get(tempId) || null;
+  async getAssessmentProgress(emailOrTempId: string): Promise<Partial<AssessmentResult> | null> {
+    // First check by email in database if available
+    if (this.pool) {
+      try {
+        const query = 'SELECT * FROM assessment_progress WHERE email = $1 ORDER BY timestamp DESC LIMIT 1';
+        const result = await this.pool.query(query, [emailOrTempId]);
+        
+        if (result.rows.length > 0) {
+          const row = result.rows[0];
+          return {
+            demographics: row.demographic_data,
+            responses: row.responses || {},
+            assessmentType: row.assessment_type,
+            timestamp: row.timestamp,
+            completed: row.completed || false
+          };
+        }
+      } catch (error) {
+        console.error('Error fetching from database:', error);
+      }
+    }
+    
+    // Fallback to memory storage
+    return this.partialAssessments.get(emailOrTempId) || null;
   }
 
   // Assessment methods
@@ -321,6 +343,50 @@ class MemStorage {
       averageSessionDuration,
       popularPages,
     };
+  }
+
+  // Update assessment with pool application status after payment
+  async updateAssessmentPoolStatus(email: string, transactionId: string): Promise<void> {
+    // Update assessment progress if exists
+    const progressData = await this.getAssessmentProgress(email);
+    if (progressData && progressData.demographics) {
+      progressData.demographics.thmPoolApplied = true;
+      await this.saveAssessmentProgress({
+        email: progressData.demographics.email,
+        demographicData: progressData.demographics,
+        responses: progressData.responses || {},
+        assessmentType: progressData.assessmentType || 'individual',
+        timestamp: new Date().toISOString(),
+        completed: progressData.completed || false
+      });
+      
+      console.log(`✅ Updated pool status for ${email} after payment ${transactionId}`);
+    }
+
+    // Also update completed assessments if they exist
+    const assessment = this.assessments.get(email);
+    if (assessment) {
+      assessment.demographics.thmPoolApplied = true;
+      assessment.transactionId = transactionId;
+      this.assessments.set(email, assessment);
+      console.log(`✅ Updated completed assessment pool status for ${email}`);
+    }
+
+    // Update in database if available
+    if (this.pool) {
+      try {
+        await this.pool.query(
+          'UPDATE assessment_progress SET demographic_data = jsonb_set(demographic_data, \'{thmPoolApplied}\', \'true\') WHERE email = $1',
+          [email]
+        );
+        await this.pool.query(
+          'UPDATE assessment_results SET demographic_data = jsonb_set(demographic_data, \'{thmPoolApplied}\', \'true\'), transaction_id = $2 WHERE email = $1',
+          [email, transactionId]
+        );
+      } catch (error) {
+        console.error('Error updating database for pool status:', error);
+      }
+    }
   }
 
   // Payment methods

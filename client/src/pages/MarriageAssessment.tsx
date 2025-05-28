@@ -139,13 +139,47 @@ export default function MarriageAssessment() {
   // Handle selection of an answer option
   const handleOptionSelect = async (questionId: number, option: string, value: number) => {
     // Update state with the new response
-    setUserResponses(prev => ({
-      ...prev,
+    const updatedResponses = {
+      ...userResponses,
       [questionId]: { option, value }
-    }));
+    };
     
-    // AUTOSAVE DISABLED: We no longer save after each response to avoid overwriting issues
-    // Instead, user can manually save progress using the Save Progress button
+    setUserResponses(updatedResponses);
+    
+    // Real-time autosaving implementation
+    try {
+      if (demographicData.email) {
+        await apiRequest('POST', '/api/assessment/save-progress', {
+          email: demographicData.email,
+          demographicData,
+          responses: updatedResponses,
+          assessmentType,
+          timestamp: new Date().toISOString(),
+          completed: false
+        });
+      }
+
+      // Check if this is question 99 (final question) and auto-complete
+      if (questionId === 99 && demographicData.email) {
+        await apiRequest('POST', '/api/assessment/complete', {
+          email: demographicData.email,
+          finalResponse: {
+            questionId: questionId.toString(),
+            option,
+            value
+          }
+        });
+        
+        toast({
+          title: "Assessment Completed!",
+          description: "All questions answered. Your results are being processed.",
+        });
+      }
+    } catch (error) {
+      console.error('Error with autosave/completion:', error);
+      // Silent failure for autosave to avoid disrupting user experience
+    }
+    
     console.log(`Response recorded for question ${questionId}`);
   };
 
