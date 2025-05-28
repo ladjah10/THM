@@ -333,8 +333,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Validate the request body
       const validatedData = progressSchema.parse(req.body);
       
-      // Check if this is a final submission 
-      const isFinalSubmission = validatedData.completed === true;
+      // Auto-merge responses instead of overwriting (critical fix #6)
+      const existingProgress = await storage.getAssessmentProgress(validatedData.email);
+      const mergedResponses = {
+        ...(existingProgress?.responses || {}),
+        ...(validatedData.responses || {})
+      };
+      
+      // Check if this is a final submission or question 99 is answered
+      const hasQuestion99 = mergedResponses['99'] !== undefined;
+      const isFinalSubmission = validatedData.completed === true || hasQuestion99;
       
       if (isFinalSubmission) {
         console.log(`Received final submission for assessment: ${validatedData.email}`);

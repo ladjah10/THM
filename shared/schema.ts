@@ -102,6 +102,21 @@ export const coupleAssessments = pgTable('couple_assessments', {
   reportSent: boolean('report_sent').notNull().default(false)
 });
 
+// Referrals table for tracking invite functionality
+export const referrals = pgTable('referrals', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  referrerEmail: text('referrer_email').notNull(),
+  referrerName: text('referrer_name'),
+  invitedEmail: text('invited_email').notNull(),
+  invitedName: text('invited_name'),
+  promoCode: text('promo_code').notNull(),
+  status: text('status').notNull().default('sent'), // sent, completed, expired
+  sentTimestamp: timestamp('sent_timestamp').notNull().defaultNow(),
+  completedTimestamp: timestamp('completed_timestamp'),
+  productType: text('product_type').notNull(), // individual, couple, pool
+  customMessage: text('custom_message')
+});
+
 // Drizzle schema for insertions
 export const insertPageViewSchema = createInsertSchema(pageViews);
 export const insertVisitorSessionSchema = createInsertSchema(visitorSessions);
