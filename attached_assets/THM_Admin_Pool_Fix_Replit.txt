@@ -1,0 +1,65 @@
+
+✅ REPLIT TASK PROMPT: FIX ADMIN MARRIAGE POOL DISPLAY
+
+Apply the following updates to ensure the admin dashboard correctly displays users who opted into the Arranged Marriage Pool. This includes removing any score threshold and confirming proper demographic flags are saved and used.
+
+---
+
+🧩 1. Remove Score Filter in Pool Candidates Query
+- File: `server/routes.ts`
+- Locate the `/api/admin/pool-candidates` endpoint.
+- DELETE or COMMENT OUT any score filter (e.g., `score >= 60`) and the `goodScore` variable.
+- UPDATE the filter to return users who meet only these conditions:
+  - `demographics.interestedInArrangedMarriage === true`
+  - `demographics.thmPoolApplied === true`
+  - `demographics.marriageStatus` is one of ['single', 'divorced', 'widowed']
+
+Example updated filter logic:
+
+```ts
+const poolCandidates = allAssessments.filter(assessment => {
+  const demographics = assessment.demographics;
+  const marriageStatus = demographics?.marriageStatus?.toLowerCase();
+  const poolParticipant = demographics?.interestedInArrangedMarriage === true &&
+                          demographics?.thmPoolApplied === true;
+  const eligibleStatus = ['single', 'divorced', 'widowed'].includes(marriageStatus);
+  return poolParticipant && eligibleStatus;
+});
+```
+
+---
+
+🧾 2. Confirm Demographic Flags Are Saved Correctly
+- File: `client/src/components/assessment/PaywallView.tsx`
+- In the payment success handler, confirm the following logic is present and executed:
+
+```ts
+if (demographicData.interestedInArrangedMarriage) {
+  onChange("thmPoolApplied", true);
+}
+```
+
+- This ensures `thmPoolApplied = true` is set during the assessment+pool combined payment flow.
+
+- File: `client/src/components/assessment/DemographicView.tsx`
+- For the THM pool payment form (if user used a promo code), confirm it also sets:
+
+```ts
+onChange("thmPoolApplied", true);
+```
+
+- These flags are already accepted by the backend and stored as part of `demographic_data`.
+
+---
+
+📊 3. Verify Admin Dashboard Behavior
+- No changes required in the frontend display logic.
+- Once the server filter is updated, the `/api/admin/pool-candidates` response will include all opted-in users.
+- The admin UI will automatically render the list with name, age, profile, score, and match score.
+
+---
+
+✅ After completion, verify:
+- Users who paid and opted into the arranged marriage pool now appear in the Admin → Marriage Pool tab.
+- Score no longer affects inclusion.
+- Pool Candidate count updates from 0 to actual number.

@@ -2182,27 +2182,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Filter for pool candidates - those who:
       // 1. Are single/divorced/widowed
       // 2. Have opted into arranged marriage pool (interestedInArrangedMarriage = true)
-      // 3. Have good scores (above 60%)
-      // 4. Have paid for THM pool access (thmPoolApplied = true)
+      // 3. Have paid for THM pool access (thmPoolApplied = true)
+      // Note: Score filter removed per admin requirements
       const poolCandidates = allAssessments.filter(assessment => {
         const demographics = assessment.demographics;
         const marriageStatus = demographics?.marriageStatus?.toLowerCase();
-        const score = assessment.scores?.overallPercentage || 0;
-        const interestedInArrangedMarriage = demographics?.interestedInArrangedMarriage;
-        const thmPoolApplied = demographics?.thmPoolApplied;
+        const poolParticipant = demographics?.interestedInArrangedMarriage === true &&
+                               demographics?.thmPoolApplied === true;
+        const eligibleStatus = ['single', 'divorced', 'widowed'].includes(marriageStatus);
         
-        // Must be eligible marital status
-        const eligibleMaritalStatus = marriageStatus === 'single' || 
-                                     marriageStatus === 'divorced' || 
-                                     marriageStatus === 'widowed';
-        
-        // Must have good compatibility score
-        const goodScore = score >= 60;
-        
-        // Must have opted into arranged marriage and applied/paid for THM pool
-        const poolParticipant = interestedInArrangedMarriage === true && thmPoolApplied === true;
-        
-        return eligibleMaritalStatus && goodScore && poolParticipant;
+        return poolParticipant && eligibleStatus;
       }).map(assessment => ({
         ...assessment,
         // Calculate match score for sorting

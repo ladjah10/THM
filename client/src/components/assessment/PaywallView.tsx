@@ -47,6 +47,12 @@ export default function PaywallView({
   // Handle successful promo code
   const handlePromoSuccess = () => {
     onChange("hasPaid", true);
+    
+    // If user is interested in arranged marriage, mark them as applied when promo succeeds
+    if (demographicData.interestedInArrangedMarriage) {
+      onChange("thmPoolApplied", true);
+    }
+    
     onPaymentComplete();
   };
 
