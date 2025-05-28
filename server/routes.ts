@@ -535,6 +535,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Hidden test route for manual assessment testing
+  app.get('/test-assessment', async (req, res) => {
+    try {
+      const { email, gender, promo } = req.query;
+      
+      // Import the test function
+      const { runAssessmentTest } = await import('../runAssessmentTestFlow');
+      
+      console.log('🧪 Manual test trigger received');
+      console.log(`Email: ${email}, Gender: ${gender}, Promo: ${promo}`);
+      
+      // Run the test in the background
+      runAssessmentTest().then(() => {
+        console.log('✅ Test completed successfully');
+      }).catch(error => {
+        console.error('❌ Test failed:', error);
+      });
+      
+      res.json({
+        success: true,
+        message: 'Assessment test triggered successfully',
+        params: { email, gender, promo },
+        note: 'Check server console and test-outputs directory for results'
+      });
+      
+    } catch (error) {
+      console.error('Error triggering assessment test:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Failed to trigger test',
+        error: error.message
+      });
+    }
+  });
+
   app.post('/api/email/send', async (req, res) => {
     try {
       // Validate the request body

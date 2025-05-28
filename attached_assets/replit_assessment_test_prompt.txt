@@ -1,0 +1,88 @@
+# Replit Developer Prompt: Build Automated Assessment Test System
+
+## 🎯 Objective
+Create a test script to simulate a real user completing the entire assessment flow with a promo code, gender selection, weighted answer logic, and email receipt.
+
+---
+
+## 1. ✅ Create Script: `runAssessmentTestFlow.ts`
+
+This script should simulate a full user flow:
+```ts
+const testUser = {
+  email: "la@lawrenceadjah.com",
+  firstName: "Test",
+  lastName: "User THM",
+  gender: "male", // or "female"
+  promoCode: "FREE100"
+};
+```
+
+---
+
+## 2. ✅ Load Questions and Generate Simulated Responses
+
+Use a weighted randomness engine:
+```ts
+function generateWeightedResponse(options: string[]): string {
+  const weights = options.map((opt, i) => options.length - i); // bias toward earlier options
+  const total = weights.reduce((sum, w) => sum + w, 0);
+  const rand = Math.floor(Math.random() * total);
+  let cumulative = 0;
+  for (let i = 0; i < options.length; i++) {
+    cumulative += weights[i];
+    if (rand < cumulative) return options[i];
+  }
+  return options[0]; // fallback
+}
+
+const responses = questions.map(q => ({
+  questionId: q.id,
+  answer: generateWeightedResponse(q.options)
+}));
+```
+
+---
+
+## 3. ✅ Bypass Payment with Promo Code
+
+Check the promo code:
+```ts
+if (testUser.promoCode === "FREE100") {
+  skipPayment = true;
+}
+```
+
+---
+
+## 4. ✅ Trigger Assessment Submit
+
+POST to your backend or assessment handler with:
+- Email, Name, Gender
+- Simulated Responses
+- Score + Profile logic
+
+---
+
+## 5. ✅ Save Output
+
+Store outputs in a local folder `test-outputs/`:
+- `report-[timestamp].pdf`
+- `email-log-[timestamp].json`
+
+Allow visual inspection and debugging.
+
+---
+
+## 6. ✅ Optional: Test Trigger via Browser
+
+Add hidden route for manual triggering:
+```
+/test-assessment?email=la@lawrenceadjah.com&gender=male&promo=FREE100
+```
+
+This triggers the script and outputs results to dev logs.
+
+---
+
+Use this prompt to build a full-featured internal test harness for THM assessment validation.
