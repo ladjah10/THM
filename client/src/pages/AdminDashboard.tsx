@@ -265,6 +265,17 @@ export default function AdminDashboard() {
     enabled: isAuthenticated,
   });
 
+  // Fetch pool candidates (arranged marriage pool participants)
+  const { 
+    data: poolCandidatesData, 
+    isLoading: poolCandidatesLoading,
+    error: poolCandidatesError,
+    refetch: refetchPoolCandidates 
+  } = useQuery({
+    queryKey: ["/api/admin/pool-candidates"],
+    enabled: isAuthenticated,
+  });
+
   // Fetch referral data
   const { 
     data: referralData, 
@@ -355,26 +366,15 @@ export default function AdminDashboard() {
 
   const totalPages = Math.ceil(filteredAssessments.length / itemsPerPage);
 
-  // Calculate pool candidates (highly compatible singles)
+  // Calculate pool candidates from dedicated endpoint
   const poolCandidates = useMemo(() => {
-    if (!assessments || !Array.isArray(assessments)) return [];
+    if (!poolCandidatesData || !poolCandidatesData.success || !Array.isArray(poolCandidatesData.data)) return [];
     
-    return assessments
-      .filter((assessment: AssessmentResult) => {
-        const marriageStatus = assessment.demographics?.marriageStatus?.toLowerCase();
-        const score = assessment.scores?.overallPercentage || 0;
-        
-        // Include single, divorced, or widowed with scores above 60%
-        return (marriageStatus === 'single' || marriageStatus === 'divorced' || marriageStatus === 'widowed') &&
-               score > 60;
-      })
-      .map((assessment: AssessmentResult) => ({
-        ...assessment,
-        matchScore: calculateMatchScore(assessment)
-      }))
-      .sort((a: any, b: any) => b.matchScore - a.matchScore)
-      .slice(0, 50);
-  }, [assessments]);
+    return poolCandidatesData.data.map((assessment: AssessmentResult) => ({
+      ...assessment,
+      matchScore: assessment.matchScore || calculateMatchScore(assessment)
+    }));
+  }, [poolCandidatesData]);
 
   // Generate analytics summary
   const analyticsSummary = useMemo(() => {
@@ -1045,11 +1045,11 @@ export default function AdminDashboard() {
                       </Select>
                     </div>
 
-                    {assessmentsLoading ? (
+                    {poolCandidatesLoading ? (
                       <div className="flex items-center justify-center py-8">
                         <Loader2 className="h-8 w-8 animate-spin" />
                       </div>
-                    ) : assessmentsError ? (
+                    ) : poolCandidatesError ? (
                       <div className="flex items-center justify-center py-8 text-red-500">
                         <AlertCircle className="h-5 w-5 mr-2" />
                         Failed to load pool candidates

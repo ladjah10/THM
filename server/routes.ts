@@ -2103,6 +2103,63 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin API to fetch pool candidates (arranged marriage pool participants)
+  app.get('/api/admin/pool-candidates', async (req: Request, res: Response) => {
+    try {
+      console.log('Fetching pool candidates for admin dashboard');
+      
+      // Get all completed assessments
+      const allAssessments = await storage.getAllAssessments();
+      
+      // Filter for pool candidates - those who:
+      // 1. Are single/divorced/widowed
+      // 2. Have opted into arranged marriage pool (interestedInArrangedMarriage = true)
+      // 3. Have good scores (above 60%)
+      // 4. Have paid for THM pool access (thmPoolApplied = true)
+      const poolCandidates = allAssessments.filter(assessment => {
+        const demographics = assessment.demographics;
+        const marriageStatus = demographics?.marriageStatus?.toLowerCase();
+        const score = assessment.scores?.overallPercentage || 0;
+        const interestedInArrangedMarriage = demographics?.interestedInArrangedMarriage;
+        const thmPoolApplied = demographics?.thmPoolApplied;
+        
+        // Must be eligible marital status
+        const eligibleMaritalStatus = marriageStatus === 'single' || 
+                                     marriageStatus === 'divorced' || 
+                                     marriageStatus === 'widowed';
+        
+        // Must have good compatibility score
+        const goodScore = score >= 60;
+        
+        // Must have opted into arranged marriage and applied/paid for THM pool
+        const poolParticipant = interestedInArrangedMarriage === true && thmPoolApplied === true;
+        
+        return eligibleMaritalStatus && goodScore && poolParticipant;
+      }).map(assessment => ({
+        ...assessment,
+        // Calculate match score for sorting
+        matchScore: (assessment.scores?.overallPercentage || 0) + 
+                   (assessment.demographics?.age ? Math.max(0, 40 - Math.abs(30 - assessment.demographics.age)) : 0)
+      }));
+      
+      // Sort by match score (highest first)
+      poolCandidates.sort((a, b) => b.matchScore - a.matchScore);
+      
+      console.log(`Found ${poolCandidates.length} pool candidates`);
+      
+      return res.status(200).json({
+        success: true,
+        data: poolCandidates
+      });
+    } catch (error) {
+      console.error('Error fetching pool candidates:', error);
+      return res.status(500).json({
+        success: false,
+        message: error instanceof Error ? error.message : 'Failed to fetch pool candidates'
+      });
+    }
+  });
+
   // Admin API for downloading full assessment data as JSON
   app.get('/api/admin/download-assessment/:email', async (req: RequestWithSession, res: Response) => {
     try {
