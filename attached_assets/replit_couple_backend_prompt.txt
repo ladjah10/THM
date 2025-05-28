@@ -1,0 +1,68 @@
+# Replit Implementation Prompt: Add Backend Support for Couple Assessment
+
+## 🎯 Objective
+Ensure that couple assessment results are:
+- ✅ Saved in your backend database
+- ✅ Delivered via email (optional)
+- ✅ Logged for auditing or analytics
+
+---
+
+## 1. 📡 Create Backend API Route
+
+Create a file: `api/couple-assessment.ts` (or server equivalent)
+
+Example POST endpoint:
+
+```ts
+POST /api/couple-assessment
+{
+  userIdA: string,
+  userIdB: string,
+  compatibilityScore: number,
+  differenceAnalysis: object,
+  matchedProfile: string
+}
+```
+
+Store this data in your database (`CoupleAssessment` collection/table).
+
+---
+
+## 2. 📬 Optional: Send Email or PDF Report
+
+Integrate SendGrid, NodeMailer, or similar.
+
+On successful result:
+- Generate a PDF report of the couple compatibility
+- Send to both user emails
+
+Optional method:
+```ts
+async function sendCoupleAssessmentEmail(toEmails, reportAttachment) { ... }
+```
+
+---
+
+## 3. 📝 Log Assessment for Analytics
+
+Create a log entry:
+- Timestamp
+- User IDs
+- Score Summary
+
+Save into a lightweight `AssessmentLog` collection for internal analytics.
+
+---
+
+## 4. ✅ Frontend: Submit on Completion
+
+From `CoupleAssessmentView.tsx`:
+- On final submission, POST to `/api/couple-assessment` with all result data.
+
+Add a confirmation toast like:
+> “Your results have been saved and sent!”
+
+---
+
+Save this as `replit_couple_backend_prompt.txt` and use it to extend backend support for your couple assessment functionality.

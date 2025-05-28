@@ -25,6 +25,7 @@ class MemStorage {
   private payments: Map<string, PaymentTransaction> = new Map();
   private referrals: ReferralData[] = [];
   private promoCodesUsage: { promoCode: string, assessmentType: string, timestamp: string }[] = [];
+  private assessmentLogs: { id: string, assessmentId?: string, coupleAssessmentId?: string, action: string, userEmail?: string, scoreSummary?: string, timestamp: string, metadata?: string }[] = [];
 
   // User management methods
   async getUser(id: number): Promise<User | undefined> {
@@ -492,6 +493,75 @@ class MemStorage {
       // Return the transaction as is if no metadata found
       return transaction;
     });
+  }
+
+  // Couple Assessment Methods
+  async saveCoupleAssessment(data: {
+    coupleId: string;
+    primaryId: string;
+    spouseId: string;
+    analysis: string;
+    compatibilityScore: string;
+    recommendations: string;
+    reportSent: boolean;
+  }): Promise<{ id: string }> {
+    const id = `couple_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const coupleAssessment = {
+      id,
+      coupleId: data.coupleId,
+      primaryId: data.primaryId,
+      spouseId: data.spouseId,
+      analysis: data.analysis,
+      compatibilityScore: data.compatibilityScore,
+      recommendations: data.recommendations,
+      reportSent: data.reportSent,
+      timestamp: new Date().toISOString()
+    };
+    
+    this.coupleAssessments.set(id, coupleAssessment as any);
+    console.log(`Couple assessment saved in memory with ID: ${id}`);
+    return { id };
+  }
+
+  async updateCoupleAssessmentReportStatus(id: string, reportSent: boolean): Promise<void> {
+    const assessment = this.coupleAssessments.get(id);
+    if (assessment) {
+      (assessment as any).reportSent = reportSent;
+      this.coupleAssessments.set(id, assessment);
+      console.log(`Couple assessment report status updated in memory: ${id} -> ${reportSent}`);
+    }
+  }
+
+  // Assessment Logging Methods
+  async logAssessmentAction(data: {
+    assessmentId?: string;
+    coupleAssessmentId?: string;
+    action: string;
+    userEmail?: string;
+    scoreSummary?: string;
+    metadata?: string;
+  }): Promise<{ id: string }> {
+    const id = `log_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const logEntry = {
+      id,
+      assessmentId: data.assessmentId,
+      coupleAssessmentId: data.coupleAssessmentId,
+      action: data.action,
+      userEmail: data.userEmail,
+      scoreSummary: data.scoreSummary,
+      timestamp: new Date().toISOString(),
+      metadata: data.metadata
+    };
+    
+    this.assessmentLogs.push(logEntry);
+    console.log(`Assessment action logged in memory: ${data.action} for ${data.userEmail || 'unknown user'}`);
+    return { id };
+  }
+
+  async getAssessmentLogs(limit: number = 100): Promise<any[]> {
+    return this.assessmentLogs
+      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+      .slice(0, limit);
   }
 }
 

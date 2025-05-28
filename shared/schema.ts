@@ -102,6 +102,18 @@ export const coupleAssessments = pgTable('couple_assessments', {
   reportSent: boolean('report_sent').notNull().default(false)
 });
 
+// Assessment logs for analytics and auditing
+export const assessmentLogs = pgTable('assessment_logs', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  assessmentId: uuid('assessment_id').references(() => assessmentResults.id),
+  coupleAssessmentId: uuid('couple_assessment_id').references(() => coupleAssessments.id),
+  action: text('action').notNull(), // 'individual_completed', 'couple_completed', 'email_sent', etc.
+  userEmail: text('user_email'),
+  scoreSummary: text('score_summary'),
+  timestamp: timestamp('timestamp').notNull().defaultNow(),
+  metadata: text('metadata') // JSON string for additional data
+});
+
 // Referrals table for tracking invite functionality
 export const referrals = pgTable('referrals', {
   id: uuid('id').defaultRandom().primaryKey(),
@@ -123,6 +135,7 @@ export const insertVisitorSessionSchema = createInsertSchema(visitorSessions);
 export const insertPaymentTransactionSchema = createInsertSchema(paymentTransactions);
 export const insertAssessmentResultSchema = createInsertSchema(assessmentResults);
 export const insertCoupleAssessmentSchema = createInsertSchema(coupleAssessments);
+export const insertAssessmentLogSchema = createInsertSchema(assessmentLogs);
 
 // TypeScript types for inserts
 export type InsertPageView = z.infer<typeof insertPageViewSchema>;
@@ -130,6 +143,7 @@ export type InsertVisitorSession = z.infer<typeof insertVisitorSessionSchema>;
 export type InsertPaymentTransaction = z.infer<typeof insertPaymentTransactionSchema>;
 export type InsertAssessmentResult = z.infer<typeof insertAssessmentResultSchema>;
 export type InsertCoupleAssessment = z.infer<typeof insertCoupleAssessmentSchema>;
+export type InsertAssessmentLog = z.infer<typeof insertAssessmentLogSchema>;
 
 // TypeScript types for selections
 export type PageViewDB = typeof pageViews.$inferSelect;
@@ -137,6 +151,7 @@ export type VisitorSessionDB = typeof visitorSessions.$inferSelect;
 export type PaymentTransactionDB = typeof paymentTransactions.$inferSelect;
 export type AssessmentResultDB = typeof assessmentResults.$inferSelect;
 export type CoupleAssessmentDB = typeof coupleAssessments.$inferSelect;
+export type AssessmentLogDB = typeof assessmentLogs.$inferSelect;
 
 // Analytics data interfaces for frontend usage
 export interface PageView {

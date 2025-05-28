@@ -409,6 +409,132 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // NEW: Couple Assessment Backend API Route
+  app.post('/api/couple-assessment', async (req, res) => {
+    try {
+      // Validate the request body
+      const coupleAssessmentSchema = z.object({
+        primaryAssessmentId: z.string().uuid(),
+        spouseAssessmentId: z.string().uuid(),
+        compatibilityScore: z.number(),
+        differenceAnalysis: z.object({
+          significantDifferences: z.array(z.object({
+            section: z.string(),
+            difference: z.number(),
+            analysis: z.string()
+          })),
+          alignmentAreas: z.array(z.object({
+            section: z.string(),
+            similarity: z.number(),
+            analysis: z.string()
+          })),
+          recommendations: z.array(z.string()),
+          overallCompatibility: z.string()
+        }),
+        reportData: z.object({
+          primaryAssessment: z.any(),
+          spouseAssessment: z.any(),
+          analysis: z.any(),
+          recommendations: z.array(z.string()),
+          compatibilityScore: z.number(),
+          timestamp: z.string()
+        }),
+        coupleId: z.string(),
+        sendEmails: z.boolean().optional().default(true)
+      });
+
+      const validatedData = coupleAssessmentSchema.parse(req.body);
+
+      // Store couple assessment in database
+      const coupleAssessment = await storage.saveCoupleAssessment({
+        coupleId: validatedData.coupleId,
+        primaryId: validatedData.primaryAssessmentId,
+        spouseId: validatedData.spouseAssessmentId,
+        analysis: JSON.stringify(validatedData.differenceAnalysis),
+        compatibilityScore: validatedData.compatibilityScore.toString(),
+        recommendations: JSON.stringify(validatedData.reportData.recommendations),
+        reportSent: false
+      });
+
+      // Log assessment completion for analytics
+      await storage.logAssessmentAction({
+        coupleAssessmentId: coupleAssessment.id,
+        action: 'couple_completed',
+        userEmail: validatedData.reportData.primaryAssessment.demographicData.email,
+        scoreSummary: JSON.stringify({
+          compatibilityScore: validatedData.compatibilityScore,
+          timestamp: validatedData.reportData.timestamp
+        }),
+        metadata: JSON.stringify({
+          primaryProfile: validatedData.reportData.primaryAssessment.profile.name,
+          spouseProfile: validatedData.reportData.spouseAssessment.profile.name,
+          coupleId: validatedData.coupleId
+        })
+      });
+
+      // Send email reports if requested
+      if (validatedData.sendEmails) {
+        try {
+          // Get assessment data for email generation
+          const primaryAssessment = validatedData.reportData.primaryAssessment;
+          const spouseAssessment = validatedData.reportData.spouseAssessment;
+          
+          // Create couple report object
+          const coupleReport = {
+            primaryAssessment,
+            spouseAssessment,
+            differenceAnalysis: validatedData.differenceAnalysis,
+            compatibilityScore: validatedData.compatibilityScore,
+            recommendations: validatedData.reportData.recommendations,
+            timestamp: validatedData.reportData.timestamp
+          };
+
+          // Send couple assessment email
+          await sendCoupleInvitationEmails(
+            primaryAssessment.demographicData.email,
+            spouseAssessment.demographicData.email,
+            coupleReport
+          );
+
+          // Update report sent status
+          await storage.updateCoupleAssessmentReportStatus(coupleAssessment.id, true);
+
+          // Log email sent for analytics
+          await storage.logAssessmentAction({
+            coupleAssessmentId: coupleAssessment.id,
+            action: 'email_sent',
+            userEmail: primaryAssessment.demographicData.email,
+            scoreSummary: JSON.stringify({ compatibilityScore: validatedData.compatibilityScore }),
+            metadata: JSON.stringify({
+              recipientEmails: [primaryAssessment.demographicData.email, spouseAssessment.demographicData.email],
+              sentAt: new Date().toISOString()
+            })
+          });
+
+          console.log(`✅ Couple assessment completed and emails sent for couple ID: ${validatedData.coupleId}`);
+
+        } catch (emailError) {
+          console.error('Error sending couple assessment emails:', emailError);
+          // Don't fail the entire request if email fails
+        }
+      }
+
+      res.json({
+        success: true,
+        message: "Couple assessment saved successfully",
+        coupleAssessmentId: coupleAssessment.id,
+        emailsSent: validatedData.sendEmails
+      });
+
+    } catch (error) {
+      console.error("Error saving couple assessment:", error);
+      return res.status(500).json({
+        success: false,
+        message: error instanceof Error ? error.message : "Failed to save couple assessment"
+      });
+    }
+  });
+
   app.post('/api/email/send', async (req, res) => {
     try {
       // Validate the request body
