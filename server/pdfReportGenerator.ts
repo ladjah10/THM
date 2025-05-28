@@ -192,11 +192,28 @@ export class ProfessionalPDFGenerator {
   }
 
   // Individual Assessment Report Generation
-  async generateIndividualReport(assessment: AssessmentResult): Promise<Buffer> {
+  async generateIndividualReport(assessment: any): Promise<Buffer> {
+    // Parse JSON strings if needed
+    const demographics = typeof assessment.demographics === 'string' 
+      ? JSON.parse(assessment.demographics) 
+      : assessment.demographics;
+    
+    const scores = typeof assessment.scores === 'string' 
+      ? JSON.parse(assessment.scores) 
+      : assessment.scores;
+    
+    const profile = typeof assessment.profile === 'string' 
+      ? JSON.parse(assessment.profile) 
+      : assessment.profile;
+    
+    const genderProfile = assessment.genderProfile && typeof assessment.genderProfile === 'string' 
+      ? JSON.parse(assessment.genderProfile) 
+      : assessment.genderProfile;
+
     // Header
     this.drawHeader(
       'The 100 Marriage Assessment - Individual Report',
-      `Report for ${assessment.demographicData.firstName} ${assessment.demographicData.lastName}`
+      `Report for ${demographics.firstName} ${demographics.lastName}`
     );
 
     // Overall Score Section
@@ -204,7 +221,7 @@ export class ProfessionalPDFGenerator {
     this.doc.fill(COLORS.PRIMARY)
       .font(FONTS.SCORE.font)
       .fontSize(32)
-      .text(`${assessment.scores.overallPercentage}%`, LAYOUT.MARGIN, this.currentY, {
+      .text(`${scores.overallPercentage}%`, LAYOUT.MARGIN, this.currentY, {
         width: LAYOUT.CONTENT_WIDTH,
         align: 'center'
       });
@@ -213,19 +230,19 @@ export class ProfessionalPDFGenerator {
 
     // Section Scores
     this.drawSectionHeader('Section Performance');
-    Object.entries(assessment.scores.sections).forEach(([section, data]) => {
+    Object.entries(scores.sections).forEach(([section, data]: [string, any]) => {
       this.checkPageBreak(60);
       this.drawScoreBar(`${section}`, data.percentage);
     });
 
     // Primary Profile
     this.checkPageBreak(150);
-    this.drawProfileSection(assessment.profile, 'Your Primary Profile');
+    this.drawProfileSection(profile, 'Your Primary Profile');
 
     // Gender-Specific Profile (if available)
-    if (assessment.genderProfile) {
+    if (genderProfile) {
       this.checkPageBreak(150);
-      this.drawProfileSection(assessment.genderProfile, 'Your Gender-Specific Profile');
+      this.drawProfileSection(genderProfile, 'Your Gender-Specific Profile');
     }
 
     // Strengths and Improvements
@@ -233,12 +250,12 @@ export class ProfessionalPDFGenerator {
     this.drawSectionHeader('Key Insights');
     
     this.drawParagraph('Your Strengths:', { bold: true });
-    assessment.scores.strengths.forEach(strength => {
+    scores.strengths.forEach((strength: string) => {
       this.drawParagraph(`• ${strength}`, { indent: true });
     });
 
     this.drawParagraph('Areas for Growth:', { bold: true });
-    assessment.scores.improvementAreas.forEach(area => {
+    scores.improvementAreas.forEach((area: string) => {
       this.drawParagraph(`• ${area}`, { indent: true });
     });
 
@@ -256,11 +273,25 @@ export class ProfessionalPDFGenerator {
   }
 
   // Couple Assessment Report Generation
-  async generateCoupleReport(coupleReport: CoupleAssessmentReport): Promise<Buffer> {
+  async generateCoupleReport(coupleReport: any): Promise<Buffer> {
+    // Parse the couple report data if needed
+    const primaryAssessment = coupleReport.primaryAssessment || coupleReport.primary;
+    const spouseAssessment = coupleReport.spouseAssessment || coupleReport.spouse;
+    const analysis = coupleReport.differenceAnalysis || coupleReport.analysis;
+    
+    // Parse demographics for both assessments
+    const primaryDemographics = typeof primaryAssessment.demographics === 'string' 
+      ? JSON.parse(primaryAssessment.demographics) 
+      : primaryAssessment.demographics;
+    
+    const spouseDemographics = typeof spouseAssessment.demographics === 'string' 
+      ? JSON.parse(spouseAssessment.demographics) 
+      : spouseAssessment.demographics;
+
     // Header
     this.drawHeader(
       'The 100 Marriage Assessment - Couple Compatibility Report',
-      `${coupleReport.primaryAssessment.demographicData.firstName} & ${coupleReport.spouseAssessment.demographicData.firstName}`
+      `${primaryDemographics.firstName} & ${spouseDemographics.firstName}`
     );
 
     // Compatibility Score
