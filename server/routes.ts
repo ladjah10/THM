@@ -2184,12 +2184,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // 2. Have opted into arranged marriage pool (interestedInArrangedMarriage = true)
       // 3. Have paid for THM pool access (thmPoolApplied = true)
       // Note: Score filter removed per admin requirements
-      console.log(`Processing ${allAssessments.length} assessments for pool candidates`);
-      
       const poolCandidates = allAssessments.filter(assessment => {
         const demographics = assessment.demographics;
         if (!demographics) {
-          console.log(`No demographics found for assessment`);
           return false;
         }
         
@@ -2198,14 +2195,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const applied = demographics?.thmPoolApplied === true;
         const eligibleStatus = ['single', 'divorced', 'widowed', 'no'].includes(marriageStatus);
         
-        console.log(`${demographics.email}: status=${marriageStatus}, interested=${interested}, applied=${applied}, eligible=${eligibleStatus}`);
-        
-        const isCandidate = interested && applied && eligibleStatus;
-        if (isCandidate) {
-          console.log(`✅ POOL CANDIDATE FOUND: ${demographics.email}`);
-        }
-        
-        return isCandidate;
+        return interested && applied && eligibleStatus;
       }).map(assessment => ({
         ...assessment,
         // Calculate match score for sorting
