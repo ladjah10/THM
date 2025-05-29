@@ -535,79 +535,117 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Hidden test route for manual assessment testing
+  // Enhanced test route using real assessment system components
   app.post('/api/test-assessment', async (req, res) => {
     try {
       const { email = 'la@lawrenceadjah.com', firstName = 'Test', lastName = 'User', gender = 'male', promoCode = 'FREE100' } = req.body;
       
-      console.log('🧪 Test assessment endpoint triggered');
+      console.log('🧪 Test assessment endpoint triggered with real scoring system');
       console.log(`📧 Email: ${email}, Name: ${firstName} ${lastName}, Gender: ${gender}, Promo: ${promoCode}`);
       
-      // Create mock assessment results
-      const mockResults = {
+      // Import real assessment components
+      const questions = await import('../client/src/data/questionsData');
+      const { calculateAssessmentWithResponses } = await import('../client/src/utils/scoringUtils');
+      const psychographicProfiles = await import('../client/src/data/psychographicProfiles');
+      
+      // Generate realistic weighted responses for all 99 questions
+      function generateWeightedResponses(questionList: any[]) {
+        const responses: Record<number, { option: string; value: number }> = {};
+        
+        questionList.forEach((question, index) => {
+          const questionId = index + 1;
+          
+          if (question.type === 'declaration') {
+            // For declaration questions: 70% chance of agreement
+            const agrees = Math.random() < 0.7;
+            const selectedOption = agrees ? question.options[0] : question.options[1];
+            responses[questionId] = {
+              option: selectedOption,
+              value: agrees ? question.weight : 0
+            };
+          } else {
+            // For multiple choice: weighted towards earlier options (more traditional)
+            const numOptions = question.options.length;
+            const weights = Array.from({ length: numOptions }, (_, i) => 
+              Math.pow(0.7, i) // Exponential decay favoring earlier options
+            );
+            const totalWeight = weights.reduce((sum, w) => sum + w, 0);
+            
+            let random = Math.random() * totalWeight;
+            let selectedIndex = 0;
+            for (let i = 0; i < weights.length; i++) {
+              random -= weights[i];
+              if (random <= 0) {
+                selectedIndex = i;
+                break;
+              }
+            }
+            
+            responses[questionId] = {
+              option: question.options[selectedIndex],
+              value: (selectedIndex + 1) * question.weight
+            };
+          }
+        });
+        
+        return responses;
+      }
+      
+      // Generate responses using real questions
+      const responses = generateWeightedResponses(questions.default);
+      console.log(`📝 Generated responses for ${Object.keys(responses).length} questions`);
+      
+      // Create demographics
+      const demographics = {
+        firstName,
+        lastName,
         email,
-        name: `${firstName} ${lastName}`,
-        timestamp: new Date().toISOString(),
-        demographics: {
-          firstName,
-          lastName,
-          email,
-          gender,
-          marriageStatus: 'Single',
-          desireChildren: 'Yes',
-          ethnicity: 'Not specified',
-          birthday: '1990-01-01',
-          lifeStage: 'Adult',
-          city: 'Test City',
-          state: 'NY',
-          zipCode: '10001',
-          hasPurchasedBook: 'No'
-        },
-        scores: {
-          sections: {
-            'Your Foundation': { earned: 45, possible: 50, percentage: 90 },
-            'Communication': { earned: 40, possible: 50, percentage: 80 },
-            'Conflict Resolution': { earned: 42, possible: 50, percentage: 84 },
-            'Finances': { earned: 38, possible: 50, percentage: 76 },
-            'Family Planning': { earned: 44, possible: 50, percentage: 88 },
-            'Physical Intimacy': { earned: 35, possible: 50, percentage: 70 }
-          },
-          overallPercentage: 82,
-          strengths: ['Strong foundation values', 'Excellent communication'],
-          improvementAreas: ['Financial planning', 'Physical intimacy'],
-          totalEarned: 244,
-          totalPossible: 300
-        },
-        profile: {
-          id: 1,
-          name: 'The Visionary',
-          description: 'Test profile for assessment validation',
-          genderSpecific: null,
-          criteria: []
-        },
-        genderProfile: null,
-        responses: {}
+        gender,
+        marriageStatus: 'Single',
+        desireChildren: 'Yes',
+        ethnicity: 'Not specified',
+        birthday: '1990-01-01',
+        lifeStage: 'Adult',
+        city: 'Test City',
+        state: 'NY',
+        zipCode: '10001',
+        hasPurchasedBook: 'No'
       };
-
+      
+      // Calculate actual scores using real scoring logic
+      const assessmentResult = calculateAssessmentWithResponses(
+        responses,
+        demographics
+      );
+      
+      console.log(`📊 Assessment calculated: ${assessmentResult.scores.overallPercentage}% overall score`);
+      console.log(`👤 Primary profile: ${assessmentResult.profile.name}`);
+      if (assessmentResult.genderProfile) {
+        console.log(`🚻 Gender profile: ${assessmentResult.genderProfile.name}`);
+      }
+      
       // Import PDF generation and email sending functions
       const { generateIndividualAssessmentPDF } = await import('./pdfReportGenerator');
       const { sendAssessmentEmailSendGrid } = await import('./sendgrid');
       
-      console.log('📄 Generating PDF report...');
-      const pdfBuffer = await generateIndividualAssessmentPDF(mockResults);
+      console.log('📄 Generating PDF report with real assessment data...');
+      const pdfBuffer = await generateIndividualAssessmentPDF(assessmentResult);
       console.log(`✅ PDF generated successfully (${pdfBuffer.length} bytes)`);
       
       console.log('📧 Sending email with PDF attachment...');
-      const emailResult = await sendAssessmentEmailSendGrid(mockResults, pdfBuffer);
+      const emailResult = await sendAssessmentEmailSendGrid(assessmentResult, pdfBuffer);
       
       if (emailResult.success) {
         console.log('✅ Test email and PDF report sent successfully');
         res.json({ 
           success: true,
-          message: 'Test email and PDF report sent successfully',
+          message: 'Test assessment completed using real scoring system',
           emailSent: true,
           pdfGenerated: true,
-          recipient: email
+          recipient: email,
+          overallScore: assessmentResult.scores.overallPercentage,
+          profile: assessmentResult.profile.name,
+          genderProfile: assessmentResult.genderProfile?.name || 'None'
         });
       } else {
         throw new Error(emailResult.error || 'Email sending failed');
