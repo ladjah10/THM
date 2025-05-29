@@ -50,11 +50,13 @@ export const sendAssessmentEmail = async (to: string, subject: string, text: str
   try {
     const response = await mailService.send(msg);
     console.log("✅ Email sent successfully to", to);
-    console.log("📨 SendGrid response:", response[0].statusCode);
+    console.log("📨 SendGrid response status:", response[0].statusCode);
+    console.log("📨 SendGrid message ID:", response[0].headers['x-message-id']);
     return { success: true, response };
-  } catch (err) {
-    console.error("❌ Email delivery failed:", err);
-    return { success: false, error: err };
+  } catch (error) {
+    console.error("❌ Failed to send email:", error.response?.body || error.message);
+    console.error("❌ Full error details:", JSON.stringify(error, null, 2));
+    return { success: false, error: error.message || error };
   }
 };
 
@@ -329,4 +331,34 @@ Lawrence Adjah Ministries
   `;
 
   return { subject, textContent, htmlContent };
+};
+
+export const sendAssessmentEmailSendGrid = async (assessment: any, pdfBuffer: Buffer) => {
+  console.log('📧 Preparing SendGrid email for assessment...');
+  
+  if (!apiKey) {
+    console.error("❌ Cannot send email: SendGrid API key not configured");
+    return { success: false, error: "SendGrid API key not configured" };
+  }
+
+  try {
+    const { subject, textContent, htmlContent } = generateIndividualEmailContent(assessment);
+    
+    console.log(`📧 Email content generated: Subject: ${subject}`);
+    console.log(`📧 Recipient: ${assessment.email}`);
+    console.log(`📄 PDF attachment size: ${pdfBuffer.length} bytes`);
+    
+    const result = await sendAssessmentEmail(
+      assessment.email,
+      subject,
+      textContent,
+      pdfBuffer,
+      htmlContent
+    );
+    
+    return result;
+  } catch (error) {
+    console.error('❌ Error in sendAssessmentEmailSendGrid:', error);
+    return { success: false, error: error.message || error };
+  }
 };

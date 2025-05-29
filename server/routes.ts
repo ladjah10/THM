@@ -536,36 +536,89 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Hidden test route for manual assessment testing
-  app.get('/test-assessment', async (req, res) => {
+  app.post('/api/test-assessment', async (req, res) => {
     try {
-      const { email, gender, promo } = req.query;
+      const { email = 'la@lawrenceadjah.com', firstName = 'Test', lastName = 'User', gender = 'male', promoCode = 'FREE100' } = req.body;
       
-      // Import the test function
-      const { runAssessmentTest } = await import('../runAssessmentTestFlow');
+      console.log('🧪 Test assessment endpoint triggered');
+      console.log(`📧 Email: ${email}, Name: ${firstName} ${lastName}, Gender: ${gender}, Promo: ${promoCode}`);
       
-      console.log('🧪 Manual test trigger received');
-      console.log(`Email: ${email}, Gender: ${gender}, Promo: ${promo}`);
+      // Create mock assessment results
+      const mockResults = {
+        email,
+        name: `${firstName} ${lastName}`,
+        timestamp: new Date().toISOString(),
+        demographics: {
+          firstName,
+          lastName,
+          email,
+          gender,
+          marriageStatus: 'Single',
+          desireChildren: 'Yes',
+          ethnicity: 'Not specified',
+          birthday: '1990-01-01',
+          lifeStage: 'Adult',
+          city: 'Test City',
+          state: 'NY',
+          zipCode: '10001',
+          hasPurchasedBook: 'No'
+        },
+        scores: {
+          sections: {
+            'Your Foundation': { earned: 45, possible: 50, percentage: 90 },
+            'Communication': { earned: 40, possible: 50, percentage: 80 },
+            'Conflict Resolution': { earned: 42, possible: 50, percentage: 84 },
+            'Finances': { earned: 38, possible: 50, percentage: 76 },
+            'Family Planning': { earned: 44, possible: 50, percentage: 88 },
+            'Physical Intimacy': { earned: 35, possible: 50, percentage: 70 }
+          },
+          overallPercentage: 82,
+          strengths: ['Strong foundation values', 'Excellent communication'],
+          improvementAreas: ['Financial planning', 'Physical intimacy'],
+          totalEarned: 244,
+          totalPossible: 300
+        },
+        profile: {
+          id: 1,
+          name: 'The Visionary',
+          description: 'Test profile for assessment validation',
+          genderSpecific: null,
+          criteria: []
+        },
+        genderProfile: null,
+        responses: {}
+      };
+
+      // Import PDF generation and email sending functions
+      const { generateIndividualAssessmentPDF } = await import('./pdfReportGenerator');
+      const { sendAssessmentEmailSendGrid } = await import('./sendgrid');
       
-      // Run the test in the background
-      runAssessmentTest().then(() => {
-        console.log('✅ Test completed successfully');
-      }).catch(error => {
-        console.error('❌ Test failed:', error);
-      });
+      console.log('📄 Generating PDF report...');
+      const pdfBuffer = await generateIndividualAssessmentPDF(mockResults);
+      console.log(`✅ PDF generated successfully (${pdfBuffer.length} bytes)`);
       
-      res.json({
-        success: true,
-        message: 'Assessment test triggered successfully',
-        params: { email, gender, promo },
-        note: 'Check server console and test-outputs directory for results'
-      });
+      console.log('📧 Sending email with PDF attachment...');
+      const emailResult = await sendAssessmentEmailSendGrid(mockResults, pdfBuffer);
+      
+      if (emailResult.success) {
+        console.log('✅ Test email and PDF report sent successfully');
+        res.json({ 
+          success: true,
+          message: 'Test email and PDF report sent successfully',
+          emailSent: true,
+          pdfGenerated: true,
+          recipient: email
+        });
+      } else {
+        throw new Error(emailResult.error || 'Email sending failed');
+      }
       
     } catch (error) {
-      console.error('Error triggering assessment test:', error);
-      res.status(500).json({
+      console.error('❌ Error during test-assessment email flow:', error.message || error);
+      res.status(500).json({ 
         success: false,
-        message: 'Failed to trigger test',
-        error: error.message
+        error: 'Test email failed',
+        details: error.message
       });
     }
   });
