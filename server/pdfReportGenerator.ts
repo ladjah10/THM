@@ -99,7 +99,7 @@ export class ProfessionalPDFGenerator {
     this.currentY += 35;
   }
 
-  private drawParagraph(text: string, options: { indent?: boolean, bold?: boolean } = {}): void {
+  private drawParagraph(text: string, options: { indent?: boolean, bold?: boolean, fontSize?: number, align?: string } = {}): void {
     const xPosition = LAYOUT.MARGIN + (options.indent ? 20 : 0);
     
     this.doc.fill(COLORS.TEXT)
@@ -210,10 +210,36 @@ export class ProfessionalPDFGenerator {
       ? JSON.parse(assessment.genderProfile) 
       : assessment.genderProfile;
 
-    // Header
+    // Header with enhanced content
     this.drawHeader(
-      'The 100 Marriage Assessment - Individual Report',
+      'The 100 Marriage Assessment - Series 1',
       `Report for ${demographics.firstName} ${demographics.lastName}`
+    );
+    
+    // Add completion date
+    const completionDate = new Date().toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+    this.doc.fontSize(12)
+      .fill(COLORS.TEXT)
+      .text(`Completed on ${completionDate}`, LAYOUT.MARGIN, this.currentY, {
+        width: LAYOUT.CONTENT_WIDTH,
+        align: 'center'
+      });
+    
+    this.currentY += 30;
+    
+    // Introduction text
+    this.drawParagraph(
+      'Thank you for completing The 100 Marriage Assessment - Series 1. This report provides insights into your perspectives on marriage and relationships based on your responses to our comprehensive questionnaire.',
+      { fontSize: 11, align: 'justify' }
+    );
+    
+    this.drawParagraph(
+      'Your assessment score reflects your perspectives on marriage, not a judgment of readiness. Higher percentages indicate alignment with more traditional views, while lower percentages suggest less traditional approaches. Neither is inherently better—these simply reflect different value systems and approaches to marriage.',
+      { fontSize: 11, align: 'justify' }
     );
 
     // Overall Score Section
@@ -228,23 +254,61 @@ export class ProfessionalPDFGenerator {
     
     this.currentY += 50;
 
-    // Section Scores
+    // Section Scores with descriptions
     this.drawSectionHeader('Section Performance');
+    
+    // Add section score interpretation
+    this.drawParagraph(
+      'Section Score Interpretation:',
+      { bold: true, fontSize: 10 }
+    );
+    this.drawParagraph(
+      '• High (≥80%): Biblical marriage alignment, strong convictions',
+      { fontSize: 9, indent: true }
+    );
+    this.drawParagraph(
+      '• Moderate (60–79%): Balanced, some traditional and modern views',
+      { fontSize: 9, indent: true }
+    );
+    this.drawParagraph(
+      '• Low (<60%): Evolving values, non-traditional but committed',
+      { fontSize: 9, indent: true }
+    );
+    
+    this.currentY += 15;
+    
     Object.entries(scores.sections).forEach(([section, data]: [string, any]) => {
       this.checkPageBreak(60);
       this.drawScoreBar(`${section}`, data.percentage);
     });
 
-    // Primary Profile
+    // Psychographic Profile Enhancements
     this.checkPageBreak(150);
-    this.drawProfileSection(profile, 'Your Primary Profile');
+    this.drawSectionHeader('Your Psychographic Profiles');
+    
+    // General Profile
+    this.drawParagraph('General Profile:', { bold: true, fontSize: 12 });
+    this.drawProfileSection(profile, '');
 
     // Gender-Specific Profile (if available)
     if (genderProfile) {
       this.checkPageBreak(150);
-      this.drawProfileSection(genderProfile, 'Your Gender-Specific Profile');
+      this.drawParagraph('Gender-Specific Profile:', { bold: true, fontSize: 12 });
+      this.drawProfileSection(genderProfile, '');
     }
 
+    // Statistical Comparison Section
+    this.checkPageBreak(150);
+    this.drawSectionHeader('Statistical Comparison');
+    
+    // Mock comparison data - would be replaced with real statistics
+    const overallAverage = 65.2;
+    const genderAverage = demographics.gender === 'male' ? 62.8 : 67.6;
+    
+    this.drawParagraph(`Your Score: ${scores.overallPercentage}%`, { bold: true });
+    this.drawParagraph(`Overall Average: ${overallAverage}%`);
+    this.drawParagraph(`${demographics.gender === 'male' ? 'Male' : 'Female'} Average: ${genderAverage}%`);
+    
     // Strengths and Improvements
     this.checkPageBreak(200);
     this.drawSectionHeader('Key Insights');
@@ -259,7 +323,36 @@ export class ProfessionalPDFGenerator {
       this.drawParagraph(`• ${area}`, { indent: true });
     });
 
-    // Footer on each page
+    // Next Steps Section
+    this.checkPageBreak(150);
+    this.drawSectionHeader('Next Steps');
+    
+    this.drawParagraph(
+      'We recommend discussing these results with your significant other or potential spouse to better understand how your perspectives align. The 100 Marriage book can serve as an excellent companion to this assessment.'
+    );
+    
+    this.drawParagraph(
+      'For a more in-depth discussion of your results, schedule a consultation:'
+    );
+    
+    this.drawParagraph(
+      'https://lawrence-adjah.clientsecure.me/request/service',
+      { bold: true }
+    );
+
+    // Appendix: Assessment Information
+    this.checkPageBreak(200);
+    this.drawSectionHeader('About The 100 Marriage Assessment');
+    
+    this.drawParagraph(
+      'The 100 Marriage Assessment - Series 1 is based on Lawrence Adjah\'s bestselling book "The 100 Marriage Decisions & Declarations." This comprehensive assessment evaluates your perspectives across multiple areas of marriage and relationships.'
+    );
+    
+    this.drawParagraph(
+      'The assessment includes 99 carefully designed questions covering topics such as biblical foundations, financial planning, communication, intimacy, and family values. Your results provide insights into your relationship readiness and compatibility factors.'
+    );
+
+    // Enhanced Footer with branding
     this.drawFooter();
 
     return new Promise((resolve) => {

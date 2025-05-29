@@ -1,0 +1,76 @@
+### Full Implementation Guide for Report, Email, and Results Page Enhancements
+
+#### 1. REPORT PDF UPDATES (via PDF Generator)
+- Include the following content updates:
+
+  **Header Section**
+  - Add "Completed on [Month DD, YYYY]" (dynamic date).
+  - Insert the following intro text below the date:
+    ---
+    Thank you for completing The 100 Marriage Assessment - Series 1. This report provides insights into your perspectives on marriage and relationships based on your responses to our comprehensive questionnaire. Your assessment score reflects your perspectives on marriage, not a judgment of readiness. Higher percentages indicate alignment with more traditional views, while lower percentages suggest less traditional approaches. Neither is inherently better—these simply reflect different expectations. W...
+
+  **Section Descriptions**
+  - Under each section title, insert:
+    - High (≥80%): Biblical marriage alignment, strong convictions.
+    - Moderate (60–79%): Balanced, some traditional and modern views.
+    - Low (<60%): Evolving values, non-traditional but committed.
+
+  **Psychographic Profile Enhancements**
+  - Show "General Profile:"
+  - Show "Gender-Specific Profile:"
+
+  **Statistical Comparison Section**
+  - Add data comparing:
+    - User score vs. overall average
+    - User score vs. same-gender average
+
+  **Next Steps Section**
+  - Add at bottom:
+    ---
+    We recommend discussing these results with your significant other or potential spouse to better understand how your perspectives align. The 100 Marriage book can serve as an excellent companion to this assessment.
+
+    For a more in-depth discussion of your results, schedule a consultation:
+    https://lawrence-adjah.clientsecure.me/request/service
+
+  **Appendix: Psychographic Profiles Overview**
+  - Show all profiles with title and 1-line summary.
+
+  **General Formatting Standards**
+  - Use:
+    - Clear section breaks
+    - Bold section headers
+    - Consistent font and spacing
+    - Branding footer: “The 100 Marriage Assessment – Series 1 | Lawrence Adjah”
+
+#### 2. EMAIL RESULT TEMPLATE
+- Ensure the same intro description (above) is in the email body.
+- Link to PDF report in email or attach PDF directly.
+- Add "Next Steps" text at the bottom.
+- Maintain consistent fonts, spacing, and no markdown rendering issues.
+
+#### 3. RESULTS PAGE DISPLAY
+- Include:
+  - Completion date
+  - Overall percentage explanation
+  - Section-level scores + explanations
+  - General and gender-specific profile
+  - Comparison stats
+  - Next Steps paragraph
+  - Button to schedule consultation
+
+#### 4. FORMATTING SAFEGUARDS
+- Use reusable CSS/JS formatting tokens for:
+  - Headers
+  - Score percentage displays
+  - Section cards
+  - Spacing / margins
+- Validate rendering before deployment to prevent layout collapse or spacing bugs.
+
+#### 5. TESTING REQUIREMENT
+- Set up automated test case using:
+  - Promo code access
+  - Known email: la@lawrenceadjah.com
+  - Gender: Male/Female
+  - First name: Test
+  - Last name: THM
+  - Trigger full assessment-to-report-email flow and verify all elements above.
