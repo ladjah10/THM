@@ -1,0 +1,112 @@
+{
+  "processedAt": "2025-05-29T08:04:34.503Z",
+  "totalAssessments": 13,
+  "successful": 13,
+  "failed": 0,
+  "details": [
+    {
+      "email": "harmon.jere@gmail.com",
+      "score": 53.8,
+      "profile": "Balanced Individual",
+      "pdfFile": "recalc-harmon-jere-gmail-com-1748505874297.pdf",
+      "timestamp": "2025-05-29T08:04:34.300Z",
+      "status": "success"
+    },
+    {
+      "email": "deborah.metts@gmail.com",
+      "score": 59.4,
+      "profile": "Balanced Individual",
+      "pdfFile": "recalc-deborah-metts-gmail-com-1748505874324.pdf",
+      "timestamp": "2025-05-29T08:04:34.325Z",
+      "status": "success"
+    },
+    {
+      "email": "sbangudu.b@gmail.com",
+      "score": 50,
+      "profile": "Balanced Individual",
+      "pdfFile": "recalc-sbangudu-b-gmail-com-1748505874343.pdf",
+      "timestamp": "2025-05-29T08:04:34.343Z",
+      "status": "success"
+    },
+    {
+      "email": "la@lawrenceadjah.com",
+      "score": 50.6,
+      "profile": "Balanced Traditionalists",
+      "pdfFile": "recalc-la-lawrenceadjah-com-1748505874359.pdf",
+      "timestamp": "2025-05-29T08:04:34.360Z",
+      "status": "success"
+    },
+    {
+      "email": "sbangudu.b@gmail.com",
+      "score": 47.9,
+      "profile": "Individualist Seekers",
+      "pdfFile": "recalc-sbangudu-b-gmail-com-1748505874377.pdf",
+      "timestamp": "2025-05-29T08:04:34.377Z",
+      "status": "success"
+    },
+    {
+      "email": "sbangudu.b@gmail.com",
+      "score": 47.9,
+      "profile": "Individualist Seekers",
+      "pdfFile": "recalc-sbangudu-b-gmail-com-1748505874396.pdf",
+      "timestamp": "2025-05-29T08:04:34.399Z",
+      "status": "success"
+    },
+    {
+      "email": "deborah.metts@gmail.com",
+      "score": 47.9,
+      "profile": "Individualist Seekers",
+      "pdfFile": "recalc-deborah-metts-gmail-com-1748505874417.pdf",
+      "timestamp": "2025-05-29T08:04:34.417Z",
+      "status": "success"
+    },
+    {
+      "email": "deborah.metts@gmail.com",
+      "score": 47.9,
+      "profile": "Individualist Seekers",
+      "pdfFile": "recalc-deborah-metts-gmail-com-1748505874433.pdf",
+      "timestamp": "2025-05-29T08:04:34.434Z",
+      "status": "success"
+    },
+    {
+      "email": "deborah.metts@gmail.com",
+      "score": 47.9,
+      "profile": "Individualist Seekers",
+      "pdfFile": "recalc-deborah-metts-gmail-com-1748505874446.pdf",
+      "timestamp": "2025-05-29T08:04:34.446Z",
+      "status": "success"
+    },
+    {
+      "email": "harmon.jere@gmail.com",
+      "score": 47.9,
+      "profile": "Individualist Seekers",
+      "pdfFile": "recalc-harmon-jere-gmail-com-1748505874459.pdf",
+      "timestamp": "2025-05-29T08:04:34.459Z",
+      "status": "success"
+    },
+    {
+      "email": "harmon.jere@gmail.com",
+      "score": 47.9,
+      "profile": "Individualist Seekers",
+      "pdfFile": "recalc-harmon-jere-gmail-com-1748505874475.pdf",
+      "timestamp": "2025-05-29T08:04:34.476Z",
+      "status": "success"
+    },
+    {
+      "email": "cmcbrady@gmail.com",
+      "score": 74.9,
+      "profile": "Harmonious Planners",
+      "pdfFile": "recalc-cmcbrady-gmail-com-1748505874488.pdf",
+      "timestamp": "2025-05-29T08:04:34.488Z",
+      "status": "success"
+    },
+    {
+      "email": "la@lawrenceadjah.com",
+      "score": 47.9,
+      "profile": "Individualist Seekers",
+      "pdfFile": "recalc-la-lawrenceadjah-com-1748505874502.pdf",
+      "timestamp": "2025-05-29T08:04:34.503Z",
+      "status": "success"
+    }
+  ]
+}

@@ -164,6 +164,38 @@ class MemStorage {
   async getAllAssessments(): Promise<AssessmentResult[]> {
     return Array.from(this.assessments.values());
   }
+
+  async updateAssessment(email: string, updatedAssessment: AssessmentResult): Promise<void> {
+    this.assessments.set(email, updatedAssessment);
+    console.log(`Assessment updated in memory for ${email}`);
+    
+    // Also update in database if available
+    try {
+      const query = `
+        UPDATE assessment_results 
+        SET scores = $1, profile = $2, recalculated = $3, recalculated_at = $4,
+            original_score = $5, original_profile = $6, recalculated_pdf_path = $7
+        WHERE email = $8
+      `;
+      
+      const values = [
+        JSON.stringify(updatedAssessment.scores),
+        JSON.stringify(updatedAssessment.profile),
+        updatedAssessment.recalculated || false,
+        updatedAssessment.recalculatedAt || null,
+        updatedAssessment.originalScore || null,
+        updatedAssessment.originalProfile || null,
+        updatedAssessment.recalculatedPdfPath || null,
+        email
+      ];
+      
+      await this.pool.query(query, values);
+      console.log(`Assessment updated in database for ${email}`);
+    } catch (dbError) {
+      console.error('Error updating assessment in database:', dbError);
+      // Continue with memory update even if database fails
+    }
+  }
   
   // Get a completed assessment by email
   async getCompletedAssessment(email: string): Promise<AssessmentResult | null> {
