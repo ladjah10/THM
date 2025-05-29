@@ -1,5 +1,7 @@
 import PDFDocument from 'pdfkit';
 import { AssessmentResult, CoupleAssessmentReport } from '@shared/schema';
+import { generateEnhancedIndividualAssessmentPDF } from '../updated-individual-pdf';
+import { generateEnhancedCoupleAssessmentPDF } from '../updated-couple-pdf';
 import fs from 'fs';
 import path from 'path';
 
