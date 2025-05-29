@@ -1,0 +1,29 @@
+### 🚨 Replit Force Push Instructions (Use With Caution)
+
+If your push is rejected because the remote has commits not present in your Replit project, and you are certain that you want your Replit code to **overwrite** the GitHub repo, follow these steps:
+
+---
+
+#### 🛠 Step-by-Step (From Replit Shell)
+
+1. Open the Replit **Shell** (Tools > Shell)
+
+2. Run the following commands:
+
+```bash
+git add .
+git commit -m "Force syncing Replit changes with GitHub"
+git push origin main --force
+```
+
+> If you're using a different branch (e.g. `master`), replace `main` with your branch name.
+
+---
+
+### ⚠️ WARNING:
+- This will **overwrite** changes on GitHub with your current Replit code.
+- Only use this if you are confident that the GitHub repo doesn't have important changes you want to keep.
+
+---
+
+Always double-check before using `--force`.

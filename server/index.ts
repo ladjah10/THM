@@ -119,13 +119,9 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // Use environment port for deployment compatibility (Replit default is 3000)
-  const port = process.env.PORT || 3000;
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
+  // Use environment port for deployment compatibility (Replit expects 5000)
+  const port = parseInt(process.env.PORT || '5000', 10);
+  server.listen(port, () => {
     log(`serving on port ${port}`);
   });
 })();
