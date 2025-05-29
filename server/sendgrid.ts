@@ -8,14 +8,25 @@ const apiKey = process.env.SENDGRID_API_KEY;
 const senderEmail = process.env.EMAIL_SENDER || "hello@wgodw.com";
 
 if (!apiKey) {
-  console.warn("⚠️ SendGrid API key not set.");
+  console.warn("⚠️ SendGrid API key not set. Email functionality will be disabled.");
+  console.warn("Please add SENDGRID_API_KEY to your Replit Secrets.");
 } else {
+  console.log("✅ SendGrid API key detected and configured");
   mailService.setApiKey(apiKey);
 }
 
+console.log(`📧 Email sender configured as: ${senderEmail}`);
+
 export const sendAssessmentEmail = async (to: string, subject: string, text: string, pdfBuffer: Buffer, htmlContent?: string) => {
+  console.log(`📤 Attempting to send email to ${to} with PDF attachment size ${pdfBuffer.length} bytes`);
+  
   if (!senderEmail) {
     throw new Error("Sender email not configured in EMAIL_SENDER");
+  }
+
+  if (!apiKey) {
+    console.error("❌ Cannot send email: SendGrid API key not configured");
+    return { success: false, error: "SendGrid API key not configured" };
   }
 
   const msg = {
@@ -34,12 +45,15 @@ export const sendAssessmentEmail = async (to: string, subject: string, text: str
     ],
   };
 
+  console.log(`📧 Email prepared: From ${senderEmail} to ${to}, Subject: ${subject}`);
+
   try {
-    await mailService.send(msg);
-    console.log("✅ Email sent to", to);
-    return { success: true };
+    const response = await mailService.send(msg);
+    console.log("✅ Email sent successfully to", to);
+    console.log("📨 SendGrid response:", response[0].statusCode);
+    return { success: true, response };
   } catch (err) {
-    console.error("❌ Email failed:", err);
+    console.error("❌ Email delivery failed:", err);
     return { success: false, error: err };
   }
 };

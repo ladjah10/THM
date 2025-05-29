@@ -1471,6 +1471,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Generate PDF report using your enhanced generator
       const { generateIndividualAssessmentPDF } = await import('./pdfReportGenerator');
       const pdfBuffer = await generateIndividualAssessmentPDF(storedAssessment);
+      console.log("📄 PDF Buffer Generated - Length:", pdfBuffer.length, "bytes");
 
       // Send email with comprehensive content
       const { generateIndividualEmailContent, sendAssessmentEmail } = await import('./sendgrid');
