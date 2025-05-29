@@ -1395,6 +1395,129 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Enhanced test assessment simulation route
+  app.post('/test-assessment', async (req, res) => {
+    try {
+      const fakeUser = {
+        firstName: "Test",
+        lastName: "User", 
+        email: "la@lawrenceadjah.com",
+        gender: "male",
+        promoCode: "FREE100",
+        marriageStatus: "no",
+        desireChildren: "yes",
+        ethnicity: "Other",
+        city: "Test City",
+        state: "CA",
+        zipCode: "90210",
+        birthday: "1990-01-01",
+        phone: "555-123-4567"
+      };
+
+      // Get all 99 questions from your questions data
+      const { questions } = await import('../client/src/data/questionsData');
+      const responses: Record<string, { option: string; value: number }> = {};
+
+      // Generate realistic test responses for all questions
+      questions.forEach((question: any, index: number) => {
+        const questionId = (index + 1).toString();
+        let selectedOption: string;
+        let value: number;
+
+        if (question.type === 'declaration') {
+          // For declaration questions, randomly choose agree/disagree
+          const agreeOptions = ['I agree', 'I do agree', 'Yes, I agree'];
+          const disagreeOptions = ['I do not agree', 'I disagree', 'No, I do not agree'];
+          
+          if (Math.random() > 0.3) { // 70% chance to agree
+            selectedOption = agreeOptions[Math.floor(Math.random() * agreeOptions.length)];
+            value = question.weight || 5;
+          } else {
+            selectedOption = disagreeOptions[Math.floor(Math.random() * disagreeOptions.length)];
+            value = 0;
+          }
+        } else {
+          // For multiple choice questions
+          const numberOfOptions = question.options?.length || 4;
+          const selectedIndex = Math.floor(Math.random() * numberOfOptions);
+          selectedOption = question.options[selectedIndex];
+          value = (selectedIndex + 1) * (question.weight || 1);
+        }
+
+        responses[questionId] = {
+          option: selectedOption,
+          value: value
+        };
+      });
+
+      // Calculate assessment scores using your existing logic
+      const { calculateAssessmentWithResponses } = await import('../client/src/utils/scoringUtils');
+      const assessmentResult = calculateAssessmentWithResponses(responses, fakeUser);
+
+      // Store assessment in database
+      const storedAssessment = await storage.saveAssessment({
+        email: fakeUser.email,
+        demographics: fakeUser,
+        responses: responses,
+        scores: assessmentResult.scores,
+        profile: assessmentResult.profile,
+        genderProfile: assessmentResult.genderProfile,
+        assessmentType: 'individual',
+        isComplete: true,
+        transactionId: 'test-free100-transaction',
+        timestamp: new Date().toISOString()
+      });
+
+      // Generate PDF report using your enhanced generator
+      const { generateIndividualAssessmentPDF } = await import('./pdfReportGenerator');
+      const pdfBuffer = await generateIndividualAssessmentPDF(storedAssessment);
+
+      // Send email with comprehensive content
+      const { generateIndividualEmailContent, sendAssessmentEmail } = await import('./sendgrid');
+      const { subject, textContent, htmlContent } = generateIndividualEmailContent(storedAssessment);
+      
+      const emailResult = await sendAssessmentEmail(
+        fakeUser.email,
+        subject,
+        textContent,
+        pdfBuffer,
+        htmlContent
+      );
+
+      // Send backup copy to Lawrence
+      await sendAssessmentBackup(fakeUser.email, {
+        assessment: storedAssessment,
+        responses: responses,
+        testRun: true,
+        timestamp: new Date().toISOString()
+      });
+
+      if (emailResult.success) {
+        res.status(200).json({
+          success: true,
+          message: "✅ Test assessment submitted successfully. Check email for enhanced report.",
+          assessmentId: storedAssessment.id,
+          overallScore: assessmentResult.scores.overallPercentage,
+          profile: assessmentResult.profile.name,
+          emailSent: true
+        });
+      } else {
+        res.status(500).json({
+          success: false,
+          message: "❌ Test assessment processed but email failed. Please verify email configuration.",
+          assessmentId: storedAssessment.id
+        });
+      }
+    } catch (error) {
+      console.error("Enhanced test assessment error:", error);
+      res.status(500).json({
+        success: false,
+        message: "❌ Internal test error occurred.",
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
   // Create payment intent specifically for THM pool application fee
   app.post('/api/create-thm-payment-intent', async (req, res) => {
     try {
