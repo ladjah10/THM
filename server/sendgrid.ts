@@ -173,6 +173,53 @@ Lawrence Adjah Ministries
   return { subject, textContent, htmlContent };
 };
 
+// Missing exports required by routes.ts
+export const sendFormInitiationNotification = async (email: string, firstName: string) => {
+  if (!apiKey) {
+    console.warn("⚠️ SendGrid API key not set, skipping notification");
+    return { success: false, error: "API key not configured" };
+  }
+
+  const msg = {
+    to: email,
+    from: senderEmail,
+    subject: "Welcome to The 100 Marriage Assessment",
+    text: `Dear ${firstName},\n\nThank you for starting The 100 Marriage Assessment. We're excited to help you on your journey!\n\nBest regards,\nThe 100 Marriage Assessment Team`,
+  };
+
+  try {
+    await mailService.send(msg);
+    console.log("✅ Form initiation notification sent to", email);
+    return { success: true };
+  } catch (err) {
+    console.error("❌ Form initiation notification failed:", err);
+    return { success: false, error: err };
+  }
+};
+
+export const sendAssessmentBackup = async (email: string, assessmentData: any) => {
+  if (!apiKey) {
+    console.warn("⚠️ SendGrid API key not set, skipping backup");
+    return { success: false, error: "API key not configured" };
+  }
+
+  const msg = {
+    to: "lawrence@lawrenceadjah.com",
+    from: senderEmail,
+    subject: `Assessment Backup - ${email}`,
+    text: `Assessment backup for ${email}:\n\n${JSON.stringify(assessmentData, null, 2)}`,
+  };
+
+  try {
+    await mailService.send(msg);
+    console.log("✅ Assessment backup sent");
+    return { success: true };
+  } catch (err) {
+    console.error("❌ Assessment backup failed:", err);
+    return { success: false, error: err };
+  }
+};
+
 export const generateCoupleEmailContent = (coupleReport: any) => {
   const primaryDemo = typeof coupleReport.primaryDemographics === 'string' 
     ? JSON.parse(coupleReport.primaryDemographics) 

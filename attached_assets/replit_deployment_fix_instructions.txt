@@ -1,0 +1,51 @@
+### Replit Deployment Fix Instructions for Common Errors
+
+#### 1. Fix: Missing Exports in sendgrid.ts
+Ensure you are exporting all necessary functions used in routes or other files.
+Example:
+```ts
+export { sendAssessmentEmail, sendCoupleAssessmentEmail };
+```
+Verify function names match what is being imported in other files.
+
+---
+
+#### 2. Fix: Port Mismatch (5000 vs 3000)
+Replit defaults to port 3000. Modify your server entry file (e.g. server.ts or index.ts) to:
+
+```ts
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
+});
+```
+
+Avoid hardcoding `5000` unless absolutely necessary and supported by Replit configuration.
+
+---
+
+#### 3. Fix: Import Errors in server/routes.ts
+In `server/routes.ts`, confirm imports like:
+
+```ts
+import { sendAssessmentEmail } from '../utils/sendgrid';
+```
+
+Match the actual exports in `sendgrid.ts`. If exports are missing, you'll get a build error. Also check:
+- There are no typos in import/export names
+- Correct file extensions are used
+- Functions are defined before exporting
+- No circular dependencies
+
+---
+
+#### 4. Final Steps to Re-Deploy
+- Save all files
+- Restart the server
+- Click "Deploy"
+- Monitor console logs for new errors
+- If SendGrid or any 3rd-party services fail, verify API keys are loaded in `.env`
+
+---
+
+Use this checklist before each deployment to prevent build failures and mismatches.
