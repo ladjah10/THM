@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-const sgMail = require("@sendgrid/mail");
+import sgMail from '@sendgrid/mail';
 
 const apiKey = process.env.SENDGRID_API_KEY;
 const senderEmail = process.env.EMAIL_SENDER || "hello@wgodw.com";
@@ -336,23 +336,23 @@ export const sendAssessmentReport = async (email: string, pdfBuffer: Buffer, sub
   try {
     await sgMail.send({
       to: email,
-      from: process.env.EMAIL_SENDER!,
-      subject: subject || "Your Assessment Report",
-      text: "See attached report.",
+      from: process.env.EMAIL_SENDER || 'hello@wgodw.com',
+      subject: subject || 'Your Assessment Report',
+      text: 'See attached report.',
       attachments: [
         {
-          content: pdfBuffer.toString("base64"),
-          filename: "AssessmentReport.pdf",
-          type: "application/pdf",
-          disposition: "attachment",
+          content: pdfBuffer.toString('base64'),
+          filename: 'AssessmentReport.pdf',
+          type: 'application/pdf',
+          disposition: 'attachment',
         },
       ],
     });
-    console.log(`✅ Assessment report sent successfully to ${email}`);
+    console.log(`Email sent to ${email}`);
     return { success: true };
-  } catch (err) {
-    console.error("SendGrid email failed:", err);
-    return { success: false, error: err };
+  } catch (error) {
+    console.error('SendGrid error:', error);
+    return { success: false, error };
   }
 };
 
