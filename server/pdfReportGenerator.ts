@@ -181,6 +181,16 @@ export class ProfessionalPDFGenerator {
     }
   }
 
+  private getSectionDescription(percentage: number): string {
+    if (percentage >= 80) {
+      return "Strong alignment with biblical marriage principles";
+    } else if (percentage >= 60) {
+      return "Balanced approach with flexible perspectives";  
+    } else {
+      return "Contemporary approach with varied viewpoints";
+    }
+  }
+
   private drawFooter(): void {
     const footerY = LAYOUT.PAGE_HEIGHT - 40;
     
