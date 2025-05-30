@@ -237,23 +237,8 @@ export class ProfessionalPDFGenerator {
     );
     
     // Add completion date
-    const completionDate = new Date().toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    });
-    this.doc.fontSize(12)
-      .fill(COLORS.TEXT)
-      .text(`Completed on ${completionDate}`, LAYOUT.MARGIN, this.currentY, {
-        width: LAYOUT.CONTENT_WIDTH,
-        align: 'center'
-      });
-    
-    this.currentY += 30;
-    
-    // Add completion date
-    const completionDate = new Date(assessment.timestamp);
-    this.drawParagraph(`Completed on ${completionDate.toLocaleDateString('en-US', { 
+    const assessmentDate = new Date(assessment.timestamp);
+    this.drawParagraph(`Completed on ${assessmentDate.toLocaleDateString('en-US', { 
       year: 'numeric', 
       month: 'long', 
       day: 'numeric' 
@@ -610,6 +595,7 @@ export class ProfessionalPDFGenerator {
       this.doc.end();
     });
   }
+
 }
 
 // Convenience functions for backward compatibility

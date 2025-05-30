@@ -1069,7 +1069,9 @@ export class DatabaseStorage {
       
       const results = await pool.query(`
         SELECT id, email, name, scores, profile, gender_profile, responses, 
-               demographics, timestamp, transaction_id, couple_id, couple_role, report_sent
+               demographics, raw_answers, timestamp, updated_at, recalculated, 
+               last_recalculated, original_score, original_profile, recalculated_pdf_path,
+               transaction_id, couple_id, couple_role, report_sent
         FROM assessment_results
         ORDER BY timestamp DESC
       `);
