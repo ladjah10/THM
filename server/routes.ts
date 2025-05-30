@@ -1078,8 +1078,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
-      // Return the assessments
-      return res.status(200).json(assessments);
+      // Return the assessments with proper recalculation fields
+      const enhancedAssessments = assessments.map(a => ({
+        ...a,
+        recalculated: a.recalculated || false,
+        updatedAt: a.updatedAt || a.timestamp,
+      }));
+      
+      return res.status(200).json(enhancedAssessments);
     } catch (error) {
       console.error("Error fetching assessments:", error);
       return res.status(500).json({ 
