@@ -38,6 +38,7 @@ interface AssessmentResultData {
     name: string;
   };
   timestamp: string;
+  updatedAt?: string;
   transactionId?: string;
   coupleId?: string;
   coupleRole?: string;
@@ -191,6 +192,55 @@ export default function SimpleAssessmentResults() {
     } catch (error) {
       return "Invalid date";
     }
+  };
+
+  // Calculate section averages from assessment data
+  const calculateSectionAverages = () => {
+    const sectionTotals: Record<string, number> = {};
+    const sectionCounts: Record<string, number> = {};
+
+    assessments.forEach(assessment => {
+      if (assessment.scores?.sections) {
+        Object.entries(assessment.scores.sections).forEach(([section, scoreData]) => {
+          const percentage = scoreData.percentage;
+          if (typeof percentage === 'number' && !isNaN(percentage)) {
+            sectionTotals[section] = (sectionTotals[section] || 0) + percentage;
+            sectionCounts[section] = (sectionCounts[section] || 0) + 1;
+          }
+        });
+      }
+    });
+
+    return Object.fromEntries(
+      Object.entries(sectionTotals).map(([section, total]) => [
+        section,
+        Math.round(total / sectionCounts[section])
+      ])
+    );
+  };
+
+  // Calculate profile distribution
+  const calculateProfileDistribution = () => {
+    const profileCounts: Record<string, number> = {};
+    
+    assessments.forEach(assessment => {
+      if (assessment.profile?.name) {
+        profileCounts[assessment.profile.name] = (profileCounts[assessment.profile.name] || 0) + 1;
+      }
+    });
+
+    return profileCounts;
+  };
+
+  // Generate analytics when assessments change
+  const generateAnalytics = () => {
+    if (assessments.length === 0) return null;
+
+    return {
+      sectionAverages: calculateSectionAverages(),
+      profileDistribution: calculateProfileDistribution(),
+      totalAssessments: assessments.length
+    };
   };
 
   const resendReport = async (email: string) => {
@@ -366,8 +416,9 @@ export default function SimpleAssessmentResults() {
             variant="outline" 
             onClick={() => {
               setShowAnalytics(!showAnalytics);
-              if (!showAnalytics && !analytics) {
-                fetchAnalytics();
+              if (!showAnalytics) {
+                const analyticsData = generateAnalytics();
+                setAnalytics(analyticsData);
               }
             }}
           >
