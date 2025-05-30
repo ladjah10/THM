@@ -89,12 +89,14 @@ export async function recalculateAllAssessments(): Promise<RecalculationSummary>
         
         fs.writeFileSync(pdfPath, pdfBuffer);
         
-        // Update assessment in storage
+        // Update assessment in storage with proper recalculation flags
         const updatedAssessment = {
           ...assessment,
           scores: JSON.stringify(recalculatedResult.scores),
           profile: JSON.stringify(recalculatedResult.profile),
           genderProfile: recalculatedResult.genderProfile ? JSON.stringify(recalculatedResult.genderProfile) : assessment.genderProfile,
+          updatedAt: new Date().toISOString(), // Ensure the dashboard reflects recalc date
+          recalculated: true,                   // Mark recalc status
           lastRecalculated: new Date().toISOString(),
           recalculatedPdfPath: pdfPath
         };
@@ -189,12 +191,14 @@ export async function recalculateSingleAssessment(assessmentId: string): Promise
     // Generate new PDF
     const pdfBuffer = await generateIndividualAssessmentPDF(recalculatedResult);
     
-    // Update assessment in storage
+    // Update assessment in storage with proper recalculation flags
     const updatedAssessment = {
       ...assessment,
       scores: JSON.stringify(recalculatedResult.scores),
       profile: JSON.stringify(recalculatedResult.profile),
       genderProfile: recalculatedResult.genderProfile ? JSON.stringify(recalculatedResult.genderProfile) : assessment.genderProfile,
+      updatedAt: new Date().toISOString(), // Ensure the dashboard reflects recalc date
+      recalculated: true,                   // Mark recalc status
       lastRecalculated: new Date().toISOString()
     };
     
