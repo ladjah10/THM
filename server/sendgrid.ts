@@ -331,6 +331,31 @@ Lawrence Adjah Ministries
   return { subject, textContent, htmlContent };
 };
 
+// Centralized SendGrid email functions following the requested format
+export const sendAssessmentReport = async (email: string, pdfBuffer: Buffer, subject?: string) => {
+  try {
+    await sgMail.send({
+      to: email,
+      from: process.env.EMAIL_SENDER!,
+      subject: subject || "Your Assessment Report",
+      text: "See attached report.",
+      attachments: [
+        {
+          content: pdfBuffer.toString("base64"),
+          filename: "AssessmentReport.pdf",
+          type: "application/pdf",
+          disposition: "attachment",
+        },
+      ],
+    });
+    console.log(`✅ Assessment report sent successfully to ${email}`);
+    return { success: true };
+  } catch (err) {
+    console.error("SendGrid email failed:", err);
+    return { success: false, error: err };
+  }
+};
+
 export const sendAssessmentEmailSendGrid = async (assessment: any, pdfBuffer: Buffer) => {
   console.log('📧 Preparing SendGrid email for assessment...');
   
@@ -355,7 +380,7 @@ export const sendAssessmentEmailSendGrid = async (assessment: any, pdfBuffer: Bu
     );
     
     return result;
-  } catch (error) {
+  } catch (error: any) {
     console.error('❌ Error in sendAssessmentEmailSendGrid:', error);
     return { success: false, error: error.message || error };
   }

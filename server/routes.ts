@@ -793,6 +793,191 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin API to download individual assessment PDF
+  app.get('/api/admin/assessment/:id/download', async (req: Request, res: Response) => {
+    try {
+      const assessmentId = req.params.id;
+      
+      // Fetch assessment from storage
+      const assessment = await storage.getAssessmentById(assessmentId);
+      if (!assessment) {
+        return res.status(404).json({ error: 'Assessment not found' });
+      }
+
+      // Generate fresh PDF with current data
+      const { generateIndividualAssessmentPDF } = await import('./pdfReportGenerator');
+      const pdfBuffer = await generateIndividualAssessmentPDF(assessment);
+      
+      // Set appropriate headers for PDF download
+      const demographics = typeof assessment.demographics === 'string' 
+        ? JSON.parse(assessment.demographics) 
+        : assessment.demographics;
+      
+      const filename = `assessment-${demographics.firstName}-${demographics.lastName}-${assessment.id}.pdf`;
+      
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+      res.setHeader('Content-Length', pdfBuffer.length);
+      
+      res.send(pdfBuffer);
+    } catch (error) {
+      console.error('Error downloading assessment PDF:', error);
+      res.status(500).json({ error: 'Failed to generate PDF' });
+    }
+  });
+
+  // Admin API to get assessment analytics with charts/graphs
+  app.get('/api/admin/analytics', async (req: Request, res: Response) => {
+    try {
+      const analytics = await storage.getAnalyticsSummary();
+      
+      // Calculate section averages for chart display
+      const assessments = await storage.getAllAssessments();
+      const sectionAverages: Record<string, number> = {};
+      const sectionCounts: Record<string, number> = {};
+      
+      assessments.forEach(assessment => {
+        const scores = typeof assessment.scores === 'string' 
+          ? JSON.parse(assessment.scores) 
+          : assessment.scores;
+          
+        if (scores?.sections) {
+          Object.entries(scores.sections).forEach(([section, data]: [string, any]) => {
+            if (!sectionAverages[section]) {
+              sectionAverages[section] = 0;
+              sectionCounts[section] = 0;
+            }
+            sectionAverages[section] += data.percentage;
+            sectionCounts[section]++;
+          });
+        }
+      });
+      
+      // Calculate final averages
+      Object.keys(sectionAverages).forEach(section => {
+        if (sectionCounts[section] > 0) {
+          sectionAverages[section] = Math.round((sectionAverages[section] / sectionCounts[section]) * 10) / 10;
+        }
+      });
+      
+      // Profile distribution
+      const profileDistribution: Record<string, number> = {};
+      assessments.forEach(assessment => {
+        const profile = typeof assessment.profile === 'string' 
+          ? JSON.parse(assessment.profile) 
+          : assessment.profile;
+          
+        if (profile?.name) {
+          profileDistribution[profile.name] = (profileDistribution[profile.name] || 0) + 1;
+        }
+      });
+      
+      res.json({
+        ...analytics,
+        sectionAverages,
+        profileDistribution,
+        totalAssessments: assessments.length
+      });
+    } catch (error) {
+      console.error('Error fetching analytics:', error);
+      res.status(500).json({ error: 'Failed to fetch analytics' });
+    }
+  });
+
+  // Admin API to trigger recalculation for all assessments
+  app.post('/api/admin/recalculate-all', async (req: Request, res: Response) => {
+    try {
+      const { recalculateAllAssessments } = await import('../recalculate-system');
+      
+      console.log('Starting bulk recalculation process...');
+      const summary = await recalculateAllAssessments();
+      
+      res.json({
+        success: true,
+        message: 'Recalculation completed successfully',
+        summary
+      });
+    } catch (error: any) {
+      console.error('Bulk recalculation failed:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Recalculation failed',
+        details: error.message
+      });
+    }
+  });
+
+  // Admin API to recalculate single assessment
+  app.post('/api/admin/recalculate/:id', async (req: Request, res: Response) => {
+    try {
+      const { recalculateSingleAssessment } = await import('../recalculate-system');
+      const assessmentId = req.params.id;
+      
+      console.log(`Recalculating assessment: ${assessmentId}`);
+      const result = await recalculateSingleAssessment(assessmentId);
+      
+      if (result.status === 'success') {
+        res.json({
+          success: true,
+          message: 'Assessment recalculated successfully',
+          result
+        });
+      } else {
+        res.status(400).json({
+          success: false,
+          error: 'Recalculation failed',
+          details: result.error
+        });
+      }
+    } catch (error: any) {
+      console.error('Single recalculation failed:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Recalculation failed',
+        details: error.message
+      });
+    }
+  });
+
+  // Admin API to re-send assessment email
+  app.post('/api/admin/resend-email/:id', async (req: Request, res: Response) => {
+    try {
+      const assessmentId = req.params.id;
+      const assessment = await storage.getAssessmentById(assessmentId);
+      
+      if (!assessment) {
+        return res.status(404).json({ error: 'Assessment not found' });
+      }
+
+      // Generate fresh PDF and send email
+      const { generateIndividualAssessmentPDF } = await import('./pdfReportGenerator');
+      const { sendAssessmentEmailSendGrid } = await import('./sendgrid');
+      
+      const pdfBuffer = await generateIndividualAssessmentPDF(assessment);
+      const emailResult = await sendAssessmentEmailSendGrid(assessment, pdfBuffer);
+      
+      if (emailResult.success) {
+        res.json({
+          success: true,
+          message: 'Email sent successfully'
+        });
+      } else {
+        res.status(500).json({
+          success: false,
+          error: 'Failed to send email',
+          details: emailResult.error
+        });
+      }
+    } catch (error: any) {
+      console.error('Failed to resend email:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Failed to resend email',
+        details: error.message
+      });
+    }
+  });
+
   // Admin API to fetch all assessments with optional date filtering
   app.get('/api/admin/assessments', async (req: Request, res: Response) => {
     try {
