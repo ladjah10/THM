@@ -510,7 +510,16 @@ export default function SimpleAssessmentResults() {
                 <TableBody>
                   {assessments.map((assessment) => (
                     <TableRow key={assessment.id}>
-                      <TableCell>{formatDate(assessment.timestamp)}</TableCell>
+                      <TableCell>
+                        {assessment.recalculated && (
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-yellow-100 text-yellow-800 mb-1">
+                            Recalculated
+                          </span>
+                        )}
+                        <div>
+                          {formatDate(assessment.updatedAt || assessment.timestamp)}
+                        </div>
+                      </TableCell>
                       <TableCell>{assessment.name}</TableCell>
                       <TableCell>{assessment.email}</TableCell>
                       <TableCell>
