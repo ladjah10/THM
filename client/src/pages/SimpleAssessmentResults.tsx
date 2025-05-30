@@ -42,12 +42,30 @@ interface AssessmentResultData {
   coupleId?: string;
   coupleRole?: string;
   reportSent: boolean;
+  recalculated?: boolean;
+  lastRecalculated?: string;
+  originalScore?: number;
+}
+
+interface SectionAnalytics {
+  sectionName: string;
+  average: number;
+  count: number;
+}
+
+interface AnalyticsData {
+  sectionAverages: Record<string, number>;
+  profileDistribution: Record<string, number>;
+  totalAssessments: number;
 }
 
 export default function SimpleAssessmentResults() {
   const [assessments, setAssessments] = useState<AssessmentResultData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
+  const [loadingAnalytics, setLoadingAnalytics] = useState<boolean>(false);
+  const [showAnalytics, setShowAnalytics] = useState<boolean>(false);
   const { toast } = useToast();
   // Admin constants
   const ADMIN_USERNAME = "admin";
@@ -97,8 +115,8 @@ export default function SimpleAssessmentResults() {
   const fetchAssessments = async () => {
     try {
       setLoading(true);
-      // Fetch all assessments without date filtering
-      const response = await fetch("/api/admin/assessments");
+      // Fetch all assessments including recalculated ones, sorted by most recent update
+      const response = await fetch("/api/admin/assessments?sortBy=updated");
       
       if (!response.ok) {
         const errorData = await response.json();
@@ -198,6 +216,92 @@ export default function SimpleAssessmentResults() {
     }
   };
 
+  const fetchAnalytics = async () => {
+    try {
+      setLoadingAnalytics(true);
+      const response = await fetch("/api/analytics/sections");
+      
+      if (!response.ok) {
+        throw new Error("Failed to fetch analytics");
+      }
+      
+      const data = await response.json();
+      setAnalytics(data);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to load analytics data",
+        variant: "destructive",
+      });
+    } finally {
+      setLoadingAnalytics(false);
+    }
+  };
+
+  const exportAssessmentData = async (assessmentId: string, email: string) => {
+    try {
+      const response = await fetch(`/api/assessment/${assessmentId}/export`);
+      
+      if (!response.ok) {
+        throw new Error("Failed to export assessment data");
+      }
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = `assessment-${email.replace('@', '_at_')}.json`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      
+      toast({
+        title: "Success",
+        description: `Assessment data exported for ${email}`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to export assessment data",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const downloadPDF = async (assessmentId: string, email: string) => {
+    try {
+      const response = await fetch(`/api/assessment/${assessmentId}/pdf`);
+      
+      if (!response.ok) {
+        throw new Error("Failed to download PDF");
+      }
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = `assessment-report-${email.replace('@', '_at_')}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      
+      toast({
+        title: "Success",
+        description: `PDF downloaded for ${email}`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to download PDF",
+        variant: "destructive",
+      });
+    }
+  };
+
   // Login form for admin authentication
   if (!isAuthenticated) {
     return (
@@ -260,6 +364,17 @@ export default function SimpleAssessmentResults() {
         <div className="flex gap-2">
           <Button 
             variant="outline" 
+            onClick={() => {
+              setShowAnalytics(!showAnalytics);
+              if (!showAnalytics && !analytics) {
+                fetchAnalytics();
+              }
+            }}
+          >
+            {showAnalytics ? "Hide Analytics" : "Show Analytics"}
+          </Button>
+          <Button 
+            variant="outline" 
             onClick={() => window.location.href = "/admin"}
           >
             Back to Dashboard
@@ -279,6 +394,77 @@ export default function SimpleAssessmentResults() {
           </Button>
         </div>
       </div>
+
+      {showAnalytics && (
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>Section Analytics</CardTitle>
+            <CardDescription>
+              Average scores and distribution across all assessments
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {loadingAnalytics ? (
+              <div className="flex justify-center py-6">
+                <Loader2 className="h-6 w-6 animate-spin text-primary" />
+              </div>
+            ) : analytics ? (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="text-center p-4 bg-primary/5 rounded-lg">
+                    <div className="text-2xl font-bold text-primary">
+                      {analytics.totalAssessments}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      Total Assessments
+                    </div>
+                  </div>
+                  <div className="text-center p-4 bg-secondary/5 rounded-lg">
+                    <div className="text-2xl font-bold text-secondary-foreground">
+                      {Object.keys(analytics.sectionAverages).length}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      Active Sections
+                    </div>
+                  </div>
+                  <div className="text-center p-4 bg-accent/5 rounded-lg">
+                    <div className="text-2xl font-bold text-accent-foreground">
+                      {Object.keys(analytics.profileDistribution).length}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      Profile Types
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <h4 className="font-semibold">Section Averages</h4>
+                  {Object.entries(analytics.sectionAverages).map(([section, average]) => (
+                    <div key={section} className="flex justify-between items-center p-2 border rounded">
+                      <span className="font-medium">{section}</span>
+                      <span className="text-primary font-semibold">{average.toFixed(1)}%</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="space-y-3">
+                  <h4 className="font-semibold">Profile Distribution</h4>
+                  {Object.entries(analytics.profileDistribution).map(([profile, count]) => (
+                    <div key={profile} className="flex justify-between items-center p-2 border rounded">
+                      <span className="font-medium">{profile}</span>
+                      <span className="text-secondary-foreground font-semibold">{count}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-6 text-muted-foreground">
+                No analytics data available
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>
