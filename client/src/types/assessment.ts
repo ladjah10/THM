@@ -74,5 +74,6 @@ export interface AssessmentResult {
   genderProfile?: UserProfile | null;
   responses: Record<number, UserResponse>;
   demographics: DemographicData;
+  rawAnswers?: any; // Complete raw submission data for admin download
   timestamp: string;
 }

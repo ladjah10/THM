@@ -977,6 +977,7 @@ export class DatabaseStorage {
         profile: jsonProfile,
         responses: jsonResponses,
         demographics: jsonDemographics,
+        rawAnswers: assessment.rawAnswers ? JSON.stringify(assessment.rawAnswers) : null,
         couple_id: assessment.coupleId,
         couple_role: assessment.coupleRole
         // transaction_id will be linked when a payment is made

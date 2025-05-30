@@ -745,6 +745,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         genderProfile: validatedData.data.genderProfile || null,
         responses: validatedData.data.responses,
         demographics,
+        rawAnswers: req.body, // Store complete submission data for admin download
         timestamp: new Date().toISOString()
       };
       

@@ -82,11 +82,16 @@ export const assessmentResults = pgTable('assessment_results', {
   genderProfile: text('gender_profile'), // JSON string of UserProfile or null
   responses: text('responses').notNull(), // JSON string of responses
   demographics: text('demographics').notNull(), // JSON string of DemographicData
+  rawAnswers: text('raw_answers'), // Complete raw submission data for admin download
   timestamp: timestamp('timestamp').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at'),
   transactionId: uuid('transaction_id').references(() => paymentTransactions.id),
   coupleId: text('couple_id'), // For linking spouse assessments
   coupleRole: text('couple_role'), // 'primary' or 'spouse'
-  reportSent: boolean('report_sent').notNull().default(false)
+  reportSent: boolean('report_sent').notNull().default(false),
+  recalculated: boolean('recalculated').notNull().default(false),
+  lastRecalculated: timestamp('last_recalculated'),
+  recalculatedPdfPath: text('recalculated_pdf_path')
 });
 
 // Couple assessment reports
