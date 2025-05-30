@@ -502,6 +502,7 @@ export default function SimpleAssessmentResults() {
                     <TableHead>Email</TableHead>
                     <TableHead>Score</TableHead>
                     <TableHead>Profile</TableHead>
+                    <TableHead>Status</TableHead>
                     <TableHead>Payment</TableHead>
                     <TableHead>Actions</TableHead>
                   </TableRow>
@@ -526,6 +527,29 @@ export default function SimpleAssessmentResults() {
                         )}
                       </TableCell>
                       <TableCell>
+                        {assessment.recalculated ? (
+                          <div className="space-y-1">
+                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800">
+                              Recalculated
+                            </span>
+                            {assessment.lastRecalculated && (
+                              <div className="text-xs text-muted-foreground">
+                                {formatDate(assessment.lastRecalculated)}
+                              </div>
+                            )}
+                            {assessment.originalScore && (
+                              <div className="text-xs text-muted-foreground">
+                                Original: {assessment.originalScore.toFixed(1)}%
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-800">
+                            Original
+                          </span>
+                        )}
+                      </TableCell>
+                      <TableCell>
                         {assessment.transactionId ? (
                           <span className="text-green-600 font-medium">Paid</span>
                         ) : (
@@ -533,13 +557,29 @@ export default function SimpleAssessmentResults() {
                         )}
                       </TableCell>
                       <TableCell>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => resendReport(assessment.email)}
-                        >
-                          Resend Report
-                        </Button>
+                        <div className="flex gap-2 flex-wrap">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => resendReport(assessment.email)}
+                          >
+                            Resend Report
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => downloadPDF(assessment.id, assessment.email)}
+                          >
+                            Download PDF
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => exportAssessmentData(assessment.id, assessment.email)}
+                          >
+                            Export Data
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}

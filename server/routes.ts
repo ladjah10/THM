@@ -978,13 +978,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Admin API to fetch all assessments with optional date filtering
+  // Admin API to fetch all assessments with optional date filtering and sorting
   app.get('/api/admin/assessments', async (req: Request, res: Response) => {
     try {
-      // Get optional date filtering parameters
+      // Get optional date filtering parameters and sorting preference
       const startDate = req.query.startDate as string | undefined;
       const endDate = req.query.endDate as string | undefined;
       const requirePayment = req.query.requirePayment === 'true';
+      const sortBy = req.query.sortBy as string | undefined;
       
       let assessments;
       
@@ -1060,6 +1061,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
           assessments = assessments.filter(assessment => !!assessment.transactionId);
           console.log(`Filtered to ${assessments.length} paid assessments`);
         }
+      }
+      
+      // Apply sorting if requested
+      if (sortBy === 'updated') {
+        assessments.sort((a, b) => {
+          // Sort by recalculated timestamp first, then by original timestamp
+          const aTime = a.lastRecalculated || a.timestamp;
+          const bTime = b.lastRecalculated || b.timestamp;
+          
+          if (!aTime && !bTime) return 0;
+          if (!aTime) return 1;
+          if (!bTime) return -1;
+          
+          return new Date(bTime).getTime() - new Date(aTime).getTime();
+        });
       }
       
       // Return the assessments
@@ -2829,6 +2845,131 @@ export async function registerRoutes(app: Express): Promise<Server> {
         success: false, 
         message: error instanceof Error ? error.message : 'Failed to download assessment data' 
       });
+    }
+  });
+
+  // Admin API endpoint for section analytics
+  app.get('/api/analytics/sections', async (req: Request, res: Response) => {
+    try {
+      // Get all completed assessments
+      const allAssessments = await storage.getAllAssessments();
+      
+      // Calculate section averages
+      const sectionTotals: Record<string, { total: number; count: number }> = {};
+      const profileDistribution: Record<string, number> = {};
+      
+      allAssessments.forEach(assessment => {
+        // Parse scores if they are stored as strings
+        let scores = assessment.scores;
+        if (typeof scores === 'string') {
+          try {
+            scores = JSON.parse(scores);
+          } catch (e) {
+            console.error('Error parsing scores for analytics:', e);
+            return;
+          }
+        }
+        
+        // Process section scores
+        if (scores && scores.sections) {
+          Object.entries(scores.sections).forEach(([section, sectionData]: [string, any]) => {
+            if (sectionData && typeof sectionData.percentage === 'number') {
+              if (!sectionTotals[section]) {
+                sectionTotals[section] = { total: 0, count: 0 };
+              }
+              sectionTotals[section].total += sectionData.percentage;
+              sectionTotals[section].count += 1;
+            }
+          });
+        }
+        
+        // Process profile distribution
+        let profile = assessment.profile;
+        if (typeof profile === 'string') {
+          try {
+            profile = JSON.parse(profile);
+          } catch (e) {
+            console.error('Error parsing profile for analytics:', e);
+            return;
+          }
+        }
+        
+        if (profile && profile.name) {
+          profileDistribution[profile.name] = (profileDistribution[profile.name] || 0) + 1;
+        }
+      });
+      
+      // Calculate section averages
+      const sectionAverages: Record<string, number> = {};
+      Object.entries(sectionTotals).forEach(([section, data]) => {
+        sectionAverages[section] = data.total / data.count;
+      });
+      
+      const analyticsData = {
+        sectionAverages,
+        profileDistribution,
+        totalAssessments: allAssessments.length
+      };
+      
+      res.json(analyticsData);
+    } catch (error) {
+      console.error('Error fetching analytics:', error);
+      res.status(500).json({ error: 'Failed to fetch analytics data' });
+    }
+  });
+
+  // Admin API endpoint for exporting individual assessment data
+  app.get('/api/assessment/:id/export', async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      
+      // Get all assessments and find the one with matching ID
+      const allAssessments = await storage.getAllAssessments();
+      const assessment = allAssessments.find(a => a.id === id);
+      
+      if (!assessment) {
+        return res.status(404).json({ error: 'Assessment not found' });
+      }
+      
+      // Set headers for file download
+      res.setHeader('Content-Type', 'application/json');
+      res.setHeader('Content-Disposition', `attachment; filename="assessment-${assessment.email.replace('@', '_at_')}-${Date.now()}.json"`);
+      
+      // Return full assessment data
+      res.json(assessment);
+    } catch (error) {
+      console.error('Error exporting assessment data:', error);
+      res.status(500).json({ error: 'Failed to export assessment data' });
+    }
+  });
+
+  // Admin API endpoint for downloading assessment PDF
+  app.get('/api/assessment/:id/pdf', async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      
+      // Get all assessments and find the one with matching ID
+      const allAssessments = await storage.getAllAssessments();
+      const assessment = allAssessments.find(a => a.id === id);
+      
+      if (!assessment) {
+        return res.status(404).json({ error: 'Assessment not found' });
+      }
+      
+      // Check if PDF path exists
+      if (assessment.pdfPath && fs.existsSync(assessment.pdfPath)) {
+        const pdfBuffer = fs.readFileSync(assessment.pdfPath);
+        
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="assessment-report-${assessment.email.replace('@', '_at_')}.pdf"`);
+        
+        res.send(pdfBuffer);
+      } else {
+        return res.status(404).json({ error: 'PDF file not found' });
+      }
+    } catch (error) {
+      console.error('Error downloading PDF:', error);
+      res.status(500).json({ error: 'Failed to download PDF' });
     }
   });
   
