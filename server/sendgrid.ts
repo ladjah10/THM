@@ -1,8 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { MailService } from '@sendgrid/mail';
-
-const mailService = new MailService();
+const sgMail = require("@sendgrid/mail");
 
 const apiKey = process.env.SENDGRID_API_KEY;
 const senderEmail = process.env.EMAIL_SENDER || "hello@wgodw.com";
@@ -12,7 +10,7 @@ if (!apiKey) {
   console.warn("Please add SENDGRID_API_KEY to your Replit Secrets.");
 } else {
   console.log("✅ SendGrid API key detected and configured");
-  mailService.setApiKey(apiKey);
+  sgMail.setApiKey(apiKey);
 }
 
 console.log(`📧 Email sender configured as: ${senderEmail}`);
@@ -48,7 +46,7 @@ export const sendAssessmentEmail = async (to: string, subject: string, text: str
   console.log(`📧 Email prepared: From ${senderEmail} to ${to}, Subject: ${subject}`);
 
   try {
-    const response = await mailService.send(msg);
+    const response = await sgMail.send(msg);
     console.log("✅ Email sent successfully to", to);
     console.log("📨 SendGrid response status:", response[0].statusCode);
     console.log("📨 SendGrid message ID:", response[0].headers['x-message-id']);
@@ -82,7 +80,7 @@ export const sendCoupleAssessmentEmail = async (to: string, subject: string, tex
   };
 
   try {
-    await mailService.send(msg);
+    await sgMail.send(msg);
     console.log("✅ Couple email sent to", to);
     return { success: true };
   } catch (err) {
@@ -204,7 +202,7 @@ export const sendFormInitiationNotification = async (email: string, firstName: s
   };
 
   try {
-    await mailService.send(msg);
+    await sgMail.send(msg);
     console.log("✅ Form initiation notification sent to", email);
     return { success: true };
   } catch (err) {
@@ -227,7 +225,7 @@ export const sendAssessmentBackup = async (email: string, assessmentData: any) =
   };
 
   try {
-    await mailService.send(msg);
+    await sgMail.send(msg);
     console.log("✅ Assessment backup sent");
     return { success: true };
   } catch (err) {
