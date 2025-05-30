@@ -251,6 +251,14 @@ export class ProfessionalPDFGenerator {
     
     this.currentY += 30;
     
+    // Add completion date
+    const completionDate = new Date(assessment.timestamp);
+    this.drawParagraph(`Completed on ${completionDate.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    })}`, { bold: true, fontSize: 12 });
+    
     // Introduction text
     this.drawParagraph(
       'Thank you for completing The 100 Marriage Assessment - Series 1. This report provides insights into your perspectives on marriage and relationships based on your responses to our comprehensive questionnaire.',
@@ -300,6 +308,13 @@ export class ProfessionalPDFGenerator {
     Object.entries(scores.sections).forEach(([section, data]: [string, any]) => {
       this.checkPageBreak(60);
       this.drawScoreBar(`${section}`, data.percentage);
+      
+      // Add section description based on score
+      const sectionDescription = this.getSectionDescription(data.percentage);
+      this.drawParagraph(`${section}: ${data.percentage.toFixed(1)}% - ${sectionDescription}`, { 
+        fontSize: 10, 
+        indent: true 
+      });
     });
 
     // Psychographic Profile Enhancements
