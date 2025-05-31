@@ -2057,6 +2057,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     }
   });
+
+  // Section averages analytics endpoint
+  app.get('/api/admin/analytics/section-averages', async (req: Request, res: Response) => {
+    try {
+      const assessments = await storage.getAllAssessments();
+      const sectionAverages: Record<string, { total: number; count: number; average: number }> = {};
+      
+      assessments.forEach(assessment => {
+        const scores = typeof assessment.scores === 'string' 
+          ? JSON.parse(assessment.scores) 
+          : assessment.scores;
+          
+        if (scores?.sections) {
+          Object.entries(scores.sections).forEach(([sectionName, sectionData]: [string, any]) => {
+            if (!sectionAverages[sectionName]) {
+              sectionAverages[sectionName] = { total: 0, count: 0, average: 0 };
+            }
+            sectionAverages[sectionName].total += sectionData.percentage || 0;
+            sectionAverages[sectionName].count += 1;
+          });
+        }
+      });
+      
+      // Calculate final averages
+      Object.keys(sectionAverages).forEach(section => {
+        if (sectionAverages[section].count > 0) {
+          sectionAverages[section].average = Math.round((sectionAverages[section].total / sectionAverages[section].count) * 10) / 10;
+        }
+      });
+      
+      return res.status(200).json(sectionAverages);
+    } catch (error) {
+      console.error('Error fetching section averages:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to fetch section averages'
+      });
+    }
+  });
   
   app.get('/api/admin/analytics/page-views', async (req: Request, res: Response) => {
     try {

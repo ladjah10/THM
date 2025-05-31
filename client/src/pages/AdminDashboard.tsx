@@ -255,6 +255,16 @@ export default function AdminDashboard() {
     enabled: isAuthenticated,
   });
 
+  // Fetch section averages data
+  const { 
+    data: sectionAverages, 
+    isLoading: sectionAveragesLoading,
+    refetch: refetchSectionAverages 
+  } = useQuery({
+    queryKey: ["/api/admin/analytics/section-averages"],
+    enabled: isAuthenticated,
+  });
+
   // Fetch payment transactions
   const { 
     data: paymentTransactions, 
@@ -581,6 +591,7 @@ export default function AdminDashboard() {
                     refetchAnalytics();
                     refetchTransactions();
                     refetchReferrals();
+                    refetchSectionAverages();
                   }}
                   disabled={assessmentsLoading || analyticsLoading}
                 >
@@ -895,6 +906,41 @@ export default function AdminDashboard() {
             <TabsContent value="analytics" className="space-y-6">
               {analyticsSummary && (
                 <>
+                  {/* Section Averages */}
+                  <Card className="mb-6">
+                    <CardHeader>
+                      <CardTitle>Section Performance Averages</CardTitle>
+                      <CardDescription>Average scores across all assessment sections</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      {sectionAveragesLoading ? (
+                        <div className="flex items-center justify-center py-8">
+                          <Loader2 className="h-8 w-8 animate-spin" />
+                        </div>
+                      ) : sectionAverages ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                          {Object.entries(sectionAverages).map(([sectionName, data]: [string, any]) => (
+                            <Card key={sectionName} className="p-4">
+                              <div className="text-sm font-medium text-muted-foreground mb-1">
+                                {sectionName}
+                              </div>
+                              <div className="text-2xl font-bold">
+                                {data.average.toFixed(1)}%
+                              </div>
+                              <div className="text-xs text-muted-foreground">
+                                {data.count} assessments
+                              </div>
+                            </Card>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="text-center text-muted-foreground py-8">
+                          No section data available
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+
                   {/* Gender Distribution */}
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <Card>
