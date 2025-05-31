@@ -586,14 +586,40 @@ export default function AdminDashboard() {
               <div className="flex items-center gap-4">
                 <Button
                   variant="outline"
-                  onClick={() => {
-                    refetchAssessments();
-                    refetchAnalytics();
-                    refetchTransactions();
-                    refetchReferrals();
-                    refetchSectionAverages();
+                  onClick={async () => {
+                    try {
+                      console.log('Refresh button clicked - starting data refresh...');
+                      
+                      toast({
+                        title: "Refreshing data...",
+                        description: "Updating all dashboard information",
+                      });
+
+                      await Promise.all([
+                        refetchAssessments(),
+                        refetchAnalytics(),
+                        refetchTransactions(),
+                        refetchReferrals(),
+                        refetchSectionAverages(),
+                        refetchPoolCandidates()
+                      ]);
+
+                      console.log('All data refreshed successfully');
+                      
+                      toast({
+                        title: "Data refreshed",
+                        description: "All dashboard information has been updated",
+                      });
+                    } catch (error) {
+                      console.error('Error refreshing data:', error);
+                      toast({
+                        title: "Refresh failed",
+                        description: "There was an error updating the data",
+                        variant: "destructive",
+                      });
+                    }
                   }}
-                  disabled={assessmentsLoading || analyticsLoading}
+                  disabled={assessmentsLoading || analyticsLoading || sectionAveragesLoading}
                 >
                   <RefreshCw className="h-4 w-4 mr-2" />
                   Refresh Data
