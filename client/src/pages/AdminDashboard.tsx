@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { RefreshCw, FileDown, Search, Loader2, Mail, Info, Download, AlertCircle, Users, DollarSign, Activity, TrendingUp } from "lucide-react";
+import { RefreshCw, FileDown, Search, Loader2, Mail, Info, Download, AlertCircle, Users, DollarSign, Activity, TrendingUp, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from "recharts";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
@@ -761,6 +761,7 @@ export default function AdminDashboard() {
                             <TableHead>Score</TableHead>
                             <TableHead>Profile</TableHead>
                             <TableHead>Date</TableHead>
+                            <TableHead>Recalculated?</TableHead>
                             <TableHead>Actions</TableHead>
                           </TableRow>
                         </TableHeader>
@@ -781,6 +782,22 @@ export default function AdminDashboard() {
                               </TableCell>
                               <TableCell>{assessment.profile?.name || "N/A"}</TableCell>
                               <TableCell>{formatDate(assessment.timestamp)}</TableCell>
+                              <TableCell>
+                                <div className="flex items-center gap-2">
+                                  {assessment.recalculated ? (
+                                    <>
+                                      <span className="text-green-600">✅</span>
+                                      {assessment.lastRecalculated && (
+                                        <span className="text-xs text-muted-foreground">
+                                          {formatDate(assessment.lastRecalculated)}
+                                        </span>
+                                      )}
+                                    </>
+                                  ) : (
+                                    <span className="text-gray-400">—</span>
+                                  )}
+                                </div>
+                              </TableCell>
                               <TableCell>
                                 <div className="flex gap-1">
                                   <Tooltip>
@@ -821,6 +838,19 @@ export default function AdminDashboard() {
                                       </Button>
                                     </TooltipTrigger>
                                     <TooltipContent>Download Data</TooltipContent>
+                                  </Tooltip>
+
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Button
+                                        size="sm"
+                                        variant="outline"
+                                        onClick={() => window.open(`/api/admin/responses/${assessment.id}/json`)}
+                                      >
+                                        <FileText className="h-3 w-3" />
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>Download JSON</TooltipContent>
                                   </Tooltip>
                                 </div>
                               </TableCell>

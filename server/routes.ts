@@ -940,11 +940,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin API to download assessment responses as JSON
+  app.get('/api/admin/responses/:id/json', async (req: Request, res: Response) => {
+    try {
+      const assessmentId = req.params.id;
+      const assessments = await storage.getAllAssessments();
+      const assessment = assessments.find(a => a.id === assessmentId);
+      
+      if (!assessment) {
+        return res.status(404).json({ error: 'Assessment not found' });
+      }
+
+      const jsonData = {
+        id: assessment.id,
+        email: assessment.demographics?.email || assessment.email,
+        name: assessment.name,
+        demographics: assessment.demographics,
+        responses: assessment.responses,
+        rawAnswers: assessment.rawAnswers,
+        scores: assessment.scores,
+        profile: assessment.profile,
+        genderProfile: assessment.genderProfile,
+        timestamp: assessment.timestamp,
+        recalculated: assessment.recalculated,
+        lastRecalculated: assessment.lastRecalculated,
+        originalScore: assessment.originalScore,
+        originalProfile: assessment.originalProfile
+      };
+
+      res.setHeader('Content-Type', 'application/json');
+      res.setHeader('Content-Disposition', `attachment; filename="assessment-${assessmentId}.json"`);
+      res.json(jsonData);
+    } catch (error: any) {
+      console.error('Error downloading assessment JSON:', error);
+      res.status(500).json({ error: 'Failed to download assessment data' });
+    }
+  });
+
   // Admin API to re-send assessment email
   app.post('/api/admin/resend-email/:id', async (req: Request, res: Response) => {
     try {
       const assessmentId = req.params.id;
-      const assessment = await storage.getAssessmentById(assessmentId);
+      const assessments = await storage.getAllAssessments();
+      const assessment = assessments.find(a => a.id === assessmentId);
       
       if (!assessment) {
         return res.status(404).json({ error: 'Assessment not found' });
