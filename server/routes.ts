@@ -1354,9 +1354,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         'Overall Score', 'Profile Name', 'Profile Description',
         'Gender Profile Name', 'Gender Profile Description',
         'Date Completed', 'Transaction ID',
-        // All 99 question responses
-        ...Array.from({length: 99}, (_, i) => `Q${i+1}_Option`),
-        ...Array.from({length: 99}, (_, i) => `Q${i+1}_Value`),
+        // All 100 question responses
+        ...Array.from({length: 100}, (_, i) => `Q${i+1}_Option`),
+        ...Array.from({length: 100}, (_, i) => `Q${i+1}_Value`),
         // Section scores
         'Foundation_Score', 'Foundation_Percentage',
         'Faith_Score', 'Faith_Percentage',
@@ -1382,12 +1382,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
           String(new Date().getFullYear() - new Date(demographics.birthday).getFullYear()) : '';
         
         // Extract all question responses
-        const questionOptions = Array.from({length: 99}, (_, i) => {
+        const questionOptions = Array.from({length: 100}, (_, i) => {
           const questionNum = String(i + 1);
           return responses[questionNum]?.option || '';
         });
         
-        const questionValues = Array.from({length: 99}, (_, i) => {
+        const questionValues = Array.from({length: 100}, (_, i) => {
           const questionNum = String(i + 1);
           return responses[questionNum]?.value || '';
         });
