@@ -1318,6 +1318,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin API to download assessment summary data as CSV
+  app.get('/api/admin/download-assessment-data', async (req: Request, res: Response) => {
+    try {
+      const assessments = await storage.getAllAssessments();
+      const header = "Name,Email,OverallScore,Profile,Date,Recalculated\n";
+      const rows = assessments.map(a => {
+        const name = `${a.demographics?.firstName || ''} ${a.demographics?.lastName || ''}`.trim();
+        const date = new Date(a.timestamp).toLocaleDateString();
+        const overallScore = a.scores?.overallPercentage?.toFixed(1) || '0';
+        const profileName = a.profile?.name || 'Unknown';
+        const recalculated = a.recalculated ? 'YES' : 'NO';
+        return `"${name}","${a.demographics?.email || ''}","${overallScore}","${profileName}","${date}","${recalculated}"`;
+      });
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', 'attachment; filename="assessment-summary.csv"');
+      res.send(header + rows.join("\n"));
+    } catch (error) {
+      console.error('Error generating assessment summary CSV:', error);
+      res.status(500).json({ success: false, message: 'Failed to generate CSV export' });
+    }
+  });
+
   // Admin API to download complete assessment data as CSV
   app.get('/api/admin/export-all-assessments-csv', async (req: Request, res: Response) => {
     try {
