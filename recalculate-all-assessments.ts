@@ -106,6 +106,23 @@ async function recalculateAllAssessments() {
         updatedAssessment.recalculatedPdfPath = pdfPath;
         await storage.updateAssessment(assessment.email, updatedAssessment);
         
+        // Optional: Log the recalculation action
+        try {
+          await storage.logAssessmentAction({
+            userEmail: assessment.email,
+            action: 'recalculated',
+            scoreSummary: `Score changed from ${originalScores.overallPercentage}% to ${newScores.overallPercentage}%`,
+            metadata: JSON.stringify({
+              originalProfile: originalProfile.name,
+              newProfile: newProfile.name,
+              scoreDifference: newScores.overallPercentage - originalScores.overallPercentage,
+              timestamp: new Date().toISOString()
+            })
+          });
+        } catch (logError) {
+          console.warn(`   ⚠️  Failed to log recalculation action: ${logError}`);
+        }
+        
         // Log the changes
         const scoreDifference = newScores.overallPercentage - originalScores.overallPercentage;
         const profileChanged = originalProfile.name !== newProfile.name;
