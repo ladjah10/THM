@@ -349,20 +349,64 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       const differencesToShow = differenceAnalysis.majorDifferences.slice(0, 3);
       
       differencesToShow.forEach((diff, index) => {
-        // Box for each difference
+        // Calculate dynamic height based on content
         const boxY = doc.y;
-        doc.rect(50, boxY, doc.page.width - 100, 150)
+        const maxWidth = doc.page.width - 140;
+        const responseWidth = doc.page.width - 220;
+        const discussionWidth = doc.page.width - 160;
+        const padding = 30;
+        
+        // Calculate heights for each content section
+        const questionText = `${diff.questionText} (${diff.section})`;
+        const questionTextHeight = doc.heightOfString(questionText, { 
+          width: maxWidth,
+          fontSize: 12,
+          font: 'Helvetica-Bold'
+        });
+        
+        const responsesText = `${primary.name.split(' ')[0]}: ${diff.primaryResponse}\n${spouse.name.split(' ')[0]}: ${diff.spouseResponse}`;
+        const responsesHeight = doc.heightOfString(responsesText, { 
+          width: responseWidth,
+          fontSize: 12,
+          font: 'Helvetica'
+        });
+        
+        // Generate discussion prompt
+        let discussionPrompt = 'Consider discussing how your different perspectives might complement each other.';
+        
+        if (diff.section === 'Your Finances') {
+          discussionPrompt = 'How might you create a financial approach that respects both viewpoints?';
+        } else if (diff.section === 'Your Faith Life') {
+          discussionPrompt = 'How can you honor each other\'s faith perspectives while growing together?';
+        } else if (diff.section === 'Your Family/Home Life') {
+          discussionPrompt = 'What family boundaries would make both of you comfortable?';
+        } else if (diff.section === 'Your Marriage and Boundaries') {
+          discussionPrompt = 'How can you establish relationship boundaries that feel right to both of you?';
+        }
+        
+        const discussionGuideText = `Discussion Guide: ${discussionPrompt}`;
+        const discussionHeight = doc.heightOfString(discussionGuideText, { 
+          width: discussionWidth,
+          fontSize: 12,
+          font: 'Helvetica'
+        });
+        
+        // Calculate total height needed
+        const totalHeight = questionTextHeight + responsesHeight + discussionHeight + padding + 60; // 60 for discussion box
+        
+        // Draw main box with calculated height
+        doc.rect(50, boxY, doc.page.width - 100, totalHeight)
           .fillAndStroke('#fff9db', '#feebc8')
           .lineWidth(0)
-          .rect(50, boxY, 4, 150)
+          .rect(50, boxY, 4, totalHeight)
           .fill('#f9a825');
         
         // Question text
         doc.fontSize(12)
           .font('Helvetica-Bold')
           .fillColor('#2d3748')
-          .text(`${diff.questionText} (${diff.section})`, 70, boxY + 15, {
-            width: doc.page.width - 140
+          .text(questionText, 70, boxY + 15, {
+            width: maxWidth
           });
         
         // Responses
@@ -376,7 +420,7 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           .font('Helvetica')
           .fillColor('#4a5568')
           .text(diff.primaryResponse, 150, doc.y - doc.currentLineHeight(), {
-            width: doc.page.width - 220
+            width: responseWidth
           });
         
         doc.moveDown(0.5)
@@ -388,11 +432,14 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           .font('Helvetica')
           .fillColor('#4a5568')
           .text(diff.spouseResponse, 150, doc.y - doc.currentLineHeight(), {
-            width: doc.page.width - 220
+            width: responseWidth
           });
         
-        // Discussion guide box
-        doc.rect(70, doc.y + 10, doc.page.width - 140, 60)
+        // Calculate discussion box height dynamically
+        const discussionBoxHeight = discussionHeight + 20; // Add padding
+        
+        // Discussion guide box with dynamic height
+        doc.rect(70, doc.y + 10, doc.page.width - 140, discussionBoxHeight)
           .fillAndStroke('#ebf8ff', '#bee3f8');
         
         doc.fontSize(12)
@@ -400,24 +447,11 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           .fillColor('#2c5282')
           .text('Discussion Guide:', 80, doc.y + 20);
         
-        // Generate a unique discussion prompt based on the difference
-        let discussionPrompt = 'Consider discussing how your different perspectives might complement each other.';
-        
-        if (diff.section === 'Your Finances') {
-          discussionPrompt = 'How might you create a financial approach that respects both viewpoints?';
-        } else if (diff.section === 'Your Faith Life') {
-          discussionPrompt = 'How can you honor each other\'s faith perspectives while growing together?';
-        } else if (diff.section === 'Your Family/Home Life') {
-          discussionPrompt = 'What family boundaries would make both of you comfortable?';
-        } else if (diff.section === 'Your Marriage and Boundaries') {
-          discussionPrompt = 'How can you establish relationship boundaries that feel right to both of you?';
-        }
-        
         doc.fontSize(12)
           .font('Helvetica')
           .fillColor('#4a5568')
           .text(discussionPrompt, 80, doc.y + 5, {
-            width: doc.page.width - 160
+            width: discussionWidth
           });
         
         doc.fontSize(10)
@@ -426,8 +460,8 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
             width: doc.page.width - 160
           });
         
-        // Move down for next difference or section
-        doc.y = boxY + 160;
+        // Move down for next difference or section using calculated height
+        doc.y = boxY + totalHeight + 20; // Add spacing between boxes
         
         // Add a page break if needed
         if (index < differencesToShow.length - 1 && doc.y > doc.page.height - 180) {
