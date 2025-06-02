@@ -173,7 +173,7 @@ class MemStorage {
     try {
       const query = `
         UPDATE assessment_results 
-        SET scores = $1, profile = $2, recalculated = $3, recalculated_at = $4,
+        SET scores = $1, profile = $2, recalculated = $3, last_recalculated = $4,
             original_score = $5, original_profile = $6, recalculated_pdf_path = $7
         WHERE email = $8
       `;
