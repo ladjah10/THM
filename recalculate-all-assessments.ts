@@ -88,7 +88,7 @@ async function recalculateAllAssessments() {
           scores: newScores,
           profile: newProfile,
           recalculated: true,
-          recalculatedAt: new Date().toISOString(),
+          last_recalculated: new Date(),
           originalScore: originalScores.overallPercentage,
           originalProfile: originalProfile.name
         };
