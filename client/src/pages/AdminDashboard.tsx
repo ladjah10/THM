@@ -889,6 +889,19 @@ export default function AdminDashboard() {
                                     </TooltipTrigger>
                                     <TooltipContent>Download JSON</TooltipContent>
                                   </Tooltip>
+
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Button
+                                        size="sm"
+                                        variant="outline"
+                                        onClick={() => window.open(`/api/admin/assessment/${assessment.id}/download`, '_blank')}
+                                      >
+                                        <FileDown className="h-3 w-3" />
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>Download PDF</TooltipContent>
+                                  </Tooltip>
                                 </div>
                               </TableCell>
                             </TableRow>
