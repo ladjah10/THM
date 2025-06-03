@@ -143,9 +143,19 @@ async function generateIndividualPDF(assessment: AssessmentResult): Promise<stri
       const stream = fs.createWriteStream(outputPath);
       doc.pipe(stream);
 
-      // Add PDF header (centered)
+      // Add PDF header (centered) with safe image loading
       if (INCLUDE_IMAGES) {
-        doc.image('public/100-marriage-book-cover.jpg', 50, 50, { width: 100 });
+        const bookCoverPath = path.join(process.cwd(), 'public', '100-marriage-book-cover.jpg');
+        if (fs.existsSync(bookCoverPath)) {
+          try {
+            doc.image(bookCoverPath, 50, 50, { width: 100 });
+          } catch (err) {
+            console.error(`Error loading book cover image: ${err}`);
+            // Continue without image
+          }
+        } else {
+          console.warn('Book cover image not found, continuing without image');
+        }
       }
       
       doc.fontSize(24)
