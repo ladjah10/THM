@@ -428,7 +428,7 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         doc.moveDown(0.5)
           .font('Helvetica-Bold')
           .fillColor('#553c9a')
-          .text(`${spouse.name.split(' ')[0]}:`, 70, doc.y + 5);
+          .text(`${spouseName.split(' ')[0]}:`, 70, doc.y + 5);
         
         doc.fontSize(12)
           .font('Helvetica')
@@ -507,7 +507,7 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
       doc.fontSize(12)
         .font('Helvetica-Bold')
         .fillColor('#3182ce') // Blue for primary partner
-        .text(`${primary.name.split(' ')[0]}: ${primary.profile.name} (General), ${primary.genderProfile?.name || 'No gender profile'} (${primary.demographics.gender === 'male' ? 'Male' : 'Female'}-Specific)`, 
+        .text(`${primaryName.split(' ')[0]}: ${primary.profile?.name || 'Profile Not Available'} (General), ${primary.genderProfile?.name || 'No gender profile'} (${primary.demographics?.gender === 'male' ? 'Male' : 'Female'}-Specific)`, 
           70, summaryBoxY + 20, {
             width: doc.page.width - 140
           });
@@ -517,7 +517,7 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         .fontSize(12)
         .font('Helvetica-Bold')
         .fillColor('#805ad5') // Purple for spouse
-        .text(`${spouse.name.split(' ')[0]}: ${spouse.profile.name} (General), ${spouse.genderProfile?.name || 'No gender profile'} (${spouse.demographics.gender === 'male' ? 'Male' : 'Female'}-Specific)`, 
+        .text(`${spouseName.split(' ')[0]}: ${spouse.profile?.name || 'Profile Not Available'} (General), ${spouse.genderProfile?.name || 'No gender profile'} (${spouse.demographics?.gender === 'male' ? 'Male' : 'Female'}-Specific)`, 
           70, doc.y, {
             width: doc.page.width - 140
           });
