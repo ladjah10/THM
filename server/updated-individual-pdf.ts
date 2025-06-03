@@ -57,6 +57,10 @@ export async function generateIndividualAssessmentPDF(assessment: AssessmentResu
         const pdfBuffer = Buffer.concat(buffers);
         resolve(pdfBuffer);
       });
+      doc.on('error', (err) => {
+        console.error('PDF generation error:', err);
+        reject(err);
+      });
 
       // ---------- PAGE 1 ----------
       

@@ -56,6 +56,10 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         const pdfBuffer = Buffer.concat(buffers);
         resolve(pdfBuffer);
       });
+      doc.on('error', (err) => {
+        console.error('PDF generation error:', err);
+        reject(err);
+      });
 
       // Extract the data we need
       const { primaryAssessment, spouseAssessment, differenceAnalysis, overallCompatibility } = report;

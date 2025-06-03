@@ -28,6 +28,10 @@ async function generateMatchingReportPDF(): Promise<Buffer> {
         const pdfBuffer = Buffer.concat(buffers);
         resolve(pdfBuffer);
       });
+      doc.on('error', (err) => {
+        console.error('PDF generation error:', err);
+        reject(err);
+      });
 
       // Sample assessment data - would be replaced with real assessment data
       const assessment = {
