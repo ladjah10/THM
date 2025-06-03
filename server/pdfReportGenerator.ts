@@ -163,7 +163,7 @@ export class ProfessionalPDFGenerator {
     this.doc.fill('white')
       .font(FONTS.SECTION_HEADER.font)
       .fontSize(FONTS.SECTION_HEADER.size)
-      .text(profile.name, LAYOUT.MARGIN + 15, this.currentY + 8, {
+      .text(profile?.name || 'Profile Name Not Available', LAYOUT.MARGIN + 15, this.currentY + 8, {
         width: LAYOUT.CONTENT_WIDTH - 30,
         align: 'center'
       });
@@ -240,10 +240,11 @@ export class ProfessionalPDFGenerator {
       ? JSON.parse(assessment.genderProfile) 
       : assessment.genderProfile;
 
-    // Header with enhanced content
+    // Header with enhanced content - safely handle undefined names
+    const fullName = `${demographics?.firstName || ''} ${demographics?.lastName || ''}`.trim() || 'Assessment Participant';
     this.drawHeader(
       'The 100 Marriage Assessment - Series 1',
-      `Report for ${demographics.firstName} ${demographics.lastName}`
+      `Report for ${fullName}`
     );
     
     // Add completion date
@@ -478,7 +479,7 @@ export class ProfessionalPDFGenerator {
       this.doc.fill(COLORS.PRIMARY)
         .font(FONTS.SUBSECTION.font)
         .fontSize(10)
-        .text(profile.name, currentX, this.currentY, { width: columnWidth });
+        .text(profile?.name || 'Profile Name Not Available', currentX, this.currentY, { width: columnWidth });
 
       this.currentY += 15;
 
@@ -516,10 +517,12 @@ export class ProfessionalPDFGenerator {
       ? JSON.parse(spouseAssessment.demographics) 
       : spouseAssessment.demographics;
 
-    // Header
+    // Header - safely handle undefined names
+    const primaryName = `${primaryDemographics?.firstName || ''} ${primaryDemographics?.lastName || ''}`.trim() || 'Partner 1';
+    const spouseName = `${spouseDemographics?.firstName || ''} ${spouseDemographics?.lastName || ''}`.trim() || 'Partner 2';
     this.drawHeader(
       'The 100 Marriage Assessment - Couple Compatibility Report',
-      `${primaryDemographics.firstName} & ${spouseDemographics.firstName}`
+      `${primaryName} & ${spouseName}`
     );
 
     // Compatibility Score
@@ -544,8 +547,8 @@ export class ProfessionalPDFGenerator {
     this.doc.fill(COLORS.TEXT)
       .font(FONTS.SUBSECTION.font)
       .fontSize(FONTS.SUBSECTION.size)
-      .text(coupleReport.primaryAssessment.demographicData.firstName, leftColumn, this.currentY)
-      .text(coupleReport.spouseAssessment.demographicData.firstName, rightColumn, this.currentY);
+      .text(coupleReport.primaryAssessment?.demographicData?.firstName || 'Partner 1', leftColumn, this.currentY)
+      .text(coupleReport.spouseAssessment?.demographicData?.firstName || 'Partner 2', rightColumn, this.currentY);
     
     this.currentY += 30;
 

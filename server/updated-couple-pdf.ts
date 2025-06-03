@@ -106,8 +106,10 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         .fillColor('#2d3748')
         .font('Helvetica-Bold');
       
-      // Calculate exact position for true centering
-      const coupleNames = `${primary.name} & ${spouse.name}`;
+      // Calculate exact position for true centering - safely handle undefined names
+      const primaryName = `${primary.demographics?.firstName || ''} ${primary.demographics?.lastName || ''}`.trim() || 'Partner 1';
+      const spouseName = `${spouse.demographics?.firstName || ''} ${spouse.demographics?.lastName || ''}`.trim() || 'Partner 2';
+      const coupleNames = `${primaryName} & ${spouseName}`;
       const coupleNamesWidth = doc.widthOfString(coupleNames);
       doc.text(coupleNames, (doc.page.width / 2) - (coupleNamesWidth / 2), doc.y);
       
@@ -199,8 +201,8 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
         .font('Helvetica-Bold')
         .fillColor('#4a5568')
         .text('Section', 60, tableTop + 10)
-        .text(`${primary.name.split(' ')[0]}'s Score`, 60 + colWidth, tableTop + 10)
-        .text(`${spouse.name.split(' ')[0]}'s Score`, 60 + colWidth * 2, tableTop + 10)
+        .text(`${primaryName.split(' ')[0]}'s Score`, 60 + colWidth, tableTop + 10)
+        .text(`${spouseName.split(' ')[0]}'s Score`, 60 + colWidth * 2, tableTop + 10)
         .text('Difference', 60 + colWidth * 3, tableTop + 10);
       
       // Draw separator line
@@ -364,7 +366,7 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           font: 'Helvetica-Bold'
         });
         
-        const responsesText = `${primary.name.split(' ')[0]}: ${diff.primaryResponse}\n${spouse.name.split(' ')[0]}: ${diff.spouseResponse}`;
+        const responsesText = `${primaryName.split(' ')[0]}: ${diff.primaryResponse}\n${spouseName.split(' ')[0]}: ${diff.spouseResponse}`;
         const responsesHeight = doc.heightOfString(responsesText, { 
           width: responseWidth,
           fontSize: 12,
@@ -414,7 +416,7 @@ export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport
           .fontSize(12)
           .font('Helvetica-Bold')
           .fillColor('#2c5282')
-          .text(`${primary.name.split(' ')[0]}:`, 70, doc.y + 5);
+          .text(`${primaryName.split(' ')[0]}:`, 70, doc.y + 5);
         
         doc.fontSize(12)
           .font('Helvetica')
