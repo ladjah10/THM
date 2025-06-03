@@ -270,10 +270,18 @@ export class EnhancedIndividualPDFGenerator {
     
     this.currentY += 15;
     
-    Object.entries(scores.sections).forEach(([section, data]: [string, any]) => {
-      this.checkPageBreak(60);
-      this.drawScoreBar(`${section}`, data.percentage);
-    });
+    // Safely handle section scores with validation
+    if (scores && scores.sections && typeof scores.sections === 'object') {
+      Object.entries(scores.sections).forEach(([section, data]: [string, any]) => {
+        if (data && typeof data.percentage === 'number') {
+          this.checkPageBreak(60);
+          this.drawScoreBar(`${section}`, data.percentage);
+        }
+      });
+    } else {
+      console.warn('No section scores data available for this assessment');
+      this.drawParagraph('Section-wise scores not available for this assessment.', { fontSize: 10 });
+    }
 
     // Statistical Comparison Section
     this.checkPageBreak(150);
