@@ -800,8 +800,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const assessmentId = req.params.id;
       
       // Fetch assessment from storage by ID
-      const allAssessments = await storage.getAllAssessments();
-      const assessment = allAssessments.find(a => a.id === assessmentId);
+      const assessment = await storage.getAssessmentById(assessmentId);
       if (!assessment) {
         return res.status(404).json({ error: 'Assessment not found' });
       }

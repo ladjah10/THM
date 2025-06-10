@@ -13,6 +13,36 @@ import {
   type DifferenceAnalysis
 } from "@shared/schema";
 
+// Storage interface definition
+export interface IStorage {
+  // User management
+  getUser(id: number): Promise<User | undefined>;
+  getUserByUsername(username: string): Promise<User | undefined>;
+  createUser(insertUser: InsertUser): Promise<User>;
+  
+  // Assessment management
+  saveAssessment(assessment: AssessmentResult): Promise<void>;
+  getAssessments(email: string): Promise<AssessmentResult[]>;
+  getAllAssessments(): Promise<AssessmentResult[]>;
+  getAssessmentById(id: string): Promise<AssessmentResult | null>;
+  
+  // Couple assessment management
+  saveCoupleAssessment(primaryAssessment: AssessmentResult, spouseEmail: string): Promise<string>;
+  getCoupleAssessment(coupleId: string): Promise<CoupleAssessmentReport | null>;
+  getAllCoupleAssessments(): Promise<CoupleAssessmentReport[]>;
+  
+  // Analytics and tracking
+  recordPageView(path: string, referrer?: string, userAgent?: string): Promise<void>;
+  getAnalyticsSummary(period?: string, startDate?: string, endDate?: string): Promise<AnalyticsSummary>;
+  
+  // Payment tracking
+  savePaymentTransaction(transaction: PaymentTransaction): Promise<void>;
+  getPaymentTransactions(startDate?: string, endDate?: string): Promise<PaymentTransaction[]>;
+  
+  // Session management
+  sessionStore: any;
+}
+
 // Memory-based storage implementation
 class MemStorage {
   // Internal storage structures
@@ -162,7 +192,50 @@ class MemStorage {
   }
 
   async getAllAssessments(): Promise<AssessmentResult[]> {
-    return Array.from(this.assessments.values());
+    const allAssessments = Array.from(this.assessments.values());
+    
+    // Optionally include couple assessments as individual entries
+    // This helps the admin dashboard show complete data
+    const coupleEntries: AssessmentResult[] = [];
+    
+    for (const coupleReport of this.coupleAssessments.values()) {
+      // Add primary assessment if not already in the list
+      if (!allAssessments.find(a => a.id === coupleReport.primary.id)) {
+        coupleEntries.push(coupleReport.primary);
+      }
+      
+      // Add spouse assessment if not already in the list
+      if (!allAssessments.find(a => a.id === coupleReport.spouse.id)) {
+        coupleEntries.push(coupleReport.spouse);
+      }
+    }
+    
+    return [...allAssessments, ...coupleEntries];
+  }
+
+  async getAssessmentById(id: string): Promise<AssessmentResult | null> {
+    // First check individual assessments by ID
+    for (const assessment of this.assessments.values()) {
+      if (assessment.id === id) {
+        return assessment;
+      }
+    }
+    
+    // If not found in individual assessments, check if it's a couple assessment ID
+    const coupleAssessment = this.coupleAssessments.get(id);
+    if (coupleAssessment) {
+      // Return the primary assessment from the couple report
+      return coupleAssessment.primary;
+    }
+    
+    // Check if any individual assessment has this coupleId
+    for (const assessment of this.assessments.values()) {
+      if (assessment.coupleId === id) {
+        return assessment;
+      }
+    }
+    
+    return null;
   }
 
   async updateAssessment(email: string, updatedAssessment: AssessmentResult): Promise<void> {
@@ -601,7 +674,7 @@ class MemStorage {
 // Import the pool from db
 import { pool } from './db';
 
-export class DatabaseStorage {
+export class DatabaseStorage implements IStorage {
   // Shared memory storage for fallback
   private memStorage: MemStorage;
   sessionStore: any;
@@ -1177,6 +1250,101 @@ export class DatabaseStorage {
       console.error('Error getting all assessments from database:', error);
       // Only fall back to memory storage if database query fails
       return await this.memStorage.getAllAssessments();
+    }
+  }
+
+  async getAssessmentById(id: string): Promise<AssessmentResult | null> {
+    try {
+      // Get assessment from database by ID
+      const { pool } = await import('./db');
+      
+      const results = await pool.query(`
+        SELECT id, email, name, scores, profile, gender_profile, responses, 
+               demographics, raw_answers, timestamp, updated_at, recalculated, 
+               last_recalculated, original_score, original_profile, recalculated_pdf_path,
+               transaction_id, couple_id, couple_role, report_sent
+        FROM assessment_results
+        WHERE id = $1
+        LIMIT 1
+      `, [id]);
+      
+      if (results.rows.length === 0) {
+        console.log(`No assessment found in database for ID: ${id}`);
+        // Fall back to memory storage
+        return await this.memStorage.getAssessmentById(id);
+      }
+      
+      const row = results.rows[0];
+      
+      // Parse scores and handle potential string values
+      let scores;
+      try {
+        scores = JSON.parse(row.scores);
+        
+        if (typeof scores.overallPercentage === 'string') {
+          scores.overallPercentage = parseFloat(scores.overallPercentage);
+        }
+        
+        if (scores.sections) {
+          Object.keys(scores.sections).forEach(section => {
+            if (typeof scores.sections[section].percentage === 'string') {
+              scores.sections[section].percentage = parseFloat(scores.sections[section].percentage);
+            }
+          });
+        }
+      } catch (e) {
+        console.error(`Error parsing scores for assessment ${id}:`, e);
+        scores = { 
+          overallPercentage: 0, 
+          sections: {}, 
+          strengths: [], 
+          improvementAreas: [],
+          totalEarned: 0,
+          totalPossible: 0
+        };
+      }
+      
+      const profile = JSON.parse(row.profile);
+      const responses = JSON.parse(row.responses);
+      const demographics = JSON.parse(row.demographics);
+      
+      // Parse gender profile with fallback handling
+      let genderProfile = null;
+      if (row.gender_profile) {
+        genderProfile = JSON.parse(row.gender_profile);
+      } else if (row.genderProfile) {
+        genderProfile = JSON.parse(row.genderProfile);
+      }
+      
+      const assessment: AssessmentResult = {
+        id: row.id,
+        email: row.email,
+        name: row.name,
+        scores: scores,
+        profile: profile,
+        genderProfile: genderProfile,
+        responses: responses,
+        demographics: demographics,
+        rawAnswers: row.raw_answers ? JSON.parse(row.raw_answers) : undefined,
+        timestamp: row.timestamp.toISOString(),
+        updatedAt: row.updated_at ? row.updated_at.toISOString() : undefined,
+        recalculated: row.recalculated || false,
+        lastRecalculated: row.last_recalculated ? row.last_recalculated.toISOString() : undefined,
+        originalScore: row.original_score || undefined,
+        originalProfile: row.original_profile || undefined,
+        recalculatedPdfPath: row.recalculated_pdf_path || undefined,
+        transactionId: row.transaction_id,
+        coupleId: row.couple_id,
+        coupleRole: row.couple_role,
+        reportSent: row.report_sent
+      };
+      
+      console.log(`Retrieved assessment from database for ID: ${id}`);
+      return assessment;
+    } catch (error) {
+      console.error(`Error getting assessment from database for ID ${id}:`, error);
+      // Fall back to memory storage if database operation fails
+      return await this.memStorage.getAssessmentById(id);
     }
   }
   
