@@ -794,7 +794,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Admin API to download individual assessment PDF
+  // Admin API to download assessment PDF (individual or couple)
   app.get('/api/admin/assessment/:id/download', async (req: Request, res: Response) => {
     try {
       const assessmentId = req.params.id;
@@ -805,17 +805,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: 'Assessment not found' });
       }
 
-      // Generate fresh PDF with current data
-      const { generateIndividualAssessmentPDF } = await import('./pdfReportGenerator');
-      const pdfBuffer = await generateIndividualAssessmentPDF(assessment);
+      // Import both PDF generators
+      const { generateIndividualAssessmentPDF, generateCoupleAssessmentPDF } = await import('./pdf-generator-integration');
+      
+      let pdfBuffer: Buffer;
+      let filename: string;
+      
+      // Check if this is a couple assessment
+      if (assessment.coupleId) {
+        // Fetch combined couple report (both partners' data)
+        const coupleReport = await storage.getCoupleAssessment(assessment.coupleId);
+        if (!coupleReport) {
+          return res.status(400).json({ error: 'Couple report not found or incomplete' });
+        }
+        
+        pdfBuffer = await generateCoupleAssessmentPDF(coupleReport);
+        
+        // Filename using both participants' names
+        const name1 = coupleReport.primaryAssessment?.demographics?.firstName || 'Partner1';
+        const name2 = coupleReport.spouseAssessment?.demographics?.firstName || 'Partner2';
+        filename = `assessment-${name1}-${name2}-${assessment.coupleId}.pdf`;
+      } else {
+        // Individual report (existing logic)
+        pdfBuffer = await generateIndividualAssessmentPDF(assessment);
+        
+        const demographics = typeof assessment.demographics === 'string' 
+          ? JSON.parse(assessment.demographics) 
+          : assessment.demographics;
+        
+        filename = `assessment-${demographics.firstName}-${demographics.lastName}-${assessment.id}.pdf`;
+      }
       
       // Set appropriate headers for PDF download
-      const demographics = typeof assessment.demographics === 'string' 
-        ? JSON.parse(assessment.demographics) 
-        : assessment.demographics;
-      
-      const filename = `assessment-${demographics.firstName}-${demographics.lastName}-${assessment.id}.pdf`;
-      
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
       res.setHeader('Content-Length', pdfBuffer.length);

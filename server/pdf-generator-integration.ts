@@ -12,6 +12,10 @@ export async function generateAssessmentPDF(assessment: AssessmentResult): Promi
   return generateIndividualAssessmentPDF(assessment);
 }
 
+export async function generateIndividualAssessmentPDF(assessment: AssessmentResult): Promise<Buffer> {
+  return generateIndividualAssessmentPDF(assessment);
+}
+
 export async function generateCoupleAssessmentPDF(report: CoupleAssessmentReport): Promise<Buffer> {
   return generateCouplePDF(report);
 }
