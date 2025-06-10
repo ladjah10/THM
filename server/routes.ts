@@ -799,8 +799,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const assessmentId = req.params.id;
       
-      // Fetch assessment from storage
-      const assessment = await storage.getAssessmentById(assessmentId);
+      // Fetch assessment from storage by ID
+      const allAssessments = await storage.getAllAssessments();
+      const assessment = allAssessments.find(a => a.id === assessmentId);
       if (!assessment) {
         return res.status(404).json({ error: 'Assessment not found' });
       }
@@ -822,8 +823,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         pdfBuffer = await generateCoupleAssessmentPDF(coupleReport);
         
         // Filename using both participants' names
-        const name1 = coupleReport.primaryAssessment?.demographics?.firstName || 'Partner1';
-        const name2 = coupleReport.spouseAssessment?.demographics?.firstName || 'Partner2';
+        const name1 = coupleReport.primary?.demographics?.firstName || 'Partner1';
+        const name2 = coupleReport.spouse?.demographics?.firstName || 'Partner2';
         filename = `assessment-${name1}-${name2}-${assessment.coupleId}.pdf`;
       } else {
         // Individual report (existing logic)
