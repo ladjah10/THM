@@ -32,7 +32,7 @@ export interface IStorage {
   getAllCoupleAssessments(): Promise<CoupleAssessmentReport[]>;
   
   // Analytics and tracking
-  recordPageView(path: string, referrer?: string, userAgent?: string): Promise<void>;
+  recordPageView(pageView: PageView): Promise<void>;
   getAnalyticsSummary(period?: string, startDate?: string, endDate?: string): Promise<AnalyticsSummary>;
   
   // Payment tracking
