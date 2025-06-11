@@ -154,24 +154,34 @@ export class ProfessionalPDFGenerator {
   }
 
   private drawProfileSection(profile: any, title: string): void {
-    this.drawSectionHeader(title);
+    if (title) {
+      this.drawSectionHeader(title);
+    }
+    
+    // Safety check for profile existence
+    if (!profile) {
+      this.drawParagraph('Profile information not available for this assessment.', { fontSize: 10 });
+      return;
+    }
     
     // Profile name with colored background
     this.doc.rect(LAYOUT.MARGIN, this.currentY, LAYOUT.CONTENT_WIDTH, 30)
       .fill(COLORS.ACCENT);
     
+    const profileName = profile?.name || 'Profile Name Not Available';
     this.doc.fill('white')
       .font(FONTS.SECTION_HEADER.font)
       .fontSize(FONTS.SECTION_HEADER.size)
-      .text(profile?.name || 'Profile Name Not Available', LAYOUT.MARGIN + 15, this.currentY + 8, {
+      .text(profileName, LAYOUT.MARGIN + 15, this.currentY + 8, {
         width: LAYOUT.CONTENT_WIDTH - 30,
         align: 'center'
       });
 
     this.currentY += 45;
 
-    // Profile description
-    this.drawParagraph(profile.description);
+    // Profile description with safety check
+    const profileDescription = profile?.description || 'Description not available.';
+    this.drawParagraph(profileDescription);
   }
 
   private checkPageBreak(requiredSpace: number = 100): void {
@@ -223,22 +233,45 @@ export class ProfessionalPDFGenerator {
 
   // Individual Assessment Report Generation
   async generateIndividualReport(assessment: any): Promise<Buffer> {
-    // Parse JSON strings if needed
-    const demographics = typeof assessment.demographics === 'string' 
-      ? JSON.parse(assessment.demographics) 
-      : assessment.demographics || assessment.demographicData;
+    // Safe JSON parsing with fallbacks
+    let demographics: any = {};
+    try {
+      demographics = typeof assessment.demographics === 'string' 
+        ? JSON.parse(assessment.demographics) 
+        : assessment.demographics || assessment.demographicData || {};
+    } catch (error) {
+      console.warn('Failed to parse demographics, using defaults:', error);
+      demographics = {};
+    }
     
-    const scores = typeof assessment.scores === 'string' 
-      ? JSON.parse(assessment.scores) 
-      : assessment.scores;
+    let scores = { overallPercentage: 0, sections: {}, strengths: [], improvementAreas: [] };
+    try {
+      scores = typeof assessment.scores === 'string' 
+        ? JSON.parse(assessment.scores) 
+        : assessment.scores || scores;
+    } catch (error) {
+      console.warn('Failed to parse scores, using defaults:', error);
+    }
     
-    const profile = typeof assessment.profile === 'string' 
-      ? JSON.parse(assessment.profile) 
-      : assessment.profile;
+    let profile = null;
+    try {
+      profile = typeof assessment.profile === 'string' 
+        ? JSON.parse(assessment.profile) 
+        : assessment.profile;
+    } catch (error) {
+      console.warn('Failed to parse profile, using null:', error);
+      profile = null;
+    }
     
-    const genderProfile = assessment.genderProfile && typeof assessment.genderProfile === 'string' 
-      ? JSON.parse(assessment.genderProfile) 
-      : assessment.genderProfile;
+    let genderProfile = null;
+    try {
+      genderProfile = assessment.genderProfile && typeof assessment.genderProfile === 'string' 
+        ? JSON.parse(assessment.genderProfile) 
+        : assessment.genderProfile;
+    } catch (error) {
+      console.warn('Failed to parse gender profile, using null:', error);
+      genderProfile = null;
+    }
 
     // Header with enhanced content - safely handle undefined names
     const fullName = `${demographics?.firstName || ''} ${demographics?.lastName || ''}`.trim() || 'Assessment Participant';
@@ -247,13 +280,41 @@ export class ProfessionalPDFGenerator {
       `Report for ${fullName}`
     );
     
-    // Add completion date
-    const assessmentDate = new Date(assessment.timestamp);
-    this.drawParagraph(`Completed on ${assessmentDate.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    })}`, { bold: true, fontSize: 12 });
+    // Add completion date with safety check
+    let completionDate = 'Date not available';
+    try {
+      if (assessment.timestamp) {
+        const assessmentDate = new Date(assessment.timestamp);
+        if (!isNaN(assessmentDate.getTime())) {
+          completionDate = assessmentDate.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+          });
+        } else {
+          completionDate = new Date().toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+          });
+        }
+      } else {
+        completionDate = new Date().toLocaleDateString('en-US', { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        });
+      }
+    } catch (error) {
+      console.warn('Error parsing assessment date, using current date:', error);
+      completionDate = new Date().toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+    }
+    
+    this.drawParagraph(`Completed on ${completionDate}`, { bold: true, fontSize: 12 });
     
     // Introduction text
     this.drawParagraph(
@@ -266,12 +327,13 @@ export class ProfessionalPDFGenerator {
       { fontSize: 11, align: 'justify' }
     );
 
-    // Overall Score Section
+    // Overall Score Section with safety check
     this.drawSectionHeader('Overall Assessment Score');
+    const overallScore = scores?.overallPercentage || 0;
     this.doc.fill(COLORS.PRIMARY)
       .font(FONTS.SCORE.font)
       .fontSize(32)
-      .text(`${scores.overallPercentage}%`, LAYOUT.MARGIN, this.currentY, {
+      .text(`${overallScore.toFixed(1)}%`, LAYOUT.MARGIN, this.currentY, {
         width: LAYOUT.CONTENT_WIDTH,
         align: 'center'
       });
@@ -342,14 +404,17 @@ export class ProfessionalPDFGenerator {
     this.checkPageBreak(150);
     this.drawSectionHeader('Statistical Comparison');
     
-    // Calculate actual statistics from assessment data
-    const percentileRank = this.calculatePercentileRank(scores.overallPercentage);
+    // Calculate actual statistics from assessment data with safety checks
+    const percentileRank = this.calculatePercentileRank(overallScore);
     const overallAverage = 65.2; // This would come from actual database statistics
-    const genderAverage = demographics.gender === 'male' ? 62.8 : 67.6;
+    const userGender = demographics?.gender || 'unknown';
+    const genderAverage = userGender === 'male' ? 62.8 : userGender === 'female' ? 67.6 : 65.2;
     
-    this.drawParagraph(`Your Score: ${scores.overallPercentage}%`, { bold: true });
+    this.drawParagraph(`Your Score: ${overallScore.toFixed(1)}%`, { bold: true });
     this.drawParagraph(`Overall Average: ${overallAverage}%`);
-    this.drawParagraph(`${demographics.gender === 'male' ? 'Male' : 'Female'} Average: ${genderAverage}%`);
+    if (userGender !== 'unknown') {
+      this.drawParagraph(`${userGender === 'male' ? 'Male' : 'Female'} Average: ${genderAverage}%`);
+    }
     
     // Add percentile summary
     this.drawParagraph(
@@ -357,19 +422,31 @@ export class ProfessionalPDFGenerator {
       { fontSize: 10, indent: true }
     );
     
-    // Strengths and Improvements
+    // Strengths and Improvements with safety checks
     this.checkPageBreak(200);
     this.drawSectionHeader('Key Insights');
     
     this.drawParagraph('Your Strengths:', { bold: true });
-    scores.strengths.forEach((strength: string) => {
-      this.drawParagraph(`• ${strength}`, { indent: true });
-    });
+    if (scores?.strengths && Array.isArray(scores.strengths) && scores.strengths.length > 0) {
+      scores.strengths.forEach((strength: any) => {
+        if (strength && typeof strength === 'string') {
+          this.drawParagraph(`• ${strength}`, { indent: true });
+        }
+      });
+    } else {
+      this.drawParagraph('• Areas of strength will be identified based on your responses', { indent: true });
+    }
 
     this.drawParagraph('Areas for Growth:', { bold: true });
-    scores.improvementAreas.forEach((area: string) => {
-      this.drawParagraph(`• ${area}`, { indent: true });
-    });
+    if (scores?.improvementAreas && Array.isArray(scores.improvementAreas) && scores.improvementAreas.length > 0) {
+      scores.improvementAreas.forEach((area: any) => {
+        if (area && typeof area === 'string') {
+          this.drawParagraph(`• ${area}`, { indent: true });
+        }
+      });
+    } else {
+      this.drawParagraph('• Growth opportunities will be identified based on your responses', { indent: true });
+    }
 
     // Next Steps Section
     this.checkPageBreak(150);
