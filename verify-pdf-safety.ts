@@ -49,9 +49,12 @@ async function verifyPDFSafety() {
     if (pdfBuffer && pdfBuffer.length > 0) {
       fs.writeFileSync('test-outputs/malformed-assessment-test.pdf', pdfBuffer);
       console.log(`✓ Malformed assessment PDF generated: ${pdfBuffer.length} bytes`);
+    } else {
+      console.log(`✗ Malformed assessment test returned empty buffer`);
     }
   } catch (error) {
     console.log(`✗ Malformed assessment test failed: ${error}`);
+    console.log('Error details:', error.stack);
   }
   
   console.log('PDF safety verification completed.');
