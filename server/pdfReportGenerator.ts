@@ -912,6 +912,17 @@ export class ProfessionalPDFGenerator {
 
   // Couple Assessment Report Generation
   async generateCoupleReport(coupleReport: any): Promise<Buffer> {
+    this.doc = new PDFDocument({
+      size: 'letter',
+      margins: {
+        top: LAYOUT.MARGIN,
+        bottom: LAYOUT.MARGIN,
+        left: LAYOUT.MARGIN,
+        right: LAYOUT.MARGIN
+      }
+    });
+    this.currentY = LAYOUT.MARGIN;
+
     // Safe parsing of couple report data with fallbacks
     const primary = coupleReport.primary || coupleReport.primaryAssessment;
     const spouse = coupleReport.spouse || coupleReport.spouseAssessment;
@@ -925,7 +936,7 @@ export class ProfessionalPDFGenerator {
         ? JSON.parse(primary.demographics) 
         : primary?.demographics || {};
     } catch (error) {
-      console.warn('Failed to parse primary demographics, using defaults:', error);
+      // Failed to parse primary demographics, using defaults
       demo1 = {};
     }
     
@@ -1093,7 +1104,8 @@ export class ProfessionalPDFGenerator {
     ]);
     
     if (allSections.size > 0) {
-      allSections.forEach(section => {
+      const sectionsArray = Array.from(allSections);
+      sectionsArray.forEach(section => {
         const primaryScore = primaryScores.sections[section]?.percentage || 0;
         const spouseScore = spouseScores.sections[section]?.percentage || 0;
         const difference = Math.abs(primaryScore - spouseScore);
