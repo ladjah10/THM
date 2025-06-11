@@ -945,7 +945,7 @@ export class ProfessionalPDFGenerator {
         ? JSON.parse(spouse.demographics) 
         : spouse?.demographics || {};
     } catch (error) {
-      console.warn('Failed to parse spouse demographics, using defaults:', error);
+      // Failed to parse spouse demographics, using defaults
       demo2 = {};
     }
     
@@ -966,7 +966,7 @@ export class ProfessionalPDFGenerator {
         };
       }
     } catch (error) {
-      console.warn('Failed to parse primary scores, using defaults:', error);
+      // Failed to parse primary scores, using defaults
     }
     
     try {

@@ -3114,20 +3114,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: 'Assessment not found' });
       }
       
-      // Check if PDF path exists
-      if (assessment.pdfPath && fs.existsSync(assessment.pdfPath)) {
-        const pdfBuffer = fs.readFileSync(assessment.pdfPath);
-        
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', `attachment; filename="assessment-report-${assessment.email.replace('@', '_at_')}.pdf"`);
-        
-        res.send(pdfBuffer);
+      // Generate PDF using enhanced generator
+      const { ProfessionalPDFGenerator } = await import('./pdfReportGenerator');
+      const generator = new ProfessionalPDFGenerator();
+      
+      let pdfBuffer: Buffer;
+      
+      // Check if this is part of a couple assessment
+      const coupleAssessments = await storage.getAllCoupleAssessments();
+      const coupleAssessment = coupleAssessments.find(c => 
+        c.primary?.id === id || c.spouse?.id === id
+      );
+      
+      if (coupleAssessment) {
+        // Generate couple PDF
+        pdfBuffer = await generator.generateCoupleReport(coupleAssessment);
       } else {
-        return res.status(404).json({ error: 'PDF file not found' });
+        // Generate individual PDF
+        pdfBuffer = await generator.generateIndividualReport(assessment);
       }
+      
+      if (!pdfBuffer || pdfBuffer.length === 0) {
+        return res.status(500).json({ error: 'Failed to generate PDF' });
+      }
+      
+      const assessmentType = coupleAssessment ? 'couple' : 'individual';
+      const filename = coupleAssessment 
+        ? `couple-assessment-${assessment.email.replace('@', '_at_')}.pdf`
+        : `assessment-report-${assessment.email.replace('@', '_at_')}.pdf`;
+      
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+      res.send(pdfBuffer);
+      
     } catch (error) {
-      console.error('Error downloading PDF:', error);
-      res.status(500).json({ error: 'Failed to download PDF' });
+      console.error('Error generating PDF:', error);
+      res.status(500).json({ error: 'Failed to generate PDF' });
     }
   });
   
