@@ -546,6 +546,130 @@ export class ProfessionalPDFGenerator {
     return 'evolving';
   }
 
+  private calculateCompatibilityScore(primaryScores: any, spouseScores: any): number {
+    // Calculate compatibility based on score alignment
+    const primaryOverall = primaryScores.overallPercentage || 0;
+    const spouseOverall = spouseScores.overallPercentage || 0;
+    
+    // Base compatibility on overall score similarity
+    const scoreDifference = Math.abs(primaryOverall - spouseOverall);
+    let compatibility = 100 - (scoreDifference * 2); // Reduce compatibility by 2% for each percentage point difference
+    
+    // Factor in section alignment
+    const primarySections = primaryScores.sections || {};
+    const spouseSections = spouseScores.sections || {};
+    
+    const commonSections = Object.keys(primarySections).filter(section => 
+      spouseSections.hasOwnProperty(section)
+    );
+    
+    if (commonSections.length > 0) {
+      let sectionAlignmentBonus = 0;
+      commonSections.forEach(section => {
+        const primarySectionScore = primarySections[section]?.percentage || 0;
+        const spouseSectionScore = spouseSections[section]?.percentage || 0;
+        const sectionDifference = Math.abs(primarySectionScore - spouseSectionScore);
+        
+        if (sectionDifference < 10) {
+          sectionAlignmentBonus += 2; // Bonus for close alignment
+        } else if (sectionDifference > 30) {
+          sectionAlignmentBonus -= 1; // Penalty for large differences
+        }
+      });
+      
+      compatibility += sectionAlignmentBonus;
+    }
+    
+    // Ensure compatibility stays within reasonable bounds
+    return Math.max(30, Math.min(95, compatibility));
+  }
+
+  private generateComparativeInsights(primaryScores: any, spouseScores: any, primaryName: string, spouseName: string): void {
+    const primaryOverall = primaryScores.overallPercentage || 0;
+    const spouseOverall = spouseScores.overallPercentage || 0;
+    const overallDifference = Math.abs(primaryOverall - spouseOverall);
+    
+    // Overall compatibility narrative
+    if (overallDifference < 10) {
+      this.drawParagraph(
+        `${primaryName} and ${spouseName} show strong overall alignment with only a ${overallDifference.toFixed(1)}% difference in their assessment scores (${primaryOverall.toFixed(1)}% vs ${spouseOverall.toFixed(1)}%). This suggests similar foundational values and approaches to marriage.`
+      );
+    } else if (overallDifference < 20) {
+      this.drawParagraph(
+        `${primaryName} and ${spouseName} have moderately aligned perspectives with a ${overallDifference.toFixed(1)}% difference in overall scores (${primaryOverall.toFixed(1)}% vs ${spouseOverall.toFixed(1)}%). This difference provides opportunities for meaningful discussions and mutual growth.`
+      );
+    } else {
+      this.drawParagraph(
+        `${primaryName} and ${spouseName} show significant differences in their overall approaches to marriage, with a ${overallDifference.toFixed(1)}% score difference (${primaryOverall.toFixed(1)}% vs ${spouseOverall.toFixed(1)}%). These differences highlight important areas for discussion and understanding.`
+      );
+    }
+
+    this.currentY += 10;
+
+    // Section-specific insights
+    const primarySections = primaryScores.sections || {};
+    const spouseSections = spouseScores.sections || {};
+    const alignedAreas: string[] = [];
+    const divergentAreas: string[] = [];
+
+    Object.keys(primarySections).forEach(section => {
+      if (spouseSections[section]) {
+        const primaryScore = primarySections[section]?.percentage || 0;
+        const spouseScore = spouseSections[section]?.percentage || 0;
+        const difference = Math.abs(primaryScore - spouseScore);
+
+        if (difference < 15 && primaryScore > 60 && spouseScore > 60) {
+          alignedAreas.push(`${section} (${primaryName}: ${primaryScore.toFixed(1)}%, ${spouseName}: ${spouseScore.toFixed(1)}%)`);
+        } else if (difference > 25) {
+          divergentAreas.push(`${section} (${primaryName}: ${primaryScore.toFixed(1)}%, ${spouseName}: ${spouseScore.toFixed(1)}%)`);
+        }
+      }
+    });
+
+    if (alignedAreas.length > 0) {
+      this.drawParagraph('Areas of Strong Agreement:', { bold: true });
+      alignedAreas.forEach(area => {
+        this.drawParagraph(`• ${area}`, { indent: true, fontSize: 10 });
+      });
+      this.drawParagraph(
+        'These aligned areas indicate shared values and approaches that can serve as strengths in your relationship.',
+        { fontSize: 10, indent: true }
+      );
+      this.currentY += 10;
+    }
+
+    if (divergentAreas.length > 0) {
+      this.drawParagraph('Areas Requiring Discussion:', { bold: true });
+      divergentAreas.forEach(area => {
+        this.drawParagraph(`• ${area}`, { indent: true, fontSize: 10 });
+      });
+      this.drawParagraph(
+        'These differences present opportunities for deeper understanding and compromise. Consider discussing your perspectives on these topics openly.',
+        { fontSize: 10, indent: true }
+      );
+      this.currentY += 10;
+    }
+
+    // Compatibility interpretation
+    const compatibilityScore = this.calculateCompatibilityScore(primaryScores, spouseScores);
+    if (compatibilityScore >= 80) {
+      this.drawParagraph(
+        'Your high compatibility score suggests excellent potential for a harmonious relationship built on shared values and mutual understanding.',
+        { fontSize: 10 }
+      );
+    } else if (compatibilityScore >= 60) {
+      this.drawParagraph(
+        'Your moderate compatibility score indicates good relationship potential with room for growth through communication and compromise.',
+        { fontSize: 10 }
+      );
+    } else {
+      this.drawParagraph(
+        'Your compatibility score suggests significant differences that can be addressed through open dialogue, professional guidance, and mutual commitment to understanding each other\'s perspectives.',
+        { fontSize: 10 }
+      );
+    }
+  }
+
   private drawProfilesOverview(): void {
     const profiles = [
       {
@@ -618,104 +742,316 @@ export class ProfessionalPDFGenerator {
 
   // Couple Assessment Report Generation
   async generateCoupleReport(coupleReport: any): Promise<Buffer> {
-    // Parse the couple report data if needed
-    const primaryAssessment = coupleReport.primaryAssessment || coupleReport.primary;
-    const spouseAssessment = coupleReport.spouseAssessment || coupleReport.spouse;
-    const analysis = coupleReport.differenceAnalysis || coupleReport.analysis;
+    // Safe parsing of couple report data with fallbacks
+    const primary = coupleReport.primary || coupleReport.primaryAssessment;
+    const spouse = coupleReport.spouse || coupleReport.spouseAssessment;
     
-    // Parse demographics for both assessments
-    const primaryDemographics = typeof primaryAssessment.demographics === 'string' 
-      ? JSON.parse(primaryAssessment.demographics) 
-      : primaryAssessment.demographics;
+    // Safe JSON parsing for demographics with fallbacks
+    let demo1: any = {};
+    let demo2: any = {};
     
-    const spouseDemographics = typeof spouseAssessment.demographics === 'string' 
-      ? JSON.parse(spouseAssessment.demographics) 
-      : spouseAssessment.demographics;
+    try {
+      demo1 = typeof primary?.demographics === 'string' 
+        ? JSON.parse(primary.demographics) 
+        : primary?.demographics || {};
+    } catch (error) {
+      console.warn('Failed to parse primary demographics, using defaults:', error);
+      demo1 = {};
+    }
+    
+    try {
+      demo2 = typeof spouse?.demographics === 'string' 
+        ? JSON.parse(spouse.demographics) 
+        : spouse?.demographics || {};
+    } catch (error) {
+      console.warn('Failed to parse spouse demographics, using defaults:', error);
+      demo2 = {};
+    }
+    
+    // Safe parsing of scores for both partners
+    let primaryScores: any = { overallPercentage: 0, sections: {}, strengths: [], improvementAreas: [] };
+    let spouseScores: any = { overallPercentage: 0, sections: {}, strengths: [], improvementAreas: [] };
+    
+    try {
+      const parsedPrimaryScores = typeof primary?.scores === 'string' 
+        ? JSON.parse(primary.scores) 
+        : primary?.scores;
+      if (parsedPrimaryScores && typeof parsedPrimaryScores === 'object') {
+        primaryScores = {
+          overallPercentage: parsedPrimaryScores.overallPercentage || 0,
+          sections: parsedPrimaryScores.sections || {},
+          strengths: Array.isArray(parsedPrimaryScores.strengths) ? parsedPrimaryScores.strengths : [],
+          improvementAreas: Array.isArray(parsedPrimaryScores.improvementAreas) ? parsedPrimaryScores.improvementAreas : []
+        };
+      }
+    } catch (error) {
+      console.warn('Failed to parse primary scores, using defaults:', error);
+    }
+    
+    try {
+      const parsedSpouseScores = typeof spouse?.scores === 'string' 
+        ? JSON.parse(spouse.scores) 
+        : spouse?.scores;
+      if (parsedSpouseScores && typeof parsedSpouseScores === 'object') {
+        spouseScores = {
+          overallPercentage: parsedSpouseScores.overallPercentage || 0,
+          sections: parsedSpouseScores.sections || {},
+          strengths: Array.isArray(parsedSpouseScores.strengths) ? parsedSpouseScores.strengths : [],
+          improvementAreas: Array.isArray(parsedSpouseScores.improvementAreas) ? parsedSpouseScores.improvementAreas : []
+        };
+      }
+    } catch (error) {
+      console.warn('Failed to parse spouse scores, using defaults:', error);
+    }
+    
+    // Safe parsing of profiles
+    let primaryProfile = null;
+    let spouseProfile = null;
+    let primaryGenderProfile = null;
+    let spouseGenderProfile = null;
+    
+    try {
+      primaryProfile = typeof primary?.profile === 'string' 
+        ? JSON.parse(primary.profile) 
+        : primary?.profile;
+    } catch (error) {
+      console.warn('Failed to parse primary profile:', error);
+    }
+    
+    try {
+      spouseProfile = typeof spouse?.profile === 'string' 
+        ? JSON.parse(spouse.profile) 
+        : spouse?.profile;
+    } catch (error) {
+      console.warn('Failed to parse spouse profile:', error);
+    }
+    
+    try {
+      primaryGenderProfile = primary?.genderProfile && typeof primary.genderProfile === 'string' 
+        ? JSON.parse(primary.genderProfile) 
+        : primary?.genderProfile;
+    } catch (error) {
+      console.warn('Failed to parse primary gender profile:', error);
+    }
+    
+    try {
+      spouseGenderProfile = spouse?.genderProfile && typeof spouse.genderProfile === 'string' 
+        ? JSON.parse(spouse.genderProfile) 
+        : spouse?.genderProfile;
+    } catch (error) {
+      console.warn('Failed to parse spouse gender profile:', error);
+    }
 
-    // Header - safely handle undefined names
-    const primaryName = `${primaryDemographics?.firstName || ''} ${primaryDemographics?.lastName || ''}`.trim() || 'Partner 1';
-    const spouseName = `${spouseDemographics?.firstName || ''} ${spouseDemographics?.lastName || ''}`.trim() || 'Partner 2';
+    // Header with partner names
+    const primaryName = `${demo1?.firstName || ''} ${demo1?.lastName || ''}`.trim() || 'Partner 1';
+    const spouseName = `${demo2?.firstName || ''} ${demo2?.lastName || ''}`.trim() || 'Partner 2';
     this.drawHeader(
       'The 100 Marriage Assessment - Couple Compatibility Report',
-      `${primaryName} & ${spouseName}`
+      `Report for ${primaryName} & ${spouseName}`
     );
 
-    // Compatibility Score
+    // Add completion date using the later of the two timestamps or current date
+    let completionDate = 'Date not available';
+    try {
+      const primaryDate = primary?.timestamp ? new Date(primary.timestamp) : null;
+      const spouseDate = spouse?.timestamp ? new Date(spouse.timestamp) : null;
+      
+      let latestDate = new Date();
+      if (primaryDate && !isNaN(primaryDate.getTime()) && spouseDate && !isNaN(spouseDate.getTime())) {
+        latestDate = primaryDate > spouseDate ? primaryDate : spouseDate;
+      } else if (primaryDate && !isNaN(primaryDate.getTime())) {
+        latestDate = primaryDate;
+      } else if (spouseDate && !isNaN(spouseDate.getTime())) {
+        latestDate = spouseDate;
+      }
+      
+      completionDate = latestDate.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+    } catch (error) {
+      console.warn('Error parsing couple assessment dates:', error);
+      completionDate = new Date().toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+    }
+    
+    this.drawParagraph(`Completed on ${completionDate}`, { bold: true, fontSize: 12 });
+    
+    // Introduction for couples
+    this.drawParagraph(
+      'This couple compatibility report compares your individual assessment results to identify areas of alignment and potential discussion points for your relationship.',
+      { fontSize: 11, align: 'justify' }
+    );
+
+    // Overall Compatibility Score
     this.drawSectionHeader('Overall Compatibility');
+    const compatibilityScore = coupleReport?.compatibilityScore || this.calculateCompatibilityScore(primaryScores, spouseScores);
     this.doc.fill(COLORS.ACCENT)
       .font(FONTS.SCORE.font)
       .fontSize(32)
-      .text(`${coupleReport.compatibilityScore}%`, LAYOUT.MARGIN, this.currentY, {
+      .text(`${compatibilityScore.toFixed(1)}%`, LAYOUT.MARGIN, this.currentY, {
         width: LAYOUT.CONTENT_WIDTH,
         align: 'center'
       });
     
     this.currentY += 50;
 
-    // Individual Scores Comparison
+    // Individual Overall Scores Comparison
     this.drawSectionHeader('Individual Assessment Scores');
     
-    // Side-by-side comparison
-    const leftColumn = LAYOUT.MARGIN;
-    const rightColumn = LAYOUT.MARGIN + LAYOUT.COLUMN_WIDTH + 20;
+    // Overall scores comparison
+    this.drawParagraph('Overall Assessment Scores:', { bold: true });
+    this.drawParagraph(`${primaryName}: ${primaryScores.overallPercentage.toFixed(1)}%`, { indent: true });
+    this.drawParagraph(`${spouseName}: ${spouseScores.overallPercentage.toFixed(1)}%`, { indent: true });
     
-    this.doc.fill(COLORS.TEXT)
-      .font(FONTS.SUBSECTION.font)
-      .fontSize(FONTS.SUBSECTION.size)
-      .text(coupleReport.primaryAssessment?.demographicData?.firstName || 'Partner 1', leftColumn, this.currentY)
-      .text(coupleReport.spouseAssessment?.demographicData?.firstName || 'Partner 2', rightColumn, this.currentY);
+    const scoreDifference = Math.abs(primaryScores.overallPercentage - spouseScores.overallPercentage);
+    this.drawParagraph(`Score Difference: ${scoreDifference.toFixed(1)} percentage points`, { indent: true, bold: true });
     
-    this.currentY += 30;
+    this.currentY += 15;
 
-    Object.keys(coupleReport.primaryAssessment.scores.sections).forEach(section => {
-      const primaryScore = coupleReport.primaryAssessment.scores.sections[section]?.percentage || 0;
-      const spouseScore = coupleReport.spouseAssessment.scores.sections[section]?.percentage || 0;
-      
-      this.checkPageBreak(40);
-      
-      this.doc.fill(COLORS.TEXT)
-        .font(FONTS.BODY.font)
-        .fontSize(FONTS.BODY.size)
-        .text(section, leftColumn, this.currentY, { width: LAYOUT.CONTENT_WIDTH });
-      
-      this.currentY += 15;
-      
-      this.doc.text(`${primaryScore.toFixed(1)}%`, leftColumn, this.currentY)
-        .text(`${spouseScore.toFixed(1)}%`, rightColumn, this.currentY);
-      
-      this.currentY += 25;
-    });
+    // Section-by-section comparison
+    this.drawSectionHeader('Section Performance Comparison');
+    
+    // Get all sections from both assessments
+    const allSections = new Set([
+      ...Object.keys(primaryScores.sections || {}),
+      ...Object.keys(spouseScores.sections || {})
+    ]);
+    
+    if (allSections.size > 0) {
+      allSections.forEach(section => {
+        const primaryScore = primaryScores.sections[section]?.percentage || 0;
+        const spouseScore = spouseScores.sections[section]?.percentage || 0;
+        const difference = Math.abs(primaryScore - spouseScore);
+        
+        this.checkPageBreak(60);
+        
+        this.drawParagraph(`${section}:`, { bold: true });
+        this.drawParagraph(`${primaryName}: ${primaryScore.toFixed(1)}%`, { indent: true });
+        this.drawParagraph(`${spouseName}: ${spouseScore.toFixed(1)}%`, { indent: true });
+        
+        // Add comparative insight
+        if (difference < 10) {
+          this.drawParagraph(`Strong alignment (${difference.toFixed(1)}% difference)`, { 
+            indent: true, 
+            fontSize: 10 
+          });
+        } else if (difference < 20) {
+          this.drawParagraph(`Moderate difference (${difference.toFixed(1)}% difference)`, { 
+            indent: true, 
+            fontSize: 10 
+          });
+        } else {
+          this.drawParagraph(`Significant difference (${difference.toFixed(1)}% difference) - Discussion recommended`, { 
+            indent: true, 
+            fontSize: 10 
+          });
+        }
+        
+        this.currentY += 10;
+      });
+    } else {
+      this.drawParagraph('Section score details not available for comparison.', { fontSize: 10 });
+    }
 
-    // Compatibility Analysis
+    // Psychographic Profiles of Each Partner
+    this.checkPageBreak(300);
+    this.drawSectionHeader('Psychographic Profiles of Each Partner');
+    
+    // Primary partner profile
+    this.drawParagraph(`${primaryName}'s Profile:`, { bold: true, fontSize: 12 });
+    if (primaryProfile) {
+      this.drawProfileSection(primaryProfile, '');
+    } else {
+      this.drawParagraph('Profile information will be generated based on assessment responses.', { fontSize: 10 });
+    }
+    
+    if (primaryGenderProfile) {
+      this.checkPageBreak(100);
+      this.drawParagraph(`${primaryName}'s Gender-Specific Profile:`, { bold: true, fontSize: 11 });
+      this.drawProfileSection(primaryGenderProfile, '');
+    }
+    
+    // Spouse partner profile
     this.checkPageBreak(200);
-    this.drawSectionHeader('Compatibility Analysis');
+    this.drawParagraph(`${spouseName}'s Profile:`, { bold: true, fontSize: 12 });
+    if (spouseProfile) {
+      this.drawProfileSection(spouseProfile, '');
+    } else {
+      this.drawParagraph('Profile information will be generated based on assessment responses.', { fontSize: 10 });
+    }
     
-    if (coupleReport.differenceAnalysis.alignmentAreas.length > 0) {
-      this.drawParagraph('Areas of Strong Alignment:', { bold: true });
-      coupleReport.differenceAnalysis.alignmentAreas.forEach((area: any) => {
-        if (area && area.section && area.analysis) {
-          this.drawParagraph(`• ${area.section}: ${area.analysis}`, { indent: true });
-        }
-      });
+    if (spouseGenderProfile) {
+      this.checkPageBreak(100);
+      this.drawParagraph(`${spouseName}'s Gender-Specific Profile:`, { bold: true, fontSize: 11 });
+      this.drawProfileSection(spouseGenderProfile, '');
     }
 
-    if (coupleReport.differenceAnalysis.significantDifferences.length > 0) {
-      this.drawParagraph('Areas for Discussion:', { bold: true });
-      coupleReport.differenceAnalysis.significantDifferences.forEach((diff: any) => {
-        if (diff && diff.section && diff.analysis) {
-          this.drawParagraph(`• ${diff.section}: ${diff.analysis}`, { indent: true });
-        }
-      });
-    }
-
-    // Recommendations
-    this.checkPageBreak(150);
-    this.drawSectionHeader('Recommendations for Your Relationship');
-    coupleReport.recommendations.forEach((recommendation: any) => {
-      if (recommendation && typeof recommendation === 'string') {
-        this.drawParagraph(`• ${recommendation}`, { indent: true });
+    // Comparative Insights Narrative
+    this.checkPageBreak(200);
+    this.drawSectionHeader('Comparative Insights');
+    
+    this.generateComparativeInsights(primaryScores, spouseScores, primaryName, spouseName);
+    
+    // Compatibility Analysis (if provided in couple report)
+    if (coupleReport?.differenceAnalysis) {
+      this.checkPageBreak(150);
+      this.drawSectionHeader('Detailed Compatibility Analysis');
+      
+      if (coupleReport.differenceAnalysis.alignmentAreas?.length > 0) {
+        this.drawParagraph('Areas of Strong Alignment:', { bold: true });
+        coupleReport.differenceAnalysis.alignmentAreas.forEach((area: any) => {
+          if (area && area.section && area.analysis) {
+            this.drawParagraph(`• ${area.section}: ${area.analysis}`, { indent: true });
+          }
+        });
       }
-    });
+
+      if (coupleReport.differenceAnalysis.significantDifferences?.length > 0) {
+        this.drawParagraph('Areas for Discussion:', { bold: true });
+        coupleReport.differenceAnalysis.significantDifferences.forEach((diff: any) => {
+          if (diff && diff.section && diff.analysis) {
+            this.drawParagraph(`• ${diff.section}: ${diff.analysis}`, { indent: true });
+          }
+        });
+      }
+    }
+
+    // Next Steps for Couples
+    this.checkPageBreak(200);
+    this.drawSectionHeader('Next Steps for Your Relationship');
+    
+    this.drawParagraph(
+      'Based on your combined assessment results, here are specific recommendations for strengthening your relationship:'
+    );
+    
+    this.drawParagraph('• Schedule regular discussions about areas showing significant differences', { indent: true });
+    this.drawParagraph('• Celebrate and build upon your areas of strong alignment', { indent: true });
+    this.drawParagraph('• Work together on lower-scoring areas identified in both assessments', { indent: true });
+    this.drawParagraph('• Consider couples counseling or relationship workshops for continued growth', { indent: true });
+    this.drawParagraph('• Use "The 100 Marriage Decisions & Declarations" as a discussion guide', { indent: true });
+    
+    if (coupleReport?.recommendations && Array.isArray(coupleReport.recommendations)) {
+      this.drawParagraph('Additional Personalized Recommendations:', { bold: true });
+      coupleReport.recommendations.forEach((recommendation: any) => {
+        if (recommendation && typeof recommendation === 'string') {
+          this.drawParagraph(`• ${recommendation}`, { indent: true });
+        }
+      });
+    }
+    
+    this.drawParagraph(
+      'For professional guidance on your relationship journey, consider scheduling a couples consultation:'
+    );
+    
+    this.drawParagraph(
+      'https://lawrence-adjah.clientsecure.me/request/service',
+      { bold: true }
+    );
 
     // Footer
     this.drawFooter();
