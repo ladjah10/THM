@@ -54,6 +54,82 @@ export class ProfessionalPDFGenerator {
     });
   }
 
+  /**
+   * Resolves profile icon path with proper error handling
+   * @param relativePath - Relative path to the icon file
+   * @returns Absolute path if file exists, null otherwise
+   */
+  private getProfileIconPath(relativePath: string | undefined): string | null {
+    if (!relativePath) return null;
+    
+    try {
+      // Check multiple possible locations for assets
+      const possiblePaths = [
+        path.resolve(__dirname, '../attached_assets', relativePath),
+        path.resolve(__dirname, '../../attached_assets', relativePath),
+        path.resolve(process.cwd(), 'attached_assets', relativePath),
+        path.resolve(process.cwd(), 'public/assets', relativePath),
+        path.resolve(process.cwd(), 'assets', relativePath)
+      ];
+      
+      for (const fullPath of possiblePaths) {
+        if (fs.existsSync(fullPath)) {
+          return fullPath;
+        }
+      }
+      
+      console.warn(`Profile icon not found: ${relativePath}`);
+      return null;
+    } catch (error) {
+      console.warn(`Error resolving profile icon path for ${relativePath}:`, error);
+      return null;
+    }
+  }
+
+  /**
+   * Safely adds an image to the PDF with error handling
+   * @param imagePath - Path to the image file
+   * @param x - X coordinate
+   * @param y - Y coordinate
+   * @param options - Image options (width, height, etc.)
+   * @returns true if image was added successfully, false otherwise
+   */
+  private safeAddImage(imagePath: string, x: number, y: number, options: any = {}): boolean {
+    try {
+      if (!fs.existsSync(imagePath)) {
+        console.warn(`Image file not found: ${imagePath}`);
+        return false;
+      }
+      
+      // Verify the file is a valid image by checking its size and extension
+      const stats = fs.statSync(imagePath);
+      if (stats.size === 0) {
+        console.warn(`Image file is empty: ${imagePath}`);
+        return false;
+      }
+      
+      const ext = path.extname(imagePath).toLowerCase();
+      const validExtensions = ['.png', '.jpg', '.jpeg', '.gif'];
+      if (!validExtensions.includes(ext)) {
+        console.warn(`Unsupported image format: ${imagePath}`);
+        return false;
+      }
+      
+      // Add default dimensions if not provided
+      const imageOptions = {
+        width: 20,
+        height: 20,
+        ...options
+      };
+      
+      this.doc.image(imagePath, x, y, imageOptions);
+      return true;
+    } catch (error) {
+      console.error(`Failed to add image ${imagePath}:`, error);
+      return false;
+    }
+  }
+
   // Reusable Layout Functions
   private drawHeader(title: string, subtitle?: string): void {
     this.currentY = LAYOUT.MARGIN;
@@ -164,7 +240,24 @@ export class ProfessionalPDFGenerator {
       return;
     }
     
-    // Profile name with colored background
+    const startY = this.currentY;
+    
+    // Try to load and add profile icon if available
+    let iconWidth = 0;
+    if (profile.icon) {
+      const iconPath = this.getProfileIconPath(profile.icon);
+      if (iconPath) {
+        const iconAdded = this.safeAddImage(iconPath, LAYOUT.MARGIN + 5, this.currentY + 5, {
+          width: 20,
+          height: 20
+        });
+        if (iconAdded) {
+          iconWidth = 25; // Account for icon space
+        }
+      }
+    }
+    
+    // Profile name with colored background, adjusted for icon
     this.doc.rect(LAYOUT.MARGIN, this.currentY, LAYOUT.CONTENT_WIDTH, 30)
       .fill(COLORS.ACCENT);
     
@@ -172,8 +265,8 @@ export class ProfessionalPDFGenerator {
     this.doc.fill('white')
       .font(FONTS.SECTION_HEADER.font)
       .fontSize(FONTS.SECTION_HEADER.size)
-      .text(profileName, LAYOUT.MARGIN + 15, this.currentY + 8, {
-        width: LAYOUT.CONTENT_WIDTH - 30,
+      .text(profileName, LAYOUT.MARGIN + 15 + iconWidth, this.currentY + 8, {
+        width: LAYOUT.CONTENT_WIDTH - 30 - iconWidth,
         align: 'center'
       });
 
@@ -182,6 +275,26 @@ export class ProfessionalPDFGenerator {
     // Profile description with safety check
     const profileDescription = profile?.description || 'Description not available.';
     this.drawParagraph(profileDescription);
+    
+    // Add characteristics if available
+    if (profile.characteristics && Array.isArray(profile.characteristics) && profile.characteristics.length > 0) {
+      this.drawParagraph('Key Characteristics:', { bold: true, fontSize: 10 });
+      profile.characteristics.forEach((char: string) => {
+        if (char && typeof char === 'string') {
+          this.drawParagraph(`• ${char}`, { indent: true, fontSize: 9 });
+        }
+      });
+    }
+    
+    // Add traits if available
+    if (profile.traits && Array.isArray(profile.traits) && profile.traits.length > 0) {
+      this.drawParagraph('Traits:', { bold: true, fontSize: 10 });
+      profile.traits.forEach((trait: string) => {
+        if (trait && typeof trait === 'string') {
+          this.drawParagraph(`• ${trait}`, { indent: true, fontSize: 9 });
+        }
+      });
+    }
   }
 
   private checkPageBreak(requiredSpace: number = 100): void {
