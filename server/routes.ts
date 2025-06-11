@@ -805,8 +805,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: 'Assessment not found' });
       }
 
-      // Import both PDF generators
-      const { generateIndividualAssessmentPDF, generateCoupleAssessmentPDF } = await import('./pdf-generator-integration');
+      // Import enhanced PDF generator with comprehensive safety features
+      const { ProfessionalPDFGenerator } = await import('./pdfReportGenerator');
+      const generator = new ProfessionalPDFGenerator();
       
       let pdfBuffer: Buffer;
       let filename: string;
@@ -819,21 +820,51 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return res.status(400).json({ error: 'Couple report not found or incomplete' });
         }
         
-        pdfBuffer = await generateCoupleAssessmentPDF(coupleReport);
+        // Generate comprehensive couple PDF with safety features
+        pdfBuffer = await generator.generateCoupleReport(coupleReport);
         
-        // Filename using both participants' names
-        const name1 = coupleReport.primary?.demographics?.firstName || 'Partner1';
-        const name2 = coupleReport.spouse?.demographics?.firstName || 'Partner2';
-        filename = `assessment-${name1}-${name2}-${assessment.coupleId}.pdf`;
+        // Safe parsing of demographics for filename
+        let name1 = 'Partner1';
+        let name2 = 'Partner2';
+        
+        try {
+          const demo1 = typeof coupleReport.primary?.demographics === 'string' 
+            ? JSON.parse(coupleReport.primary.demographics) 
+            : coupleReport.primary?.demographics;
+          name1 = demo1?.firstName || 'Partner1';
+        } catch (error) {
+          console.warn('Failed to parse primary demographics for filename');
+        }
+        
+        try {
+          const demo2 = typeof coupleReport.spouse?.demographics === 'string' 
+            ? JSON.parse(coupleReport.spouse.demographics) 
+            : coupleReport.spouse?.demographics;
+          name2 = demo2?.firstName || 'Partner2';
+        } catch (error) {
+          console.warn('Failed to parse spouse demographics for filename');
+        }
+        
+        filename = `couple-assessment-${name1}-${name2}-${assessment.coupleId}.pdf`;
       } else {
-        // Individual report (existing logic)
-        pdfBuffer = await generateIndividualAssessmentPDF(assessment);
+        // Individual report with enhanced safety
+        pdfBuffer = await generator.generateIndividualReport(assessment);
         
-        const demographics = typeof assessment.demographics === 'string' 
-          ? JSON.parse(assessment.demographics) 
-          : assessment.demographics;
+        // Safe parsing of demographics for filename
+        let firstName = 'Individual';
+        let lastName = 'Assessment';
         
-        filename = `assessment-${demographics.firstName}-${demographics.lastName}-${assessment.id}.pdf`;
+        try {
+          const demographics = typeof assessment.demographics === 'string' 
+            ? JSON.parse(assessment.demographics) 
+            : assessment.demographics;
+          firstName = demographics?.firstName || 'Individual';
+          lastName = demographics?.lastName || 'Assessment';
+        } catch (error) {
+          console.warn('Failed to parse demographics for individual filename');
+        }
+        
+        filename = `individual-assessment-${firstName}-${lastName}-${assessment.id}.pdf`;
       }
       
       // Set appropriate headers for PDF download
