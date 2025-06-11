@@ -244,11 +244,21 @@ export class ProfessionalPDFGenerator {
       demographics = {};
     }
     
-    let scores = { overallPercentage: 0, sections: {}, strengths: [], improvementAreas: [] };
+    let scores: any = { overallPercentage: 0, sections: {}, strengths: [], improvementAreas: [] };
     try {
-      scores = typeof assessment.scores === 'string' 
+      const parsedScores = typeof assessment.scores === 'string' 
         ? JSON.parse(assessment.scores) 
-        : assessment.scores || scores;
+        : assessment.scores;
+      
+      if (parsedScores && typeof parsedScores === 'object') {
+        scores = {
+          overallPercentage: parsedScores.overallPercentage || 0,
+          sections: parsedScores.sections || {},
+          strengths: Array.isArray(parsedScores.strengths) ? parsedScores.strengths : [],
+          improvementAreas: Array.isArray(parsedScores.improvementAreas) ? parsedScores.improvementAreas : [],
+          ...parsedScores
+        };
+      }
     } catch (error) {
       console.warn('Failed to parse scores, using defaults:', error);
     }
@@ -385,19 +395,27 @@ export class ProfessionalPDFGenerator {
       this.drawParagraph('Section-wise scores not available for this assessment.', { fontSize: 10 });
     }
 
-    // Psychographic Profile Enhancements
+    // Psychographic Profile Enhancements with safety checks
     this.checkPageBreak(150);
     this.drawSectionHeader('Your Psychographic Profiles');
     
-    // General Profile
+    // General Profile with fallback
     this.drawParagraph('General Profile:', { bold: true, fontSize: 12 });
-    this.drawProfileSection(profile, '');
+    if (profile) {
+      this.drawProfileSection(profile, '');
+    } else {
+      this.drawParagraph('Your psychographic profile will be generated based on your assessment responses. This profile helps identify your relationship approach and compatibility factors.', { fontSize: 10 });
+    }
 
     // Gender-Specific Profile (if available)
     if (genderProfile) {
       this.checkPageBreak(150);
       this.drawParagraph('Gender-Specific Profile:', { bold: true, fontSize: 12 });
       this.drawProfileSection(genderProfile, '');
+    } else {
+      this.checkPageBreak(100);
+      this.drawParagraph('Gender-Specific Profile:', { bold: true, fontSize: 12 });
+      this.drawParagraph('Your gender-specific profile insights will be included in future assessment iterations.', { fontSize: 10 });
     }
 
     // Statistical Comparison Section
@@ -453,16 +471,26 @@ export class ProfessionalPDFGenerator {
     this.drawSectionHeader('Next Steps');
     
     this.drawParagraph(
-      'We recommend discussing these results with your significant other or potential spouse to better understand how your perspectives align. The 100 Marriage book can serve as an excellent companion to this assessment.'
+      'Based on your results, consider discussing the findings with your partner or a counselor. Review areas with lower scores and celebrate strengths. Here are some specific recommendations:'
     );
     
+    this.drawParagraph('• Share this report with your partner to initiate meaningful conversations', { indent: true });
+    this.drawParagraph('• Focus on strengthening areas identified for growth', { indent: true });
+    this.drawParagraph('• Consider reading "The 100 Marriage Decisions & Declarations" for deeper insights', { indent: true });
+    this.drawParagraph('• Schedule a consultation for personalized guidance', { indent: true });
+    
     this.drawParagraph(
-      'For a more in-depth discussion of your results, schedule a consultation:'
+      'For professional consultation and personalized guidance:'
     );
     
     this.drawParagraph(
       'https://lawrence-adjah.clientsecure.me/request/service',
       { bold: true }
+    );
+    
+    this.drawParagraph(
+      'Thank you for completing The 100 Marriage Assessment. We hope these insights contribute to your relationship journey.',
+      { fontSize: 10 }
     );
 
     // Appendix: Assessment Information
@@ -664,23 +692,29 @@ export class ProfessionalPDFGenerator {
     
     if (coupleReport.differenceAnalysis.alignmentAreas.length > 0) {
       this.drawParagraph('Areas of Strong Alignment:', { bold: true });
-      coupleReport.differenceAnalysis.alignmentAreas.forEach(area => {
-        this.drawParagraph(`• ${area.section}: ${area.analysis}`, { indent: true });
+      coupleReport.differenceAnalysis.alignmentAreas.forEach((area: any) => {
+        if (area && area.section && area.analysis) {
+          this.drawParagraph(`• ${area.section}: ${area.analysis}`, { indent: true });
+        }
       });
     }
 
     if (coupleReport.differenceAnalysis.significantDifferences.length > 0) {
       this.drawParagraph('Areas for Discussion:', { bold: true });
-      coupleReport.differenceAnalysis.significantDifferences.forEach(diff => {
-        this.drawParagraph(`• ${diff.section}: ${diff.analysis}`, { indent: true });
+      coupleReport.differenceAnalysis.significantDifferences.forEach((diff: any) => {
+        if (diff && diff.section && diff.analysis) {
+          this.drawParagraph(`• ${diff.section}: ${diff.analysis}`, { indent: true });
+        }
       });
     }
 
     // Recommendations
     this.checkPageBreak(150);
     this.drawSectionHeader('Recommendations for Your Relationship');
-    coupleReport.recommendations.forEach(recommendation => {
-      this.drawParagraph(`• ${recommendation}`, { indent: true });
+    coupleReport.recommendations.forEach((recommendation: any) => {
+      if (recommendation && typeof recommendation === 'string') {
+        this.drawParagraph(`• ${recommendation}`, { indent: true });
+      }
     });
 
     // Footer
