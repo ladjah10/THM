@@ -547,26 +547,46 @@ export class ProfessionalPDFGenerator {
     }
 
     // Psychographic Profile Enhancements with safety checks
-    this.checkPageBreak(150);
-    this.drawSectionHeader('Your Psychographic Profiles');
+    this.ensureSectionIntegrity(200);
+    this.drawSectionHeader('Psychographic Profile');
     
-    // General Profile with fallback
-    this.drawParagraph('General Profile:', { bold: true, fontSize: 12 });
+    // General Profile section
     if (profile) {
       this.drawProfileSection(profile, '');
     } else {
       this.drawParagraph('Your psychographic profile will be generated based on your assessment responses. This profile helps identify your relationship approach and compatibility factors.', { fontSize: 10 });
     }
 
-    // Gender-Specific Profile (if available)
-    if (genderProfile) {
-      this.checkPageBreak(150);
-      this.drawParagraph('Gender-Specific Profile:', { bold: true, fontSize: 12 });
-      this.drawProfileSection(genderProfile, '');
+    // Gender-Specific Profile section
+    this.ensureSectionIntegrity(150);
+    this.drawSectionHeader('Psychographic Profile (Gender-Specific)');
+    
+    const userGender = demographics?.gender?.toLowerCase();
+    
+    if (genderProfile && userGender) {
+      // Display gender-specific insights based on user's gender
+      if (userGender === 'female') {
+        this.drawParagraph('Female-Specific Insights:', { bold: true, fontSize: 11 });
+        this.drawProfileSection(genderProfile, '');
+        this.drawParagraph(
+          'As a woman taking this assessment, your responses reflect perspectives on relationship dynamics, communication styles, and partnership expectations that are informed by both personal values and cultural experiences.',
+          { fontSize: 10, indent: true }
+        );
+      } else if (userGender === 'male') {
+        this.drawParagraph('Male-Specific Insights:', { bold: true, fontSize: 11 });
+        this.drawProfileSection(genderProfile, '');
+        this.drawParagraph(
+          'As a man taking this assessment, your responses reveal approaches to leadership, protection, provision, and partnership that reflect both personal convictions and traditional masculine perspectives on marriage.',
+          { fontSize: 10, indent: true }
+        );
+      } else {
+        this.drawProfileSection(genderProfile, '');
+      }
     } else {
-      this.checkPageBreak(100);
-      this.drawParagraph('Gender-Specific Profile:', { bold: true, fontSize: 12 });
-      this.drawParagraph('Your gender-specific profile insights will be included in future assessment iterations.', { fontSize: 10 });
+      this.drawParagraph(
+        'Gender-specific profile insights provide additional context based on traditional perspectives and research on relationship dynamics. These insights will be included as profile data becomes available.',
+        { fontSize: 10 }
+      );
     }
 
     // Statistical Comparison Section
@@ -576,13 +596,13 @@ export class ProfessionalPDFGenerator {
     // Calculate actual statistics from assessment data with safety checks
     const percentileRank = this.calculatePercentileRank(overallScore);
     const overallAverage = 65.2; // This would come from actual database statistics
-    const userGender = demographics?.gender || 'unknown';
-    const genderAverage = userGender === 'male' ? 62.8 : userGender === 'female' ? 67.6 : 65.2;
+    const statisticsGender = demographics?.gender || 'unknown';
+    const genderAverage = statisticsGender === 'male' ? 62.8 : statisticsGender === 'female' ? 67.6 : 65.2;
     
     this.drawParagraph(`Your Score: ${overallScore.toFixed(1)}%`, { bold: true });
     this.drawParagraph(`Overall Average: ${overallAverage}%`);
-    if (userGender !== 'unknown') {
-      this.drawParagraph(`${userGender === 'male' ? 'Male' : 'Female'} Average: ${genderAverage}%`);
+    if (statisticsGender !== 'unknown') {
+      this.drawParagraph(`${statisticsGender === 'male' ? 'Male' : 'Female'} Average: ${genderAverage}%`);
     }
     
     // Add percentile summary
@@ -828,11 +848,20 @@ export class ProfessionalPDFGenerator {
     this.drawSectionHeader('Appendix: Psychographic Profiles Reference');
     
     this.drawParagraph(
-      'The 100 Marriage Assessment identifies distinct psychographic profiles based on response patterns, values alignment, and relationship approaches. This comprehensive reference provides detailed descriptions of all profile types identified in Lawrence Adjah\'s research.',
+      'The 100 Marriage Assessment identifies distinct psychographic profiles based on response patterns, values alignment, and relationship approaches. This comprehensive reference provides detailed descriptions of all profile types with both general and gender-specific insights.',
       { fontSize: 11 }
     );
     
-    this.currentY += 20;
+    this.currentY += 15;
+    
+    // Add section headers matching the main report
+    this.drawSectionHeader('General Psychographic Profiles');
+    this.drawParagraph(
+      'These profiles apply to all participants regardless of gender, focusing on core relationship approaches and values.',
+      { fontSize: 10 }
+    );
+    
+    this.currentY += 10;
 
     const comprehensiveProfiles = [
       {
@@ -954,6 +983,93 @@ export class ProfessionalPDFGenerator {
       'Remember: All profile combinations can build successful marriages with mutual understanding, communication, and commitment to growth.',
       { fontSize: 10, bold: true }
     );
+
+    // Add gender-specific profiles section
+    this.ensureSectionIntegrity(300);
+    this.drawSectionHeader('Gender-Specific Profile Insights');
+    
+    this.drawParagraph(
+      'These insights provide additional context based on traditional perspectives and research on relationship dynamics, tailored to gender-specific approaches to marriage and partnership.',
+      { fontSize: 10 }
+    );
+    
+    this.currentY += 15;
+    
+    // Female-specific profiles
+    this.drawParagraph('Female-Specific Profiles:', { bold: true, fontSize: 12 });
+    this.drawParagraph(
+      'These profiles reflect traditional feminine strengths and approaches to relationship building, emphasizing nurturing, communication, and emotional connection.',
+      { fontSize: 10, indent: true }
+    );
+    
+    const femaleProfiles = [
+      {
+        name: 'The Nurturing Leader (Women Only)',
+        description: 'Combines traditional feminine strengths with leadership qualities. Shows natural ability to nurture while maintaining personal strength and clear boundaries in relationships.',
+        characteristics: ['Nurturing leadership', 'Emotional intelligence', 'Family focus', 'Balanced strength and gentleness']
+      },
+      {
+        name: 'The Faithful Companion (Women Only)', 
+        description: 'Emphasizes partnership and support with strong spiritual foundation. Values loyalty, commitment, and building a godly home environment.',
+        characteristics: ['Faithful partnership', 'Spiritual strength', 'Home-building focus', 'Loyal commitment']
+      },
+      {
+        name: 'The Wise Counselor (Women Only)',
+        description: 'Natural ability to provide guidance and emotional support. Excels at communication and helping resolve relationship challenges through wisdom and empathy.',
+        characteristics: ['Wise guidance', 'Emotional support', 'Communication excellence', 'Empathetic understanding']
+      }
+    ];
+    
+    femaleProfiles.forEach(profile => {
+      this.checkPageBreak(80);
+      this.drawParagraph(profile.name, { bold: true, fontSize: 11 });
+      this.drawParagraph(profile.description, { fontSize: 10, indent: true });
+      if (profile.characteristics.length > 0) {
+        profile.characteristics.forEach(char => {
+          this.drawParagraph(`• ${char}`, { indent: true, fontSize: 9 });
+        });
+      }
+      this.currentY += 10;
+    });
+    
+    this.currentY += 15;
+    
+    // Male-specific profiles
+    this.drawParagraph('Male-Specific Profiles:', { bold: true, fontSize: 12 });
+    this.drawParagraph(
+      'These profiles reflect traditional masculine approaches to leadership, protection, and provision in marriage relationships.',
+      { fontSize: 10, indent: true }
+    );
+    
+    const maleProfiles = [
+      {
+        name: 'The Guardian Leader (Men Only)',
+        description: 'Traditional masculine leadership emphasizing protection, provision, and spiritual guidance. Shows strong potential for godly husband and father roles.',
+        characteristics: ['Protective leadership', 'Provider focus', 'Spiritual guidance', 'Family security emphasis']
+      },
+      {
+        name: 'The Servant Leader (Men Only)',
+        description: 'Leadership through service and sacrifice. Demonstrates Christ-like leadership by putting family needs first while maintaining strength and direction.',
+        characteristics: ['Servant leadership', 'Sacrificial love', 'Family-first mentality', 'Strength through service']
+      },
+      {
+        name: 'The Steadfast Protector (Men Only)',
+        description: 'Strong commitment to family protection and security. Values traditional roles while adapting to modern relationship dynamics with wisdom.',
+        characteristics: ['Family protection', 'Security provision', 'Traditional values', 'Adaptive wisdom']
+      }
+    ];
+    
+    maleProfiles.forEach(profile => {
+      this.checkPageBreak(80);
+      this.drawParagraph(profile.name, { bold: true, fontSize: 11 });
+      this.drawParagraph(profile.description, { fontSize: 10, indent: true });
+      if (profile.characteristics.length > 0) {
+        profile.characteristics.forEach(char => {
+          this.drawParagraph(`• ${char}`, { indent: true, fontSize: 9 });
+        });
+      }
+      this.currentY += 10;
+    });
   }
 
   // Couple Assessment Report Generation
