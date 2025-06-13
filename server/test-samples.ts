@@ -111,9 +111,9 @@ export function createCoupleAssessmentSample(): CoupleAssessmentReport {
       gender: 'female'
     },
     profile: {
-      name: 'Progressive Balanced',
+      name: 'Modern Balanced',
       description: 'You have a balanced approach to relationships with some progressive views. You value equality, communication, and partnership.',
-      matchingProfiles: ['Progressive Flexible', 'Traditional Moderate', 'Balanced Adaptor'],
+      matchingProfiles: ['Modern Flexible', 'Traditional Moderate', 'Balanced Adaptor'],
       compatibilityNotes: 'You thrive with partners who value equality while respecting traditional elements.',
       icon: 'PB',
       color: '#cc6699'

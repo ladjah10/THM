@@ -61,7 +61,7 @@ async function sendTestCoupleAssessment() {
     responses: {}
   };
   
-  // Spouse (Progressive-Leaning Female Pattern)
+  // Spouse (Modern-Leaning Female Pattern)
   const spouseAssessment: AssessmentResult = {
     id: `spouse-${coupleId}`,
     email: 'lawrence@lawrenceadjah.com',  // Using the same email for testing

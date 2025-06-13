@@ -24,7 +24,7 @@ The assessment uses **section-based percentage scoring** to determine psychograp
 - **Your Marriage Life**: ≥80%
 - **Description**: Balance spiritual conviction with practical adaptability, value communication and compromise
 
-### 4. **Pragmatic Partners**
+### 4. **Modern Partners**
 - **Your Finances**: ≥85%
 - **Your Marriage Life**: ≥80%
 - **Description**: Practical mindset, clear communication, shared responsibility, mutual respect
