@@ -297,35 +297,41 @@ export function addProfilesReferenceSection(doc: PDFKit.PDFDocument): void {
  */
 function addProfileToDocument(doc: PDFKit.PDFDocument, profile: ProfileReference): void {
   const pageWidth = doc.page.width - doc.page.margins.left - doc.page.margins.right;
-  const iconSize = 35; // Smaller icon size
+  const iconSize = 40; // Increased icon size to 40px as specified
   const iconX = doc.x;
-  const textX = iconX + iconSize + 10;
-  const textWidth = pageWidth - iconSize - 10;
+  const textX = iconX + iconSize + 15; // Increased spacing between icon and text
+  const textWidth = pageWidth - iconSize - 15;
   
   // Calculate if we need a page break, with less space required
   if (doc.y > doc.page.height - 130) {
     doc.addPage();
   }
   
+  // Save current Y position for icon placement
+  const iconY = doc.y - 15; // Move icon up slightly as specified
+  
   // Draw a circle with the profile initials
   const initials = profile.name.split(' ').map(word => word[0]).join('');
   
-  doc.circle(iconX + iconSize/2, doc.y + iconSize/2, iconSize/2)
+  doc.circle(iconX + iconSize/2, iconY + iconSize/2, iconSize/2)
      .fillAndStroke('#e3f2fd', '#3498db');
      
   doc.font('Helvetica-Bold')
-     .fontSize(14) // Smaller font
+     .fontSize(14)
      .fillColor('#2980b9')
-     .text(initials, iconX, doc.y + iconSize/3, { 
+     .text(initials, iconX, iconY + iconSize/3, { 
        width: iconSize, 
        align: 'center' 
      });
   
-  // Add profile name
+  // Ensure proper spacing between icon and text
+  doc.moveDown(0.5);
+  
+  // Add profile name with proper vertical alignment
   doc.font('Helvetica-Bold')
-     .fontSize(11) // Smaller font
+     .fontSize(11)
      .fillColor('#2c3e50')
-     .text(profile.name, textX, doc.y - iconSize, { 
+     .text(profile.name, textX, doc.y, { 
        width: textWidth,
        continued: true
      });
@@ -341,14 +347,15 @@ function addProfileToDocument(doc: PDFKit.PDFDocument, profile: ProfileReference
     doc.text(''); // End the line if no gender specification
   }
   
-  // Add profile description - more compact
+  // Add proper spacing and profile description
+  doc.moveDown(0.3);
   doc.font('Helvetica')
-     .fontSize(9) // Smaller font
+     .fontSize(9)
      .fillColor('#555')
      .text(profile.description, textX, doc.y, { 
        width: textWidth 
      })
-     .moveDown(0.3); // Less space
+     .moveDown(0.3);
   
   // Add compatibility information if available - more compact
   if (profile.implications) {

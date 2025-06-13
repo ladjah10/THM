@@ -407,7 +407,7 @@ export async function generateIndividualAssessmentPDF(assessment: AssessmentResu
         .text(`Your overall score of ${overallScore.toFixed(1).replace('.0', '')}% is ${percentileDesc} compared to other ${genderText}.`, 70, overallBoxY + 125);
         
       // Book promotion
-      doc.moveDown(2)
+      doc.moveDown(1.5)
         .fontSize(16)
         .font('Helvetica-Bold')
         .fillColor('#2d3748')
