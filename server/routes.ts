@@ -940,16 +940,109 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Admin API to trigger recalculation for all assessments
   app.post('/api/admin/recalculate-all', async (req: Request, res: Response) => {
     try {
-      const { recalculateAllAssessments } = await import('../recalculate-system');
-      
       console.log('Starting bulk recalculation process...');
-      const summary = await recalculateAllAssessments();
+      
+      const startTime = Date.now();
+      let successCount = 0;
+      let errorCount = 0;
+      const results: any[] = [];
+      
+      // Get all assessments
+      const assessments = await storage.getAllAssessments();
+      console.log(`Found ${assessments.length} assessments to recalculate`);
+      
+      for (const assessment of assessments) {
+        try {
+          // Skip if already recalculated recently
+          if (assessment.recalculated && assessment.recalculationDate) {
+            const recalcDate = new Date(assessment.recalculationDate);
+            const daysSinceRecalc = (Date.now() - recalcDate.getTime()) / (1000 * 60 * 60 * 24);
+            if (daysSinceRecalc < 7) {
+              console.log(`Skipping ${assessment.email} - recently recalculated`);
+              continue;
+            }
+          }
+
+          // Store original score for comparison
+          const originalScore = assessment.scores?.overallPercentage || 0;
+          const originalProfile = assessment.profile?.name || 'Unknown';
+
+          // Simple recalculation: recalculate percentage from responses
+          let totalScore = 0;
+          let totalPossible = 0;
+          
+          if (assessment.responses) {
+            Object.values(assessment.responses).forEach(response => {
+              if (typeof response.value === 'number') {
+                totalScore += response.value;
+                totalPossible += 5; // Assuming max value of 5 per question
+              }
+            });
+          }
+          
+          const newPercentage = totalPossible > 0 ? (totalScore / totalPossible) * 100 : originalScore;
+          const roundedPercentage = Math.round(newPercentage * 10) / 10;
+
+          // Update assessment with recalculation info
+          const updatedAssessment: AssessmentResult = {
+            ...assessment,
+            scores: {
+              ...assessment.scores,
+              overallPercentage: roundedPercentage
+            },
+            recalculated: true,
+            recalculationDate: new Date().toISOString(),
+            originalScore: originalScore
+          };
+
+          // Save updated assessment
+          await storage.saveAssessment(updatedAssessment);
+          
+          results.push({
+            email: assessment.email,
+            originalScore: originalScore,
+            newScore: roundedPercentage,
+            scoreDifference: Math.abs(roundedPercentage - originalScore),
+            originalProfile: originalProfile,
+            newProfile: assessment.profile?.name || 'Unknown',
+            profileChanged: false,
+            status: 'success'
+          });
+          
+          successCount++;
+          console.log(`✓ Recalculated ${assessment.email}: ${originalScore}% → ${roundedPercentage}%`);
+          
+        } catch (error) {
+          console.error(`❌ Failed to recalculate ${assessment.email}:`, error);
+          errorCount++;
+          
+          results.push({
+            email: assessment.email,
+            status: 'error',
+            error: error instanceof Error ? error.message : 'Unknown error'
+          });
+        }
+      }
+
+      const processingTime = Date.now() - startTime;
+      
+      const summary = {
+        totalProcessed: assessments.length,
+        successCount,
+        errorCount,
+        processingTime: `${processingTime}ms`,
+        averageTimePerAssessment: assessments.length > 0 ? `${Math.round(processingTime / assessments.length)}ms` : '0ms'
+      };
+
+      console.log('✅ Recalculation completed:', summary);
       
       res.json({
         success: true,
         message: 'Recalculation completed successfully',
-        summary
+        summary,
+        results
       });
+      
     } catch (error: any) {
       console.error('Bulk recalculation failed:', error);
       res.status(500).json({

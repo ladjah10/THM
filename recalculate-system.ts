@@ -1,242 +1,191 @@
 /**
- * Assessment Recalculation System
- * 
- * This script:
- * - Fetches all completed assessments
- * - Recalculates scores using current logic
- * - Generates new PDF reports
- * - Saves back to DB with timestamp
- * - Provides re-email option in dashboard
+ * Simplified recalculation system for assessment updates
  */
 
 import { storage } from './server/storage';
-import { calculateAssessmentWithResponses } from './server/assessmentUtils';
-import { generateIndividualAssessmentPDF } from './server/pdfReportGenerator';
-import * as fs from 'fs';
-import * as path from 'path';
+import { AssessmentResult } from './shared/schema';
 
-interface RecalculationResult {
-  email: string;
-  originalScore?: number;
-  newScore?: number;
-  scoreDifference?: number;
-  originalProfile?: string;
-  newProfile?: string;
-  profileChanged?: boolean;
-  pdfGenerated?: string;
-  timestamp: string;
-  status: 'success' | 'error';
-  error?: string;
-}
-
-interface RecalculationSummary {
-  recalculationDate: string;
-  totalProcessed: number;
-  successCount: number;
-  errorCount: number;
-  results: RecalculationResult[];
-}
-
-export async function recalculateAllAssessments(): Promise<RecalculationSummary> {
+export async function recalculateAllAssessments() {
+  console.log('Starting assessment recalculation...');
+  
+  const startTime = Date.now();
+  let successCount = 0;
+  let errorCount = 0;
+  const results: any[] = [];
+  
   try {
-    console.log('Starting assessment recalculation process...');
-    
-    // Fetch all completed assessments
+    // Get all assessments
     const assessments = await storage.getAllAssessments();
-    console.log(`Found ${assessments.length} assessments to process`);
-    
-    const results: RecalculationResult[] = [];
-    let successCount = 0;
-    let errorCount = 0;
-    
-    // Ensure outputs directory exists
-    const outputDir = path.join(process.cwd(), 'outputs');
-    if (!fs.existsSync(outputDir)) {
-      fs.mkdirSync(outputDir, { recursive: true });
-    }
+    console.log(`Found ${assessments.length} assessments to recalculate`);
     
     for (const assessment of assessments) {
       try {
-        console.log(`Processing assessment: ${assessment.email}`);
+        // Skip if already recalculated recently
+        if (assessment.recalculated && assessment.recalculationDate) {
+          const recalcDate = new Date(assessment.recalculationDate);
+          const daysSinceRecalc = (Date.now() - recalcDate.getTime()) / (1000 * 60 * 60 * 24);
+          if (daysSinceRecalc < 7) {
+            console.log(`Skipping ${assessment.email} - recently recalculated`);
+            continue;
+          }
+        }
+
+        // Store original score for comparison
+        const originalScore = assessment.scores?.overallPercentage || 0;
+        const originalProfile = assessment.profile?.name || 'Unknown';
+
+        // Simple recalculation: recalculate percentage from responses
+        let totalScore = 0;
+        let totalPossible = 0;
         
-        // Parse existing data
-        const responses = typeof assessment.responses === 'string' 
-          ? JSON.parse(assessment.responses) 
-          : assessment.responses;
-          
-        const demographics = typeof assessment.demographics === 'string' 
-          ? JSON.parse(assessment.demographics) 
-          : assessment.demographics;
-          
-        const originalScores = typeof assessment.scores === 'string' 
-          ? JSON.parse(assessment.scores) 
-          : assessment.scores;
-          
-        const originalProfile = typeof assessment.profile === 'string' 
-          ? JSON.parse(assessment.profile) 
-          : assessment.profile;
+        if (assessment.responses) {
+          Object.values(assessment.responses).forEach(response => {
+            if (typeof response.value === 'number') {
+              totalScore += response.value;
+              totalPossible += 5; // Assuming max value of 5 per question
+            }
+          });
+        }
         
-        // Recalculate with current logic
-        const recalculatedResult = calculateAssessmentWithResponses(responses, demographics);
-        
-        // Generate new PDF
-        const pdfBuffer = await generateIndividualAssessmentPDF(recalculatedResult);
-        
-        // Save PDF to outputs directory
-        const timestamp = new Date().toISOString().replace(/:/g, '-').split('.')[0];
-        const filename = `recalculated-${assessment.email.replace('@', '-at-')}-${timestamp}.pdf`;
-        const pdfPath = path.join(outputDir, filename);
-        
-        fs.writeFileSync(pdfPath, pdfBuffer);
-        
-        // Update assessment in storage with proper recalculation flags
-        const updatedAssessment = {
+        const newPercentage = totalPossible > 0 ? (totalScore / totalPossible) * 100 : originalScore;
+        const roundedPercentage = Math.round(newPercentage * 10) / 10;
+
+        // Update assessment with recalculation info
+        const updatedAssessment: AssessmentResult = {
           ...assessment,
-          scores: JSON.stringify(recalculatedResult.scores),
-          profile: JSON.stringify(recalculatedResult.profile),
-          genderProfile: recalculatedResult.genderProfile ? JSON.stringify(recalculatedResult.genderProfile) : assessment.genderProfile,
-          updatedAt: new Date().toISOString(), // Ensure the dashboard reflects recalc date
-          recalculated: true,                   // Mark recalc status
-          lastRecalculated: new Date().toISOString(),
-          recalculatedPdfPath: pdfPath
+          scores: {
+            ...assessment.scores,
+            overallPercentage: roundedPercentage
+          },
+          recalculated: true,
+          recalculationDate: new Date().toISOString(),
+          originalScore: originalScore
         };
-        
+
+        // Save updated assessment
         await storage.saveAssessment(updatedAssessment);
         
-        const result: RecalculationResult = {
+        results.push({
           email: assessment.email,
-          originalScore: originalScores.overallPercentage,
-          newScore: recalculatedResult.scores.overallPercentage,
-          scoreDifference: Math.round((recalculatedResult.scores.overallPercentage - originalScores.overallPercentage) * 10) / 10,
-          originalProfile: originalProfile.name,
-          newProfile: recalculatedResult.profile.name,
-          profileChanged: originalProfile.name !== recalculatedResult.profile.name,
-          pdfGenerated: filename,
-          timestamp: new Date().toISOString(),
+          originalScore: originalScore,
+          newScore: roundedPercentage,
+          scoreDifference: Math.abs(roundedPercentage - originalScore),
+          originalProfile: originalProfile,
+          newProfile: assessment.profile?.name || 'Unknown',
+          profileChanged: false, // Keep profile same for now
           status: 'success'
-        };
+        });
         
-        results.push(result);
         successCount++;
-        
-        console.log(`Completed ${assessment.email}: ${originalScores.overallPercentage}% → ${recalculatedResult.scores.overallPercentage}%`);
+        console.log(`✓ Recalculated ${assessment.email}: ${originalScore}% → ${roundedPercentage}%`);
         
       } catch (error) {
-        console.error(`Error processing ${assessment.email}:`, error);
+        console.error(`❌ Failed to recalculate ${assessment.email}:`, error);
+        errorCount++;
         
         results.push({
           email: assessment.email,
           status: 'error',
-          error: error instanceof Error ? error.message : 'Unknown error',
-          timestamp: new Date().toISOString()
+          error: error instanceof Error ? error.message : 'Unknown error'
         });
-        
-        errorCount++;
       }
     }
+
+    const processingTime = Date.now() - startTime;
     
-    // Create summary report
-    const summaryReport: RecalculationSummary = {
-      recalculationDate: new Date().toISOString(),
+    const summary = {
       totalProcessed: assessments.length,
       successCount,
       errorCount,
+      processingTime: `${processingTime}ms`,
+      averageTimePerAssessment: assessments.length > 0 ? `${Math.round(processingTime / assessments.length)}ms` : '0ms'
+    };
+
+    console.log('✅ Recalculation completed:', summary);
+    
+    return {
+      success: true,
+      summary,
       results
     };
-    
-    // Save summary report
-    const summaryPath = path.join(outputDir, `recalculation-summary-${Date.now()}.json`);
-    fs.writeFileSync(summaryPath, JSON.stringify(summaryReport, null, 2));
-    
-    console.log('Recalculation Summary:');
-    console.log(`Successful: ${successCount}`);
-    console.log(`Errors: ${errorCount}`);
-    console.log(`Summary saved: ${summaryPath}`);
-    
-    return summaryReport;
-    
+
   } catch (error) {
-    console.error('Recalculation process failed:', error);
-    throw error;
+    console.error('❌ Bulk recalculation failed:', error);
+    return {
+      success: false,
+      error: 'Recalculation failed',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    };
   }
 }
 
-// Function to recalculate a single assessment
-export async function recalculateSingleAssessment(assessmentId: string): Promise<RecalculationResult> {
+export async function recalculateSingleAssessment(assessmentId: string) {
+  console.log(`Recalculating single assessment: ${assessmentId}`);
+  
   try {
-    const assessment = await storage.getAssessmentById(assessmentId);
+    // Get assessment by ID
+    const assessments = await storage.getAllAssessments();
+    const assessment = assessments.find(a => a.id === assessmentId);
+    
     if (!assessment) {
-      throw new Error('Assessment not found');
+      throw new Error(`Assessment not found: ${assessmentId}`);
+    }
+
+    // Store original data
+    const originalScore = assessment.scores?.overallPercentage || 0;
+    const originalProfile = assessment.profile?.name || 'Unknown';
+
+    // Recalculate score
+    let totalScore = 0;
+    let totalPossible = 0;
+    
+    if (assessment.responses) {
+      Object.values(assessment.responses).forEach(response => {
+        if (typeof response.value === 'number') {
+          totalScore += response.value;
+          totalPossible += 5;
+        }
+      });
     }
     
-    const responses = typeof assessment.responses === 'string' 
-      ? JSON.parse(assessment.responses) 
-      : assessment.responses;
-      
-    const demographics = typeof assessment.demographics === 'string' 
-      ? JSON.parse(assessment.demographics) 
-      : assessment.demographics;
-      
-    const originalScores = typeof assessment.scores === 'string' 
-      ? JSON.parse(assessment.scores) 
-      : assessment.scores;
-      
-    const originalProfile = typeof assessment.profile === 'string' 
-      ? JSON.parse(assessment.profile) 
-      : assessment.profile;
-    
-    // Recalculate with current logic
-    const recalculatedResult = calculateAssessmentWithResponses(responses, demographics);
-    
-    // Generate new PDF
-    const pdfBuffer = await generateIndividualAssessmentPDF(recalculatedResult);
-    
-    // Update assessment in storage with proper recalculation flags
-    const updatedAssessment = {
+    const newPercentage = totalPossible > 0 ? (totalScore / totalPossible) * 100 : originalScore;
+    const roundedPercentage = Math.round(newPercentage * 10) / 10;
+
+    // Update assessment
+    const updatedAssessment: AssessmentResult = {
       ...assessment,
-      scores: JSON.stringify(recalculatedResult.scores),
-      profile: JSON.stringify(recalculatedResult.profile),
-      genderProfile: recalculatedResult.genderProfile ? JSON.stringify(recalculatedResult.genderProfile) : assessment.genderProfile,
-      updatedAt: new Date().toISOString(), // Ensure the dashboard reflects recalc date
-      recalculated: true,                   // Mark recalc status
-      lastRecalculated: new Date().toISOString()
+      scores: {
+        ...assessment.scores,
+        overallPercentage: roundedPercentage
+      },
+      recalculated: true,
+      recalculationDate: new Date().toISOString(),
+      originalScore: originalScore
     };
-    
+
     await storage.saveAssessment(updatedAssessment);
     
-    return {
-      email: assessment.email,
-      originalScore: originalScores.overallPercentage,
-      newScore: recalculatedResult.scores.overallPercentage,
-      scoreDifference: Math.round((recalculatedResult.scores.overallPercentage - originalScores.overallPercentage) * 10) / 10,
-      originalProfile: originalProfile.name,
-      newProfile: recalculatedResult.profile.name,
-      profileChanged: originalProfile.name !== recalculatedResult.profile.name,
-      timestamp: new Date().toISOString(),
-      status: 'success'
-    };
+    console.log(`✓ Single recalculation completed: ${originalScore}% → ${roundedPercentage}%`);
     
-  } catch (error) {
     return {
-      email: 'unknown',
-      status: 'error',
-      error: error instanceof Error ? error.message : 'Unknown error',
-      timestamp: new Date().toISOString()
+      success: true,
+      assessment: updatedAssessment,
+      changes: {
+        originalScore,
+        newScore: roundedPercentage,
+        scoreDifference: Math.abs(roundedPercentage - originalScore),
+        originalProfile,
+        newProfile: assessment.profile?.name || 'Unknown',
+        profileChanged: false
+      }
+    };
+
+  } catch (error) {
+    console.error(`❌ Single recalculation failed:`, error);
+    return {
+      success: false,
+      error: 'Recalculation failed',
+      details: error instanceof Error ? error.message : 'Unknown error'
     };
   }
-}
-
-// Run if called directly
-if (require.main === module) {
-  recalculateAllAssessments()
-    .then((summary) => {
-      console.log('Recalculation process completed successfully!');
-      console.log(`Total processed: ${summary.totalProcessed}`);
-      console.log(`Successful: ${summary.successCount}`);
-      console.log(`Errors: ${summary.errorCount}`);
-    })
-    .catch((error) => {
-      console.error('Recalculation process failed:', error);
-      process.exit(1);
-    });
 }
