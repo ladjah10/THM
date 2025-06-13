@@ -184,7 +184,7 @@ export class ProfessionalPDFGenerator {
     this.currentY += 30; // Reduced from 35 for tighter spacing
   }
 
-  private drawParagraph(text: string, options: { indent?: boolean, bold?: boolean, fontSize?: number, align?: string } = {}): void {
+  private drawParagraph(text: string, options: { indent?: boolean, bold?: boolean, fontSize?: number, align?: 'left' | 'right' | 'center' | 'justify' } = {}): void {
     const xPosition = LAYOUT.MARGIN + (options.indent ? 20 : 0);
     const fontSize = options.fontSize || FONTS.BODY.size;
     const textWidth = LAYOUT.CONTENT_WIDTH - (options.indent ? 20 : 0);
@@ -200,7 +200,7 @@ export class ProfessionalPDFGenerator {
       .fontSize(fontSize)
       .text(text, xPosition, this.currentY, {
         width: textWidth,
-        align: (options.align as 'left' | 'right' | 'center' | 'justify') || 'left',
+        align: options.align || 'left',
         continued: false
       });
 
@@ -247,6 +247,10 @@ export class ProfessionalPDFGenerator {
   }
 
   private drawProfileSection(profile: any, title: string): void {
+    // Estimate profile section height and ensure it stays together
+    const estimatedHeight = 120; // Profile header + description + characteristics
+    this.ensureSectionIntegrity(estimatedHeight);
+    
     if (title) {
       this.drawSectionHeader(title);
     }
@@ -587,8 +591,12 @@ export class ProfessionalPDFGenerator {
       { fontSize: 10, indent: true }
     );
     
-    // Strengths and Improvements with safety checks
-    this.checkPageBreak(200);
+    // Strengths and Improvements with section integrity
+    const strengthsCount = scores?.strengths?.length || 1;
+    const improvementCount = scores?.improvementAreas?.length || 1;
+    const estimatedHeight = 80 + (strengthsCount * 15) + (improvementCount * 15);
+    
+    this.ensureSectionIntegrity(estimatedHeight);
     this.drawSectionHeader('Key Insights');
     
     this.drawParagraph('Your Strengths:', { bold: true });
@@ -602,6 +610,8 @@ export class ProfessionalPDFGenerator {
       this.drawParagraph('• Areas of strength will be identified based on your responses', { indent: true });
     }
 
+    this.addSectionBreak();
+    
     this.drawParagraph('Areas for Growth:', { bold: true });
     if (scores?.improvementAreas && Array.isArray(scores.improvementAreas) && scores.improvementAreas.length > 0) {
       scores.improvementAreas.forEach((area: any) => {
@@ -613,8 +623,8 @@ export class ProfessionalPDFGenerator {
       this.drawParagraph('• Growth opportunities will be identified based on your responses', { indent: true });
     }
 
-    // Next Steps Section
-    this.checkPageBreak(150);
+    // Next Steps Section with section integrity
+    this.ensureSectionIntegrity(180);
     this.drawSectionHeader('Next Steps');
     
     this.drawParagraph(
@@ -625,6 +635,8 @@ export class ProfessionalPDFGenerator {
     this.drawParagraph('• Focus on strengthening areas identified for growth', { indent: true });
     this.drawParagraph('• Consider reading "The 100 Marriage Decisions & Declarations" for deeper insights', { indent: true });
     this.drawParagraph('• Schedule a consultation for personalized guidance', { indent: true });
+    
+    this.addSectionBreak();
     
     this.drawParagraph(
       'For professional consultation and personalized guidance:'
