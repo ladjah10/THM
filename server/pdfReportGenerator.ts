@@ -202,16 +202,24 @@ export class ProfessionalPDFGenerator {
   }
 
   private drawSectionHeader(text: string): void {
+    const colors = this.getColorScheme();
+    
     // Ensure section header has enough space on current page
     this.ensureSectionIntegrity(LAYOUT.SECTION_HEADER_HEIGHT + LAYOUT.MIN_SECTION_HEIGHT);
     
     this.currentY += LAYOUT.SECTION_SPACING;
     
-    // Section background bar
+    // Section background bar with report-specific accent color
     this.doc.rect(LAYOUT.MARGIN, this.currentY - 5, LAYOUT.CONTENT_WIDTH, 25)
-      .fill(COLORS.LIGHT_GRAY);
+      .fill(colors.HEADER_BG);
     
-    this.doc.fill(COLORS.TEXT)
+    // Add divider line above section with primary color
+    this.doc.moveTo(LAYOUT.MARGIN, this.currentY - 8)
+      .lineTo(LAYOUT.MARGIN + LAYOUT.CONTENT_WIDTH, this.currentY - 8)
+      .lineWidth(2)
+      .stroke(colors.PRIMARY);
+    
+    this.doc.fill(colors.TEXT)
       .font(FONTS.SECTION_HEADER.font)
       .fontSize(FONTS.SECTION_HEADER.size)
       .text(text, LAYOUT.MARGIN + 10, this.currentY, {
@@ -246,6 +254,7 @@ export class ProfessionalPDFGenerator {
   }
 
   private drawScoreBar(label: string, score: number, maxScore: number = 100): void {
+    const colors = this.getColorScheme();
     const barWidth = 300;
     const barHeight = 20;
     const totalHeight = 60; // Total space needed for score bar section
@@ -256,7 +265,7 @@ export class ProfessionalPDFGenerator {
     this.checkPageBreak(totalHeight);
 
     // Enhanced label with exact percentage format
-    this.doc.fill(COLORS.TEXT)
+    this.doc.fill(colors.TEXT)
       .font(FONTS.BODY.font)
       .fontSize(FONTS.BODY.size)
       .text(`${label} – ${percentage.toFixed(1)}%`, LAYOUT.MARGIN, this.currentY);
@@ -267,9 +276,9 @@ export class ProfessionalPDFGenerator {
     this.doc.rect(LAYOUT.MARGIN, this.currentY, barWidth, barHeight)
       .fill(COLORS.MEDIUM_GRAY);
 
-    // Score bar fill with color coding
+    // Score bar fill with report-specific color coding
     const fillColor = percentage >= 80 ? COLORS.SUCCESS : 
-                     percentage >= 60 ? COLORS.WARNING : COLORS.ACCENT;
+                     percentage >= 60 ? COLORS.WARNING : colors.ACCENT;
     
     this.doc.rect(LAYOUT.MARGIN, this.currentY, fillWidth, barHeight)
       .fill(fillColor);
@@ -1497,11 +1506,11 @@ export class ProfessionalPDFGenerator {
 
 // Convenience functions for backward compatibility
 export async function generateIndividualAssessmentPDF(assessment: AssessmentResult): Promise<Buffer> {
-  const generator = new ProfessionalPDFGenerator();
+  const generator = new ProfessionalPDFGenerator('individual');
   return generator.generateIndividualReport(assessment);
 }
 
 export async function generateCoupleAssessmentPDF(coupleReport: CoupleAssessmentReport): Promise<Buffer> {
-  const generator = new ProfessionalPDFGenerator();
+  const generator = new ProfessionalPDFGenerator('couple');
   return generator.generateCoupleReport(coupleReport);
 }
