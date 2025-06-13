@@ -1930,6 +1930,86 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin API to recalculate all assessments
+  app.post('/api/admin/recalculate-all', async (req: Request, res: Response) => {
+    try {
+      // Import the recalculation function
+      const { recalculateAllAssessments } = await import('./recalculateAssessments');
+      
+      console.log('Starting assessment recalculation process...');
+      const startTime = Date.now();
+      
+      // Run the recalculation
+      const summary = await recalculateAllAssessments();
+      
+      const endTime = Date.now();
+      const duration = (endTime - startTime) / 1000;
+      
+      console.log(`Recalculation completed in ${duration} seconds`);
+      
+      return res.status(200).json({
+        success: true,
+        message: "All assessments recalculated successfully",
+        summary: {
+          ...summary,
+          processingTime: `${duration} seconds`
+        }
+      });
+      
+    } catch (error) {
+      console.error('Error during assessment recalculation:', error);
+      return res.status(500).json({
+        success: false,
+        message: "Failed to recalculate assessments",
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Admin API to recalculate single assessment
+  app.post('/api/admin/recalculate-single/:id', async (req: Request, res: Response) => {
+    try {
+      const assessmentId = req.params.id;
+      
+      if (!assessmentId) {
+        return res.status(400).json({
+          success: false,
+          message: "Assessment ID is required"
+        });
+      }
+      
+      // Import the recalculation function
+      const { recalculateSingleAssessment } = await import('./recalculateAssessments');
+      
+      console.log(`Recalculating single assessment: ${assessmentId}`);
+      
+      // Run the single assessment recalculation
+      const result = await recalculateSingleAssessment(assessmentId);
+      
+      if (result.status === 'success') {
+        return res.status(200).json({
+          success: true,
+          message: "Assessment recalculated successfully",
+          result
+        });
+      } else {
+        return res.status(400).json({
+          success: false,
+          message: "Failed to recalculate assessment",
+          result
+        });
+      }
+      
+    } catch (error) {
+      console.error('Error during single assessment recalculation:', error);
+      return res.status(500).json({
+        success: false,
+        message: "Failed to recalculate assessment",
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
   // Create payment intent specifically for THM pool application fee
   app.post('/api/create-thm-payment-intent', async (req, res) => {
     try {

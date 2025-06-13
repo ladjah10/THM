@@ -25,11 +25,14 @@ export interface IStorage {
   getAssessments(email: string): Promise<AssessmentResult[]>;
   getAllAssessments(): Promise<AssessmentResult[]>;
   getAssessmentById(id: string): Promise<AssessmentResult | null>;
+  getAssessment(id: string): Promise<AssessmentResult | null>;
+  updateAssessment(id: string, assessment: AssessmentResult): Promise<void>;
   
   // Couple assessment management
   saveCoupleAssessment(primaryAssessment: AssessmentResult, spouseEmail: string): Promise<string>;
   getCoupleAssessment(coupleId: string): Promise<CoupleAssessmentReport | null>;
   getAllCoupleAssessments(): Promise<CoupleAssessmentReport[]>;
+  updateCoupleAssessment(id: string, report: CoupleAssessmentReport): Promise<void>;
   
   // Analytics and tracking
   recordPageView(pageView: PageView): Promise<void>;
@@ -238,36 +241,30 @@ class MemStorage {
     return null;
   }
 
-  async updateAssessment(email: string, updatedAssessment: AssessmentResult): Promise<void> {
-    this.assessments.set(email, updatedAssessment);
-    console.log(`Assessment updated in memory for ${email}`);
-    
-    // Also update in database if available
-    try {
-      const query = `
-        UPDATE assessment_results 
-        SET scores = $1, profile = $2, recalculated = $3, last_recalculated = $4,
-            original_score = $5, original_profile = $6, recalculated_pdf_path = $7
-        WHERE email = $8
-      `;
-      
-      const values = [
-        JSON.stringify(updatedAssessment.scores),
-        JSON.stringify(updatedAssessment.profile),
-        updatedAssessment.recalculated || false,
-        updatedAssessment.recalculatedAt || null,
-        updatedAssessment.originalScore || null,
-        updatedAssessment.originalProfile || null,
-        updatedAssessment.recalculatedPdfPath || null,
-        email
-      ];
-      
-      await this.pool.query(query, values);
-      console.log(`Assessment updated in database for ${email}`);
-    } catch (dbError) {
-      console.error('Error updating assessment in database:', dbError);
-      // Continue with memory update even if database fails
+  async getAssessment(id: string): Promise<AssessmentResult | null> {
+    return this.getAssessmentById(id);
+  }
+
+  async updateAssessment(id: string, updatedAssessment: AssessmentResult): Promise<void> {
+    // Update assessment by ID
+    for (const [email, assessment] of this.assessments.entries()) {
+      if (assessment.id === id) {
+        this.assessments.set(email, updatedAssessment);
+        console.log(`Assessment updated in memory for ${email} (ID: ${id})`);
+        return;
+      }
     }
+    
+    // If not found by ID, try to find by email
+    if (updatedAssessment.email) {
+      this.assessments.set(updatedAssessment.email, updatedAssessment);
+      console.log(`Assessment updated in memory for ${updatedAssessment.email}`);
+    }
+  }
+
+  async updateCoupleAssessment(id: string, report: CoupleAssessmentReport): Promise<void> {
+    this.coupleAssessments.set(id, report);
+    console.log(`Couple assessment updated in memory (ID: ${id})`);
   }
   
   // Get a completed assessment by email
