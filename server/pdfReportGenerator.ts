@@ -31,7 +31,7 @@ const FONTS = {
   SCORE: { font: 'Helvetica-Bold', size: 16 }
 };
 
-// Color Palette
+// Color Palettes
 const COLORS = {
   PRIMARY: '#2B4C8C',
   ACCENT: '#8B4A9C',
@@ -42,11 +42,31 @@ const COLORS = {
   WARNING: '#FF9800'
 };
 
+const INDIVIDUAL_COLORS = {
+  PRIMARY: '#3D9400',
+  SECONDARY: '#4CAF50',
+  ACCENT: '#66BB6A',
+  HEADER_BG: '#F1F8E9',
+  TEXT: '#2D3748',
+  DIVIDER: '#888888'
+};
+
+const COUPLE_COLORS = {
+  PRIMARY: '#005A9C',
+  SECONDARY: '#1976D2',
+  ACCENT: '#42A5F5',
+  HEADER_BG: '#E3F2FD',
+  TEXT: '#2D3748',
+  DIVIDER: '#888888'
+};
+
 export class ProfessionalPDFGenerator {
   private doc: PDFKit.PDFDocument;
   private currentY: number = LAYOUT.MARGIN;
+  private reportType: 'individual' | 'couple' = 'individual';
 
-  constructor() {
+  constructor(reportType: 'individual' | 'couple' = 'individual') {
+    this.reportType = reportType;
     this.doc = new PDFDocument({
       size: 'letter',
       margins: {
@@ -56,6 +76,13 @@ export class ProfessionalPDFGenerator {
         right: LAYOUT.MARGIN
       }
     });
+  }
+
+  /**
+   * Gets the appropriate color scheme based on report type
+   */
+  private getColorScheme() {
+    return this.reportType === 'couple' ? COUPLE_COLORS : INDIVIDUAL_COLORS;
   }
 
   /**
@@ -136,11 +163,22 @@ export class ProfessionalPDFGenerator {
 
   // Reusable Layout Functions
   private drawHeader(title: string, subtitle?: string): void {
+    const colors = this.getColorScheme();
     this.currentY = LAYOUT.MARGIN;
     
-    // Add header background
+    // Add header background with report-specific color
     this.doc.rect(0, 0, LAYOUT.PAGE_WIDTH, 80)
-      .fill(COLORS.PRIMARY);
+      .fill(colors.PRIMARY);
+    
+    // Report type identifier in top right
+    const reportTypeText = this.reportType === 'couple' ? 'Couple Assessment Report' : 'Individual Assessment Report';
+    this.doc.fill('white')
+      .font('Helvetica')
+      .fontSize(8)
+      .text(reportTypeText, LAYOUT.MARGIN, 10, {
+        width: LAYOUT.CONTENT_WIDTH,
+        align: 'right'
+      });
     
     // Main title
     this.doc.fill('white')
@@ -430,18 +468,22 @@ export class ProfessionalPDFGenerator {
   }
 
   private drawFooter(): void {
+    const colors = this.getColorScheme();
     const footerY = LAYOUT.PAGE_HEIGHT - 40;
     
-    // Add horizontal line above footer
+    // Add horizontal line above footer with report-specific color
     this.doc.moveTo(LAYOUT.MARGIN, footerY - 10)
       .lineTo(LAYOUT.MARGIN + LAYOUT.CONTENT_WIDTH, footerY - 10)
-      .stroke(COLORS.LIGHT_GRAY);
+      .stroke(colors.DIVIDER);
     
-    // Left side - Assessment info
+    // Report-specific footer content
+    const reportTypeLabel = this.reportType === 'couple' ? 'Couple Report' : 'Individual Report';
+    
+    // Left side - Assessment info with report type
     this.doc.fill(COLORS.MEDIUM_GRAY)
       .font(FONTS.SMALL.font)
       .fontSize(FONTS.SMALL.size)
-      .text('The 100 Marriage Assessment - Series 1', LAYOUT.MARGIN, footerY);
+      .text(`The 100 Marriage Assessment - ${reportTypeLabel}`, LAYOUT.MARGIN, footerY);
     
     // Center - Website
     this.doc.text('https://the100marriage.lawrenceadjah.com', 
