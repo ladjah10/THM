@@ -38,7 +38,7 @@ export const psychographicProfiles: UserProfile[] = [
   },
   {
     id: 4,
-    name: "Pragmatic Partners",
+    name: "Modern Partners",
     description: "You approach marriage with a practical mindset, valuing clear communication and shared responsibility. While faith plays a role in your relationship, you also emphasize mutual respect and fairness in all aspects of your relationship.",
     genderSpecific: null,
     criteria: [

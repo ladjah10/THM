@@ -121,7 +121,7 @@ export function createCoupleAssessmentSample(): CoupleAssessmentReport {
     genderProfile: {
       name: 'Relationship Nurturer (Female)',
       description: 'As a Relationship Nurturer female, you prioritize emotional connection and communication. You believe in shared responsibilities and mutual support.',
-      matchingProfiles: ['Structured Builder (Male)', 'Faith-Centered (Male)', 'Progressive Partner (Male)'],
+      matchingProfiles: ['Structured Builder (Male)', 'Faith-Centered (Male)', 'Modern Partner (Male)'],
       compatibilityNotes: 'Your ideal match values your emotional intelligence and shares your commitment to nurturing relationships.',
       icon: 'RN',
       color: '#8866cc'

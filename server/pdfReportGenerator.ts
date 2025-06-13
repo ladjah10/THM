@@ -883,7 +883,7 @@ export class ProfessionalPDFGenerator {
         icon: 'IS 5.png'
       },
       {
-        name: 'Progressive Partner (PP)',
+        name: 'Modern Partner (MP)',
         description: 'Modern approach to relationships emphasizing equality and shared responsibilities. They adapt well to changing circumstances and value flexible communication styles.',
         characteristics: ['Equality-focused', 'Adaptive communication', 'Shared responsibilities', 'Modern values'],
         icon: 'PP 4.png'
@@ -967,14 +967,14 @@ export class ProfessionalPDFGenerator {
     this.drawParagraph('High Compatibility Combinations:', { bold: true, fontSize: 11 });
     this.drawParagraph('• Biblical Foundation Builder + Faithful Companion', { indent: true, fontSize: 10 });
     this.drawParagraph('• Harmonious Communicator + Nurturing Partner', { indent: true, fontSize: 10 });
-    this.drawParagraph('• Strategic Planner + Progressive Partner', { indent: true, fontSize: 10 });
+    this.drawParagraph('• Strategic Planner + Modern Partner', { indent: true, fontSize: 10 });
     this.drawParagraph('• Protective Leader + Nurturing Partner', { indent: true, fontSize: 10 });
     
     this.currentY += 15;
     
     this.drawParagraph('Growth Opportunity Combinations:', { bold: true, fontSize: 11 });
     this.drawParagraph('• Individualist Seeker + Biblical Foundation Builder', { indent: true, fontSize: 10 });
-    this.drawParagraph('• Progressive Partner + Protective Leader', { indent: true, fontSize: 10 });
+    this.drawParagraph('• Modern Partner + Protective Leader', { indent: true, fontSize: 10 });
     this.drawParagraph('• Strategic Planner + Harmonious Communicator', { indent: true, fontSize: 10 });
     
     this.currentY += 20;
