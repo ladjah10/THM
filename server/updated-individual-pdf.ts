@@ -75,6 +75,19 @@ export async function generateIndividualAssessmentPDF(assessment: AssessmentResu
         .fillColor('#3182ce')
         .text('Personal Assessment Results', { align: 'center' });
       
+      // Add gender-specific psychographic profile if available
+      if (assessment.genderProfile) {
+        doc.moveDown(1);
+        doc.fontSize(14)
+           .fillColor('#4a5568')
+           .font('Helvetica')
+           .text(`Gender-Specific Psychographic: ${assessment.genderProfile.name}`, { align: 'center' });
+        doc.moveDown(0.5);
+        doc.fontSize(12)
+           .fillColor('#2d3748')
+           .text(`${assessment.genderProfile.description}`, { align: 'center' });
+      }
+      
       // Add a horizontal line
       doc.strokeColor('#e2e8f0')
         .lineWidth(1)
@@ -129,7 +142,7 @@ export async function generateIndividualAssessmentPDF(assessment: AssessmentResu
       doc.text(scoreText, centerX - scoreTextWidth / 2, circleY - textHeight / 2);
       
       // Move past the circle
-      doc.moveDown(6);
+      doc.moveDown(1.5);
       
       // Add score explanation with better width constraints
       doc.fontSize(12)
@@ -194,7 +207,7 @@ export async function generateIndividualAssessmentPDF(assessment: AssessmentResu
       
       // ---------- PAGE 2 ----------
       
-      doc.addPage();
+      doc.addPage({ margin: 50 });
       
       // Gender-specific profile if available
       if (assessment.genderProfile) {
@@ -277,7 +290,7 @@ export async function generateIndividualAssessmentPDF(assessment: AssessmentResu
       
       // ---------- PAGE 3 ----------
       
-      doc.addPage();
+      doc.addPage({ margin: 50 });
       
       const genderKey = assessment.demographics.gender === 'male' ? 'male' : 'female';
       const genderText = assessment.demographics.gender === 'male' ? 'men' : 'women';
@@ -430,7 +443,7 @@ export async function generateIndividualAssessmentPDF(assessment: AssessmentResu
           160, bookboxY + 85, { width: doc.page.width - 230 });
           
       // Consultation link
-      doc.moveDown(2)
+      doc.moveDown(1.5)
         .fontSize(12)
         .font('Helvetica-Bold')
         .fillColor('#2d3748')
