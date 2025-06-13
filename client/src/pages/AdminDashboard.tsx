@@ -348,6 +348,28 @@ export default function AdminDashboard() {
     },
   });
 
+  // Mutation for recalculating all assessments
+  const recalculateMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest("POST", "/api/admin/recalculate-all");
+      return response.json();
+    },
+    onSuccess: (data) => {
+      refetchAssessments();
+      toast({
+        title: "Recalculation completed",
+        description: `Successfully recalculated ${data.summary.successCount} assessments`,
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Recalculation failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
   // Filter assessments based on search and filters
   const filteredAssessments = useMemo(() => {
     if (!assessments || !Array.isArray(assessments)) return [];
@@ -737,6 +759,20 @@ export default function AdminDashboard() {
                       >
                         <FileDown className="h-4 w-4 mr-2" />
                         Export Complete Data
+                      </Button>
+                      
+                      <Button 
+                        onClick={() => recalculateMutation.mutate()}
+                        disabled={recalculateMutation.isPending}
+                        variant="default"
+                        className="flex items-center gap-2"
+                      >
+                        {recalculateMutation.isPending ? (
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        ) : (
+                          <RefreshCw className="h-4 w-4 mr-2" />
+                        )}
+                        Recalculate All
                       </Button>
                     </div>
                   </div>
