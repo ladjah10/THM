@@ -301,6 +301,13 @@ export interface AssessmentResult {
   coupleId?: string;       // For linking spouse assessments
   coupleRole?: 'primary' | 'spouse';  // Role in couple assessment
   reportSent?: boolean;    // Whether report has been sent by email
+  
+  // Recalculation tracking fields
+  recalculated?: boolean;        // Whether this assessment has been recalculated
+  recalculationDate?: string;    // When the recalculation occurred
+  originalScore?: number;        // Original score before recalculation
+  originalProfile?: string;      // Original profile name before recalculation
+  status?: 'completed' | 'incomplete' | 'processing';  // Assessment status
 }
 
 // Analysis of differences between partners

@@ -6,7 +6,6 @@
  */
 
 import { storage } from './storage';
-import { calculateAssessmentScores } from './assessment-processor';
 import { generateIndividualAssessmentPDF, generateCoupleAssessmentPDF } from './pdfReportGenerator';
 import { AssessmentResult, CoupleAssessmentReport } from '../shared/schema';
 
@@ -60,8 +59,16 @@ export async function recalculateAllAssessments(): Promise<RecalculationSummary>
           status: 'success'
         };
 
+        // Import the scoring utilities
+        const { calculateAssessmentWithResponses } = await import('../client/src/utils/scoringUtils');
+        
         // Recalculate scores using current algorithm
-        const recalculatedScores = calculateAssessmentScores(assessment.responses, assessment.demographics);
+        const recalculatedData = calculateAssessmentWithResponses(assessment.responses, assessment.demographics);
+        const recalculatedScores = {
+          overallPercentage: recalculatedData.scores.overallPercentage,
+          profile: recalculatedData.profile,
+          genderProfile: recalculatedData.genderProfile
+        };
         
         result.newScore = recalculatedScores.overallPercentage;
         result.newProfile = recalculatedScores.profile?.name;
