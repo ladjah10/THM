@@ -5,7 +5,7 @@ import { generateEnhancedCoupleAssessmentPDF } from '../updated-couple-pdf';
 import fs from 'fs';
 import path from 'path';
 
-// Layout Constants for Professional Formatting
+// Layout Constants for Professional Formatting with Improved Page Breaks
 const LAYOUT = {
   MARGIN: 50,
   COLUMN_WIDTH: 250,
@@ -13,8 +13,12 @@ const LAYOUT = {
   PAGE_WIDTH: 612,
   PAGE_HEIGHT: 792,
   CONTENT_WIDTH: 512, // PAGE_WIDTH - (MARGIN * 2)
-  SECTION_SPACING: 30,
-  PARAGRAPH_SPACING: 12
+  CONTENT_HEIGHT: 692, // PAGE_HEIGHT - (MARGIN * 2)
+  SECTION_SPACING: 20, // Reduced for better flow
+  PARAGRAPH_SPACING: 8, // Consistent smaller spacing
+  MIN_SECTION_HEIGHT: 100, // Minimum space needed for a section
+  SECTION_HEADER_HEIGHT: 30,
+  FOOTER_HEIGHT: 40
 };
 
 // Font Styles for Consistency
@@ -160,6 +164,9 @@ export class ProfessionalPDFGenerator {
   }
 
   private drawSectionHeader(text: string): void {
+    // Ensure section header has enough space on current page
+    this.ensureSectionIntegrity(LAYOUT.SECTION_HEADER_HEIGHT + LAYOUT.MIN_SECTION_HEIGHT);
+    
     this.currentY += LAYOUT.SECTION_SPACING;
     
     // Section background bar
@@ -174,31 +181,41 @@ export class ProfessionalPDFGenerator {
         align: 'left'
       });
 
-    this.currentY += 35;
+    this.currentY += 30; // Reduced from 35 for tighter spacing
   }
 
   private drawParagraph(text: string, options: { indent?: boolean, bold?: boolean, fontSize?: number, align?: string } = {}): void {
     const xPosition = LAYOUT.MARGIN + (options.indent ? 20 : 0);
+    const fontSize = options.fontSize || FONTS.BODY.size;
+    const textWidth = LAYOUT.CONTENT_WIDTH - (options.indent ? 20 : 0);
+    
+    // Calculate required height for text
+    const textHeight = this.doc.heightOfString(text, { width: textWidth });
+    
+    // Check if paragraph will fit on current page
+    this.checkPageBreak(textHeight + LAYOUT.PARAGRAPH_SPACING);
     
     this.doc.fill(COLORS.TEXT)
       .font(options.bold ? FONTS.SUBSECTION.font : FONTS.BODY.font)
-      .fontSize(FONTS.BODY.size)
+      .fontSize(fontSize)
       .text(text, xPosition, this.currentY, {
-        width: LAYOUT.CONTENT_WIDTH - (options.indent ? 20 : 0),
-        align: 'left',
+        width: textWidth,
+        align: (options.align as 'left' | 'right' | 'center' | 'justify') || 'left',
         continued: false
       });
 
-    this.currentY += this.doc.heightOfString(text, {
-      width: LAYOUT.CONTENT_WIDTH - (options.indent ? 20 : 0)
-    }) + LAYOUT.PARAGRAPH_SPACING;
+    this.currentY += textHeight + LAYOUT.PARAGRAPH_SPACING;
   }
 
   private drawScoreBar(label: string, score: number, maxScore: number = 100): void {
     const barWidth = 300;
     const barHeight = 20;
+    const totalHeight = 60; // Total space needed for score bar section
     const percentage = Math.min((score / maxScore) * 100, 100);
     const fillWidth = (percentage / 100) * barWidth;
+
+    // Ensure score bar section stays together
+    this.checkPageBreak(totalHeight);
 
     // Enhanced label with exact percentage format
     this.doc.fill(COLORS.TEXT)
@@ -206,7 +223,7 @@ export class ProfessionalPDFGenerator {
       .fontSize(FONTS.BODY.size)
       .text(`${label} – ${percentage.toFixed(1)}%`, LAYOUT.MARGIN, this.currentY);
 
-    this.currentY += 20;
+    this.currentY += 18; // Reduced spacing
 
     // Score bar background
     this.doc.rect(LAYOUT.MARGIN, this.currentY, barWidth, barHeight)
@@ -219,7 +236,7 @@ export class ProfessionalPDFGenerator {
     this.doc.rect(LAYOUT.MARGIN, this.currentY, fillWidth, barHeight)
       .fill(fillColor);
 
-    this.currentY += barHeight + 10;
+    this.currentY += barHeight + 8; // Reduced spacing
 
     // Add horizontal divider between sections
     this.doc.moveTo(LAYOUT.MARGIN, this.currentY)
@@ -298,10 +315,27 @@ export class ProfessionalPDFGenerator {
   }
 
   private checkPageBreak(requiredSpace: number = 100): void {
-    if (this.currentY + requiredSpace > LAYOUT.PAGE_HEIGHT - LAYOUT.MARGIN) {
+    const maxY = LAYOUT.PAGE_HEIGHT - LAYOUT.MARGIN - LAYOUT.FOOTER_HEIGHT;
+    if (this.currentY + requiredSpace > maxY) {
       this.doc.addPage();
       this.currentY = LAYOUT.MARGIN;
     }
+  }
+
+  private ensureSectionIntegrity(sectionHeight: number): void {
+    const maxY = LAYOUT.PAGE_HEIGHT - LAYOUT.MARGIN - LAYOUT.FOOTER_HEIGHT;
+    const spaceRemaining = maxY - this.currentY;
+    
+    // If section won't fit on current page, start new page
+    if (sectionHeight > spaceRemaining) {
+      this.doc.addPage();
+      this.currentY = LAYOUT.MARGIN;
+    }
+  }
+
+  private addSectionBreak(): void {
+    this.currentY += LAYOUT.SECTION_SPACING;
+    this.checkPageBreak(LAYOUT.MIN_SECTION_HEIGHT);
   }
 
   private getSectionDescription(percentage: number): string {
