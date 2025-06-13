@@ -342,6 +342,83 @@ export class ProfessionalPDFGenerator {
     this.checkPageBreak(LAYOUT.MIN_SECTION_HEIGHT);
   }
 
+  /**
+   * Draws a profile entry with proper logo and text alignment for appendix
+   * @param profile Profile object with name, description, characteristics, and icon
+   */
+  private drawAppendixProfileEntry(profile: any): void {
+    this.checkPageBreak(100);
+    
+    const startY = this.currentY;
+    const logoSize = 60;
+    const logoMarginRight = 16;
+    const textStartX = LAYOUT.MARGIN + logoSize + logoMarginRight;
+    const textWidth = LAYOUT.PAGE_WIDTH - LAYOUT.MARGIN * 2 - logoSize - logoMarginRight;
+    
+    // Draw profile icon if available
+    if (profile.icon) {
+      const iconPath = this.getProfileIconPath(profile.icon);
+      if (iconPath) {
+        this.safeAddImage(iconPath, LAYOUT.MARGIN, startY, {
+          width: logoSize,
+          height: logoSize
+        });
+      }
+    }
+    
+    // Draw profile name aligned with logo center
+    this.doc.font('Helvetica-Bold').fontSize(11);
+    const nameY = startY + (logoSize / 2) - 6; // Center vertically with logo
+    this.doc.text(profile.name, textStartX, nameY, {
+      width: textWidth,
+      align: 'left'
+    });
+    
+    // Calculate the height of the profile name text
+    const nameHeight = this.doc.heightOfString(profile.name, {
+      width: textWidth,
+      fontSize: 11
+    });
+    
+    // Draw description below the name, indented to clear the logo
+    const descriptionY = Math.max(startY + logoSize + 8, nameY + nameHeight + 8);
+    this.doc.font('Helvetica').fontSize(10);
+    this.doc.text(profile.description, textStartX, descriptionY, {
+      width: textWidth,
+      align: 'left'
+    });
+    
+    // Calculate the height of the description text
+    const descriptionHeight = this.doc.heightOfString(profile.description, {
+      width: textWidth,
+      fontSize: 10
+    });
+    
+    // Draw characteristics if available
+    let characteristicsHeight = 0;
+    if (profile.characteristics && profile.characteristics.length > 0) {
+      let charY = descriptionY + descriptionHeight + 8;
+      this.doc.font('Helvetica').fontSize(9);
+      
+      profile.characteristics.forEach((char: string) => {
+        this.doc.text(`• ${char}`, textStartX, charY, {
+          width: textWidth,
+          align: 'left'
+        });
+        const charHeight = this.doc.heightOfString(`• ${char}`, {
+          width: textWidth,
+          fontSize: 9
+        });
+        charY += charHeight + 4;
+        characteristicsHeight += charHeight + 4;
+      });
+    }
+    
+    // Update currentY to the bottom of all content, ensuring proper spacing
+    const contentBottom = descriptionY + descriptionHeight + characteristicsHeight + 16;
+    this.currentY = contentBottom;
+  }
+
   private getSectionDescription(percentage: number): string {
     if (percentage >= 80) {
       return "Strong alignment with biblical marriage principles";
@@ -915,44 +992,7 @@ export class ProfessionalPDFGenerator {
     ];
 
     comprehensiveProfiles.forEach((profile, index) => {
-      this.checkPageBreak(120);
-      
-      // Add profile with icon support
-      const startY = this.currentY;
-      let iconWidth = 0;
-      
-      if (profile.icon) {
-        const iconPath = this.getProfileIconPath(profile.icon);
-        if (iconPath) {
-          const iconAdded = this.safeAddImage(iconPath, LAYOUT.MARGIN, this.currentY, {
-            width: 24,
-            height: 24
-          });
-          if (iconAdded) {
-            iconWidth = 30;
-          }
-        }
-      }
-      
-      this.doc.fill(COLORS.ACCENT)
-        .font(FONTS.SUBSECTION.font)
-        .fontSize(FONTS.SUBSECTION.size)
-        .text(profile.name, LAYOUT.MARGIN + iconWidth, this.currentY, {
-          width: LAYOUT.CONTENT_WIDTH - iconWidth
-        });
-      
-      this.currentY += 20;
-      
-      this.drawParagraph(profile.description, { fontSize: 10 });
-      
-      if (profile.characteristics.length > 0) {
-        this.drawParagraph('Key Characteristics:', { bold: true, fontSize: 10 });
-        profile.characteristics.forEach(char => {
-          this.drawParagraph(`• ${char}`, { indent: true, fontSize: 9 });
-        });
-      }
-      
-      this.currentY += 15;
+      this.drawAppendixProfileEntry(profile);
     });
     
     // Add compatibility matrix information
@@ -1021,15 +1061,7 @@ export class ProfessionalPDFGenerator {
     ];
     
     femaleProfiles.forEach(profile => {
-      this.checkPageBreak(80);
-      this.drawParagraph(profile.name, { bold: true, fontSize: 11 });
-      this.drawParagraph(profile.description, { fontSize: 10, indent: true });
-      if (profile.characteristics.length > 0) {
-        profile.characteristics.forEach(char => {
-          this.drawParagraph(`• ${char}`, { indent: true, fontSize: 9 });
-        });
-      }
-      this.currentY += 10;
+      this.drawAppendixProfileEntry(profile);
     });
     
     this.currentY += 15;
@@ -1060,15 +1092,7 @@ export class ProfessionalPDFGenerator {
     ];
     
     maleProfiles.forEach(profile => {
-      this.checkPageBreak(80);
-      this.drawParagraph(profile.name, { bold: true, fontSize: 11 });
-      this.drawParagraph(profile.description, { fontSize: 10, indent: true });
-      if (profile.characteristics.length > 0) {
-        profile.characteristics.forEach(char => {
-          this.drawParagraph(`• ${char}`, { indent: true, fontSize: 9 });
-        });
-      }
-      this.currentY += 10;
+      this.drawAppendixProfileEntry(profile);
     });
   }
 
