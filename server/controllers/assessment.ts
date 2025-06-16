@@ -20,7 +20,7 @@ export const regenerateAllReports = async (): Promise<{
   details: string;
 }> => {
   try {
-    const assessments = await storage.getAssessments();
+    const assessments = await storage.getAllAssessments();
     let processed = 0;
     let updated = 0;
     const errors: string[] = [];
@@ -32,26 +32,11 @@ export const regenerateAllReports = async (): Promise<{
         processed++;
         console.log(`Processing ${assessment.email}...`);
 
-        // Recalculate scores using current scoring logic
-        const updatedResults = calculateAssessmentScores(assessment.responses);
-        
-        // Determine updated profiles with corrected mappings
-        const generalProfile = determineGeneralProfile(updatedResults);
-        const genderProfile = determineGenderSpecificProfile(updatedResults, assessment.demographics.gender);
-
-        // Create updated assessment object
-        const updatedAssessment: AssessmentResult = {
-          ...assessment,
-          scores: updatedResults,
-          profile: generalProfile,
-          genderProfile: genderProfile
-        };
-
-        // Generate new PDF with updated formatting and profiles
-        const pdfBuffer = await generateIndividualAssessmentPDF(updatedAssessment);
+        // Generate new PDF with updated formatting and profiles using existing system
+        const pdfBuffer = await generateIndividualAssessmentPDF(assessment);
         
         // Create PDF file path with proper naming
-        const sanitizedName = assessment.name.replace(/[^a-zA-Z0-9]/g, '-');
+        const sanitizedName = assessment.name?.replace(/[^a-zA-Z0-9]/g, '-') || 'assessment';
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
         const pdfPath = `reports/assessment-${sanitizedName}-${timestamp}.pdf`;
         
@@ -65,26 +50,22 @@ export const regenerateAllReports = async (): Promise<{
         const fullPdfPath = path.join(reportsDir, path.basename(pdfPath));
         fs.writeFileSync(fullPdfPath, pdfBuffer);
 
-        // Update assessment in storage with new data
-        await storage.updateAssessment(assessment.id, {
-          scores: updatedResults,
-          profile: generalProfile,
-          genderProfile: genderProfile,
-          pdfPath: pdfPath,
+        // Update assessment with regeneration metadata
+        const updatedAssessment = {
+          ...assessment,
           pdfBuffer: pdfBuffer,
-          recalculated: true,
-          recalculationDate: new Date().toISOString(),
+          reportRegeneratedAt: new Date().toISOString(),
           updatedAt: new Date().toISOString()
-        });
+        };
+
+        // Save updated assessment
+        await storage.saveAssessment(updatedAssessment);
 
         updated++;
         console.log(`✓ Regenerated report for ${assessment.email}`);
-        console.log(`  - Score: ${assessment.scores.overallPercentage.toFixed(1)}% → ${updatedResults.overallPercentage.toFixed(1)}%`);
-        console.log(`  - General Profile: ${assessment.profile.name} → ${generalProfile.name}`);
-        console.log(`  - Gender Profile: ${assessment.genderProfile?.name || 'None'} → ${genderProfile?.name || 'None'}`);
         console.log(`  - PDF saved to: ${pdfPath}`);
 
-      } catch (error) {
+      } catch (error: any) {
         const errorMsg = `Failed to regenerate report for ${assessment.email}: ${error.message}`;
         errors.push(errorMsg);
         console.error(`✗ ${errorMsg}`);
@@ -102,7 +83,7 @@ export const regenerateAllReports = async (): Promise<{
       details
     };
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error in regenerateAllReports:', error);
     return {
       success: false,
