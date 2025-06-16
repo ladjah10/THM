@@ -39,10 +39,10 @@ export async function generateIndividualAssessmentPDF(assessment: AssessmentResu
 
   return new Promise((resolve, reject) => {
     try {
-      // Create a PDF document
+      // Create a PDF document with proper margins
       const doc = new PDFDocument({
         size: 'LETTER',
-        margin: 50,
+        margins: { top: 50, bottom: 50, left: 50, right: 50 },
         info: {
           Title: `${assessment.name}'s The 100 Marriage Assessment - Series 1 Results`,
           Author: 'Lawrence E. Adjah',
@@ -64,7 +64,7 @@ export async function generateIndividualAssessmentPDF(assessment: AssessmentResu
 
       // ---------- PAGE 1 ----------
       
-      // Header
+      // Header with proper margins and spacing
       doc.fontSize(24)
         .font('Helvetica-Bold')
         .fillColor('#1a365d')
