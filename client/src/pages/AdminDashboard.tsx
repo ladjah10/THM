@@ -893,12 +893,12 @@ export default function AdminDashboard() {
                               <TableCell>{formatDate(assessment.timestamp)}</TableCell>
                               <TableCell>
                                 <div className="flex items-center gap-2">
-                                  {assessment.recalculated ? (
+                                  {assessment.recalculated || assessment.recalculationDate || assessment.reportRegeneratedAt ? (
                                     <>
                                       <span className="text-green-600">✅</span>
-                                      {assessment.lastRecalculated && (
+                                      {(assessment.recalculationDate || assessment.reportRegeneratedAt) && (
                                         <span className="text-xs text-muted-foreground">
-                                          {formatDate(assessment.lastRecalculated)}
+                                          {formatDate(assessment.recalculationDate || assessment.reportRegeneratedAt)}
                                         </span>
                                       )}
                                     </>
@@ -954,7 +954,7 @@ export default function AdminDashboard() {
                                       <Button
                                         size="sm"
                                         variant="outline"
-                                        onClick={() => window.open(`/api/admin/responses/${assessment.id}/json`)}
+                                        onClick={() => window.open(`/api/admin/responses/${encodeURIComponent(assessment.demographics?.email || '')}/json`)}
                                       >
                                         <FileText className="h-3 w-3" />
                                       </Button>
@@ -967,7 +967,7 @@ export default function AdminDashboard() {
                                       <Button
                                         size="sm"
                                         variant="outline"
-                                        onClick={() => window.open(`/api/admin/assessment/${assessment.id}/download`, '_blank')}
+                                        onClick={() => window.open(`/api/admin/assessment/${encodeURIComponent(assessment.demographics?.email || '')}/download`, '_blank')}
                                       >
                                         <FileDown className="h-3 w-3" />
                                       </Button>
@@ -1441,12 +1441,22 @@ export default function AdminDashboard() {
                   </div>
                 </div>
 
-                {selectedAssessment.genderProfile && (
+                {(selectedAssessment.genderProfile || selectedAssessment.genderSpecificProfile) && (
                   <div>
                     <Label className="text-sm font-medium text-gray-600">Gender-Specific Profile</Label>
-                    <div className="mt-2 p-4 bg-gray-50 rounded-lg">
-                      <h4 className="font-medium">{selectedAssessment.genderProfile.name}</h4>
-                      <p className="text-sm text-gray-600 mt-1">{selectedAssessment.genderProfile.description}</p>
+                    <div className="mt-2 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Badge variant="secondary" className="text-xs">
+                          {selectedAssessment.demographics?.gender?.toUpperCase()}
+                        </Badge>
+                        <span className="text-xs text-muted-foreground">Profile</span>
+                      </div>
+                      <h4 className="font-medium text-blue-900">
+                        {selectedAssessment.genderProfile?.name || selectedAssessment.genderSpecificProfile?.name}
+                      </h4>
+                      <p className="text-sm text-blue-700 mt-1">
+                        {selectedAssessment.genderProfile?.description || selectedAssessment.genderSpecificProfile?.description}
+                      </p>
                     </div>
                   </div>
                 )}
