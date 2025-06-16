@@ -149,31 +149,31 @@ export async function generateIndividualAssessmentPDF(assessment: AssessmentResu
         .font('Helvetica')
         .fillColor('#4a5568')
         .text('Understanding Your Score: Your assessment score reflects your perspectives on marriage, not a judgment of readiness. Higher percentages indicate alignment with traditional marriage values, while lower percentages suggest less traditional approaches. Neither is inherently better—just different expectations.', {
-          width: doc.page.width - 150, // Increased margin to prevent text overrun
+          width: doc.page.width - 100, // Proper margin to prevent text overrun
           align: 'left',
           lineGap: 3 // Added line gap to prevent text overlap
         });
         
-      doc.moveDown(1); // Increased spacing between paragraphs
+      doc.moveDown(1.5); // Increased spacing between paragraphs
       
       // Add comparison explanation in bullet points
       doc.fontSize(12)
         .font('Helvetica')
         .fillColor('#4a5568')
         .text('• The most important consideration is how your assessment and approach compares with someone you are married to or discerning marriage with.', {
-          width: doc.page.width - 170, // Increased margin to prevent text overrun
+          width: doc.page.width - 100, // Proper margin to prevent text overrun
           indent: 10,
           align: 'left',
           lineGap: 3 // Added line gap to prevent text overlap
         });
         
-      doc.moveDown(0.8); // Increased spacing between bullet points
+      doc.moveDown(1); // Proper spacing between bullet points
         
       doc.fontSize(12)
         .font('Helvetica')
         .fillColor('#4a5568')
         .text('• The closer the percentage (with your spouse), overall, the more aligned and successful you will be.', {
-          width: doc.page.width - 170, // Increased margin to prevent text overrun
+          width: doc.page.width - 100, // Proper margin to prevent text overrun
           indent: 10,
           align: 'left',
           lineGap: 3 // Added line gap to prevent text overlap
@@ -199,15 +199,20 @@ export async function generateIndividualAssessmentPDF(assessment: AssessmentResu
         .fontSize(12)
         .fillColor('#4a5568')
         .font('Helvetica')
-        .text(assessment.profile.description, {
+        .text(assessment.profile.description.replace(/Progressive Partner/g, 'Modern Partner'), {
           align: 'left',
-          width: doc.page.width - 150, // Increased margin to prevent text overrun
+          width: doc.page.width - 100, // Proper margin to prevent text overrun
           lineGap: 3 // Added line gap to prevent text overlap
         });
       
+      // Check if we need a new page before continuing
+      if (doc.y > doc.page.height - 200) {
+        doc.addPage();
+      }
+      
       // ---------- PAGE 2 ----------
       
-      doc.addPage({ margin: 50 });
+      doc.addPage();
       
       // Gender-specific profile if available
       if (assessment.genderProfile) {
@@ -227,9 +232,9 @@ export async function generateIndividualAssessmentPDF(assessment: AssessmentResu
           .fontSize(12)
           .fillColor('#4a5568')
           .font('Helvetica')
-          .text(assessment.genderProfile.description, {
+          .text(assessment.genderProfile.description.replace(/Progressive Partner/g, 'Modern Partner'), {
             align: 'left',
-            width: doc.page.width - 150, // Increased margin to prevent text overrun
+            width: doc.page.width - 100, // Proper margin to prevent text overrun
             lineGap: 3 // Added line gap to prevent text overlap
           });
         
