@@ -355,10 +355,18 @@ export default function AdminDashboard() {
       return response.json();
     },
     onSuccess: (data) => {
+      // Invalidate all assessment-related queries to force fresh data
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/assessments"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/analytics"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/analytics/section-averages"] });
+      
       refetchAssessments();
+      refetchAnalytics();
+      refetchSectionAverages();
+      
       toast({
         title: "Recalculation completed",
-        description: `Successfully recalculated ${data.summary.successCount} assessments`,
+        description: `Successfully recalculated ${data.summary.successCount} assessments with updated scores and profiles`,
       });
     },
     onError: (error: Error) => {

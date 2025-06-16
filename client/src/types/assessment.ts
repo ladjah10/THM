@@ -67,6 +67,7 @@ export interface UserProfile {
 }
 
 export interface AssessmentResult {
+  id?: string;  // UUID for database storage
   email: string;
   name: string;
   scores: AssessmentScores;
@@ -76,4 +77,16 @@ export interface AssessmentResult {
   demographics: DemographicData;
   rawAnswers?: any; // Complete raw submission data for admin download
   timestamp: string;
+  transactionId?: string;  // Link to payment transaction
+  coupleId?: string;       // For linking spouse assessments
+  coupleRole?: 'primary' | 'spouse';  // Role in couple assessment
+  reportSent?: boolean;    // Whether report has been sent by email
+  
+  // Recalculation tracking fields
+  recalculated?: boolean;        // Whether this assessment has been recalculated
+  recalculationDate?: string;    // When the recalculation occurred
+  originalScore?: number;        // Original score before recalculation
+  originalProfile?: string;      // Original profile name before recalculation
+  reportRegeneratedAt?: string;  // When report was regenerated
+  status?: 'completed' | 'incomplete' | 'processing';  // Assessment status
 }
