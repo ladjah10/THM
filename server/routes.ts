@@ -794,17 +794,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Admin API to download assessment PDF (individual or couple)
+  // Admin API to download assessment PDF (individual or couple) with proper validation
   app.get('/api/admin/assessment/:id/download', async (req: Request, res: Response) => {
     try {
       const assessmentId = req.params.id;
       
-      // Fetch assessment from storage by ID
-      const assessment = await storage.getAssessmentById(assessmentId);
-      if (!assessment) {
-        return res.status(404).json({ error: 'Assessment not found' });
+      // Add null/undefined check for assessmentId
+      if (!assessmentId || assessmentId.trim() === '') {
+        return res.status(400).json({ error: 'Invalid assessment ID provided' });
       }
-
+      
+      // Try to find assessment by email (since admin dashboard uses email as identifier)
+      const assessment = await storage.getCompletedAssessment(decodeURIComponent(assessmentId));
+      
+      if (!assessment) {
+        // Fallback: try to find by ID in case it's an actual ID
+        const assessments = await storage.getAllAssessments();
+        const foundAssessment = assessments.find(a => a.id === assessmentId);
+        
+        if (!foundAssessment) {
+          return res.status(404).json({ error: 'Assessment not found in original or recalculated records' });
+        }
+        
+        // Use found assessment
+        return await generateAndDownloadPDF(foundAssessment, res);
+      }
+      
       // Import enhanced PDF generator with comprehensive safety features
       const { ProfessionalPDFGenerator } = await import('./pdfReportGenerator');
       const generator = new ProfessionalPDFGenerator();
@@ -874,8 +889,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       res.send(pdfBuffer);
     } catch (error) {
-      console.error('Error downloading assessment PDF:', error);
-      res.status(500).json({ error: 'Failed to generate PDF' });
+      console.error('Error in assessment download:', error);
+      return res.status(500).json({ 
+        error: 'Failed to download assessment PDF',
+        details: error instanceof Error ? error.message : String(error)
+      });
     }
   });
 
@@ -975,6 +993,80 @@ export async function registerRoutes(app: Express): Promise<Server> {
         success: false,
         message: 'Internal server error during report regeneration',
         error: error.message
+      });
+    }
+  });
+
+  // Admin API to recalculate all assessments with updated scoring
+  app.post('/api/admin/recalculate-all', async (req: Request, res: Response) => {
+    try {
+      const { recalculateAllAssessments } = await import('./recalculate-system');
+      console.log('Starting assessment recalculation process...');
+      
+      const startTime = Date.now();
+      const result = await recalculateAllAssessments();
+      const endTime = Date.now();
+      
+      res.json({
+        success: true,
+        message: 'Assessment recalculation completed successfully',
+        summary: {
+          totalProcessed: result.totalProcessed || 0,
+          successCount: result.successCount || 0,
+          errorCount: result.errorCount || 0,
+          processingTime: `${endTime - startTime}ms`
+        },
+        details: result.details || 'Recalculation completed',
+        errors: result.errors || []
+      });
+    } catch (error) {
+      console.error('Error in recalculate-all endpoint:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error during assessment recalculation',
+        error: error instanceof Error ? error.message : String(error)
+      });
+    }
+  });
+
+  // Admin API to regenerate PDFs only (separate endpoint)
+  app.post('/api/admin/regenerate-pdfs', async (req: Request, res: Response) => {
+    try {
+      const { regenerateAllReports } = await import('./controllers/assessment');
+      console.log('Starting PDF regeneration process...');
+      
+      const startTime = Date.now();
+      const result = await regenerateAllReports();
+      const endTime = Date.now();
+      
+      if (result.success) {
+        console.log(`PDF regeneration completed in ${endTime - startTime}ms`);
+        res.json({
+          success: true,
+          message: 'PDF regeneration completed successfully',
+          summary: {
+            totalProcessed: result.processed,
+            successCount: result.updated,
+            errorCount: result.errors.length,
+            processingTime: `${endTime - startTime}ms`
+          },
+          details: result.details,
+          errors: result.errors
+        });
+      } else {
+        res.status(500).json({
+          success: false,
+          message: 'PDF regeneration failed',
+          error: result.details,
+          errors: result.errors
+        });
+      }
+    } catch (error) {
+      console.error('Error in regenerate-pdfs endpoint:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error during PDF regeneration',
+        error: error instanceof Error ? error.message : String(error)
       });
     }
   });
