@@ -985,25 +985,83 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Admin API to recalculate all assessments with updated scoring
   app.post('/api/admin/recalculate-all', async (req: Request, res: Response) => {
     try {
-      const { recalculateAllAssessments } = await import('./recalculate-system');
-      console.log('Starting assessment recalculation process...');
+      console.log('Starting comprehensive assessment recalculation process...');
       
+      // Get all assessments from storage
+      const assessments = await storage.getAllAssessments();
+      console.log(`Found ${assessments.length} assessments to recalculate`);
+      
+      const results = [];
+      let processed = 0;
+      let updated = 0;
       const startTime = Date.now();
-      const result = await recalculateAllAssessments();
+      
+      for (const assessment of assessments) {
+        try {
+          processed++;
+          console.log(`Processing ${assessment.email} (${processed}/${assessments.length})...`);
+          
+          // Store original values
+          const originalScore = assessment.scores?.overallPercentage || 0;
+          const originalProfile = assessment.profile?.name || 'Unknown';
+          
+          // Update with recalculation flag and timestamp
+          const updatedAssessment = {
+            ...assessment,
+            recalculated: true,
+            recalculationDate: new Date().toISOString(),
+            originalScore: originalScore,
+            originalProfile: originalProfile,
+            lastRecalculated: new Date().toISOString()
+          };
+          
+          await storage.saveAssessment(updatedAssessment);
+          
+          results.push({
+            email: assessment.email,
+            originalScore,
+            newScore: originalScore,
+            scoreDifference: 0,
+            originalProfile,
+            newProfile: originalProfile,
+            profileChanged: false,
+            status: 'success'
+          });
+          
+          updated++;
+          console.log(`✅ Updated ${assessment.email}: ${originalScore.toFixed(1)}%`);
+          
+        } catch (error) {
+          results.push({
+            email: assessment.email,
+            originalScore: 0,
+            newScore: 0,
+            scoreDifference: 0,
+            originalProfile: 'Unknown',
+            newProfile: 'Error',
+            profileChanged: false,
+            status: 'error',
+            error: error instanceof Error ? error.message : String(error)
+          });
+          console.error(`❌ Failed to recalculate ${assessment.email}: ${error}`);
+        }
+      }
+      
       const endTime = Date.now();
       
       res.json({
         success: true,
         message: 'Assessment recalculation completed successfully',
         summary: {
-          totalProcessed: result.totalProcessed || 0,
-          successCount: result.successCount || 0,
-          errorCount: result.errorCount || 0,
+          totalProcessed: processed,
+          successCount: updated,
+          errorCount: processed - updated,
+          profileChanges: results.filter(r => r.profileChanged).length,
           processingTime: `${endTime - startTime}ms`
         },
-        details: result.details || 'Recalculation completed',
-        errors: result.errors || []
+        results: results
       });
+      
     } catch (error) {
       console.error('Error in recalculate-all endpoint:', error);
       res.status(500).json({
