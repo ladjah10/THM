@@ -370,6 +370,28 @@ export default function AdminDashboard() {
     },
   });
 
+  // Mutation for regenerating all reports
+  const regenerateReportsMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest("POST", "/api/admin/regenerate-all-reports");
+      return response.json();
+    },
+    onSuccess: (data) => {
+      refetchAssessments();
+      toast({
+        title: "Report regeneration completed",
+        description: `Successfully regenerated ${data.summary.successCount} reports with updated profiles and formatting`,
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Report regeneration failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
   // Filter assessments based on search and filters
   const filteredAssessments = useMemo(() => {
     if (!assessments || !Array.isArray(assessments)) return [];
@@ -773,6 +795,20 @@ export default function AdminDashboard() {
                           <RefreshCw className="h-4 w-4 mr-2" />
                         )}
                         Recalculate All
+                      </Button>
+                      
+                      <Button 
+                        onClick={() => regenerateReportsMutation.mutate()}
+                        disabled={regenerateReportsMutation.isPending}
+                        variant="secondary"
+                        className="flex items-center gap-2"
+                      >
+                        {regenerateReportsMutation.isPending ? (
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        ) : (
+                          <FileText className="h-4 w-4 mr-2" />
+                        )}
+                        Regenerate All Reports
                       </Button>
                     </div>
                   </div>

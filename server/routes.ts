@@ -937,6 +937,80 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin API to regenerate all assessment reports with updated profiles and formatting
+  app.post('/api/admin/regenerate-all-reports', async (req: Request, res: Response) => {
+    try {
+      const { regenerateAllReports } = await import('./controllers/assessment');
+      console.log('Starting report regeneration process...');
+      
+      const startTime = Date.now();
+      const result = await regenerateAllReports();
+      const endTime = Date.now();
+      
+      if (result.success) {
+        console.log(`Report regeneration completed in ${endTime - startTime}ms`);
+        res.json({
+          success: true,
+          message: 'Report regeneration completed successfully',
+          summary: {
+            totalProcessed: result.processed,
+            successCount: result.updated,
+            errorCount: result.errors.length,
+            processingTime: `${endTime - startTime}ms`
+          },
+          details: result.details,
+          errors: result.errors
+        });
+      } else {
+        res.status(500).json({
+          success: false,
+          message: 'Report regeneration failed',
+          error: result.details,
+          errors: result.errors
+        });
+      }
+    } catch (error) {
+      console.error('Error in regenerate-all-reports endpoint:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error during report regeneration',
+        error: error.message
+      });
+    }
+  });
+
+  app.post('/api/admin/regenerate-report/:id', async (req: Request, res: Response) => {
+    try {
+      const { regenerateSingleReport } = await import('./controllers/assessment');
+      const assessmentId = req.params.id;
+      
+      console.log(`Regenerating report for assessment: ${assessmentId}`);
+      const result = await regenerateSingleReport(assessmentId);
+      
+      if (result.success) {
+        res.json({
+          success: true,
+          message: 'Report regenerated successfully',
+          assessment: result.assessment,
+          changes: result.changes
+        });
+      } else {
+        res.status(404).json({
+          success: false,
+          message: 'Failed to regenerate report',
+          error: result.error
+        });
+      }
+    } catch (error) {
+      console.error('Error in regenerate-report endpoint:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error during single report regeneration',
+        error: error.message
+      });
+    }
+  });
+
   // Admin API to trigger recalculation for all assessments
   app.post('/api/admin/recalculate-all', async (req: Request, res: Response) => {
     try {
