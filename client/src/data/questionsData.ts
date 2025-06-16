@@ -30,26 +30,25 @@ export const questions: Question[] = [
   {
     id: 2,
     section: "Your Foundation",
-    subsection: "Marriage + Family",
+    subsection: "Marriage + Family Accountability",
     type: "D",
-    text: "We commit to prayer as a regular practice in our family life.",
+    text: "In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this \"life covenant\" process, unless mutually revisited and discussed at a later time.",
     options: [
-      "We commit to prayer as a regular practice in our family life",
-      "I do not agree with this statement"
+      "In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this \"life covenant\" process, unless mutually revisited and discussed at a later time",
+      "Other: Before committing to this we need further discussion with spiritual counsel around how this would operate"
     ],
     weight: 8
   },
   {
     id: 3,
     section: "Your Foundation", 
-    subsection: "Marriage + Family",
+    subsection: "Marriage & Your Children's Faith Journey",
     type: "D",
-    text: "We commit to reading the Bible together as a couple and family.",
+    text: "We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ.",
     options: [
-      "We commit to reading the Bible together as a couple and family",
-      "I do not agree with this statement"
+      "We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ"
     ],
-    weight: 7
+    weight: 6
   },
   {
     id: 4,
