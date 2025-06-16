@@ -816,11 +816,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return res.status(404).json({ error: 'Assessment not found in original or recalculated records' });
         }
         
-        // Use found assessment
-        return await generateAndDownloadPDF(foundAssessment, res);
+        // Generate PDF for found assessment
+        const { ProfessionalPDFGenerator } = await import('./pdfReportGenerator');
+        const generator = new ProfessionalPDFGenerator();
+        const pdfBuffer = await generator.generateIndividualReport(foundAssessment);
+        
+        // Set headers and send PDF
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="assessment-${foundAssessment.id}.pdf"`);
+        res.setHeader('Content-Length', pdfBuffer.length);
+        return res.send(pdfBuffer);
       }
       
-      // Import enhanced PDF generator with comprehensive safety features
+      // Generate PDF for main assessment
       const { ProfessionalPDFGenerator } = await import('./pdfReportGenerator');
       const generator = new ProfessionalPDFGenerator();
       
@@ -837,30 +845,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         // Generate comprehensive couple PDF with safety features
         pdfBuffer = await generator.generateCoupleReport(coupleReport);
-        
-        // Safe parsing of demographics for filename
-        let name1 = 'Partner1';
-        let name2 = 'Partner2';
-        
-        try {
-          const demo1 = typeof coupleReport.primary?.demographics === 'string' 
-            ? JSON.parse(coupleReport.primary.demographics) 
-            : coupleReport.primary?.demographics;
-          name1 = demo1?.firstName || 'Partner1';
-        } catch (error) {
-          console.warn('Failed to parse primary demographics for filename');
-        }
-        
-        try {
-          const demo2 = typeof coupleReport.spouse?.demographics === 'string' 
-            ? JSON.parse(coupleReport.spouse.demographics) 
-            : coupleReport.spouse?.demographics;
-          name2 = demo2?.firstName || 'Partner2';
-        } catch (error) {
-          console.warn('Failed to parse spouse demographics for filename');
-        }
-        
-        filename = `couple-assessment-${name1}-${name2}-${assessment.coupleId}.pdf`;
+        filename = `couple-assessment-${assessment.coupleId}.pdf`;
       } else {
         // Individual report with enhanced safety
         pdfBuffer = await generator.generateIndividualReport(assessment);
