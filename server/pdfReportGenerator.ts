@@ -230,7 +230,7 @@ export class ProfessionalPDFGenerator {
     this.currentY += 30; // Reduced from 35 for tighter spacing
   }
 
-  private drawParagraph(text: string, options: { indent?: boolean, bold?: boolean, fontSize?: number, align?: 'left' | 'right' | 'center' | 'justify' } = {}): void {
+  private drawParagraph(text: string, options: { indent?: boolean, bold?: boolean, fontSize?: number, align?: 'left' | 'right' | 'center' | 'justify', color?: string } = {}): void {
     const xPosition = LAYOUT.MARGIN + (options.indent ? 20 : 0);
     const fontSize = options.fontSize || FONTS.BODY.size;
     const textWidth = LAYOUT.CONTENT_WIDTH - (options.indent ? 20 : 0);
@@ -241,7 +241,7 @@ export class ProfessionalPDFGenerator {
     // Check if paragraph will fit on current page
     this.checkPageBreak(textHeight + LAYOUT.PARAGRAPH_SPACING);
     
-    this.doc.fill(COLORS.TEXT)
+    this.doc.fill(options.color || COLORS.TEXT)
       .font(options.bold ? FONTS.SUBSECTION.font : FONTS.BODY.font)
       .fontSize(fontSize)
       .text(text, xPosition, this.currentY, {
@@ -969,7 +969,7 @@ export class ProfessionalPDFGenerator {
     }
   }
 
-  private async addImprovedProfilesReferenceSection(): Promise<void> {
+  private addImprovedProfilesReferenceSection(): void {
     this.doc.addPage();
     this.currentY = LAYOUT.MARGIN;
     
@@ -982,8 +982,129 @@ export class ProfessionalPDFGenerator {
     
     this.currentY += 15;
     
-    // Import authentic profiles from the data file
-    const { psychographicProfiles } = await import('../client/src/data/psychographicProfiles.js');
+    // Authentic Lawrence Adjah profiles - hardcoded to avoid import issues
+    const authenticProfiles = [
+      // Unisex profiles
+      {
+        name: "Steadfast Believers",
+        description: "You have a strong commitment to faith as the foundation of your relationship. You value traditional marriage roles and have clear expectations for family life. Your decisions are firmly guided by your interpretation of scripture, and you're unwavering in your convictions.",
+        genderSpecific: null,
+        criteria: [
+          { section: "Section I: Your Foundation", min: 90 },
+          { section: "Section II: Your Faith Life", min: 85 }
+        ]
+      },
+      {
+        name: "Harmonious Planners",
+        description: "You value structure and careful planning in your relationship while maintaining strong faith values. You're committed to establishing clear expectations and boundaries in your marriage while prioritizing your spiritual foundation.",
+        genderSpecific: null,
+        criteria: [
+          { section: "Section I: Your Foundation", min: 80 },
+          { section: "Section III: Your Marriage Life", min: 75 },
+          { section: "Section VI: Your Finances", min: 70 }
+        ]
+      },
+      {
+        name: "Flexible Faithful",
+        description: "While your faith is important to you, you balance spiritual conviction with practical adaptability. You value communication and compromise, seeking to honor your beliefs while remaining flexible in how you apply them to daily life.",
+        genderSpecific: null,
+        criteria: [
+          { section: "Section II: Your Faith Life", min: 70, max: 85 },
+          { section: "Section III: Your Marriage Life", min: 80 }
+        ]
+      },
+      {
+        name: "Pragmatic Partners",
+        description: "You approach marriage with a practical mindset, valuing clear communication and shared responsibility. While faith plays a role in your relationship, you also emphasize mutual respect and fairness in all aspects of your relationship.",
+        genderSpecific: null,
+        criteria: [
+          { section: "Section VI: Your Finances", min: 85 },
+          { section: "Section III: Your Marriage Life", min: 80 }
+        ]
+      },
+      {
+        name: "Independent Seekers",
+        description: "You value your independence and personal growth alongside your relationship goals. You believe in maintaining individual identity while building a strong partnership, and you're comfortable with non-traditional approaches to marriage.",
+        genderSpecific: null,
+        criteria: [
+          { section: "Section V: Your Communication", min: 75 },
+          { section: "Section I: Your Foundation", max: 70 }
+        ]
+      },
+      // Female-specific profiles
+      {
+        name: "Balanced Visionary",
+        description: "As a woman, you balance traditional feminine strengths with modern independence. You value both nurturing relationships and personal achievement, seeking a partnership that honors both aspects of your identity.",
+        genderSpecific: "female",
+        criteria: [
+          { section: "Section III: Your Marriage Life", min: 70, max: 85 },
+          { section: "Section V: Your Communication", min: 80 }
+        ]
+      },
+      {
+        name: "Relational Navigator",
+        description: "You excel at understanding and managing relationship dynamics. Your natural emotional intelligence helps you navigate complex situations, and you prioritize harmony and connection in your marriage.",
+        genderSpecific: "female",
+        criteria: [
+          { section: "Section V: Your Communication", min: 85 },
+          { section: "Section VII: Your In-Laws", min: 80 }
+        ]
+      },
+      {
+        name: "Adaptive Communicator",
+        description: "You have strong communication skills and adapt well to different relationship challenges. You value open dialogue and are willing to adjust your approach based on what works best for your partnership.",
+        genderSpecific: "female",
+        criteria: [
+          { section: "Section V: Your Communication", min: 90 }
+        ]
+      },
+      {
+        name: "Faithful Caretaker",
+        description: "Your approach to relationships centers on care, faithfulness, and building a strong family foundation. You prioritize your family's spiritual and emotional well-being above personal ambitions.",
+        genderSpecific: "female",
+        criteria: [
+          { section: "Section II: Your Faith Life", min: 85 },
+          { section: "Section VIII: Your Children", min: 80 }
+        ]
+      },
+      {
+        name: "Independent Thinker",
+        description: "You value your independence and bring a thoughtful, analytical approach to relationships. You prefer to make decisions based on careful consideration rather than tradition alone.",
+        genderSpecific: "female",
+        criteria: [
+          { section: "Section I: Your Foundation", max: 60 },
+          { section: "Section VI: Your Finances", min: 75 }
+        ]
+      },
+      // Male-specific profiles
+      {
+        name: "Financial Provider",
+        description: "You take seriously your role as a financial provider and protector. You value stability, security, and building a strong economic foundation for your family's future.",
+        genderSpecific: "male",
+        criteria: [
+          { section: "Section VI: Your Finances", min: 85 },
+          { section: "Section I: Your Foundation", min: 75 }
+        ]
+      },
+      {
+        name: "Balanced Partner",
+        description: "You balance traditional masculine qualities with modern partnership values. You're comfortable with shared responsibilities and value mutual respect in your relationship.",
+        genderSpecific: "male",
+        criteria: [
+          { section: "Section III: Your Marriage Life", min: 75, max: 90 },
+          { section: "Section V: Your Communication", min: 70 }
+        ]
+      },
+      {
+        name: "Growing Partner",
+        description: "You're committed to personal growth and building a strong partnership. You value learning and adapting in your relationship, and you're open to feedback and change.",
+        genderSpecific: "male",
+        criteria: [
+          { section: "Section V: Your Communication", min: 80 },
+          { section: "Section III: Your Marriage Life", min: 70 }
+        ]
+      }
+    ];
     
     // Add section headers matching the main report
     this.drawSectionHeader('Unisex Psychographic Profiles');
@@ -995,9 +1116,9 @@ export class ProfessionalPDFGenerator {
     this.currentY += 10;
 
     // Get authentic unisex profiles
-    const unisexProfiles = psychographicProfiles.filter((p: any) => p.genderSpecific === null);
+    const unisexProfiles = authenticProfiles.filter(p => p.genderSpecific === null);
 
-    unisexProfiles.forEach((profile: any) => {
+    unisexProfiles.forEach(profile => {
       this.checkPageBreak(120);
       this.drawAuthenticProfileEntry(profile);
     });
@@ -1012,9 +1133,9 @@ export class ProfessionalPDFGenerator {
     
     this.currentY += 10;
     
-    const femaleProfiles = psychographicProfiles.filter((p: any) => p.genderSpecific === 'female');
+    const femaleProfiles = authenticProfiles.filter(p => p.genderSpecific === 'female');
     
-    femaleProfiles.forEach((profile: any) => {
+    femaleProfiles.forEach(profile => {
       this.checkPageBreak(120);
       this.drawAuthenticProfileEntry(profile);
     });
@@ -1029,9 +1150,9 @@ export class ProfessionalPDFGenerator {
     
     this.currentY += 10;
     
-    const maleProfiles = psychographicProfiles.filter((p: any) => p.genderSpecific === 'male');
+    const maleProfiles = authenticProfiles.filter(p => p.genderSpecific === 'male');
     
-    maleProfiles.forEach((profile: any) => {
+    maleProfiles.forEach(profile => {
       this.checkPageBreak(120);
       this.drawAuthenticProfileEntry(profile);
     });
