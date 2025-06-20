@@ -805,19 +805,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const decodedId = decodeURIComponent(assessmentId);
 
-      // Try to get from recalculated assessments first
+      // Try to get from recalculated assessments first (by ID and email)
       const recalculated = await storage.getRecalculatedAssessments();
-      let assessment: AssessmentResult | null = recalculated.find(a => a.id === decodedId) || null;
+      let assessment: AssessmentResult | null = recalculated.find(a => a.id === decodedId || a.email === decodedId) || null;
 
-      // If not found, try completed assessments
+      // If not found, try completed assessments (by ID and email)
       if (!assessment) {
         assessment = await storage.getCompletedAssessment(decodedId);
       }
 
-      // Fallback to search by ID in all original assessments
+      // Fallback to search by ID or email in all original assessments
       if (!assessment) {
         const allOriginal = await storage.getAllAssessments();
-        assessment = allOriginal.find(a => a.id === decodedId);
+        assessment = allOriginal.find(a => a.id === decodedId || a.email === decodedId) || null;
       }
 
       if (!assessment) {
