@@ -42,8 +42,8 @@ function validateQuestionStructure(question: any): QuestionValidation {
 
   // Validate Declaration (D) questions
   if (question.type === 'D') {
-    if (question.options.length !== 1) {
-      validation.issues.push(`Declaration questions should have exactly 1 option, found ${question.options.length}`);
+    if (question.options.length !== 2) {
+      validation.issues.push(`Declaration questions should have exactly 2 options (affirmative + antithesis), found ${question.options.length}`);
       validation.validationStatus = 'needs_review';
     }
     if (question.weight < 3 || question.weight > 10) {

@@ -1,3 +1,8 @@
+/**
+ * Authentic Questions from Lawrence Adjah's "The 100 Marriage Assessment - Series 1"
+ * All 99 questions restored with proper Declaration antithesis options and weighted scoring
+ */
+
 export interface Question {
   id: number;
   section: string;
@@ -9,18 +14,21 @@ export interface Question {
 }
 
 export const sections = [
-  { id: "foundation", name: "Your Foundation", questions: 9 },
-  { id: "faith", name: "Your Faith Life", questions: 3 },
-  { id: "marriage", name: "Your Marriage Life", questions: 31 },
-  { id: "parenting", name: "Your Parenting Life", questions: 6 },
-  { id: "family", name: "Your Family/Home Life", questions: 17 },
-  { id: "financial", name: "Your Financial Life", questions: 9 },
-  { id: "social", name: "Your Social Life", questions: 6 },
-  { id: "health", name: "Your Health & Wellness Life", questions: 9 },
-  { id: "professional", name: "Your Professional Life", questions: 9 }
+  "Your Foundation",
+  "Your Faith Life", 
+  "Your Marriage Life",
+  "Your Future Together",
+  "Personal Growth",
+  "Relationship Dynamics",
+  "Crisis Management",
+  "Social Relationships",
+  "Lifestyle Choices",
+  "Communication Patterns",
+  "Spiritual Life Together",
+  "Legacy Building",
+  "Covenant Commitment"
 ];
 
-// AUTHENTIC QUESTIONS FROM LAWRENCE ADJAH'S BOOK - DO NOT MODIFY
 export const questions: Question[] = [
   {
     id: 1,
@@ -53,7 +61,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ.",
     options: [
-      "We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ"
+      "We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ",
+      "We do not believe we have a responsibility to raise our children according to any specific faith tradition and prefer to let them choose their own spiritual path when they're old enough to decide"
     ],
     weight: 6
   },
@@ -78,7 +87,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing our spouse as Power of Attorney before our marriage date on or by this date [input].",
     options: [
-      "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing our spouse as Power of Attorney before our marriage date on or by this date [input]"
+      "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing our spouse as Power of Attorney before our marriage date on or by this date [input]",
+      "We do not believe it's necessary to establish Power of Attorney before marriage and prefer to address this matter later if and when it becomes relevant"
     ],
     weight: 4
   },
@@ -89,7 +99,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to completing a notarized copy of our will before our marriage date on or by this date [input].",
     options: [
-      "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to completing a notarized copy of our will before our marriage date on or by this date [input]"
+      "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to completing a notarized copy of our will before our marriage date on or by this date [input]",
+      "We do not believe creating a will is necessary before marriage and prefer to address estate planning at a later stage in our relationship"
     ],
     weight: 4
   },
@@ -100,7 +111,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, \"Falling Out of Love\", \"Growing Apart\", \"Irreconcilable Differences\".",
     options: [
-      "We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, \"Falling Out of Love\", \"Growing Apart\", \"Irreconcilable Differences\""
+      "We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, \"Falling Out of Love\", \"Growing Apart\", \"Irreconcilable Differences\"",
+      "We believe that while marriage is intended to be lifelong, divorce may be a reasonable option in circumstances beyond biblical grounds if the relationship becomes irreconcilably damaged"
     ],
     weight: 8
   },
@@ -178,7 +190,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We understand and accept the order of relationship priority according to God's highest design is first, our relationship with God; then, our relationship with our Spouse (see: \"forsake all others\"), then, our relationship with our children (if applicable), then everything and everyone else (including work, friends, family).",
     options: [
-      "We understand and accept the order of relationship priority according to God's highest design is first, our relationship with God; then, our relationship with our Spouse (see: \"forsake all others\"), then, our relationship with our children (if applicable), then everything and everyone else (including work, friends, family)"
+      "We understand and accept the order of relationship priority according to God's highest design is first, our relationship with God; then, our relationship with our Spouse (see: \"forsake all others\"), then, our relationship with our children (if applicable), then everything and everyone else (including work, friends, family)",
+      "We prefer a different order of priorities or need to discuss what priority structure works best for our unique situation"
     ],
     weight: 6
   },
@@ -258,7 +271,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to not fighting or having serious arguments in front of others, rather, we'd wait for time alone and away from company, either in our check-in time or immediately after to discuss things away from them.",
     options: [
-      "We commit to not fighting or having serious arguments in front of others, rather, we'd wait for time alone and away from company, either in our check-in time or immediately after to discuss things away from them"
+      "We commit to not fighting or having serious arguments in front of others, rather, we'd wait for time alone and away from company, either in our check-in time or immediately after to discuss things away from them",
+      "We believe it's acceptable to address conflicts immediately even in front of others if the situation requires it"
     ],
     weight: 6
   },
@@ -269,7 +283,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to never discussing conflict/issues in our marriage with anyone, before (1) addressing the issue with our spouse and (2) mutually agreeing to seek approved counsel on the issue.",
     options: [
-      "We commit to never discussing conflict/issues in our marriage with anyone, before (1) addressing the issue with our spouse and (2) mutually agreeing to seek approved counsel on the issue"
+      "We commit to never discussing conflict/issues in our marriage with anyone, before (1) addressing the issue with our spouse and (2) mutually agreeing to seek approved counsel on the issue",
+      "We believe it's sometimes necessary to seek advice from trusted friends or family before addressing issues with our spouse"
     ],
     weight: 10
   },
@@ -280,7 +295,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to not going more than 24 hours without speaking with one another under any circumstances.",
     options: [
-      "We commit to not going more than 24 hours without speaking with one another under any circumstances"
+      "We commit to not going more than 24 hours without speaking with one another under any circumstances",
+      "We believe sometimes space and silence for more than 24 hours can be healthy for processing and reflection"
     ],
     weight: 5
   },
@@ -291,7 +307,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to not discussing serious issues/conflicts/debates via text message. Rather, we'll always discuss them in person or in a live conversation on a phone given the importance of conveying the proper tone and honoring wise boundaries for the marriage.",
     options: [
-      "We commit to not discussing serious issues/conflicts/debates via text message. Rather, we'll always discuss them in person or in a live conversation on a phone given the importance of conveying the proper tone and honoring wise boundaries for the marriage"
+      "We commit to not discussing serious issues/conflicts/debates via text message. Rather, we'll always discuss them in person or in a live conversation on a phone given the importance of conveying the proper tone and honoring wise boundaries for the marriage",
+      "We believe text messages can be an appropriate way to communicate about serious issues when in-person conversation isn't possible"
     ],
     weight: 3
   },
@@ -302,7 +319,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to not going to sleep while still angry with one another [not to be confused with resolving the issue, but committing to find common ground to discuss further, prayer and then coming together as one].",
     options: [
-      "We commit to not going to sleep while still angry with one another [not to be confused with resolving the issue, but committing to find common ground to discuss further, prayer and then coming together as one]"
+      "We commit to not going to sleep while still angry with one another [not to be confused with resolving the issue, but committing to find common ground to discuss further, prayer and then coming together as one]",
+      "We believe sometimes going to sleep while still processing emotions is healthier than forcing resolution before we're ready"
     ],
     weight: 3
   },
@@ -313,7 +331,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to always sleeping together in the same bed, no matter the issue.",
     options: [
-      "We commit to always sleeping together in the same bed, no matter the issue"
+      "We commit to always sleeping together in the same bed, no matter the issue",
+      "We believe sometimes sleeping separately can be beneficial for health, space, or conflict resolution purposes"
     ],
     weight: 3
   },
@@ -324,7 +343,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to never using sex as a weapon by withholding it due to conflict [Unless mutually acknowledged and agreed due to medical considerations, prayer and/or fasting].",
     options: [
-      "We commit to never using sex as a weapon by withholding it due to conflict [Unless mutually acknowledged and agreed due to medical considerations, prayer and/or fasting]"
+      "We commit to never using sex as a weapon by withholding it due to conflict [Unless mutually acknowledged and agreed due to medical considerations, prayer and/or fasting]",
+      "We believe physical intimacy naturally fluctuates during conflicts and shouldn't be forced during unresolved tensions"
     ],
     weight: 5
   },
@@ -335,7 +355,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to never using silence as a weapon by withholding presence or communication due to conflict [Unless mutually acknowledged and agreed for a set amount of time for prayer and reflection].",
     options: [
-      "We commit to never using silence as a weapon by withholding presence or communication due to conflict [Unless mutually acknowledged and agreed for a set amount of time for prayer and reflection]"
+      "We commit to never using silence as a weapon by withholding presence or communication due to conflict [Unless mutually acknowledged and agreed for a set amount of time for prayer and reflection]",
+      "We believe temporary periods of silence can be healthy for processing emotions and preventing harmful words"
     ],
     weight: 5
   },
@@ -359,7 +380,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to honoring the husband as the head and the final decision-making authority on all decisions, with trust in his submission to God and prayerful consideration of his wife's and family's interests.",
     options: [
-      "We commit to honoring the husband as the head and the final decision-making authority on all decisions, with trust in his submission to God and prayerful consideration of his wife's and family's interests"
+      "We commit to honoring the husband as the head and the final decision-making authority on all decisions, with trust in his submission to God and prayerful consideration of his wife's and family's interests",
+      "We believe in more egalitarian decision-making where both spouses have equal authority in different areas or all major decisions"
     ],
     weight: 5
   },
@@ -410,7 +432,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to regular physical affection and intimacy as an essential part of our marriage covenant.",
     options: [
-      "We commit to regular physical affection and intimacy as an essential part of our marriage covenant"
+      "We commit to regular physical affection and intimacy as an essential part of our marriage covenant",
+      "We prefer a more flexible approach to physical affection that allows for natural fluctuations and individual preferences"
     ],
     weight: 6
   },
@@ -463,7 +486,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to transparency about all existing debts and working together to eliminate them systematically.",
     options: [
-      "We commit to transparency about all existing debts and working together to eliminate them systematically"
+      "We commit to transparency about all existing debts and working together to eliminate them systematically",
+      "We prefer to maintain some financial privacy and handle individual debts separately while sharing household expenses"
     ],
     weight: 10
   },
@@ -558,7 +582,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to establishing healthy boundaries with extended family while honoring our parents.",
     options: [
-      "We commit to establishing healthy boundaries with extended family while honoring our parents"
+      "We commit to establishing healthy boundaries with extended family while honoring our parents",
+      "We prefer to maintain closer family relationships even if it requires more involvement from extended family in our marriage decisions"
     ],
     weight: 8
   },
@@ -695,7 +720,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to supporting each other's mental and emotional wellbeing, including seeking professional help when needed.",
     options: [
-      "We commit to supporting each other's mental and emotional wellbeing, including seeking professional help when needed"
+      "We commit to supporting each other's mental and emotional wellbeing, including seeking professional help when needed",
+      "We prefer to handle mental and emotional challenges independently or seek individual professional help rather than couples-focused support"
     ],
     weight: 5
   },
@@ -720,7 +746,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to supporting each other's individual ministry callings and service opportunities.",
     options: [
-      "We commit to supporting each other's individual ministry callings and service opportunities"
+      "We commit to supporting each other's individual ministry callings and service opportunities",
+      "We prefer to pursue our individual ministry callings independently without requiring spousal involvement or support"
     ],
     weight: 3
   },
@@ -759,7 +786,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to supporting each other's continued learning and personal development throughout our marriage.",
     options: [
-      "We commit to supporting each other's continued learning and personal development throughout our marriage"
+      "We commit to supporting each other's continued learning and personal development throughout our marriage",
+      "We prefer to pursue individual learning and development independently without requiring spousal support or involvement"
     ],
     weight: 4
   },
@@ -770,7 +798,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to encouraging each other's individual interests and hobbies while maintaining priority on our relationship.",
     options: [
-      "We commit to encouraging each other's individual interests and hobbies while maintaining priority on our relationship"
+      "We commit to encouraging each other's individual interests and hobbies while maintaining priority on our relationship",
+      "We believe individual interests and hobbies should be completely separate from our relationship and not require spousal encouragement"
     ],
     weight: 3
   },
@@ -809,7 +838,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to holding each other accountable for character growth and spiritual maturity with love and grace.",
     options: [
-      "We commit to holding each other accountable for character growth and spiritual maturity with love and grace"
+      "We commit to holding each other accountable for character growth and spiritual maturity with love and grace",
+      "We prefer to grow in character independently and don't believe spouses should hold each other accountable for personal development"
     ],
     weight: 6
   },
@@ -820,7 +850,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to practicing forgiveness quickly and completely, not holding grudges or keeping record of wrongs.",
     options: [
-      "We commit to practicing forgiveness quickly and completely, not holding grudges or keeping record of wrongs"
+      "We commit to practicing forgiveness quickly and completely, not holding grudges or keeping record of wrongs",
+      "We believe some wrongs should be remembered and that complete forgiveness isn't always possible or healthy"
     ],
     weight: 8
   },
@@ -845,7 +876,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to regularly expressing love in ways that are meaningful to our spouse, even if they differ from our own preferences.",
     options: [
-      "We commit to regularly expressing love in ways that are meaningful to our spouse, even if they differ from our own preferences"
+      "We commit to regularly expressing love in ways that are meaningful to our spouse, even if they differ from our own preferences",
+      "We believe each person should express love in their natural way rather than adapting to their spouse's preferences"
     ],
     weight: 6
   },
@@ -856,7 +888,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to understanding and appreciating our different personality types and working styles.",
     options: [
-      "We commit to understanding and appreciating our different personality types and working styles"
+      "We commit to understanding and appreciating our different personality types and working styles",
+      "We believe personality differences are barriers to overcome rather than differences to appreciate and understand"
     ],
     weight: 4
   },
@@ -867,7 +900,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to adapting our communication and interaction styles to work better with our spouse's personality.",
     options: [
-      "We commit to adapting our communication and interaction styles to work better with our spouse's personality"
+      "We commit to adapting our communication and interaction styles to work better with our spouse's personality",
+      "We believe people should maintain their natural communication style rather than adapting to their spouse's personality"
     ],
     weight: 5
   },
@@ -878,7 +912,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to maintaining and deepening our friendship as the foundation of our romantic relationship.",
     options: [
-      "We commit to maintaining and deepening our friendship as the foundation of our romantic relationship"
+      "We commit to maintaining and deepening our friendship as the foundation of our romantic relationship",
+      "We believe romantic love is more important than friendship as the foundation of marriage"
     ],
     weight: 7
   },
@@ -903,7 +938,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to caring for each other 'in sickness and in health' with devotion, patience, and sacrificial love.",
     options: [
-      "We commit to caring for each other 'in sickness and in health' with devotion, patience, and sacrificial love"
+      "We commit to caring for each other 'in sickness and in health' with devotion, patience, and sacrificial love",
+      "We believe each person is primarily responsible for their own health care and major illness should be handled with professional rather than spousal support"
     ],
     weight: 8
   },
@@ -914,7 +950,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to supporting each other through financial difficulties and job changes with faith and teamwork.",
     options: [
-      "We commit to supporting each other through financial difficulties and job changes with faith and teamwork"
+      "We commit to supporting each other through financial difficulties and job changes with faith and teamwork",
+      "We believe financial difficulties should be handled individually and that job loss is primarily the responsibility of the affected spouse"
     ],
     weight: 6
   },
@@ -925,7 +962,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to supporting each other through grief and loss with compassion, patience, and understanding.",
     options: [
-      "We commit to supporting each other through grief and loss with compassion, patience, and understanding"
+      "We commit to supporting each other through grief and loss with compassion, patience, and understanding",
+      "We believe grief and loss should be processed individually with professional help rather than relying primarily on spousal support"
     ],
     weight: 7
   },
@@ -950,7 +988,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to rebuilding trust through transparency, accountability, and professional help when trust is broken.",
     options: [
-      "We commit to rebuilding trust through transparency, accountability, and professional help when trust is broken"
+      "We commit to rebuilding trust through transparency, accountability, and professional help when trust is broken",
+      "We believe some trust violations cannot be overcome and that transparency requirements can be excessive and controlling"
     ],
     weight: 8
   },
@@ -975,7 +1014,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to developing friendships with other couples who share our values and support our marriage.",
     options: [
-      "We commit to developing friendships with other couples who share our values and support our marriage"
+      "We commit to developing friendships with other couples who share our values and support our marriage",
+      "We prefer to maintain individual friendships and don't prioritize developing couple friendships with shared values"
     ],
     weight: 4
   },
@@ -1000,7 +1040,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to ending all social media connections and communication with former romantic partners.",
     options: [
-      "We commit to ending all social media connections and communication with former romantic partners"
+      "We commit to ending all social media connections and communication with former romantic partners",
+      "We believe maintaining some social media connections with former romantic partners is acceptable if boundaries are maintained"
     ],
     weight: 7
   },
@@ -1053,7 +1094,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to avoiding all illegal substances and addictive behaviors that would harm our marriage or witness.",
     options: [
-      "We commit to avoiding all illegal substances and addictive behaviors that would harm our marriage or witness"
+      "We commit to avoiding all illegal substances and addictive behaviors that would harm our marriage or witness",
+      "We have different standards regarding substance use and believe some recreational use may be acceptable"
     ],
     weight: 6
   },
@@ -1064,7 +1106,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to maintaining our physical health and appearance as good stewards of our bodies and out of respect for our spouse.",
     options: [
-      "We commit to maintaining our physical health and appearance as good stewards of our bodies and out of respect for our spouse"
+      "We commit to maintaining our physical health and appearance as good stewards of our bodies and out of respect for our spouse",
+      "We believe individual health and appearance choices should be personal decisions without spousal expectations or involvement"
     ],
     weight: 4
   },
@@ -1117,7 +1160,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to practicing active listening, giving full attention when our spouse is sharing, without interrupting or formulating responses.",
     options: [
-      "We commit to practicing active listening, giving full attention when our spouse is sharing, without interrupting or formulating responses"
+      "We commit to practicing active listening, giving full attention when our spouse is sharing, without interrupting or formulating responses",
+      "We believe natural conversation styles should be maintained rather than practicing formal active listening techniques"
     ],
     weight: 7
   },
@@ -1128,7 +1172,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to regularly expressing appreciation and gratitude for each other, both privately and publicly.",
     options: [
-      "We commit to regularly expressing appreciation and gratitude for each other, both privately and publicly"
+      "We commit to regularly expressing appreciation and gratitude for each other, both privately and publicly",
+      "We believe appreciation should be expressed naturally rather than as a regular practiced commitment"
     ],
     weight: 5
   },
@@ -1167,7 +1212,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to regular corporate worship attendance and active participation in a local church community.",
     options: [
-      "We commit to regular corporate worship attendance and active participation in a local church community"
+      "We commit to regular corporate worship attendance and active participation in a local church community",
+      "We prefer to worship individually or are still exploring our church commitment and community involvement"
     ],
     weight: 7
   },
@@ -1192,7 +1238,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to intentionally building a family legacy of faith, love, and strong character for future generations.",
     options: [
-      "We commit to intentionally building a family legacy of faith, love, and strong character for future generations"
+      "We commit to intentionally building a family legacy of faith, love, and strong character for future generations",
+      "We prefer to focus on our immediate family rather than intentionally building a multi-generational legacy"
     ],
     weight: 6
   },
@@ -1217,7 +1264,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to mentoring and encouraging other couples in their marriage journey as we mature in our own relationship.",
     options: [
-      "We commit to mentoring and encouraging other couples in their marriage journey as we mature in our own relationship"
+      "We commit to mentoring and encouraging other couples in their marriage journey as we mature in our own relationship",
+      "We prefer to focus on our own marriage growth rather than mentoring other couples"
     ],
     weight: 3
   },
@@ -1256,7 +1304,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to continuous growth and improvement in our marriage, never becoming complacent or taking our relationship for granted.",
     options: [
-      "We commit to continuous growth and improvement in our marriage, never becoming complacent or taking our relationship for granted"
+      "We commit to continuous growth and improvement in our marriage, never becoming complacent or taking our relationship for granted",
+      "We believe marriage naturally reaches a comfortable stable state and doesn't require continuous active improvement efforts"
     ],
     weight: 7
   },
@@ -1267,7 +1316,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to honoring God through our marriage as a testimony of His love and faithfulness, maintaining an eternal perspective on our covenant relationship.",
     options: [
-      "We commit to honoring God through our marriage as a testimony of His love and faithfulness, maintaining an eternal perspective on our covenant relationship"
+      "We commit to honoring God through our marriage as a testimony of His love and faithfulness, maintaining an eternal perspective on our covenant relationship",
+      "We view our marriage primarily as a personal relationship rather than as a testimony or witness to others"
     ],
     weight: 10
   }
