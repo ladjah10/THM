@@ -385,5 +385,887 @@ export const questions: Question[] = [
       "Weekly check-in on [fill-in] at [fill-in]"
     ],
     weight: 5
+  },
+  {
+    id: 31,
+    section: "Your Marriage Life",
+    subsection: "Intimacy: Date Night Planning",
+    type: "M",
+    text: "We commit to regular date nights with intentional planning, how do you approach this?",
+    options: [
+      "We plan date nights in advance with specific activities and venues",
+      "We keep date nights spontaneous and flexible",
+      "We alternate planning responsibilities between us",
+      "Other: Please detail"
+    ],
+    weight: 4
+  },
+  {
+    id: 32,
+    section: "Your Marriage Life",
+    subsection: "Intimacy: Physical Affection",
+    type: "D",
+    text: "We commit to regular physical affection and intimacy as an essential part of our marriage covenant.",
+    options: [
+      "We commit to regular physical affection and intimacy as an essential part of our marriage covenant"
+    ],
+    weight: 6
+  },
+  {
+    id: 33,
+    section: "Your Marriage Life",
+    subsection: "Intimacy: Sexual Expectations",
+    type: "M",
+    text: "We commit to open communication about our sexual relationship, what is your approach?",
+    options: [
+      "Regular discussion about needs and preferences",
+      "Addressing issues as they arise",
+      "Seeking professional counsel when needed",
+      "All of the above"
+    ],
+    weight: 8
+  },
+  {
+    id: 34,
+    section: "Your Marriage Life",
+    subsection: "Financial Management: Joint Accounts",
+    type: "M",
+    text: "We commit to managing our finances together, what is your approach to banking?",
+    options: [
+      "All joint accounts with shared access",
+      "Joint accounts with individual allowances",
+      "Separate accounts with shared expenses account",
+      "Other: Please detail"
+    ],
+    weight: 6
+  },
+  {
+    id: 35,
+    section: "Your Marriage Life",
+    subsection: "Financial Management: Major Purchases",
+    type: "M",
+    text: "We commit to mutual agreement on major financial decisions, what threshold requires discussion?",
+    options: [
+      "Any purchase over $100",
+      "Any purchase over $500",
+      "Any purchase over $1,000",
+      "Any purchase over $2,500"
+    ],
+    weight: 8
+  },
+  {
+    id: 36,
+    section: "Your Marriage Life",
+    subsection: "Financial Management: Debt",
+    type: "D",
+    text: "We commit to transparency about all existing debts and working together to eliminate them systematically.",
+    options: [
+      "We commit to transparency about all existing debts and working together to eliminate them systematically"
+    ],
+    weight: 10
+  },
+  {
+    id: 37,
+    section: "Your Marriage Life",
+    subsection: "Financial Management: Budgeting",
+    type: "M",
+    text: "We commit to creating and maintaining a household budget, how often will you review it?",
+    options: [
+      "Weekly budget reviews",
+      "Monthly budget reviews",
+      "Quarterly budget reviews",
+      "As needed"
+    ],
+    weight: 6
+  },
+  {
+    id: 38,
+    section: "Your Marriage Life",
+    subsection: "Financial Management: Savings Goals",
+    type: "M",
+    text: "We commit to establishing and working toward shared financial goals, what is your priority?",
+    options: [
+      "Emergency fund (6 months expenses)",
+      "Home ownership down payment",
+      "Retirement savings",
+      "Children's education fund"
+    ],
+    weight: 4
+  },
+  {
+    id: 39,
+    section: "Your Marriage Life",
+    subsection: "Career & Work: Balance",
+    type: "M",
+    text: "We commit to supporting each other's career goals while prioritizing our marriage, what is your approach?",
+    options: [
+      "Marriage always takes priority over career advancement",
+      "Career and marriage require equal attention and balance",
+      "Career advancement is necessary to support our marriage",
+      "Other: Please detail"
+    ],
+    weight: 8
+  },
+  {
+    id: 40,
+    section: "Your Marriage Life",
+    subsection: "Career & Work: Travel",
+    type: "M",
+    text: "We commit to managing work-related travel in a way that honors our marriage, what are your boundaries?",
+    options: [
+      "No overnight work travel without spouse approval",
+      "Limited work travel with advance notice and planning",
+      "Work travel as needed with regular communication",
+      "Other: Please detail"
+    ],
+    weight: 6
+  },
+  {
+    id: 41,
+    section: "Your Marriage Life",
+    subsection: "Household Management: Chores",
+    type: "M",
+    text: "We commit to sharing household responsibilities fairly, how will you divide tasks?",
+    options: [
+      "Traditional gender-based division of labor",
+      "Equal sharing of all household tasks",
+      "Division based on individual preferences and schedules",
+      "Other: Please detail"
+    ],
+    weight: 4
+  },
+  {
+    id: 42,
+    section: "Your Marriage Life",
+    subsection: "Household Management: Cooking",
+    type: "M",
+    text: "We commit to sharing meal preparation and planning, what is your approach?",
+    options: [
+      "One person primarily responsible for cooking",
+      "Alternating cooking responsibilities",
+      "Cooking together as a team",
+      "Other: Please detail"
+    ],
+    weight: 3
+  },
+  {
+    id: 43,
+    section: "Your Marriage Life",
+    subsection: "Extended Family: Boundaries",
+    type: "D",
+    text: "We commit to establishing healthy boundaries with extended family while honoring our parents.",
+    options: [
+      "We commit to establishing healthy boundaries with extended family while honoring our parents"
+    ],
+    weight: 8
+  },
+  {
+    id: 44,
+    section: "Your Marriage Life",
+    subsection: "Extended Family: Holidays",
+    type: "M",
+    text: "We commit to managing holiday celebrations in a way that honors both families, what is your approach?",
+    options: [
+      "Alternate holidays between families each year",
+      "Split time during each holiday season",
+      "Create new traditions as our own family unit",
+      "Other: Please detail"
+    ],
+    weight: 4
+  },
+  {
+    id: 45,
+    section: "Your Marriage Life",
+    subsection: "Extended Family: Living Arrangements",
+    type: "M",
+    text: "We commit to maintaining independence while supporting extended family, what are your boundaries?",
+    options: [
+      "Extended family welcome to visit but not live with us",
+      "Extended family welcome for extended stays in emergencies",
+      "Open to extended family living arrangements if needed",
+      "Other: Please detail"
+    ],
+    weight: 6
+  },
+  {
+    id: 46,
+    section: "Your Future Together",
+    subsection: "Children: Timing",
+    type: "M",
+    text: "We have discussed and agreed on our timeline for having children, what is your preference?",
+    options: [
+      "Children within the first year of marriage",
+      "Children within 2-3 years of marriage",
+      "Children when financially and emotionally ready",
+      "We are undecided and need more discussion"
+    ],
+    weight: 10
+  },
+  {
+    id: 47,
+    section: "Your Future Together",
+    subsection: "Children: Number",
+    type: "M",
+    text: "We have discussed and agreed on the number of children we hope to have, what is your preference?",
+    options: [
+      "1-2 children",
+      "3-4 children",
+      "5 or more children",
+      "As many as God blesses us with"
+    ],
+    weight: 8
+  },
+  {
+    id: 48,
+    section: "Your Future Together",
+    subsection: "Children: Discipline",
+    type: "M",
+    text: "We commit to consistent parenting and discipline approaches, what is your philosophy?",
+    options: [
+      "Biblical discipline with love and correction",
+      "Positive reinforcement with natural consequences",
+      "Balanced approach combining multiple methods",
+      "We need to discuss this further"
+    ],
+    weight: 6
+  },
+  {
+    id: 49,
+    section: "Your Future Together",
+    subsection: "Children: Education",
+    type: "M",
+    text: "We have discussed our preferences for our children's education, what is your approach?",
+    options: [
+      "Christian private school education",
+      "Homeschooling with Christian curriculum",
+      "Public school with strong family values reinforcement",
+      "Other: Please detail"
+    ],
+    weight: 4
+  },
+  {
+    id: 50,
+    section: "Your Future Together",
+    subsection: "Housing: Ownership",
+    type: "M",
+    text: "We have discussed our housing goals and timeline, what is your priority?",
+    options: [
+      "Home ownership within 2 years",
+      "Home ownership within 5 years",
+      "Rent until circumstances are optimal for buying",
+      "Other: Please detail"
+    ],
+    weight: 3
+  },
+  {
+    id: 51,
+    section: "Your Future Together",
+    subsection: "Housing: Location",
+    type: "M",
+    text: "We have discussed our preferred living location and community, what is your priority?",
+    options: [
+      "Close to extended family",
+      "Strong Christian community",
+      "Good schools and family amenities",
+      "Career opportunities and growth"
+    ],
+    weight: 4
+  },
+  {
+    id: 52,
+    section: "Your Future Together",
+    subsection: "Health & Wellness: Lifestyle",
+    type: "M",
+    text: "We commit to maintaining healthy lifestyles together, what is your approach?",
+    options: [
+      "Regular exercise and healthy eating together",
+      "Supporting each other's individual health goals",
+      "Preventive healthcare and regular checkups",
+      "All of the above"
+    ],
+    weight: 3
+  },
+  {
+    id: 53,
+    section: "Your Future Together",
+    subsection: "Health & Wellness: Mental Health",
+    type: "D",
+    text: "We commit to supporting each other's mental and emotional wellbeing, including seeking professional help when needed.",
+    options: [
+      "We commit to supporting each other's mental and emotional wellbeing, including seeking professional help when needed"
+    ],
+    weight: 5
+  },
+  {
+    id: 54,
+    section: "Your Future Together",
+    subsection: "Ministry & Service: Together",
+    type: "M",
+    text: "We commit to serving together in ministry and community service, what is your preference?",
+    options: [
+      "Active leadership roles in church ministry",
+      "Regular volunteer service in community",
+      "Supporting missions and charitable causes",
+      "Other: Please detail"
+    ],
+    weight: 4
+  },
+  {
+    id: 55,
+    section: "Your Future Together",
+    subsection: "Ministry & Service: Individual",
+    type: "D",
+    text: "We commit to supporting each other's individual ministry callings and service opportunities.",
+    options: [
+      "We commit to supporting each other's individual ministry callings and service opportunities"
+    ],
+    weight: 3
+  },
+  {
+    id: 56,
+    section: "Your Future Together",
+    subsection: "Retirement: Planning",
+    type: "M",
+    text: "We commit to planning for our retirement together, what is your approach?",
+    options: [
+      "Traditional retirement savings and investments",
+      "Real estate and property investments",
+      "Business ownership and passive income",
+      "Other: Please detail"
+    ],
+    weight: 3
+  },
+  {
+    id: 57,
+    section: "Your Future Together",
+    subsection: "Retirement: Lifestyle",
+    type: "M",
+    text: "We have discussed our vision for retirement lifestyle, what is your preference?",
+    options: [
+      "Travel and new experiences together",
+      "Settled life near family and community",
+      "Continued ministry and service work",
+      "Other: Please detail"
+    ],
+    weight: 2
+  },
+  {
+    id: 58,
+    section: "Personal Growth",
+    subsection: "Individual Development: Education",
+    type: "D",
+    text: "We commit to supporting each other's continued learning and personal development throughout our marriage.",
+    options: [
+      "We commit to supporting each other's continued learning and personal development throughout our marriage"
+    ],
+    weight: 4
+  },
+  {
+    id: 59,
+    section: "Personal Growth",
+    subsection: "Individual Development: Hobbies",
+    type: "D",
+    text: "We commit to encouraging each other's individual interests and hobbies while maintaining priority on our relationship.",
+    options: [
+      "We commit to encouraging each other's individual interests and hobbies while maintaining priority on our relationship"
+    ],
+    weight: 3
+  },
+  {
+    id: 60,
+    section: "Personal Growth",
+    subsection: "Spiritual Growth: Individual",
+    type: "M",
+    text: "We commit to individual spiritual growth and development, what is your approach?",
+    options: [
+      "Daily personal Bible study and prayer",
+      "Regular participation in Bible study groups",
+      "Spiritual mentorship and accountability",
+      "All of the above"
+    ],
+    weight: 6
+  },
+  {
+    id: 61,
+    section: "Personal Growth",
+    subsection: "Spiritual Growth: Together",
+    type: "M",
+    text: "We commit to growing spiritually together as a couple, what is your priority?",
+    options: [
+      "Regular couples devotion and Bible study",
+      "Attending conferences and retreats together",
+      "Serving together in ministry",
+      "All of the above"
+    ],
+    weight: 8
+  },
+  {
+    id: 62,
+    section: "Personal Growth",
+    subsection: "Character Development: Accountability",
+    type: "D",
+    text: "We commit to holding each other accountable for character growth and spiritual maturity with love and grace.",
+    options: [
+      "We commit to holding each other accountable for character growth and spiritual maturity with love and grace"
+    ],
+    weight: 6
+  },
+  {
+    id: 63,
+    section: "Personal Growth",
+    subsection: "Character Development: Forgiveness",
+    type: "D",
+    text: "We commit to practicing forgiveness quickly and completely, not holding grudges or keeping record of wrongs.",
+    options: [
+      "We commit to practicing forgiveness quickly and completely, not holding grudges or keeping record of wrongs"
+    ],
+    weight: 8
+  },
+  {
+    id: 64,
+    section: "Relationship Dynamics",
+    subsection: "Love Languages: Understanding",
+    type: "M",
+    text: "We have identified and discussed our love languages, what is most important to you?",
+    options: [
+      "Words of affirmation and encouragement",
+      "Quality time and undivided attention",
+      "Physical touch and affection",
+      "Acts of service and helpfulness"
+    ],
+    weight: 5
+  },
+  {
+    id: 65,
+    section: "Relationship Dynamics",
+    subsection: "Love Languages: Expression",
+    type: "D",
+    text: "We commit to regularly expressing love in ways that are meaningful to our spouse, even if they differ from our own preferences.",
+    options: [
+      "We commit to regularly expressing love in ways that are meaningful to our spouse, even if they differ from our own preferences"
+    ],
+    weight: 6
+  },
+  {
+    id: 66,
+    section: "Relationship Dynamics",
+    subsection: "Personality Types: Understanding",
+    type: "D",
+    text: "We commit to understanding and appreciating our different personality types and working styles.",
+    options: [
+      "We commit to understanding and appreciating our different personality types and working styles"
+    ],
+    weight: 4
+  },
+  {
+    id: 67,
+    section: "Relationship Dynamics",
+    subsection: "Personality Types: Adaptation",
+    type: "D",
+    text: "We commit to adapting our communication and interaction styles to work better with our spouse's personality.",
+    options: [
+      "We commit to adapting our communication and interaction styles to work better with our spouse's personality"
+    ],
+    weight: 5
+  },
+  {
+    id: 68,
+    section: "Relationship Dynamics",
+    subsection: "Friendship: Priority",
+    type: "D",
+    text: "We commit to maintaining and deepening our friendship as the foundation of our romantic relationship.",
+    options: [
+      "We commit to maintaining and deepening our friendship as the foundation of our romantic relationship"
+    ],
+    weight: 7
+  },
+  {
+    id: 69,
+    section: "Relationship Dynamics",
+    subsection: "Friendship: Activities",
+    type: "M",
+    text: "We commit to regularly engaging in activities that strengthen our friendship, what is your preference?",
+    options: [
+      "Shared hobbies and interests",
+      "Deep conversations and sharing",
+      "Fun adventures and new experiences",
+      "All of the above"
+    ],
+    weight: 4
+  },
+  {
+    id: 70,
+    section: "Crisis Management",
+    subsection: "Health: Serious Illness",
+    type: "D",
+    text: "We commit to caring for each other 'in sickness and in health' with devotion, patience, and sacrificial love.",
+    options: [
+      "We commit to caring for each other 'in sickness and in health' with devotion, patience, and sacrificial love"
+    ],
+    weight: 8
+  },
+  {
+    id: 71,
+    section: "Crisis Management",
+    subsection: "Financial: Job Loss",
+    type: "D",
+    text: "We commit to supporting each other through financial difficulties and job changes with faith and teamwork.",
+    options: [
+      "We commit to supporting each other through financial difficulties and job changes with faith and teamwork"
+    ],
+    weight: 6
+  },
+  {
+    id: 72,
+    section: "Crisis Management",
+    subsection: "Family: Death/Loss",
+    type: "D",
+    text: "We commit to supporting each other through grief and loss with compassion, patience, and understanding.",
+    options: [
+      "We commit to supporting each other through grief and loss with compassion, patience, and understanding"
+    ],
+    weight: 7
+  },
+  {
+    id: 73,
+    section: "Crisis Management",
+    subsection: "Relationship: Infidelity",
+    type: "M",
+    text: "We commit to absolute faithfulness, but if unfaithfulness occurs, what is your approach to restoration?",
+    options: [
+      "Professional counseling with commitment to restoration",
+      "Separation with path to reconciliation if possible",
+      "This would require much prayer and professional guidance",
+      "This situation would end our marriage"
+    ],
+    weight: 10
+  },
+  {
+    id: 74,
+    section: "Crisis Management",
+    subsection: "Relationship: Trust Issues",
+    type: "D",
+    text: "We commit to rebuilding trust through transparency, accountability, and professional help when trust is broken.",
+    options: [
+      "We commit to rebuilding trust through transparency, accountability, and professional help when trust is broken"
+    ],
+    weight: 8
+  },
+  {
+    id: 75,
+    section: "Social Relationships",
+    subsection: "Friendships: Individual",
+    type: "M",
+    text: "We commit to maintaining healthy individual friendships while prioritizing our marriage, what are your boundaries?",
+    options: [
+      "Individual friendships with full transparency",
+      "Primarily couple friendships with some individual connections",
+      "Individual friendships of same gender only",
+      "Other: Please detail"
+    ],
+    weight: 5
+  },
+  {
+    id: 76,
+    section: "Social Relationships",
+    subsection: "Friendships: Couple",
+    type: "D",
+    text: "We commit to developing friendships with other couples who share our values and support our marriage.",
+    options: [
+      "We commit to developing friendships with other couples who share our values and support our marriage"
+    ],
+    weight: 4
+  },
+  {
+    id: 77,
+    section: "Social Relationships",
+    subsection: "Social Media: Boundaries",
+    type: "M",
+    text: "We commit to appropriate social media use that honors our marriage, what are your boundaries?",
+    options: [
+      "Complete transparency with shared access to accounts",
+      "Individual accounts with agreed-upon boundaries",
+      "Limited social media use to protect our relationship",
+      "Other: Please detail"
+    ],
+    weight: 4
+  },
+  {
+    id: 78,
+    section: "Social Relationships",
+    subsection: "Social Media: Ex-Relationships",
+    type: "D",
+    text: "We commit to ending all social media connections and communication with former romantic partners.",
+    options: [
+      "We commit to ending all social media connections and communication with former romantic partners"
+    ],
+    weight: 7
+  },
+  {
+    id: 79,
+    section: "Lifestyle Choices",
+    subsection: "Entertainment: Standards",
+    type: "M",
+    text: "We commit to entertainment choices that align with our Christian values, what is your approach?",
+    options: [
+      "Only explicitly Christian entertainment",
+      "Family-friendly content with Christian values",
+      "Selective mainstream content with discernment",
+      "Other: Please detail"
+    ],
+    weight: 3
+  },
+  {
+    id: 80,
+    section: "Lifestyle Choices",
+    subsection: "Entertainment: Time Limits",
+    type: "M",
+    text: "We commit to balanced entertainment consumption that doesn't interfere with our relationship, what are your boundaries?",
+    options: [
+      "Specific time limits on entertainment consumption",
+      "No entertainment during designated couple time",
+      "Mutual agreement on entertainment choices",
+      "All of the above"
+    ],
+    weight: 3
+  },
+  {
+    id: 81,
+    section: "Lifestyle Choices",
+    subsection: "Substance Use: Alcohol",
+    type: "M",
+    text: "We commit to responsible choices regarding alcohol consumption that honor our marriage and faith, what is your approach?",
+    options: [
+      "Complete abstinence from alcohol",
+      "Occasional social drinking with moderation",
+      "Wine with meals and special occasions only",
+      "Other: Please detail"
+    ],
+    weight: 4
+  },
+  {
+    id: 82,
+    section: "Lifestyle Choices",
+    subsection: "Substance Use: Other",
+    type: "D",
+    text: "We commit to avoiding all illegal substances and addictive behaviors that would harm our marriage or witness.",
+    options: [
+      "We commit to avoiding all illegal substances and addictive behaviors that would harm our marriage or witness"
+    ],
+    weight: 6
+  },
+  {
+    id: 83,
+    section: "Lifestyle Choices",
+    subsection: "Physical Fitness: Health",
+    type: "D",
+    text: "We commit to maintaining our physical health and appearance as good stewards of our bodies and out of respect for our spouse.",
+    options: [
+      "We commit to maintaining our physical health and appearance as good stewards of our bodies and out of respect for our spouse"
+    ],
+    weight: 4
+  },
+  {
+    id: 84,
+    section: "Lifestyle Choices",
+    subsection: "Physical Fitness: Activities",
+    type: "M",
+    text: "We commit to regular physical activity and fitness, what is your preferred approach?",
+    options: [
+      "Individual workout routines with personal accountability",
+      "Exercising together as a couple regularly",
+      "Participating in sports or fitness activities together",
+      "All of the above"
+    ],
+    weight: 3
+  },
+  {
+    id: 85,
+    section: "Communication Patterns",
+    subsection: "Daily Check-ins: Format",
+    type: "M",
+    text: "We commit to daily communication and connection, what is your preferred format?",
+    options: [
+      "Morning prayer and planning together",
+      "Evening reflection and sharing",
+      "Multiple brief check-ins throughout the day",
+      "All of the above"
+    ],
+    weight: 5
+  },
+  {
+    id: 86,
+    section: "Communication Patterns",
+    subsection: "Deep Conversations: Frequency",
+    type: "M",
+    text: "We commit to regular deep, meaningful conversations beyond daily logistics, how often?",
+    options: [
+      "Daily heart-to-heart conversations",
+      "Weekly intentional deep sharing",
+      "Monthly relationship review and planning",
+      "All of the above"
+    ],
+    weight: 6
+  },
+  {
+    id: 87,
+    section: "Communication Patterns",
+    subsection: "Listening Skills: Active",
+    type: "D",
+    text: "We commit to practicing active listening, giving full attention when our spouse is sharing, without interrupting or formulating responses.",
+    options: [
+      "We commit to practicing active listening, giving full attention when our spouse is sharing, without interrupting or formulating responses"
+    ],
+    weight: 7
+  },
+  {
+    id: 88,
+    section: "Communication Patterns",
+    subsection: "Appreciation: Expression",
+    type: "D",
+    text: "We commit to regularly expressing appreciation and gratitude for each other, both privately and publicly.",
+    options: [
+      "We commit to regularly expressing appreciation and gratitude for each other, both privately and publicly"
+    ],
+    weight: 5
+  },
+  {
+    id: 89,
+    section: "Spiritual Life Together",
+    subsection: "Prayer Life: Specific Times",
+    type: "M",
+    text: "We commit to specific times for prayer together, what is your preference?",
+    options: [
+      "Morning prayer before starting our day",
+      "Evening prayer before sleep",
+      "Grace before all meals together",
+      "All of the above"
+    ],
+    weight: 6
+  },
+  {
+    id: 90,
+    section: "Spiritual Life Together",
+    subsection: "Bible Study: Method",
+    type: "M",
+    text: "We commit to studying God's Word together regularly, what is your preferred method?",
+    options: [
+      "Daily devotional reading together",
+      "Weekly Bible study with discussion",
+      "Following a structured study program",
+      "Other: Please detail"
+    ],
+    weight: 5
+  },
+  {
+    id: 91,
+    section: "Spiritual Life Together",
+    subsection: "Worship: Corporate",
+    type: "D",
+    text: "We commit to regular corporate worship attendance and active participation in a local church community.",
+    options: [
+      "We commit to regular corporate worship attendance and active participation in a local church community"
+    ],
+    weight: 7
+  },
+  {
+    id: 92,
+    section: "Spiritual Life Together",
+    subsection: "Giving: Stewardship",
+    type: "M",
+    text: "We commit to faithful stewardship and giving as an expression of our faith, what is your approach?",
+    options: [
+      "Tithing 10% of gross income",
+      "Proportional giving based on blessings received",
+      "Regular giving with additional charitable support",
+      "Other: Please detail"
+    ],
+    weight: 4
+  },
+  {
+    id: 93,
+    section: "Legacy Building",
+    subsection: "Family Heritage: Values",
+    type: "D",
+    text: "We commit to intentionally building a family legacy of faith, love, and strong character for future generations.",
+    options: [
+      "We commit to intentionally building a family legacy of faith, love, and strong character for future generations"
+    ],
+    weight: 6
+  },
+  {
+    id: 94,
+    section: "Legacy Building",
+    subsection: "Family Heritage: Traditions",
+    type: "M",
+    text: "We commit to establishing meaningful family traditions that reinforce our values, what is your priority?",
+    options: [
+      "Annual family mission or service projects",
+      "Regular family celebrations and memory-making",
+      "Documented family history and faith stories",
+      "All of the above"
+    ],
+    weight: 4
+  },
+  {
+    id: 95,
+    section: "Legacy Building",
+    subsection: "Mentorship: Others",
+    type: "D",
+    text: "We commit to mentoring and encouraging other couples in their marriage journey as we mature in our own relationship.",
+    options: [
+      "We commit to mentoring and encouraging other couples in their marriage journey as we mature in our own relationship"
+    ],
+    weight: 3
+  },
+  {
+    id: 96,
+    section: "Legacy Building",
+    subsection: "Community Impact: Service",
+    type: "M",
+    text: "We commit to making a positive impact in our community together, what is your preferred focus?",
+    options: [
+      "Church ministry and leadership",
+      "Community service and outreach",
+      "Professional and workplace witness",
+      "All of the above"
+    ],
+    weight: 3
+  },
+  {
+    id: 97,
+    section: "Covenant Commitment",
+    subsection: "Renewal: Regular",
+    type: "M",
+    text: "We commit to regularly renewing our marriage covenant and commitments, how often?",
+    options: [
+      "Annual formal covenant renewal ceremony",
+      "Regular reaffirmation during anniversaries",
+      "Ongoing daily recommitment in prayer",
+      "All of the above"
+    ],
+    weight: 5
+  },
+  {
+    id: 98,
+    section: "Covenant Commitment",
+    subsection: "Growth: Continuous",
+    type: "D",
+    text: "We commit to continuous growth and improvement in our marriage, never becoming complacent or taking our relationship for granted.",
+    options: [
+      "We commit to continuous growth and improvement in our marriage, never becoming complacent or taking our relationship for granted"
+    ],
+    weight: 7
+  },
+  {
+    id: 99,
+    section: "Covenant Commitment",
+    subsection: "Eternal Perspective: Final",
+    type: "D",
+    text: "We commit to honoring God through our marriage as a testimony of His love and faithfulness, maintaining an eternal perspective on our covenant relationship.",
+    options: [
+      "We commit to honoring God through our marriage as a testimony of His love and faithfulness, maintaining an eternal perspective on our covenant relationship"
+    ],
+    weight: 10
   }
 ];
