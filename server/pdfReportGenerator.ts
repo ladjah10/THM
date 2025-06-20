@@ -969,182 +969,124 @@ export class ProfessionalPDFGenerator {
     }
   }
 
-  private addImprovedProfilesReferenceSection(): void {
+  private async addImprovedProfilesReferenceSection(): Promise<void> {
     this.doc.addPage();
     this.currentY = LAYOUT.MARGIN;
     
     this.drawSectionHeader('Appendix: Psychographic Profiles Reference');
     
     this.drawParagraph(
-      'The 100 Marriage Assessment identifies distinct psychographic profiles based on response patterns, values alignment, and relationship approaches. This comprehensive reference provides detailed descriptions of all profile types with both general and gender-specific insights.',
+      'The 100 Marriage Assessment identifies distinct psychographic profiles based on response patterns from Lawrence Adjah\'s authentic 99-question assessment. This comprehensive reference provides detailed descriptions of all 13 authentic profile types identified in the research.',
       { fontSize: 11 }
     );
     
     this.currentY += 15;
     
+    // Import authentic profiles from the data file
+    const { psychographicProfiles } = await import('../client/src/data/psychographicProfiles.js');
+    
     // Add section headers matching the main report
-    this.drawSectionHeader('General Psychographic Profiles');
+    this.drawSectionHeader('Unisex Psychographic Profiles');
     this.drawParagraph(
-      'These profiles apply to all participants regardless of gender, focusing on core relationship approaches and values.',
+      'These profiles apply to all participants regardless of gender, focusing on core relationship approaches and values based on Lawrence Adjah\'s research.',
       { fontSize: 10 }
     );
     
     this.currentY += 10;
 
-    const comprehensiveProfiles = [
-      {
-        name: 'Biblical Foundation Builder (BFB)',
-        description: 'Individuals with strong commitment to biblical principles and traditional marriage values. They demonstrate clear understanding of spiritual foundations for relationships and prioritize faith-based decision making.',
-        characteristics: ['Faith-centered approach', 'Traditional values', 'Spiritual leadership', 'Biblical worldview'],
-        icon: 'BV 6.png'
-      },
-      {
-        name: 'Harmonious Communicator (HC)',
-        description: 'Balanced approach emphasizing communication and emotional connection. These individuals excel at creating peaceful environments and building strong family relationships through effective dialogue.',
-        characteristics: ['Excellent communication skills', 'Emotional intelligence', 'Conflict resolution', 'Family-oriented'],
-        icon: 'IS 5.png'
-      },
-      {
-        name: 'Individualist Seeker (IS)',
-        description: 'Independent perspective with focus on personal growth and mutual respect. They value maintaining individual identity while building strong partnerships based on shared goals and values.',
-        characteristics: ['Personal growth focus', 'Independent thinking', 'Mutual respect', 'Goal-oriented'],
-        icon: 'IS 5.png'
-      },
-      {
-        name: 'Modern Partner (MP)',
-        description: 'Modern approach to relationships emphasizing equality and shared responsibilities. They adapt well to changing circumstances and value flexible communication styles.',
-        characteristics: ['Equality-focused', 'Adaptive communication', 'Shared responsibilities', 'Modern values'],
-        icon: 'PP 4.png'
-      },
-      {
-        name: 'Protective Leader (PL)',
-        description: 'Traditional masculine leadership approach with protective family values. They demonstrate strong commitment to providing security and spiritual guidance for their families.',
-        characteristics: ['Protective nature', 'Leadership qualities', 'Family security', 'Provider mentality'],
-        icon: 'BP 13.png'
-      },
-      {
-        name: 'Nurturing Partner (NP)',
-        description: 'Caring approach emphasizing emotional connection and family support. They excel at creating warm, supportive home environments and building strong emotional bonds.',
-        characteristics: ['Nurturing spirit', 'Emotional support', 'Home-building', 'Relationship harmony'],
-        icon: 'FF 3.png'
-      },
-      {
-        name: 'Strategic Planner (SP)',
-        description: 'Systematic approach to relationship building with focus on long-term goals and careful planning. They excel at creating structured approaches to marriage and family life.',
-        characteristics: ['Strategic thinking', 'Long-term planning', 'Systematic approach', 'Goal achievement'],
-        icon: 'SL 12.png'
-      },
-      {
-        name: 'Faithful Companion (FC)',
-        description: 'Loyalty-focused individuals with strong commitment to relationship stability and mutual support. They prioritize faithfulness and consistent partnership through all life circumstances.',
-        characteristics: ['Unwavering loyalty', 'Relationship stability', 'Mutual support', 'Consistent partnership'],
-        icon: 'FCH 10.png'
-      }
-    ];
+    // Get authentic unisex profiles
+    const unisexProfiles = psychographicProfiles.filter((p: any) => p.genderSpecific === null);
 
-    comprehensiveProfiles.forEach((profile, index) => {
-      this.drawAppendixProfileEntry(profile);
+    unisexProfiles.forEach((profile: any) => {
+      this.checkPageBreak(120);
+      this.drawAuthenticProfileEntry(profile);
     });
     
-    // Add compatibility matrix information
+    // Female-specific profiles
     this.checkPageBreak(200);
-    this.drawSectionHeader('Profile Compatibility Guidelines');
-    
+    this.drawSectionHeader('Female-Specific Profiles');
     this.drawParagraph(
-      'Understanding profile compatibility helps couples identify areas of natural alignment and potential growth opportunities:',
-      { fontSize: 11 }
-    );
-    
-    this.drawParagraph('High Compatibility Combinations:', { bold: true, fontSize: 11 });
-    this.drawParagraph('• Biblical Foundation Builder + Faithful Companion', { indent: true, fontSize: 10 });
-    this.drawParagraph('• Harmonious Communicator + Nurturing Partner', { indent: true, fontSize: 10 });
-    this.drawParagraph('• Strategic Planner + Modern Partner', { indent: true, fontSize: 10 });
-    this.drawParagraph('• Protective Leader + Nurturing Partner', { indent: true, fontSize: 10 });
-    
-    this.currentY += 15;
-    
-    this.drawParagraph('Growth Opportunity Combinations:', { bold: true, fontSize: 11 });
-    this.drawParagraph('• Individualist Seeker + Biblical Foundation Builder', { indent: true, fontSize: 10 });
-    this.drawParagraph('• Modern Partner + Protective Leader', { indent: true, fontSize: 10 });
-    this.drawParagraph('• Strategic Planner + Harmonious Communicator', { indent: true, fontSize: 10 });
-    
-    this.currentY += 20;
-    
-    this.drawParagraph(
-      'Remember: All profile combinations can build successful marriages with mutual understanding, communication, and commitment to growth.',
-      { fontSize: 10, bold: true }
-    );
-
-    // Add gender-specific profiles section
-    this.ensureSectionIntegrity(300);
-    this.drawSectionHeader('Gender-Specific Profile Insights');
-    
-    this.drawParagraph(
-      'These insights provide additional context based on traditional perspectives and research on relationship dynamics, tailored to gender-specific approaches to marriage and partnership.',
+      'These profiles reflect specific approaches to marriage and relationships based on female participants\' response patterns in Lawrence Adjah\'s assessment.',
       { fontSize: 10 }
     );
     
-    this.currentY += 15;
+    this.currentY += 10;
     
-    // Female-specific profiles
-    this.drawParagraph('Female-Specific Profiles:', { bold: true, fontSize: 12 });
-    this.drawParagraph(
-      'These profiles reflect traditional feminine strengths and approaches to relationship building, emphasizing nurturing, communication, and emotional connection.',
-      { fontSize: 10, indent: true }
-    );
+    const femaleProfiles = psychographicProfiles.filter((p: any) => p.genderSpecific === 'female');
     
-    const femaleProfiles = [
-      {
-        name: 'The Nurturing Leader (Women Only)',
-        description: 'Combines traditional feminine strengths with leadership qualities. Shows natural ability to nurture while maintaining personal strength and clear boundaries in relationships.',
-        characteristics: ['Nurturing leadership', 'Emotional intelligence', 'Family focus', 'Balanced strength and gentleness']
-      },
-      {
-        name: 'The Faithful Companion (Women Only)', 
-        description: 'Emphasizes partnership and support with strong spiritual foundation. Values loyalty, commitment, and building a godly home environment.',
-        characteristics: ['Faithful partnership', 'Spiritual strength', 'Home-building focus', 'Loyal commitment']
-      },
-      {
-        name: 'The Wise Counselor (Women Only)',
-        description: 'Natural ability to provide guidance and emotional support. Excels at communication and helping resolve relationship challenges through wisdom and empathy.',
-        characteristics: ['Wise guidance', 'Emotional support', 'Communication excellence', 'Empathetic understanding']
-      }
-    ];
-    
-    femaleProfiles.forEach(profile => {
-      this.drawAppendixProfileEntry(profile);
+    femaleProfiles.forEach((profile: any) => {
+      this.checkPageBreak(120);
+      this.drawAuthenticProfileEntry(profile);
     });
-    
-    this.currentY += 15;
     
     // Male-specific profiles
-    this.drawParagraph('Male-Specific Profiles:', { bold: true, fontSize: 12 });
+    this.checkPageBreak(200);
+    this.drawSectionHeader('Male-Specific Profiles');
     this.drawParagraph(
-      'These profiles reflect traditional masculine approaches to leadership, protection, and provision in marriage relationships.',
-      { fontSize: 10, indent: true }
+      'These profiles reflect specific approaches to marriage and relationships based on male participants\' response patterns in Lawrence Adjah\'s assessment.',
+      { fontSize: 10 }
     );
     
-    const maleProfiles = [
-      {
-        name: 'The Guardian Leader (Men Only)',
-        description: 'Traditional masculine leadership emphasizing protection, provision, and spiritual guidance. Shows strong potential for godly husband and father roles.',
-        characteristics: ['Protective leadership', 'Provider focus', 'Spiritual guidance', 'Family security emphasis']
-      },
-      {
-        name: 'The Servant Leader (Men Only)',
-        description: 'Leadership through service and sacrifice. Demonstrates Christ-like leadership by putting family needs first while maintaining strength and direction.',
-        characteristics: ['Servant leadership', 'Sacrificial love', 'Family-first mentality', 'Strength through service']
-      },
-      {
-        name: 'The Steadfast Protector (Men Only)',
-        description: 'Strong commitment to family protection and security. Values traditional roles while adapting to modern relationship dynamics with wisdom.',
-        characteristics: ['Family protection', 'Security provision', 'Traditional values', 'Adaptive wisdom']
-      }
-    ];
+    this.currentY += 10;
     
-    maleProfiles.forEach(profile => {
-      this.drawAppendixProfileEntry(profile);
+    const maleProfiles = psychographicProfiles.filter((p: any) => p.genderSpecific === 'male');
+    
+    maleProfiles.forEach((profile: any) => {
+      this.checkPageBreak(120);
+      this.drawAuthenticProfileEntry(profile);
     });
+
+    // Add note about authenticity
+    this.checkPageBreak(100);
+    this.drawParagraph(
+      'Note: All 13 psychographic profiles are derived from authentic response patterns identified in Lawrence Adjah\'s "The 100 Marriage Decisions & Declarations" assessment research.',
+      { fontSize: 9, bold: true }
+    );
+  }
+
+  private drawAuthenticProfileEntry(profile: any): void {
+    this.checkPageBreak(100);
+    
+    // Profile name with proper formatting
+    this.drawParagraph(profile.name, { 
+      bold: true, 
+      fontSize: 12,
+      color: '#2c3e50'
+    });
+    
+    // Profile description
+    this.drawParagraph(profile.description, { 
+      fontSize: 10,
+      indent: true
+    });
+    
+    // Add criteria information if available
+    if (profile.criteria && Array.isArray(profile.criteria)) {
+      this.drawParagraph('Scoring Criteria:', { 
+        bold: true, 
+        fontSize: 9,
+        indent: true
+      });
+      
+      profile.criteria.forEach((criterion: any) => {
+        let criteriaText = `• ${criterion.section}`;
+        if (criterion.min !== undefined) {
+          criteriaText += `: ${criterion.min}%`;
+          if (criterion.max !== undefined) {
+            criteriaText += ` - ${criterion.max}%`;
+          } else {
+            criteriaText += '+';
+          }
+        }
+        
+        this.drawParagraph(criteriaText, { 
+          fontSize: 8,
+          indent: true
+        });
+      });
+    }
+    
+    this.currentY += 15;
   }
 
   // Couple Assessment Report Generation
