@@ -1553,6 +1553,108 @@ export class DatabaseStorage implements IStorage {
     }
   }
   
+  // Add missing methods required by the interface
+  async getAssessment(id: string): Promise<AssessmentResult | null> {
+    return this.getAssessmentById(id);
+  }
+
+  async updateAssessment(id: string, assessment: AssessmentResult): Promise<void> {
+    try {
+      const { pool } = await import('./db');
+      
+      await pool.query(`
+        UPDATE assessments 
+        SET email = $2, name = $3, scores = $4, profile = $5, gender_profile = $6, 
+            responses = $7, demographics = $8, updated_at = $9, recalculated = $10,
+            last_recalculated = $11
+        WHERE id = $1
+      `, [
+        id,
+        assessment.email,
+        assessment.name,
+        JSON.stringify(assessment.scores),
+        JSON.stringify(assessment.profile),
+        assessment.genderProfile ? JSON.stringify(assessment.genderProfile) : null,
+        JSON.stringify(assessment.responses),
+        JSON.stringify(assessment.demographics),
+        new Date(),
+        assessment.recalculated || false,
+        assessment.lastRecalculated ? new Date(assessment.lastRecalculated) : new Date()
+      ]);
+      
+      console.log(`Assessment updated in database: ${id}`);
+    } catch (error) {
+      console.error('Error updating assessment in database:', error);
+      await this.memStorage.updateAssessment(id, assessment);
+    }
+  }
+
+  async getRecalculatedAssessments(): Promise<AssessmentResult[]> {
+    try {
+      const { pool } = await import('./db');
+      
+      const results = await pool.query(`
+        SELECT id, email, name, scores, profile, gender_profile as "genderProfile", 
+               responses, demographics, raw_answers, timestamp, updated_at, 
+               recalculated, last_recalculated, original_score, original_profile, 
+               recalculated_pdf_path, couple_id, couple_role, report_sent
+        FROM assessments 
+        WHERE recalculated = true
+        ORDER BY last_recalculated DESC
+      `);
+
+      if (!results.rows || results.rows.length === 0) {
+        return [];
+      }
+
+      return results.rows.map(row => ({
+        id: row.id,
+        email: row.email,
+        name: row.name,
+        scores: JSON.parse(row.scores),
+        profile: JSON.parse(row.profile),
+        genderProfile: row.genderProfile ? JSON.parse(row.genderProfile) : null,
+        responses: JSON.parse(row.responses),
+        demographics: JSON.parse(row.demographics),
+        timestamp: row.timestamp.toISOString(),
+        recalculated: row.recalculated || false,
+        lastRecalculated: row.last_recalculated ? row.last_recalculated.toISOString() : undefined,
+        originalScore: row.original_score,
+        originalProfile: row.original_profile,
+        recalculatedPdfPath: row.recalculated_pdf_path || undefined,
+        coupleId: row.couple_id || undefined,
+        coupleRole: row.couple_role as 'primary' | 'spouse' || undefined,
+        reportSent: row.report_sent
+      }));
+    } catch (error) {
+      console.error('Error getting recalculated assessments from database:', error);
+      return this.memStorage.getRecalculatedAssessments();
+    }
+  }
+
+  async updateCoupleAssessment(id: string, report: CoupleAssessmentReport): Promise<void> {
+    try {
+      const { pool } = await import('./db');
+      
+      await pool.query(`
+        UPDATE couple_assessments 
+        SET analysis = $2, compatibility_score = $3, recommendations = $4, report_sent = $5
+        WHERE id = $1 OR couple_id = $1
+      `, [
+        id,
+        JSON.stringify(report.analysis),
+        report.compatibilityScore,
+        JSON.stringify(report.recommendations || []),
+        report.reportSent || false
+      ]);
+      
+      console.log(`Couple assessment updated in database: ${id}`);
+    } catch (error) {
+      console.error('Error updating couple assessment in database:', error);
+      await this.memStorage.updateCoupleAssessment(id, report);
+    }
+  }
+  
   async getAllCoupleAssessments(): Promise<CoupleAssessmentReport[]> {
     try {
       // Get from database using raw SQL

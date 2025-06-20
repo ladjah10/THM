@@ -807,7 +807,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Try to get from recalculated assessments first
       const recalculated = await storage.getRecalculatedAssessments();
-      let assessment = recalculated.find(a => a.id === decodedId);
+      let assessment: AssessmentResult | null = recalculated.find(a => a.id === decodedId) || null;
 
       // If not found, try completed assessments
       if (!assessment) {
