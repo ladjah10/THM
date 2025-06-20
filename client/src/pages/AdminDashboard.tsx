@@ -685,6 +685,52 @@ export default function AdminDashboard() {
         </header>
 
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Critical Data Integrity Alert */}
+          <Card className="mb-8 border-red-200 bg-red-50">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-red-800">
+                <AlertCircle className="h-5 w-5" />
+                Data Integrity Status - Authentic Questions Restored
+              </CardTitle>
+              <CardDescription className="text-red-700">
+                Critical system update: All 99 authentic questions from Lawrence Adjah's book have been restored.
+                Legacy assessments used corrupted/simplified questions and require user attention.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-white p-4 rounded-lg border">
+                  <div className="text-2xl font-bold text-green-600">99</div>
+                  <div className="text-sm text-gray-600">Authentic Questions Restored</div>
+                  <div className="text-xs text-gray-500">From Lawrence Adjah's book</div>
+                </div>
+                <div className="bg-white p-4 rounded-lg border">
+                  <div className="text-2xl font-bold text-red-600">
+                    {assessments?.filter((a: any) => !a.recalculated)?.length || 0}
+                  </div>
+                  <div className="text-sm text-gray-600">Legacy Assessments</div>
+                  <div className="text-xs text-gray-500">Used corrupted questions</div>
+                </div>
+                <div className="bg-white p-4 rounded-lg border">
+                  <div className="text-2xl font-bold text-blue-600">
+                    {assessments?.filter((a: any) => a.recalculated)?.length || 0}
+                  </div>
+                  <div className="text-sm text-gray-600">Corrected Assessments</div>
+                  <div className="text-xs text-gray-500">Recalculated with authentic questions</div>
+                </div>
+              </div>
+              <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                <h4 className="font-semibold text-yellow-800 mb-2">Action Required</h4>
+                <ul className="text-sm text-yellow-700 space-y-1">
+                  <li>• Legacy assessments show artificially low scores (3-10%)</li>
+                  <li>• Users should retake assessments with authentic 99 questions</li>
+                  <li>• New assessments automatically use authentic book content</li>
+                  <li>• PDF reports now include data integrity status</li>
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Summary Cards */}
           {analyticsSummary && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -877,8 +923,8 @@ export default function AdminDashboard() {
                             <TableHead>Email</TableHead>
                             <TableHead>Score</TableHead>
                             <TableHead>Profile</TableHead>
+                            <TableHead>Data Integrity</TableHead>
                             <TableHead>Date</TableHead>
-                            <TableHead>Recalculated?</TableHead>
                             <TableHead>Actions</TableHead>
                           </TableRow>
                         </TableHeader>
@@ -890,14 +936,42 @@ export default function AdminDashboard() {
                               </TableCell>
                               <TableCell>{assessment.demographics?.email}</TableCell>
                               <TableCell>
-                                <Badge variant={
-                                  (assessment.scores?.overallPercentage || 0) >= 80 ? "default" :
-                                  (assessment.scores?.overallPercentage || 0) >= 60 ? "secondary" : "destructive"
-                                }>
-                                  {assessment.scores?.overallPercentage?.toFixed(1) || 0}%
-                                </Badge>
+                                <div className="flex items-center gap-2">
+                                  <Badge variant={
+                                    (assessment.scores?.overallPercentage || 0) >= 80 ? "default" :
+                                    (assessment.scores?.overallPercentage || 0) >= 60 ? "secondary" : "destructive"
+                                  }>
+                                    {assessment.scores?.overallPercentage?.toFixed(1) || 0}%
+                                  </Badge>
+                                  {!assessment.recalculated && (
+                                    <Tooltip>
+                                      <TooltipTrigger>
+                                        <AlertCircle className="h-4 w-4 text-yellow-500" />
+                                      </TooltipTrigger>
+                                      <TooltipContent>
+                                        Low score due to corrupted questions
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  )}
+                                </div>
                               </TableCell>
                               <TableCell>{assessment.profile?.name || "N/A"}</TableCell>
+                              <TableCell>
+                                <div className="flex flex-col gap-1">
+                                  {assessment.recalculated ? (
+                                    <Badge variant="default" className="bg-green-100 text-green-800 border-green-300">
+                                      Authentic (99Q)
+                                    </Badge>
+                                  ) : (
+                                    <Badge variant="destructive" className="bg-red-100 text-red-800 border-red-300">
+                                      Legacy (Corrupted)
+                                    </Badge>
+                                  )}
+                                  <div className="text-xs text-gray-500">
+                                    {assessment.recalculated ? 'Book questions' : 'Needs retake'}
+                                  </div>
+                                </div>
+                              </TableCell>
                               <TableCell>{formatDate(assessment.timestamp)}</TableCell>
                               <TableCell>
                                 <div className="flex items-center gap-2">
