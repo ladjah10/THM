@@ -140,7 +140,7 @@ export const questions: Question[] = [
   },
   {
     id: 10,
-    section: "Your Faith Life",
+    section: "Section II: Your Faith Life",
     subsection: "Worship Life: Marriage (Husband and Wife)",
     type: "M",
     text: "We commit to prayer as a couple, how often?",
@@ -153,7 +153,7 @@ export const questions: Question[] = [
   },
   {
     id: 11,
-    section: "Your Faith Life",
+    section: "Section II: Your Faith Life",
     subsection: "Worship Life: Family",
     type: "M",
     text: "We commit to family worship weekly, including what activities?",
@@ -167,7 +167,7 @@ export const questions: Question[] = [
   },
   {
     id: 12,
-    section: "Your Faith Life",
+    section: "Section II: Your Faith Life",
     subsection: "Worship Life: Serving",
     type: "M",
     text: "We commit to each volunteering/serving in our faith community, what is your approach?",
@@ -181,7 +181,7 @@ export const questions: Question[] = [
   },
   {
     id: 13,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Order of Priority before God",
     type: "D",
     text: "We understand and accept the order of relationship priority according to God's highest design is first, our relationship with God; then, our relationship with our Spouse (see: \"forsake all others\"), then, our relationship with our children (if applicable), then everything and everyone else (including work, friends, family).",
@@ -193,7 +193,7 @@ export const questions: Question[] = [
   },
   {
     id: 14,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Family Name",
     type: "M",
     text: "We commit to sharing a last name in marriage, what is your approach?",
@@ -206,7 +206,7 @@ export const questions: Question[] = [
   },
   {
     id: 15,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Relationship Model (Work / Home Life)",
     type: "M",
     text: "We commit to a marriage model for work and home life, what is your approach?",
@@ -220,7 +220,7 @@ export const questions: Question[] = [
   },
   {
     id: 16,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Relationship Model (Work / Family Life Boundaries - Travel)",
     type: "M",
     text: "We commit to a marriage/work model regarding travel, what is your approach?",
@@ -234,7 +234,7 @@ export const questions: Question[] = [
   },
   {
     id: 17,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Relationship Model (Work / Family Life Boundaries – Work Down Time)",
     type: "M",
     text: "We commit to a marriage/work model regarding work down time, what is your approach?",
@@ -248,7 +248,7 @@ export const questions: Question[] = [
   },
   {
     id: 18,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Relationship Model (Work / Family Life Boundaries – Late Night Work)",
     type: "M",
     text: "We commit to a marriage/work model regarding late night work, what is your approach?",
@@ -262,7 +262,7 @@ export const questions: Question[] = [
   },
   {
     id: 19,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Communication & Conflict Resolution",
     type: "D",
     text: "We commit to not fighting or having serious arguments in front of others, rather, we'd wait for time alone and away from company, either in our check-in time or immediately after to discuss things away from them.",
@@ -274,7 +274,7 @@ export const questions: Question[] = [
   },
   {
     id: 20,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Communication & Conflict Resolution (Discuss with others)",
     type: "D",
     text: "We commit to never discussing conflict/issues in our marriage with anyone, before (1) addressing the issue with our spouse and (2) mutually agreeing to seek approved counsel on the issue.",
@@ -286,7 +286,7 @@ export const questions: Question[] = [
   },
   {
     id: 21,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Communication & Conflict Resolution (24 hours)",
     type: "D",
     text: "We commit to not going more than 24 hours without speaking with one another under any circumstances.",
@@ -298,7 +298,7 @@ export const questions: Question[] = [
   },
   {
     id: 22,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Communication & Conflict Resolution (Text)",
     type: "D",
     text: "We commit to not discussing serious issues/conflicts/debates via text message. Rather, we'll always discuss them in person or in a live conversation on a phone given the importance of conveying the proper tone and honoring wise boundaries for the marriage.",
@@ -310,7 +310,7 @@ export const questions: Question[] = [
   },
   {
     id: 23,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Communication & Conflict Resolution (Sleep angry)",
     type: "D",
     text: "We commit to not going to sleep while still angry with one another [not to be confused with resolving the issue, but committing to find common ground to discuss further, prayer and then coming together as one].",
@@ -322,7 +322,7 @@ export const questions: Question[] = [
   },
   {
     id: 24,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Communication & Conflict Resolution (Same bed)",
     type: "D",
     text: "We commit to always sleeping together in the same bed, no matter the issue.",
@@ -334,7 +334,7 @@ export const questions: Question[] = [
   },
   {
     id: 25,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Communication & Conflict Resolution (Sex as weapon)",
     type: "D",
     text: "We commit to never using sex as a weapon by withholding it due to conflict [Unless mutually acknowledged and agreed due to medical considerations, prayer and/or fasting].",
@@ -346,7 +346,7 @@ export const questions: Question[] = [
   },
   {
     id: 26,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Communication & Conflict Resolution (Silence as weapon)",
     type: "D",
     text: "We commit to never using silence as a weapon by withholding presence or communication due to conflict [Unless mutually acknowledged and agreed for a set amount of time for prayer and reflection].",
@@ -358,7 +358,7 @@ export const questions: Question[] = [
   },
   {
     id: 27,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Communication & Conflict Resolution: Counseling",
     type: "M",
     text: "We commit to a minimum of counseling sessions for our marriage, what is your approach?",
@@ -371,7 +371,7 @@ export const questions: Question[] = [
   },
   {
     id: 28,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Decision Making",
     type: "D",
     text: "We commit to honoring the husband as the head and the final decision-making authority on all decisions, with trust in his submission to God and prayerful consideration of his wife's and family's interests.",
@@ -383,7 +383,7 @@ export const questions: Question[] = [
   },
   {
     id: 29,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Dedicated Time (Fellowship)",
     type: "M",
     text: "We commit to a date night schedule, how often?",
@@ -395,7 +395,7 @@ export const questions: Question[] = [
   },
   {
     id: 30,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Marriage: Dedicated Time",
     type: "M",
     text: "We commit to having a weekly check-in, when?",
@@ -409,7 +409,7 @@ export const questions: Question[] = [
   },
   {
     id: 31,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Intimacy: Date Night Planning",
     type: "M",
     text: "We commit to regular date nights with intentional planning, how do you approach this?",
@@ -423,7 +423,7 @@ export const questions: Question[] = [
   },
   {
     id: 32,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Intimacy: Physical Affection",
     type: "D",
     text: "We commit to regular physical affection and intimacy as an essential part of our marriage covenant.",
@@ -435,7 +435,7 @@ export const questions: Question[] = [
   },
   {
     id: 33,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Intimacy: Sexual Expectations",
     type: "M",
     text: "We commit to open communication about our sexual relationship, what is your approach?",
@@ -449,7 +449,7 @@ export const questions: Question[] = [
   },
   {
     id: 34,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Financial Management: Joint Accounts",
     type: "M",
     text: "We commit to managing our finances together, what is your approach to banking?",
@@ -463,7 +463,7 @@ export const questions: Question[] = [
   },
   {
     id: 35,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Financial Management: Major Purchases",
     type: "M",
     text: "We commit to mutual agreement on major financial decisions, what threshold requires discussion?",
@@ -477,7 +477,7 @@ export const questions: Question[] = [
   },
   {
     id: 36,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Financial Management: Debt",
     type: "D",
     text: "We commit to transparency about all existing debts and working together to eliminate them systematically.",
@@ -489,7 +489,7 @@ export const questions: Question[] = [
   },
   {
     id: 37,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Financial Management: Budgeting",
     type: "M",
     text: "We commit to creating and maintaining a household budget, how often will you review it?",
@@ -503,7 +503,7 @@ export const questions: Question[] = [
   },
   {
     id: 38,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Financial Management: Savings Goals",
     type: "M",
     text: "We commit to establishing and working toward shared financial goals, what is your priority?",
@@ -517,7 +517,7 @@ export const questions: Question[] = [
   },
   {
     id: 39,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Career & Work: Balance",
     type: "M",
     text: "We commit to supporting each other's career goals while prioritizing our marriage, what is your approach?",
@@ -531,7 +531,7 @@ export const questions: Question[] = [
   },
   {
     id: 40,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Career & Work: Travel",
     type: "M",
     text: "We commit to managing work-related travel in a way that honors our marriage, what are your boundaries?",
@@ -545,7 +545,7 @@ export const questions: Question[] = [
   },
   {
     id: 41,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Household Management: Chores",
     type: "M",
     text: "We commit to sharing household responsibilities fairly, how will you divide tasks?",
@@ -559,7 +559,7 @@ export const questions: Question[] = [
   },
   {
     id: 42,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Household Management: Cooking",
     type: "M",
     text: "We commit to sharing meal preparation and planning, what is your approach?",
@@ -573,7 +573,7 @@ export const questions: Question[] = [
   },
   {
     id: 43,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Extended Family: Boundaries",
     type: "D",
     text: "We commit to establishing healthy boundaries with extended family while honoring our parents.",
@@ -585,7 +585,7 @@ export const questions: Question[] = [
   },
   {
     id: 44,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Extended Family: Holidays",
     type: "M",
     text: "We commit to managing holiday celebrations in a way that honors both families, what is your approach?",
@@ -599,7 +599,7 @@ export const questions: Question[] = [
   },
   {
     id: 45,
-    section: "Your Marriage Life",
+    section: "Section III: Your Marriage Life",
     subsection: "Extended Family: Living Arrangements",
     type: "M",
     text: "We commit to maintaining independence while supporting extended family, what are your boundaries?",
@@ -613,7 +613,7 @@ export const questions: Question[] = [
   },
   {
     id: 46,
-    section: "Your Future Together",
+    section: "Section III: Your Marriage Life",
     subsection: "Children: Timing",
     type: "M",
     text: "We have discussed and agreed on our timeline for having children, what is your preference?",
@@ -627,7 +627,7 @@ export const questions: Question[] = [
   },
   {
     id: 47,
-    section: "Your Future Together",
+    section: "Section III: Your Marriage Life",
     subsection: "Children: Number",
     type: "M",
     text: "We have discussed and agreed on the number of children we hope to have, what is your preference?",
@@ -641,7 +641,7 @@ export const questions: Question[] = [
   },
   {
     id: 48,
-    section: "Your Future Together",
+    section: "Section III: Your Marriage Life",
     subsection: "Children: Discipline",
     type: "M",
     text: "We commit to consistent parenting and discipline approaches, what is your philosophy?",
@@ -655,7 +655,7 @@ export const questions: Question[] = [
   },
   {
     id: 49,
-    section: "Your Future Together",
+    section: "Section III: Your Marriage Life",
     subsection: "Children: Education",
     type: "M",
     text: "We have discussed our preferences for our children's education, what is your approach?",
@@ -669,7 +669,7 @@ export const questions: Question[] = [
   },
   {
     id: 50,
-    section: "Your Future Together",
+    section: "Section IV: Your Marriage Life with Children",
     subsection: "Housing: Ownership",
     type: "M",
     text: "We have discussed our housing goals and timeline, what is your priority?",
@@ -683,7 +683,7 @@ export const questions: Question[] = [
   },
   {
     id: 51,
-    section: "Your Future Together",
+    section: "Section IV: Your Marriage Life with Children",
     subsection: "Housing: Location",
     type: "M",
     text: "We have discussed our preferred living location and community, what is your priority?",
@@ -697,7 +697,7 @@ export const questions: Question[] = [
   },
   {
     id: 52,
-    section: "Your Future Together",
+    section: "Section IV: Your Marriage Life with Children",
     subsection: "Health & Wellness: Lifestyle",
     type: "M",
     text: "We commit to maintaining healthy lifestyles together, what is your approach?",
@@ -711,7 +711,7 @@ export const questions: Question[] = [
   },
   {
     id: 53,
-    section: "Your Future Together",
+    section: "Section V: Your Family/Home Life",
     subsection: "Health & Wellness: Mental Health",
     type: "D",
     text: "We commit to supporting each other's mental and emotional wellbeing, including seeking professional help when needed.",
@@ -723,7 +723,7 @@ export const questions: Question[] = [
   },
   {
     id: 54,
-    section: "Your Future Together",
+    section: "Section V: Your Family/Home Life",
     subsection: "Ministry & Service: Together",
     type: "M",
     text: "We commit to serving together in ministry and community service, what is your preference?",
@@ -737,7 +737,7 @@ export const questions: Question[] = [
   },
   {
     id: 55,
-    section: "Your Future Together",
+    section: "Section V: Your Family/Home Life",
     subsection: "Ministry & Service: Individual",
     type: "D",
     text: "We commit to supporting each other's individual ministry callings and service opportunities.",
@@ -749,7 +749,7 @@ export const questions: Question[] = [
   },
   {
     id: 56,
-    section: "Your Future Together",
+    section: "Section V: Your Family/Home Life",
     subsection: "Retirement: Planning",
     type: "M",
     text: "We commit to planning for our retirement together, what is your approach?",
@@ -763,7 +763,7 @@ export const questions: Question[] = [
   },
   {
     id: 57,
-    section: "Your Future Together",
+    section: "Section V: Your Family/Home Life",
     subsection: "Retirement: Lifestyle",
     type: "M",
     text: "We have discussed our vision for retirement lifestyle, what is your preference?",
@@ -777,7 +777,7 @@ export const questions: Question[] = [
   },
   {
     id: 58,
-    section: "Personal Growth",
+    section: "Section V: Your Family/Home Life",
     subsection: "Individual Development: Education",
     type: "D",
     text: "We commit to supporting each other's continued learning and personal development throughout our marriage.",
@@ -789,7 +789,7 @@ export const questions: Question[] = [
   },
   {
     id: 59,
-    section: "Personal Growth",
+    section: "Section V: Your Family/Home Life",
     subsection: "Individual Development: Hobbies",
     type: "D",
     text: "We commit to encouraging each other's individual interests and hobbies while maintaining priority on our relationship.",
@@ -801,7 +801,7 @@ export const questions: Question[] = [
   },
   {
     id: 60,
-    section: "Personal Growth",
+    section: "Section V: Your Family/Home Life",
     subsection: "Spiritual Growth: Individual",
     type: "M",
     text: "We commit to individual spiritual growth and development, what is your approach?",
@@ -815,7 +815,7 @@ export const questions: Question[] = [
   },
   {
     id: 61,
-    section: "Personal Growth",
+    section: "Section V: Your Family/Home Life",
     subsection: "Spiritual Growth: Together",
     type: "M",
     text: "We commit to growing spiritually together as a couple, what is your priority?",
@@ -829,7 +829,7 @@ export const questions: Question[] = [
   },
   {
     id: 62,
-    section: "Personal Growth",
+    section: "Section V: Your Family/Home Life",
     subsection: "Character Development: Accountability",
     type: "D",
     text: "We commit to holding each other accountable for character growth and spiritual maturity with love and grace.",
@@ -841,7 +841,7 @@ export const questions: Question[] = [
   },
   {
     id: 63,
-    section: "Personal Growth",
+    section: "Section V: Your Family/Home Life",
     subsection: "Character Development: Forgiveness",
     type: "D",
     text: "We commit to practicing forgiveness quickly and completely, not holding grudges or keeping record of wrongs.",
@@ -853,7 +853,7 @@ export const questions: Question[] = [
   },
   {
     id: 64,
-    section: "Relationship Dynamics",
+    section: "Section V: Your Family/Home Life",
     subsection: "Love Languages: Understanding",
     type: "M",
     text: "We have identified and discussed our love languages, what is most important to you?",
@@ -867,7 +867,7 @@ export const questions: Question[] = [
   },
   {
     id: 65,
-    section: "Relationship Dynamics",
+    section: "Section V: Your Family/Home Life",
     subsection: "Love Languages: Expression",
     type: "D",
     text: "We commit to regularly expressing love in ways that are meaningful to our spouse, even if they differ from our own preferences.",
@@ -879,7 +879,7 @@ export const questions: Question[] = [
   },
   {
     id: 66,
-    section: "Relationship Dynamics",
+    section: "Section V: Your Family/Home Life",
     subsection: "Personality Types: Understanding",
     type: "D",
     text: "We commit to understanding and appreciating our different personality types and working styles.",
@@ -891,7 +891,7 @@ export const questions: Question[] = [
   },
   {
     id: 67,
-    section: "Relationship Dynamics",
+    section: "Section V: Your Family/Home Life",
     subsection: "Personality Types: Adaptation",
     type: "D",
     text: "We commit to adapting our communication and interaction styles to work better with our spouse's personality.",
@@ -903,7 +903,7 @@ export const questions: Question[] = [
   },
   {
     id: 68,
-    section: "Relationship Dynamics",
+    section: "Section V: Your Family/Home Life",
     subsection: "Friendship: Priority",
     type: "D",
     text: "We commit to maintaining and deepening our friendship as the foundation of our romantic relationship.",
@@ -915,7 +915,7 @@ export const questions: Question[] = [
   },
   {
     id: 69,
-    section: "Relationship Dynamics",
+    section: "Section V: Your Family/Home Life",
     subsection: "Friendship: Activities",
     type: "M",
     text: "We commit to regularly engaging in activities that strengthen our friendship, what is your preference?",
@@ -929,7 +929,7 @@ export const questions: Question[] = [
   },
   {
     id: 70,
-    section: "Crisis Management",
+    section: "Section VI: Your Finances",
     subsection: "Health: Serious Illness",
     type: "D",
     text: "We commit to caring for each other 'in sickness and in health' with devotion, patience, and sacrificial love.",
@@ -941,7 +941,7 @@ export const questions: Question[] = [
   },
   {
     id: 71,
-    section: "Crisis Management",
+    section: "Section VI: Your Finances",
     subsection: "Financial: Job Loss",
     type: "D",
     text: "We commit to supporting each other through financial difficulties and job changes with faith and teamwork.",
@@ -953,7 +953,7 @@ export const questions: Question[] = [
   },
   {
     id: 72,
-    section: "Crisis Management",
+    section: "Section VI: Your Finances",
     subsection: "Family: Death/Loss",
     type: "D",
     text: "We commit to supporting each other through grief and loss with compassion, patience, and understanding.",
@@ -965,7 +965,7 @@ export const questions: Question[] = [
   },
   {
     id: 73,
-    section: "Crisis Management",
+    section: "Section VI: Your Finances",
     subsection: "Relationship: Infidelity",
     type: "M",
     text: "We commit to absolute faithfulness, but if unfaithfulness occurs, what is your approach to restoration?",
@@ -979,7 +979,7 @@ export const questions: Question[] = [
   },
   {
     id: 74,
-    section: "Crisis Management",
+    section: "Section VI: Your Finances",
     subsection: "Relationship: Trust Issues",
     type: "D",
     text: "We commit to rebuilding trust through transparency, accountability, and professional help when trust is broken.",
@@ -991,7 +991,7 @@ export const questions: Question[] = [
   },
   {
     id: 75,
-    section: "Social Relationships",
+    section: "Section VI: Your Finances",
     subsection: "Friendships: Individual",
     type: "M",
     text: "We commit to maintaining healthy individual friendships while prioritizing our marriage, what are your boundaries?",
@@ -1005,7 +1005,7 @@ export const questions: Question[] = [
   },
   {
     id: 76,
-    section: "Social Relationships",
+    section: "Section VI: Your Finances",
     subsection: "Friendships: Couple",
     type: "D",
     text: "We commit to developing friendships with other couples who share our values and support our marriage.",
@@ -1017,7 +1017,7 @@ export const questions: Question[] = [
   },
   {
     id: 77,
-    section: "Social Relationships",
+    section: "Section VI: Your Finances",
     subsection: "Social Media: Boundaries",
     type: "M",
     text: "We commit to appropriate social media use that honors our marriage, what are your boundaries?",
@@ -1031,7 +1031,7 @@ export const questions: Question[] = [
   },
   {
     id: 78,
-    section: "Social Relationships",
+    section: "Section VI: Your Finances",
     subsection: "Social Media: Ex-Relationships",
     type: "D",
     text: "We commit to ending all social media connections and communication with former romantic partners.",
@@ -1043,7 +1043,7 @@ export const questions: Question[] = [
   },
   {
     id: 79,
-    section: "Lifestyle Choices",
+    section: "Section VI: Your Finances",
     subsection: "Entertainment: Standards",
     type: "M",
     text: "We commit to entertainment choices that align with our Christian values, what is your approach?",
@@ -1057,7 +1057,7 @@ export const questions: Question[] = [
   },
   {
     id: 80,
-    section: "Lifestyle Choices",
+    section: "Section VII: Your Health and Wellness",
     subsection: "Entertainment: Time Limits",
     type: "M",
     text: "We commit to balanced entertainment consumption that doesn't interfere with our relationship, what are your boundaries?",
@@ -1071,7 +1071,7 @@ export const questions: Question[] = [
   },
   {
     id: 81,
-    section: "Lifestyle Choices",
+    section: "Section VII: Your Health and Wellness",
     subsection: "Substance Use: Alcohol",
     type: "M",
     text: "We commit to responsible choices regarding alcohol consumption that honor our marriage and faith, what is your approach?",
@@ -1085,7 +1085,7 @@ export const questions: Question[] = [
   },
   {
     id: 82,
-    section: "Lifestyle Choices",
+    section: "Section VII: Your Health and Wellness",
     subsection: "Substance Use: Other",
     type: "D",
     text: "We commit to avoiding all illegal substances and addictive behaviors that would harm our marriage or witness.",
@@ -1097,7 +1097,7 @@ export const questions: Question[] = [
   },
   {
     id: 83,
-    section: "Lifestyle Choices",
+    section: "Section VII: Your Health and Wellness",
     subsection: "Physical Fitness: Health",
     type: "D",
     text: "We commit to maintaining our physical health and appearance as good stewards of our bodies and out of respect for our spouse.",
@@ -1109,7 +1109,7 @@ export const questions: Question[] = [
   },
   {
     id: 84,
-    section: "Lifestyle Choices",
+    section: "Section VII: Your Health and Wellness",
     subsection: "Physical Fitness: Activities",
     type: "M",
     text: "We commit to regular physical activity and fitness, what is your preferred approach?",
@@ -1123,7 +1123,7 @@ export const questions: Question[] = [
   },
   {
     id: 85,
-    section: "Communication Patterns",
+    section: "Section VII: Your Health and Wellness",
     subsection: "Daily Check-ins: Format",
     type: "M",
     text: "We commit to daily communication and connection, what is your preferred format?",
@@ -1137,7 +1137,7 @@ export const questions: Question[] = [
   },
   {
     id: 86,
-    section: "Communication Patterns",
+    section: "Section VII: Your Health and Wellness",
     subsection: "Deep Conversations: Frequency",
     type: "M",
     text: "We commit to regular deep, meaningful conversations beyond daily logistics, how often?",
@@ -1151,7 +1151,7 @@ export const questions: Question[] = [
   },
   {
     id: 87,
-    section: "Communication Patterns",
+    section: "Section VIII: Your Marriage and Boundaries",
     subsection: "Listening Skills: Active",
     type: "D",
     text: "We commit to practicing active listening, giving full attention when our spouse is sharing, without interrupting or formulating responses.",
@@ -1163,7 +1163,7 @@ export const questions: Question[] = [
   },
   {
     id: 88,
-    section: "Communication Patterns",
+    section: "Section VIII: Your Marriage and Boundaries",
     subsection: "Appreciation: Expression",
     type: "D",
     text: "We commit to regularly expressing appreciation and gratitude for each other, both privately and publicly.",
@@ -1175,7 +1175,7 @@ export const questions: Question[] = [
   },
   {
     id: 89,
-    section: "Spiritual Life Together",
+    section: "Section VIII: Your Marriage and Boundaries",
     subsection: "Prayer Life: Specific Times",
     type: "M",
     text: "We commit to specific times for prayer together, what is your preference?",
@@ -1189,7 +1189,7 @@ export const questions: Question[] = [
   },
   {
     id: 90,
-    section: "Spiritual Life Together",
+    section: "Section VIII: Your Marriage and Boundaries",
     subsection: "Bible Study: Method",
     type: "M",
     text: "We commit to studying God's Word together regularly, what is your preferred method?",
@@ -1203,7 +1203,7 @@ export const questions: Question[] = [
   },
   {
     id: 91,
-    section: "Spiritual Life Together",
+    section: "Section VIII: Your Marriage and Boundaries",
     subsection: "Worship: Corporate",
     type: "D",
     text: "We commit to regular corporate worship attendance and active participation in a local church community.",
@@ -1215,7 +1215,7 @@ export const questions: Question[] = [
   },
   {
     id: 92,
-    section: "Spiritual Life Together",
+    section: "Section VIII: Your Marriage and Boundaries",
     subsection: "Giving: Stewardship",
     type: "M",
     text: "We commit to faithful stewardship and giving as an expression of our faith, what is your approach?",
@@ -1229,7 +1229,7 @@ export const questions: Question[] = [
   },
   {
     id: 93,
-    section: "Legacy Building",
+    section: "Section VIII: Your Marriage and Boundaries",
     subsection: "Family Heritage: Values",
     type: "D",
     text: "We commit to intentionally building a family legacy of faith, love, and strong character for future generations.",
@@ -1241,7 +1241,7 @@ export const questions: Question[] = [
   },
   {
     id: 94,
-    section: "Legacy Building",
+    section: "Section VIII: Your Marriage and Boundaries",
     subsection: "Family Heritage: Traditions",
     type: "M",
     text: "We commit to establishing meaningful family traditions that reinforce our values, what is your priority?",
@@ -1255,7 +1255,7 @@ export const questions: Question[] = [
   },
   {
     id: 95,
-    section: "Legacy Building",
+    section: "Section VIII: Your Marriage and Boundaries",
     subsection: "Mentorship: Others",
     type: "D",
     text: "We commit to mentoring and encouraging other couples in their marriage journey as we mature in our own relationship.",
@@ -1267,7 +1267,7 @@ export const questions: Question[] = [
   },
   {
     id: 96,
-    section: "Legacy Building",
+    section: "Section VIII: Your Marriage and Boundaries",
     subsection: "Community Impact: Service",
     type: "M",
     text: "We commit to making a positive impact in our community together, what is your preferred focus?",
@@ -1281,7 +1281,7 @@ export const questions: Question[] = [
   },
   {
     id: 97,
-    section: "Covenant Commitment",
+    section: "Section VIII: Your Marriage and Boundaries",
     subsection: "Renewal: Regular",
     type: "M",
     text: "We commit to regularly renewing our marriage covenant and commitments, how often?",
@@ -1295,7 +1295,7 @@ export const questions: Question[] = [
   },
   {
     id: 98,
-    section: "Covenant Commitment",
+    section: "Section VIII: Your Marriage and Boundaries",
     subsection: "Growth: Continuous",
     type: "D",
     text: "We commit to continuous growth and improvement in our marriage, never becoming complacent or taking our relationship for granted.",
@@ -1307,7 +1307,7 @@ export const questions: Question[] = [
   },
   {
     id: 99,
-    section: "Covenant Commitment",
+    section: "Section IX: Your Penultimate Vow",
     subsection: "Eternal Perspective: Final",
     type: "D",
     text: "We commit to honoring God through our marriage as a testimony of His love and faithfulness, maintaining an eternal perspective on our covenant relationship.",
