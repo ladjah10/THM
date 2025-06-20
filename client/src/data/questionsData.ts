@@ -14,25 +14,21 @@ export interface Question {
 }
 
 export const sections = [
-  "Your Foundation",
-  "Your Faith Life", 
-  "Your Marriage Life",
-  "Your Future Together",
-  "Personal Growth",
-  "Relationship Dynamics",
-  "Crisis Management",
-  "Social Relationships",
-  "Lifestyle Choices",
-  "Communication Patterns",
-  "Spiritual Life Together",
-  "Legacy Building",
-  "Covenant Commitment"
+  "Section I: Your Foundation",
+  "Section II: Your Faith Life", 
+  "Section III: Your Marriage Life",
+  "Section IV: Your Marriage Life with Children",
+  "Section V: Your Family/Home Life",
+  "Section VI: Your Finances",
+  "Section VII: Your Health and Wellness",
+  "Section VIII: Your Marriage and Boundaries",
+  "Section IX: Your Penultimate Vow"
 ];
 
 export const questions: Question[] = [
   {
     id: 1,
-    section: "Your Foundation",
+    section: "Section I: Your Foundation",
     subsection: "Marriage + Family",
     type: "M",
     text: "We each already believe in and (have) receive(d) Jesus Christ as our Lord and Savior and this reality will be the active foundation and guiding lens through which we see and operate in our marriage and family.",
@@ -44,7 +40,7 @@ export const questions: Question[] = [
   },
   {
     id: 2,
-    section: "Your Foundation",
+    section: "Section I: Your Foundation",
     subsection: "Marriage + Family Accountability",
     type: "D",
     text: "In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this \"life covenant\" process, unless mutually revisited and discussed at a later time.",
@@ -56,7 +52,7 @@ export const questions: Question[] = [
   },
   {
     id: 3,
-    section: "Your Foundation",
+    section: "Section I: Your Foundation",
     subsection: "Marriage & Your Children's Faith Journey",
     type: "D",
     text: "We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ.",
@@ -68,7 +64,7 @@ export const questions: Question[] = [
   },
   {
     id: 4,
-    section: "Your Foundation",
+    section: "Section I: Your Foundation",
     subsection: "Marriage Mindset: Happiness",
     type: "M",
     text: "We're committed to the belief regarding happiness in marriage, what is your primary focus?",
@@ -82,7 +78,7 @@ export const questions: Question[] = [
   },
   {
     id: 5,
-    section: "Your Foundation",
+    section: "Section I: Your Foundation",
     subsection: "Marriage Preparation: Legal (Incapacitation)",
     type: "D",
     text: "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing our spouse as Power of Attorney before our marriage date on or by this date [input].",
@@ -94,7 +90,7 @@ export const questions: Question[] = [
   },
   {
     id: 6,
-    section: "Your Foundation",
+    section: "Section I: Your Foundation",
     subsection: "Marriage Preparation: Legal (Estate)",
     type: "D",
     text: "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to completing a notarized copy of our will before our marriage date on or by this date [input].",
@@ -106,7 +102,7 @@ export const questions: Question[] = [
   },
   {
     id: 7,
-    section: "Your Foundation",
+    section: "Section I: Your Foundation",
     subsection: "Marriage Mindset: Divorce",
     type: "D",
     text: "We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, \"Falling Out of Love\", \"Growing Apart\", \"Irreconcilable Differences\".",
@@ -118,7 +114,7 @@ export const questions: Question[] = [
   },
   {
     id: 8,
-    section: "Your Foundation",
+    section: "Section I: Your Foundation",
     subsection: "Marriage Mindset: Divorce & Law",
     type: "M",
     text: "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), what is your position on prenuptial agreements?",
@@ -131,7 +127,7 @@ export const questions: Question[] = [
   },
   {
     id: 9,
-    section: "Your Foundation",
+    section: "Section I: Your Foundation",
     subsection: "Marriage Mindset: Celebrating our Covenant",
     type: "M",
     text: "We commit to establishing and celebrating our holy union/covenant through our wedding, how do you plan to celebrate it?",
