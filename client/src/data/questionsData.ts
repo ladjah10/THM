@@ -382,7 +382,10 @@ export const questions: Question[] = [
     type: "M",
     text: "We commit to having a weekly check-in, when?",
     options: [
-      "Weekly check-in on [fill-in] at [fill-in]"
+      "Sunday evening after dinner",
+      "Saturday morning with coffee",
+      "Wednesday evening mid-week",
+      "Other: Please specify your preferred time"
     ],
     weight: 5
   },
