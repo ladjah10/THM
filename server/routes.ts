@@ -798,87 +798,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/admin/assessment/:id/download', async (req: Request, res: Response) => {
     try {
       const assessmentId = req.params.id;
-      
-      // Add null/undefined check for assessmentId
+
       if (!assessmentId || assessmentId.trim() === '') {
         return res.status(400).json({ error: 'Invalid assessment ID provided' });
       }
-      
-      // Try to find assessment by email (since admin dashboard uses email as identifier)
-      const assessment = await storage.getCompletedAssessment(decodeURIComponent(assessmentId));
-      
+
+      const decodedId = decodeURIComponent(assessmentId);
+
+      // Try to get from recalculated assessments first
+      const recalculated = await storage.getRecalculatedAssessments();
+      let assessment = recalculated.find(a => a.id === decodedId);
+
+      // If not found, try completed assessments
       if (!assessment) {
-        // Fallback: try to find by ID in case it's an actual ID
-        const assessments = await storage.getAllAssessments();
-        const foundAssessment = assessments.find(a => a.id === assessmentId);
-        
-        if (!foundAssessment) {
-          return res.status(404).json({ error: 'Assessment not found in original or recalculated records' });
-        }
-        
-        // Generate PDF for found assessment
-        const { ProfessionalPDFGenerator } = await import('./pdfReportGenerator');
-        const generator = new ProfessionalPDFGenerator();
-        const pdfBuffer = await generator.generateIndividualReport(foundAssessment);
-        
-        // Set headers and send PDF
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', `attachment; filename="assessment-${foundAssessment.id}.pdf"`);
-        res.setHeader('Content-Length', pdfBuffer.length);
-        return res.send(pdfBuffer);
+        assessment = await storage.getCompletedAssessment(decodedId);
       }
-      
-      // Generate PDF for main assessment
+
+      // Fallback to search by ID in all original assessments
+      if (!assessment) {
+        const allOriginal = await storage.getAllAssessments();
+        assessment = allOriginal.find(a => a.id === decodedId);
+      }
+
+      if (!assessment) {
+        return res.status(404).json({ error: 'Assessment not found in original or recalculated records' });
+      }
+
       const { ProfessionalPDFGenerator } = await import('./pdfReportGenerator');
       const generator = new ProfessionalPDFGenerator();
-      
-      let pdfBuffer: Buffer;
-      let filename: string;
-      
-      // Check if this is a couple assessment
-      if (assessment.coupleId) {
-        // Fetch combined couple report (both partners' data)
-        const coupleReport = await storage.getCoupleAssessment(assessment.coupleId);
-        if (!coupleReport) {
-          return res.status(400).json({ error: 'Couple report not found or incomplete' });
-        }
-        
-        // Generate comprehensive couple PDF with safety features
-        pdfBuffer = await generator.generateCoupleReport(coupleReport);
-        filename = `couple-assessment-${assessment.coupleId}.pdf`;
-      } else {
-        // Individual report with enhanced safety
-        pdfBuffer = await generator.generateIndividualReport(assessment);
-        
-        // Safe parsing of demographics for filename
-        let firstName = 'Individual';
-        let lastName = 'Assessment';
-        
-        try {
-          const demographics = typeof assessment.demographics === 'string' 
-            ? JSON.parse(assessment.demographics) 
-            : assessment.demographics;
-          firstName = demographics?.firstName || 'Individual';
-          lastName = demographics?.lastName || 'Assessment';
-        } catch (error) {
-          console.warn('Failed to parse demographics for individual filename');
-        }
-        
-        filename = `individual-assessment-${firstName}-${lastName}-${assessment.id}.pdf`;
-      }
-      
-      // Set appropriate headers for PDF download
+
+      const pdfBuffer = await generator.generateIndividualReport(assessment);
+
       res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+      res.setHeader('Content-Disposition', `attachment; filename="assessment-${assessment.id}.pdf"`);
       res.setHeader('Content-Length', pdfBuffer.length);
-      
-      res.send(pdfBuffer);
+      return res.send(pdfBuffer);
     } catch (error) {
-      console.error('Error in assessment download:', error);
-      return res.status(500).json({ 
-        error: 'Failed to download assessment PDF',
-        details: error instanceof Error ? error.message : String(error)
-      });
+      console.error('Error generating PDF:', error);
+      return res.status(500).json({ error: 'Failed to generate PDF' });
     }
   });
 

@@ -27,6 +27,8 @@ export interface IStorage {
   getAssessmentById(id: string): Promise<AssessmentResult | null>;
   getAssessment(id: string): Promise<AssessmentResult | null>;
   updateAssessment(id: string, assessment: AssessmentResult): Promise<void>;
+  getRecalculatedAssessments(): Promise<AssessmentResult[]>;
+  getCompletedAssessment(emailOrId: string): Promise<AssessmentResult | null>;
   
   // Couple assessment management
   saveCoupleAssessment(primaryAssessment: AssessmentResult, spouseEmail: string): Promise<string>;
@@ -267,11 +269,27 @@ class MemStorage {
     console.log(`Couple assessment updated in memory (ID: ${id})`);
   }
   
-  // Get a completed assessment by email
-  async getCompletedAssessment(email: string): Promise<AssessmentResult | null> {
-    // Check if assessment exists with this email
-    const assessment = this.assessments.get(email);
-    return assessment || null;
+  // Get a completed assessment by email or ID
+  async getCompletedAssessment(emailOrId: string): Promise<AssessmentResult | null> {
+    // First try by email
+    const assessment = this.assessments.get(emailOrId);
+    if (assessment) return assessment;
+    
+    // Then try by ID
+    for (const assessment of this.assessments.values()) {
+      if (assessment.id === emailOrId) {
+        return assessment;
+      }
+    }
+    
+    return null;
+  }
+
+  // Get recalculated assessments (for memory storage, return all assessments)
+  async getRecalculatedAssessments(): Promise<AssessmentResult[]> {
+    // In memory storage, we don't distinguish between recalculated and original
+    // Return all assessments for compatibility
+    return Array.from(this.assessments.values());
   }
   
   // Get a couple assessment by email (checks both primary and spouse emails)
