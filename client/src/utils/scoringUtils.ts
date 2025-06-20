@@ -35,10 +35,15 @@ export function calculateScores(
     let possible: number;
     
     if (question.type === "D") {
-      // Declaration questions: earned is the response value (full weight or 0)
-      // Possible is always the full weight
+      // Declaration questions: Affirmative choice = 100% weight, Antithesis choice = 25% weight
       const weight = question.weight ?? 1;
-      earned = response.value;
+      if (response.value === 0) {
+        // First option (affirmative declaration) = full weight
+        earned = weight;
+      } else {
+        // Second option (antithesis/non-commitment) = 25% weight
+        earned = Math.round(weight * 0.25);
+      }
       possible = weight;
     } else {
       // Multiple choice and other questions
