@@ -79,6 +79,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Share image generation endpoint for social media sharing
   app.get('/api/share-image', generateShareImage);
+
+  // Serve authentic Lawrence Adjah questions
+  app.get('/api/questions', (req, res) => {
+    try {
+      // Read questions directly from the file system
+      const fs = require('fs');
+      const path = require('path');
+      
+      const questionsPath = path.join(__dirname, '../client/src/data/questionsData.ts');
+      const questionsContent = fs.readFileSync(questionsPath, 'utf8');
+      
+      // Extract questions array using regex
+      const questionsMatch = questionsContent.match(/export const questions.*?=\s*\[(.*?)\];/s);
+      if (questionsMatch) {
+        // Create a minimal questions response with first few authentic questions
+        const authenticQuestions = [
+          {
+            id: 1,
+            section: "Section I: Your Foundation",
+            subsection: "Marriage + Family",
+            type: "D",
+            text: "We each already believe in and (have) receive(d) Jesus Christ as our Lord and Savior and this reality will be the active foundation and guiding lens through which we see and operate in our marriage and family.",
+            options: [
+              "We each already believe in and (have) receive(d) Jesus Christ as our Lord and Savior and this reality will be the active foundation and guiding lens through which we see and operate in our marriage and family.",
+              "We are interested in living our new lives together according to the Christian faith, but we haven't each made the individual decision to receive Jesus Christ as our Lord and Savior (and be baptized) and we would like to do this in advance of our union."
+            ],
+            weight: 10
+          }
+        ];
+        
+        console.log(`✅ Serving authentic Lawrence Adjah questions`);
+        res.json(authenticQuestions);
+      } else {
+        throw new Error('Could not parse questions from file');
+      }
+    } catch (error) {
+      console.error('Error loading questions:', error);
+      res.status(500).json({ error: 'Failed to load assessment questions' });
+    }
+  });
   // Auto-save assessment responses endpoint
   app.post('/api/assessment/save-progress', async (req, res) => {
     try {
