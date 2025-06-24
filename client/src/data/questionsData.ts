@@ -371,8 +371,8 @@ export const questions: Question[] = [
     type: "D",
     text: "We commit to having a weekly check-in on at [] (guarded time)",
     options: [
-      "We commit to having a weekly check-in on at [] (guarded time)",
-      "(Recommended Agenda: Specific Appreciation, Area to Grow/ Challenge to Address, Planning, Prayer)"
+      "We commit to having a weekly check-in on at [] (guarded time) with a recommended agenda including: Specific Appreciation, Area to Grow/Challenge to Address, Planning, and Prayer",
+      "We prefer a more flexible approach to relationship communication without committing to scheduled weekly check-ins"
     ],
     weight: 8
   },
