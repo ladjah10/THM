@@ -516,9 +516,9 @@ export const questions: Question[] = [
     type: "M",
     text: "We commit to honoring the husband as the head and the final decision-making authority on all decisions, with trust in his submission to God and prayerful consideration of his wife's and family's interests., what is your approach?",
     options: [
-      "We commit to honoring the husband as the head and the final decision-making authority on all decisions, with trust in his submission to God and prayerful consideration of his wife's and family's interests.",
-      "We commit to not conflating this role and responsibility with function, as the one in authority does not always equate to the one executing the function/responsibility day to day. While the ultimate decision-making authority for all things rests with the Husband, the capacity to execute or provide unique wisdom can be with the other spouse in a specific area of discussion.",
-      "We commit to a model of Discussion, Prayer, Discussion, Prayer, Decision and if necessary, another round of Discussion & Prayer and seeking Godly counsel if applicable. (Time between discussion and for prayer is by discernment and God's leading)"
+      "We commit to honoring the husband as the head and the final decision-making authority on all decisions, with trust in his submission to God and prayerful consideration of his wife's and family's interests. We understand that this role and responsibility should not be conflated with function, as the one in authority does not always execute the day-to-day responsibilities. We commit to a model of Discussion, Prayer, Discussion, Prayer, Decision and if necessary, another round of Discussion & Prayer and seeking Godly counsel if applicable.",
+      "We are not in agreement with this approach to decision-making in marriage.",
+      "We would like to agree with this approach, but need additional discussion with Godly counsel to be sure of our commitment."
     ],
     weight: 6
   },
