@@ -81,6 +81,7 @@ The application uses Replit's deployment infrastructure:
 - **Dependencies**: Automatic package installation for all environments
 
 ## Recent Changes
+- June 24, 2025: Fixed Question 28 options structure - integrated sub-bullet content into main option and created proper antithesis option for communication approach
 - June 24, 2025: Fixed Question 27 options structure - integrated sub-bullet content into main option and created proper antithesis option
 - June 24, 2025: Added 4th option "Other: (Please detail)" to Question 14 (Family Name) for custom arrangements
 - June 24, 2025: Fixed Question 13 options structure - converted from 4 options (with sub-bullets) to proper 2-option multiple choice format with antithesis options
