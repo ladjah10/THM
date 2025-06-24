@@ -108,13 +108,10 @@ export const questions: Question[] = [
     section: "Section I: Your Foundation",
     subsection: "Marriage Mindset: Divorce",
     type: "M",
-    text: "We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to:, what is your approach?",
+    text: "We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, \"Falling Out of Love\", \"Growing Apart\", \"Irreconcilable Differences\"",
     options: [
-      "We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to:",
-      "Unhappiness",
-      "\"Falling Out of Love\"",
-      "\"Growing Apart\"",
-      "\"Irreconcilable Differences\""
+      "We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, \"Falling Out of Love\", \"Growing Apart\", \"Irreconcilable Differences\"",
+      "We believe divorce is acceptable for various reasons including unhappiness, falling out of love, growing apart, or irreconcilable differences beyond the biblical grounds mentioned above"
     ],
     weight: 8
   },
