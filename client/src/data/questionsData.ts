@@ -202,7 +202,8 @@ export const questions: Question[] = [
     options: [
       "We commit to sharing the same last name in marriage and for the wife to take the husband's last name.",
       "We commit to each keeping our own last names in marriage.",
-      "We commit to the wife hyphenating her last name with her husband's last name in marriage."
+      "We commit to the wife hyphenating her last name with her husband's last name in marriage.",
+      "Other: (Please detail)"
     ],
     weight: 6
   },
