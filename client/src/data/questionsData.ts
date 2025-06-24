@@ -186,12 +186,10 @@ export const questions: Question[] = [
     section: "Section III: Your Marriage Life",
     subsection: "Order of Priority before God",
     type: "M",
-    text: "We understand and accept the order of relationship priority according to God's highest design is first, our relationship with God:, what is your approach?",
+    text: "We understand and accept the order of relationship priority according to God's highest design is first, our relationship with God; then, our relationship with our Spouse (see: \"forsake all others\"); then, our relationship with our children (if applicable); then everything and everyone else (including work, friends, family)",
     options: [
-      "We understand and accept the order of relationship priority according to God's highest design is first, our relationship with God:",
-      "then, our relationship with our Spouse (see: \"forsake all others\"),",
-      "then, our relationship with our children (if applicable),",
-      "then everything and everyone else (including work, friends, family)"
+      "We understand and accept the order of relationship priority according to God's highest design is first, our relationship with God; then, our relationship with our Spouse (see: \"forsake all others\"); then, our relationship with our children (if applicable); then everything and everyone else (including work, friends, family)",
+      "We believe in a more flexible approach to relationship priorities that may vary based on circumstances and individual needs rather than following a strict hierarchical order"
     ],
     weight: 6
   },

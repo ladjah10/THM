@@ -81,6 +81,7 @@ The application uses Replit's deployment infrastructure:
 - **Dependencies**: Automatic package installation for all environments
 
 ## Recent Changes
+- June 24, 2025: Fixed Question 13 options structure - converted from 4 options (with sub-bullets) to proper 2-option multiple choice format with antithesis options
 - June 24, 2025: Fixed Question 7 options structure - converted from 5 options (with sub-bullets) to proper 2-option multiple choice format with antithesis options
 - June 24, 2025: Completed PDF appendix authenticity fix - replaced all fictitious psychographic profiles with authentic Lawrence Adjah content
 - June 24, 2025: Verified all 13 psychographic profiles match official specifications exactly
