@@ -1,0 +1,1326 @@
+=== COMPLETE QUESTION, OPTION & SCORING READOUT ===
+Updated scoring algorithm with contextual faith/traditional weighting
+
+
+================================================================================
+QUESTION 1 | Section: Section I: Your Foundation
+Type: D | Weight: 10 | Faith Question: YES
+Text: We each already believe in and (have) receive(d) Jesus Christ as our Lord and Savior and this reality will be the active foundation and guiding lens through which we see and operate in our marriage and family.
+
+OPTION SCORING:
+  Option 1: 10/10 points (100.0%) [Faith Bonus, Traditional]
+    "We each already believe in and (have) receive(d) Jesus Christ as our Lord and Savior and this reality will be the active foundation and guiding lens through which we see and operate in our marriage and family."
+  Option 2: 3/10 points (30.0%) [Faith Bonus]
+    "We are interested in living our new lives together according to the Christian faith, but we haven't each made the individual decision to receive Jesus Christ as our Lord and Savior (and be baptized) and we would like to do this in advance of our union."
+
+================================================================================
+QUESTION 2 | Section: Section I: Your Foundation
+Type: D | Weight: 10 | Faith Question: YES
+Text: In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this "life covenant" process, unless mutually revisited and discussed at a later time.
+
+OPTION SCORING:
+  Option 1: 10/10 points (100.0%) [Faith Bonus, Traditional]
+    "In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this "life covenant" process, unless mutually revisited and discussed at a later time."
+  Option 2: 3/10 points (30.0%) [Faith Bonus]
+    "Other: Before committing to this we need further discussion with spiritual counsel around how this would operate."
+
+================================================================================
+QUESTION 3 | Section: Section I: Your Foundation
+Type: D | Weight: 10 | Faith Question: YES
+Text: We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ.
+
+OPTION SCORING:
+  Option 1: 10/10 points (100.0%) [Faith Bonus, Traditional]
+    "We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ."
+  Option 2: 3/10 points (30.0%)
+    "We have different beliefs about this matter and need further discussion before reaching agreement"
+
+================================================================================
+QUESTION 4 | Section: Section I: Your Foundation
+Type: M | Weight: 8 | Faith Question: YES
+Text: We're committed to the belief: While a marriage relationship can yield happiness, we believe happiness is neither a stable emotion nor a stable foundation to build a marriage upon, as such, we believe each spouse is ultimately responsible for their own happiness., what is your approach?
+
+OPTION SCORING:
+  Option 1: 8/8 points (100.0%)
+    "We're committed to the belief: While a marriage relationship can yield happiness, we believe happiness is neither a stable emotion nor a stable foundation to build a marriage upon, as such, we believe each spouse is ultimately responsible for their own happiness."
+  Option 2: 8/8 points (100.0%) [Faith Bonus, Traditional]
+    "We're committed to the belief: "Happy Wife, Happy Life" - the husband is ultimately responsible for making his wife happy and this will in turn lead to a successful marriage."
+  Option 3: 6/8 points (75.0%) [Faith Bonus, Traditional]
+    "We're committed to the belief: "Happy King, Happy Kingdom" - the wife is ultimately responsible for making her husband happy and this will in turn lead to a successful marriage."
+  Option 4: 2/8 points (25.0%)
+    "We're committed to the belief: We believe in "Happy Spouse, Happy House" - each spouse is ultimately responsible for the other spouse's happiness and this will in turn lead to a successful marriage."
+
+================================================================================
+QUESTION 5 | Section: Section I: Your Foundation
+Type: D | Weight: 10 | Faith Question: YES
+Text: We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing our spouse as Power of Attorney before our marriage date on or by this date.
+
+OPTION SCORING:
+  Option 1: 10/10 points (100.0%)
+    "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing our spouse as Power of Attorney before our marriage date on or by this date."
+  Option 2: 3/10 points (30.0%) [Faith Bonus, Traditional]
+    "We are not ready to make this commitment at this time and prefer to address this matter later in our relationship"
+
+================================================================================
+QUESTION 6 | Section: Section I: Your Foundation
+Type: D | Weight: 10 | Faith Question: YES
+Text: We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing completing a notarized copy of our will before our marriage date on or by this date.
+
+OPTION SCORING:
+  Option 1: 10/10 points (100.0%)
+    "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing completing a notarized copy of our will before our marriage date on or by this date."
+  Option 2: 3/10 points (30.0%) [Faith Bonus, Traditional]
+    "We are not ready to make this commitment at this time and prefer to address this matter later in our relationship"
+
+================================================================================
+QUESTION 7 | Section: Section I: Your Foundation
+Type: M | Weight: 8 | Faith Question: YES
+Text: We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, "Falling Out of Love", "Growing Apart", "Irreconcilable Differences"
+
+OPTION SCORING:
+  Option 1: 8/8 points (100.0%) [Faith Bonus, Traditional]
+    "We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, "Falling Out of Love", "Growing Apart", "Irreconcilable Differences""
+  Option 2: 8/8 points (100.0%) [Faith Bonus, Traditional]
+    "We believe divorce is acceptable for various reasons including unhappiness, falling out of love, growing apart, or irreconcilable differences beyond the biblical grounds mentioned above"
+
+================================================================================
+QUESTION 8 | Section: Section I: Your Foundation
+Type: M | Weight: 8 | Faith Question: YES
+Text: We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), still, in view of the law and the prevalent rates of marriage dissolution, we agree to explore and structure a mutually considerate prenuptial agreement for our marriage., what is your approach?
+
+OPTION SCORING:
+  Option 1: 8/8 points (100.0%) [Faith Bonus, Traditional]
+    "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), still, in view of the law and the prevalent rates of marriage dissolution, we agree to explore and structure a mutually considerate prenuptial agreement for our marriage."
+  Option 2: 8/8 points (100.0%) [Faith Bonus, Traditional]
+    "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), and do not believe any legal agreements beyond our mutual commitments through this life covenant process are necessary for us to explore and structure at this time."
+  Option 3: 6/8 points (75.0%) [Faith Bonus, Traditional]
+    "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), still, we'd like to be more informed about what prenuptial agreements entail before deciding to consider or not consider it before our marriage."
+
+================================================================================
+QUESTION 9 | Section: Section I: Your Foundation
+Type: M | Weight: 8 | Faith Question: YES
+Text: We commit to establishing and celebrating our holy union/ covenant through our wedding and celebrating our marriage anniversary every year., what is your approach?
+
+OPTION SCORING:
+  Option 1: 8/8 points (100.0%) [Faith Bonus]
+    "We commit to establishing and celebrating our holy union/ covenant through our wedding and celebrating our marriage anniversary every year."
+  Option 2: 8/8 points (100.0%) [Faith Bonus]
+    "We commit to establishing and celebrating our holy union/ covenant through our wedding, celebrating our marriage anniversary every year and also doing/celebrating a covenant renewal ceremony every 10 years."
+  Option 3: 6/8 points (75.0%) [Faith Bonus]
+    "We commit to establishing and celebrating our holy union/ covenant through our wedding, celebrating our marriage anniversary every year and also doing/celebrating a covenant renewal ceremony every 5 years."
+
+================================================================================
+QUESTION 10 | Section: Section II: Your Faith Life
+Type: M | Weight: 7 | Faith Question: YES
+Text: We commit to daily prayer as a couple before we go to sleep., what is your approach?
+
+OPTION SCORING:
+  Option 1: 7/7 points (100.0%) [Faith Bonus]
+    "We commit to daily prayer as a couple before we go to sleep."
+  Option 2: 7/7 points (100.0%) [Faith Bonus]
+    "We commit to weekly prayer as a couple (during designated checkin time)."
+  Option 3: 3/7 points (42.9%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 11 | Section: Section II: Your Faith Life
+Type: M | Weight: 7 | Faith Question: YES
+Text: We commit to family worship weekly, including a dedicated time for prayer and reflection as a family weekly, familial prayer over meals, and weekly corporate worship in a local faith community where we are members., what is your approach?
+
+OPTION SCORING:
+  Option 1: 7/7 points (100.0%) [Faith Bonus, Traditional]
+    "We commit to family worship weekly, including a dedicated time for prayer and reflection as a family weekly, familial prayer over meals, and weekly corporate worship in a local faith community where we are members."
+  Option 2: 7/7 points (100.0%) [Faith Bonus, Traditional]
+    "We commit to family worship weekly, including familial prayer over meals, and weekly corporate worship in a local/femote faith community where we are members."
+  Option 3: 3/7 points (42.9%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 12 | Section: Section II: Your Faith Life
+Type: M | Weight: 7 | Faith Question: YES
+Text: We commit to each volunteering/serving in our faith community in some capacity in every season., what is your approach?
+
+OPTION SCORING:
+  Option 1: 7/7 points (100.0%) [Faith Bonus]
+    "We commit to each volunteering/serving in our faith community in some capacity in every season."
+  Option 2: 7/7 points (100.0%) [Faith Bonus]
+    "We commit to each volunteering/serving in our faith community in some capacity at least one season/event per year."
+  Option 3: 4/7 points (57.1%) [Faith Bonus]
+    "We commit to each volunteering/serving flexibly inside (and outside of) our faith community based on our capacity, but at a minimum, we'll always be serving our faith community through our giving in every season."
+  Option 4: 3/7 points (42.9%) [Faith Bonus]
+    "We commit to each volunteering/serving flexibly inside (and outside of) our faith community based on our capacity."
+
+================================================================================
+QUESTION 13 | Section: Section III: Your Marriage Life
+Type: M | Weight: 6 | Faith Question: YES
+Text: We understand and accept the order of relationship priority according to God's highest design is first, our relationship with God; then, our relationship with our Spouse (see: "forsake all others"); then, our relationship with our children (if applicable); then everything and everyone else (including work, friends, family)
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%) [Faith Bonus, Traditional]
+    "We understand and accept the order of relationship priority according to God's highest design is first, our relationship with God; then, our relationship with our Spouse (see: "forsake all others"); then, our relationship with our children (if applicable); then everything and everyone else (including work, friends, family)"
+  Option 2: 4/6 points (66.7%)
+    "We believe in a more flexible approach to relationship priorities that may vary based on circumstances and individual needs rather than following a strict hierarchical order"
+
+================================================================================
+QUESTION 14 | Section: Section III: Your Marriage Life
+Type: M | Weight: 6 | Faith Question: NO
+Text: We commit to sharing the same last name in marriage and for the wife to take the husband's last name., what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%) [Traditional]
+    "We commit to sharing the same last name in marriage and for the wife to take the husband's last name."
+  Option 2: 4/6 points (66.7%)
+    "We commit to each keeping our own last names in marriage."
+  Option 3: 4/6 points (66.7%) [Traditional]
+    "We commit to the wife hyphenating her last name with her husband's last name in marriage."
+  Option 4: 1/6 points (16.7%)
+    "Other: (Please detail)"
+
+================================================================================
+QUESTION 15 | Section: Section III: Your Marriage Life
+Type: M | Weight: 6 | Faith Question: YES
+Text: We commit to a marriage model where we agree to both work full-time for as long as we both can consistently honor our commitments to God, our spouse and our children (If applicable)., what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%) [Faith Bonus, Traditional]
+    "We commit to a marriage model where we agree to both work full-time for as long as we both can consistently honor our commitments to God, our spouse and our children (If applicable)."
+  Option 2: 6/6 points (100.0%) [Faith Bonus, Traditional]
+    "We commit to a marriage model where we agree the husband is the primary provider and works full-time and the wife stays at home as full-time housewife/homemaker."
+  Option 3: 4/6 points (66.7%) [Faith Bonus, Traditional]
+    "We commit to a marriage model where we agree to both work full-time until we have children and then we will transition to a model where the wife stays at home for an extended period (beyond standard parental leave) until the children reach age"
+  Option 4: 2/6 points (33.3%) [Faith Bonus, Traditional]
+    "We commit to a marriage model where we agree to both work full-time until we have children and then we will transition to a model where the wife stays at home indefinitely as full-time housewife/ homemaker."
+
+================================================================================
+QUESTION 16 | Section: Section III: Your Marriage Life
+Type: M | Weight: 6 | Faith Question: NO
+Text: We commit to a marriage / work model where we agree to never be away from one another for more than a 7-day period, regardless of the commitment/project scope. If necessary, we will set a "Come to me or I'll come to you" plan in order to honor this expectation., what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%) [Traditional]
+    "We commit to a marriage / work model where we agree to never be away from one another for more than a 7-day period, regardless of the commitment/project scope. If necessary, we will set a "Come to me or I'll come to you" plan in order to honor this expectation."
+  Option 2: 5/6 points (83.3%) [Traditional]
+    "We commit to a marriage / work model where we agree to never be away from one another for more than a 10-day period, regardless of the commitment/project scope. If necessary, we will set a "Come to me or I'll come to you" plan in order to honor this expectation."
+  Option 3: 4/6 points (66.7%) [Traditional]
+    "We commit to a marriage / work model where we agree to never be away from one another for more than a 3-day period, regardless of the commitment/project scope. If necessary, we will set a "Come to me or I'll come to you" plan in order to honor this expectation."
+  Option 4: 1/6 points (16.7%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 17 | Section: Section III: Your Marriage Life
+Type: M | Weight: 6 | Faith Question: NO
+Text: We commit to a marriage / work model where we agree to have a guarded period of at least 2 hours daily where it's our time to connect directly (not including children), and no work is to be done. Our preliminary guarded time is (am/pm), what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%) [Traditional]
+    "We commit to a marriage / work model where we agree to have a guarded period of at least 2 hours daily where it's our time to connect directly (not including children), and no work is to be done. Our preliminary guarded time is (am/pm)"
+  Option 2: 5/6 points (83.3%) [Traditional]
+    "We commit to a marriage / work model where we agree to have a guarded period of at least 1.5 hours daily where it's our time to connect directly (not including children), and no work is to be done. Our preliminary guarded time is (am/pm)"
+  Option 3: 4/6 points (66.7%) [Traditional]
+    "We commit to a marriage / work model where we agree to have a guarded period of at least 1 hour daily where it's our time to connect directly (not including children), and no work is to be done. Our preliminary guarded time is (am/pm)"
+  Option 4: 1/6 points (16.7%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 18 | Section: Section III: Your Marriage Life
+Type: M | Weight: 6 | Faith Question: NO
+Text: We commit to a marriage / work model where we agree to have no more than 2 late night workdays either at the office or at home (i.e., not going to bed with your spouse), per week., what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%)
+    "We commit to a marriage / work model where we agree to have no more than 2 late night workdays either at the office or at home (i.e., not going to bed with your spouse), per week."
+  Option 2: 4/6 points (66.7%)
+    "We commit to a marriage / work model where we agree to have no more than 1 late night workdays either at the office or at home (i.e., not going to bed with your spouse), per week."
+  Option 3: 4/6 points (66.7%) [Traditional]
+    "Given the nature of our work, we do not believe this commitment would align well for us."
+  Option 4: 1/6 points (16.7%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 19 | Section: Section III: Your Marriage Life
+Type: D | Weight: 8 | Faith Question: NO
+Text: We commit to a weekly date night on (guarded day, no children if applicable)
+
+OPTION SCORING:
+  Option 1: 8/8 points (100.0%) [Traditional]
+    "We commit to a weekly date night on (guarded day, no children if applicable)"
+  Option 2: 2/8 points (25.0%) [Traditional]
+    "We commit to a bi-weekly date night on (guarded day, no children if applicable)"
+
+================================================================================
+QUESTION 20 | Section: Section III: Your Marriage Life
+Type: D | Weight: 8 | Faith Question: YES
+Text: We share the belief that sex in marriage is a duty before God and not a conditional expression of love and honor. As such, we believe we not only have the opportunity to have sex in marriage, but also, we each have the equal responsibility to have sex with each other regularly in marriage, unless only for a short pause due to a mutual commitment to prayer or fasting or for an unexpected health challenge.
+
+OPTION SCORING:
+  Option 1: 8/8 points (100.0%) [Faith Bonus, Traditional]
+    "We share the belief that sex in marriage is a duty before God and not a conditional expression of love and honor. As such, we believe we not only have the opportunity to have sex in marriage, but also, we each have the equal responsibility to have sex with each other regularly in marriage, unless only for a short pause due to a mutual commitment to prayer or fasting or for an unexpected health challenge."
+  Option 2: 2/8 points (25.0%)
+    "We have different beliefs about this matter and need further discussion before reaching agreement"
+
+================================================================================
+QUESTION 21 | Section: Section III: Your Marriage Life
+Type: M | Weight: 6 | Faith Question: NO
+Text: We commit to having sex at least 3 times per week, what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%)
+    "We commit to having sex at least 3 times per week"
+  Option 2: 4/6 points (66.7%)
+    "We commit to having sex daily"
+  Option 3: 3/6 points (50.0%)
+    "We commit to having sex at least 2 times per week"
+
+================================================================================
+QUESTION 22 | Section: Section III: Your Marriage Life
+Type: M | Weight: 6 | Faith Question: NO
+Text: We commit to alternating who initiates sex by week., what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%)
+    "We commit to alternating who initiates sex by week."
+  Option 2: 4/6 points (66.7%)
+    "We commit to alternating who initiates sex by day/instance."
+  Option 3: 4/6 points (66.7%)
+    "We commit to "letting it flow" naturally without a set alternation schedule, with that said, we each willingly acknowledge it is not the responsibility of one spouse to initiate a duty before God."
+
+================================================================================
+QUESTION 23 | Section: Section III: Your Marriage Life
+Type: M | Weight: 6 | Faith Question: NO
+Text: We commit to having a conversation within the first month about what we individually enjoy in sex with our spouse and what aspect of the experience, if anything, you would each enjoy more of., what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%)
+    "We commit to having a conversation within the first month about what we individually enjoy in sex with our spouse and what aspect of the experience, if anything, you would each enjoy more of."
+  Option 2: 4/6 points (66.7%)
+    "We commit to having a conversation within the first 3 months about what we individually enjoy in sex with our spouse and what aspect of the experience, if anything, you would each enjoy more of."
+  Option 3: 3/6 points (50.0%)
+    "We commit to having a conversation within the first 6 months about what we individually enjoy in sex with our spouse and what aspect of the experience, if anything, you would each enjoy more of."
+  Option 4: 1/6 points (16.7%)
+    "Other: Before committing to this we need further discussion in our session around how this would operate."
+
+================================================================================
+QUESTION 24 | Section: Section III: Your Marriage Life
+Type: M | Weight: 6 | Faith Question: NO
+Text: We do not plan to use contraception of any form during marriage., what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%)
+    "We do not plan to use contraception of any form during marriage."
+  Option 2: 4/6 points (66.7%)
+    "We plan to use contraception, but we do not plan to use any which require oral consumption (health concerns/considerations) or invasive surgery (vasectomy, fallopian "tubes tied")."
+  Option 3: 3/6 points (50.0%)
+    "We plan to use all forms of contraception available to us which includes oral consumption and/or invasive surgery as an option (vasectomy, fallopian "tubes tied")."
+
+================================================================================
+QUESTION 25 | Section: Section III: Your Marriage Life
+Type: D | Weight: 8 | Faith Question: NO
+Text: We commit to never discussing our sex lives with anyone (friends, colleagues, and family members) unless we mutually agree to seek outside counsel on that aspect of our relationship.
+
+OPTION SCORING:
+  Option 1: 8/8 points (100.0%) [Traditional]
+    "We commit to never discussing our sex lives with anyone (friends, colleagues, and family members) unless we mutually agree to seek outside counsel on that aspect of our relationship."
+  Option 2: 2/8 points (25.0%) [Traditional]
+    "We are not ready to make this commitment at this time and prefer to address this matter later in our relationship"
+
+================================================================================
+QUESTION 26 | Section: Section III: Your Marriage Life
+Type: D | Weight: 8 | Faith Question: NO
+Text: We're committed to not having any mobile electronics in our bedroom, specifically, TV's, laptops and/or phones at night's end to ensure our bedroom is a place of intimacy.
+
+OPTION SCORING:
+  Option 1: 8/8 points (100.0%)
+    "We're committed to not having any mobile electronics in our bedroom, specifically, TV's, laptops and/or phones at night's end to ensure our bedroom is a place of intimacy."
+  Option 2: 2/8 points (25.0%)
+    "We do not believe we need unique boundaries around electronics in our bedroom."
+
+================================================================================
+QUESTION 27 | Section: Section III: Your Marriage Life
+Type: D | Weight: 8 | Faith Question: NO
+Text: We commit to having a weekly check-in on at [] (guarded time)
+
+OPTION SCORING:
+  Option 1: 8/8 points (100.0%)
+    "We commit to having a weekly check-in on at [] (guarded time) with a recommended agenda including: Specific Appreciation, Area to Grow/Challenge to Address, Planning, and Prayer"
+  Option 2: 2/8 points (25.0%)
+    "We prefer a more flexible approach to relationship communication without committing to scheduled weekly check-ins"
+
+================================================================================
+QUESTION 28 | Section: Section III: Your Marriage Life
+Type: D | Weight: 8 | Faith Question: NO
+Text: We commit to having a weekly check-in on at [] (guarded time)
+
+OPTION SCORING:
+  Option 1: 8/8 points (100.0%)
+    "We commit to having a weekly check-in on at [] (guarded time) with a recommended agenda including: Specific Appreciation, Area to Grow/Challenge to Address, Planning, and Prayer"
+  Option 2: 2/8 points (25.0%)
+    "We prefer handling communication and conflict resolution naturally as issues arise rather than through scheduled weekly check-ins"
+
+================================================================================
+QUESTION 29 | Section: Section III: Your Marriage Life
+Type: D | Weight: 8 | Faith Question: NO
+Text: We commit to not fighting or having serious arguments in front of others, rather, we'd wait for time alone and away from company, either in our check-in time or immediately after to discuss things away from them.
+
+OPTION SCORING:
+  Option 1: 8/8 points (100.0%)
+    "We commit to not fighting or having serious arguments in front of others, rather, we'd wait for time alone and away from company, either in our check-in time or immediately after to discuss things away from them."
+  Option 2: 2/8 points (25.0%) [Traditional]
+    "We are not ready to make this commitment at this time and prefer to address this matter later in our relationship"
+
+================================================================================
+QUESTION 30 | Section: Section III: Your Marriage Life
+Type: M | Weight: 6 | Faith Question: NO
+Text: We commit to a minimum of monthly counseling sessions for the first year of our marriage, with a minimum of bi-monthly in year 2 and a minimum of quarterly in years 3+ as check-ins (with additional sessions as needed)., what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%)
+    "We commit to a minimum of monthly counseling sessions for the first year of our marriage, with a minimum of bi-monthly in year 2 and a minimum of quarterly in years 3+ as check-ins (with additional sessions as needed)."
+  Option 2: 4/6 points (66.7%)
+    "We commit to a min of bi-weekly counseling sessions for the first year of our marriage, with a min of monthly in year 2 and a min of quarterly in years 3+ as check-ins (with additional sessions as needed)."
+  Option 3: 3/6 points (50.0%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 31 | Section: Section III: Your Marriage Life
+Type: D | Weight: 8 | Faith Question: NO
+Text: We commit to never discussing conflict/issues in our marriage with anyone, before (1) addressing the issue with our spouse and (2) mutually agreeing to seek approved counsel on the issue.
+
+OPTION SCORING:
+  Option 1: 8/8 points (100.0%)
+    "We commit to never discussing conflict/issues in our marriage with anyone, before (1) addressing the issue with our spouse and (2) mutually agreeing to seek approved counsel on the issue."
+  Option 2: 2/8 points (25.0%) [Traditional]
+    "We are not ready to make this commitment at this time and prefer to address this matter later in our relationship"
+
+================================================================================
+QUESTION 32 | Section: Section III: Your Marriage Life
+Type: D | Weight: 8 | Faith Question: NO
+Text: We commit to not going more than 24 hours without speaking with one another under any circumstances.
+
+OPTION SCORING:
+  Option 1: 8/8 points (100.0%)
+    "We commit to not going more than 24 hours without speaking with one another under any circumstances."
+  Option 2: 2/8 points (25.0%) [Traditional]
+    "We are not ready to make this commitment at this time and prefer to address this matter later in our relationship"
+
+================================================================================
+QUESTION 33 | Section: Section III: Your Marriage Life
+Type: D | Weight: 8 | Faith Question: NO
+Text: We commit to not discussing serious issues/ conflicts/debates via text message. Rather, we'll always discuss them in person or in a live conversation on a phone given the importance of conveying the proper tone and honoring wise boundaries for the marriage.
+
+OPTION SCORING:
+  Option 1: 8/8 points (100.0%)
+    "We commit to not discussing serious issues/ conflicts/debates via text message. Rather, we'll always discuss them in person or in a live conversation on a phone given the importance of conveying the proper tone and honoring wise boundaries for the marriage."
+  Option 2: 2/8 points (25.0%) [Traditional]
+    "We are not ready to make this commitment at this time and prefer to address this matter later in our relationship"
+
+================================================================================
+QUESTION 34 | Section: Section III: Your Marriage Life
+Type: D | Weight: 8 | Faith Question: YES
+Text: We commit to not going to sleep while still angry with one another [not to be confused with resolving the issue, but committing to find common ground to discuss further, prayer and then coming together as one]
+
+OPTION SCORING:
+  Option 1: 8/8 points (100.0%) [Faith Bonus]
+    "We commit to not going to sleep while still angry with one another [not to be confused with resolving the issue, but committing to find common ground to discuss further, prayer and then coming together as one]"
+  Option 2: 2/8 points (25.0%) [Faith Bonus, Traditional]
+    "We are not ready to make this commitment at this time and prefer to address this matter later in our relationship"
+
+================================================================================
+QUESTION 35 | Section: Section III: Your Marriage Life
+Type: D | Weight: 8 | Faith Question: NO
+Text: We commit to always sleeping together in the same bed, no matter the issue.
+
+OPTION SCORING:
+  Option 1: 8/8 points (100.0%)
+    "We commit to always sleeping together in the same bed, no matter the issue."
+  Option 2: 2/8 points (25.0%) [Traditional]
+    "We are not ready to make this commitment at this time and prefer to address this matter later in our relationship"
+
+================================================================================
+QUESTION 36 | Section: Section III: Your Marriage Life
+Type: D | Weight: 8 | Faith Question: YES
+Text: We commit to never using sex as a weapon by withholding it due to conflict [Unless mutually acknowledged and agreed due to medical considerations, prayer and/or fasting]
+
+OPTION SCORING:
+  Option 1: 8/8 points (100.0%) [Faith Bonus]
+    "We commit to never using sex as a weapon by withholding it due to conflict [Unless mutually acknowledged and agreed due to medical considerations, prayer and/or fasting]"
+  Option 2: 2/8 points (25.0%) [Faith Bonus, Traditional]
+    "We are not ready to make this commitment at this time and prefer to address this matter later in our relationship"
+
+================================================================================
+QUESTION 37 | Section: Section III: Your Marriage Life
+Type: D | Weight: 8 | Faith Question: YES
+Text: We commit to never using silence as a weapon by withholding presence or communication due to conflict [Unless mutually acknowledged and agreed for a set amount of time for prayer and reflection]
+
+OPTION SCORING:
+  Option 1: 8/8 points (100.0%) [Faith Bonus]
+    "We commit to never using silence as a weapon by withholding presence or communication due to conflict [Unless mutually acknowledged and agreed for a set amount of time for prayer and reflection]"
+  Option 2: 2/8 points (25.0%) [Faith Bonus, Traditional]
+    "We are not ready to make this commitment at this time and prefer to address this matter later in our relationship"
+
+================================================================================
+QUESTION 38 | Section: Section III: Your Marriage Life
+Type: D | Weight: 8 | Faith Question: NO
+Text: We commit to never discussing conflict/issues in your marriage with anyone (especially family members) before (1) addressing the issue with your spouse and (2) mutually agreeing to seek approved counsel on the issue.
+
+OPTION SCORING:
+  Option 1: 8/8 points (100.0%) [Traditional]
+    "We commit to never discussing conflict/issues in your marriage with anyone (especially family members) before (1) addressing the issue with your spouse and (2) mutually agreeing to seek approved counsel on the issue."
+  Option 2: 2/8 points (25.0%) [Traditional]
+    "We are not ready to make this commitment at this time and prefer to address this matter later in our relationship"
+
+================================================================================
+QUESTION 39 | Section: Section III: Your Marriage Life
+Type: M | Weight: 6 | Faith Question: YES
+Text: We commit to honoring the husband as the head and the final decision-making authority on all decisions, with trust in his submission to God and prayerful consideration of his wife's and family's interests., what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%) [Faith Bonus, Traditional]
+    "We commit to honoring the husband as the head and the final decision-making authority on all decisions, with trust in his submission to God and prayerful consideration of his wife's and family's interests. We understand that this role and responsibility should not be conflated with function, as the one in authority does not always execute the day-to-day responsibilities. We commit to a model of Discussion, Prayer, Discussion, Prayer, Decision and if necessary, another round of Discussion & Prayer and seeking Godly counsel if applicable."
+  Option 2: 4/6 points (66.7%)
+    "We are not in agreement with this approach to decision-making in marriage."
+  Option 3: 4/6 points (66.7%) [Faith Bonus, Traditional]
+    "We would like to agree with this approach, but need additional discussion with Godly counsel to be sure of our commitment."
+
+================================================================================
+QUESTION 40 | Section: Section III: Your Marriage Life
+Type: M | Weight: 6 | Faith Question: NO
+Text: We're committed to living in a city where at least one of our families resides, always., what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%)
+    "We're committed to living in a city where at least one of our families resides, always."
+  Option 2: 5/6 points (83.3%) [Traditional]
+    "We're committed to living in a city where at least one of our families resides for up to the next 10 years (with consideration for younger children + childcare, parental care + presence in older age, existing community)."
+  Option 3: 4/6 points (66.7%) [Traditional]
+    "We're committed to being flexible about our home location, open to living wherever opportunity may lead us, even if it's not in a city with existing family."
+  Option 4: 2/6 points (33.3%) [Traditional]
+    "We're committed to living in a city where at least one of our families resides for up to the next 5 years (with consideration for younger children + childcare, parental care + presence in older age, existing community)."
+
+================================================================================
+QUESTION 41 | Section: Section III: Your Marriage Life
+Type: M | Weight: 6 | Faith Question: NO
+Text: We're committed to living in a downtown area of a major city long-term., what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%)
+    "We're committed to living in a downtown area of a major city long-term."
+  Option 2: 4/6 points (66.7%)
+    "We're committed to living in the suburbs long-term."
+  Option 3: 3/6 points (50.0%)
+    "We're committed to living in a remote area, whether domestically or abroad, which is not necessarily connected or proximate to a major city."
+  Option 4: 1/6 points (16.7%)
+    "We're committed to being flexible about our living area and do not have a particular preference to a city type."
+
+================================================================================
+QUESTION 42 | Section: Section III: Your Marriage Life
+Type: M | Weight: 6 | Faith Question: NO
+Text: We're committed to living domestically long-term., what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%)
+    "We're committed to living domestically long-term."
+  Option 2: 4/6 points (66.7%)
+    "We're committed to living internationally long-term and plan to eventually move shortly after our marriage."
+  Option 3: 3/6 points (50.0%)
+    "We're committed to being flexible about our living location and do not have a particular preference around living domestically or internationally."
+
+================================================================================
+QUESTION 43 | Section: Section III: Your Marriage Life
+Type: M | Weight: 6 | Faith Question: NO
+Text: We're committed to living in an apartment long-term as our primary residence., what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%)
+    "We're committed to living in an apartment long-term as our primary residence."
+  Option 2: 5/6 points (83.3%) [Traditional]
+    "We're committed to living in a standalone single-family house long-term as our primary residence."
+  Option 3: 4/6 points (66.7%) [Traditional]
+    "We're committed to living in a standalone single-family townhouse long-term as our primary residence."
+  Option 4: 2/6 points (33.3%) [Traditional]
+    "We're committed to living in a multi-family house long-term."
+
+================================================================================
+QUESTION 44 | Section: Section IV: Your Marriage Life with Children
+Type: D | Weight: 8 | Faith Question: YES
+Text: We commit to having children (according to God's will).
+
+OPTION SCORING:
+  Option 1: 8/8 points (100.0%) [Faith Bonus, Traditional]
+    "We commit to having children (according to God's will)."
+  Option 2: 2/8 points (25.0%) [Faith Bonus, Traditional]
+    "We do not commit to having children."
+
+================================================================================
+QUESTION 45 | Section: Section IV: Your Marriage Life with Children
+Type: M | Weight: 6 | Faith Question: NO
+Text: We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer:, what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%)
+    "A Water Delivery (if medically prudent and possible)"
+  Option 2: 4/6 points (66.7%)
+    "Vaginal Delivery (Out of Water) (with potential for C-Section if medically necessary)"
+
+================================================================================
+QUESTION 46 | Section: Section IV: Your Marriage Life with Children
+Type: M | Weight: 6 | Faith Question: NO
+Text: We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer:, what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%)
+    "A Home Birth (if medically prudent and possible)"
+  Option 2: 4/6 points (66.7%)
+    "A Hospital Birth"
+  Option 3: 3/6 points (50.0%)
+    "A Birth Center (if medically prudent and possible)"
+
+================================================================================
+QUESTION 47 | Section: Section IV: Your Marriage Life with Children
+Type: M | Weight: 6 | Faith Question: NO
+Text: We commit to attempting to have them as soon as possible., what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%)
+    "We commit to attempting to have them as soon as possible."
+  Option 2: 4/6 points (66.7%)
+    "We commit to attempting to have them after year one."
+  Option 3: 3/6 points (50.0%)
+    "We commit to attempting to have them after year two."
+  Option 4: 1/6 points (16.7%)
+    "We commit to attempting to have them after this specific milestone."
+
+================================================================================
+QUESTION 48 | Section: Section IV: Your Marriage Life with Children
+Type: M | Weight: 6 | Faith Question: YES
+Text: We commit to having as many children as God will allow us to have., what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%) [Faith Bonus, Traditional]
+    "We commit to having as many children as God will allow us to have."
+  Option 2: 6/6 points (100.0%) [Faith Bonus]
+    "We commit to having one child (according to God's will)."
+  Option 3: 4/6 points (66.7%) [Faith Bonus, Traditional]
+    "We commit to having two children (according to God's will)."
+  Option 4: 2/6 points (33.3%) [Faith Bonus, Traditional]
+    "We commit to having three children (according to God's will)."
+  Option 5: 1/6 points (16.7%)
+    "Not Applicable"
+
+================================================================================
+QUESTION 49 | Section: Section IV: Your Marriage Life with Children
+Type: M | Weight: 6 | Faith Question: NO
+Text: We commit to adopting at least one child during our marriage., what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%)
+    "We commit to adopting at least one child during our marriage."
+  Option 2: 4/6 points (66.7%)
+    "We admire and believe in adoption but do not plan to adopt during our marriage."
+  Option 3: 4/6 points (66.7%) [Traditional]
+    "We are committed to having children biologically (according to God's will), but would consider adoption if we discern it's not His will for us to have children biologically."
+
+================================================================================
+QUESTION 50 | Section: Section IV: Your Marriage Life with Children
+Type: M | Weight: 6 | Faith Question: NO
+Text: We commit to naming our children with first names that are from the Bible., what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%) [Traditional]
+    "We commit to naming our children with first names that are from the Bible."
+  Option 2: 5/6 points (83.3%) [Traditional]
+    "We commit to naming our children with first names that honor a family member from either side of the family."
+  Option 3: 4/6 points (66.7%) [Traditional]
+    "We commit to naming our children with first names that are gender neutral."
+  Option 4: 1/6 points (16.7%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 51 | Section: Section IV: Your Marriage Life with Children
+Type: M | Weight: 6 | Faith Question: NO
+Text: We agree that it's an option to name one of our children after a parent., what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%) [Traditional]
+    "We agree that it's an option to name one of our children after a parent."
+  Option 2: 5/6 points (83.3%) [Traditional]
+    "We agree that's not an option name one of our children after a parent."
+  Option 3: 3/6 points (50.0%)
+    "Not Applicable"
+
+================================================================================
+QUESTION 52 | Section: Section IV: Your Marriage Life with Children
+Type: M | Weight: 6 | Faith Question: NO
+Text: We commit to keeping the news of our pregnancy private until the end of the 1st trimester., what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%)
+    "We commit to keeping the news of our pregnancy private until the end of the 1st trimester."
+  Option 2: 4/6 points (66.7%)
+    "We commit to keeping the news of our pregnancy private until the end of the 2nd trimester."
+  Option 3: 3/6 points (50.0%)
+    "We do not have a specific guideline around if and when we will share news of a pregnancy."
+  Option 4: 1/6 points (16.7%)
+    "Not Applicable"
+
+================================================================================
+QUESTION 53 | Section: Section IV: Your Marriage Life with Children
+Type: M | Weight: 6 | Faith Question: YES
+Text: We commit to raising and disciplining our children with Godly wisdom and discernment, with an orientation to disciplining our children according to their age and level of understanding leveraging:, what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%) [Faith Bonus, Traditional]
+    "We commit to raising and disciplining our children with Godly wisdom and discernment, with an orientation to disciplining our children according to their age and level of understanding leveraging gentle verbal instruction/warning, firm verbal instruction/warning and in the repeated case of disobedience, disrespect or danger, we are comfortable with physical discipline and other forms of punishments in love."
+  Option 2: 6/6 points (100.0%) [Faith Bonus, Traditional]
+    "We commit to raising and disciplining our children with Godly wisdom and discernment, with an orientation to disciplining our children according to their age and level of understanding leveraging gentle verbal instruction/warning, firm verbal instruction warning and in the repeated case of disobedience, disrespect or danger, we are comfortable with other forms of punishment in love, which do not include physical discipline."
+  Option 3: 3/6 points (50.0%)
+    "Not Applicable"
+
+================================================================================
+QUESTION 54 | Section: Section IV: Your Marriage Life with Children
+Type: D | Weight: 8 | Faith Question: NO
+Text: We commit to being a united front before our children, never keeping any secrets from the other parent and never undermining a decision or perspective given by your spouse, whether in front of the children as a couple, or separate from your spouse with the children
+
+OPTION SCORING:
+  Option 1: 8/8 points (100.0%) [Traditional]
+    "We commit to being a united front before our children, never keeping any secrets from the other parent and never undermining a decision or perspective given by your spouse, whether in front of the children as a couple, or separate from your spouse with the children"
+  Option 2: 2/8 points (25.0%) [Traditional]
+    "We are not ready to make this commitment at this time and prefer to address this matter later in our relationship"
+
+================================================================================
+QUESTION 55 | Section: Section IV: Your Marriage Life with Children
+Type: D | Weight: 8 | Faith Question: NO
+Text: We commit to not fighting or having serious arguments in front of the children, rather, we'd wait for time alone and away from the children, either in our check-in time or immediately after to discuss things away from them.
+
+OPTION SCORING:
+  Option 1: 8/8 points (100.0%) [Traditional]
+    "We commit to not fighting or having serious arguments in front of the children, rather, we'd wait for time alone and away from the children, either in our check-in time or immediately after to discuss things away from them."
+  Option 2: 2/8 points (25.0%) [Traditional]
+    "We commit to fighting respectfully, even if it's a serious disagreement, in front of the children, because we believe it's healthy and constructive to model positive conflict resolution and to set realistic expectations for them in a marriage."
+
+================================================================================
+QUESTION 56 | Section: Section IV: Your Marriage Life with Children
+Type: M | Weight: 6 | Faith Question: NO
+Text: We commit to discussing sex with our children together at no later than 5 years old, specifically, discussing appropriate/inappropriate touch and expectations of communication if it happens., what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%) [Traditional]
+    "We commit to discussing sex with our children together at no later than 5 years old, specifically, discussing appropriate/inappropriate touch and expectations of communication if it happens."
+  Option 2: 5/6 points (83.3%) [Traditional]
+    "We commit to discussing sex with our children one on one (each parent has their own talk) at no later than 5 years old specifically, discussing appropriate/inappropriate touch and expectations of communication if it happens and talking through anatomy and what sex is."
+  Option 3: 4/6 points (66.7%) [Traditional]
+    "We commit to discussing sex with our children together at no later than 5 years old; however, we'll discuss appropriate/inappropriate touch and expectations of communication if it happens, between by age 7 and we'll talk through anatomy, what sex is and its purpose, by puberty (10-13)."
+  Option 4: 2/6 points (33.3%) [Traditional]
+    "We commit to discussing sex with our children one on one (each parent has their own talk) at no later than 5 years old; however, we'll discuss appropriate/inappropriate touch and expectations of communication if it happens, between by age 7 and we'll talk through anatomy, what sex is and its purpose, by puberty (10-13)."
+  Option 5: 1/6 points (16.7%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 57 | Section: Section IV: Your Marriage Life with Children
+Type: M | Weight: 6 | Faith Question: NO
+Text: We're committed to guarding the image and identity of our children and are committed to not posting any photos of them on social media indefinitely, what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%) [Traditional]
+    "We're committed to guarding the image and identity of our children and are committed to not posting any photos of them on social media indefinitely"
+  Option 2: 5/6 points (83.3%) [Traditional]
+    "We're committed to guarding the image and identity of our children and are committed to limiting their exposure on social media by restricting others from sharing photos of our children on social media (direct/indirectly) and posting family/individual photos we've mutually agreed to share"
+  Option 3: 4/6 points (66.7%) [Traditional]
+    "We're committed to approaching the issue of social media exposure of our children's image and identity with discretion; however, we do not believe any specific restrictions on sharing / posting from friends and family are necessary"
+  Option 4: 2/6 points (33.3%) [Traditional]
+    "We're committed to guarding the image and identity of our children and are committed to limiting their exposure on social media by limiting others from sharing photos of our children on social media (direct/indirectly) without our permission and posting family/individual photos we've mutually agreed to share."
+
+================================================================================
+QUESTION 58 | Section: Section IV: Your Marriage Life with Children
+Type: M | Weight: 6 | Faith Question: NO
+Text: We're committed to guarding the psychological development and physical safety of our children while allowing them to be socially connected and technologically adept, with that said, we do not believe it is appropriate for our children to be on any form of social media until they become high school age, what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%) [Traditional]
+    "We're committed to guarding the psychological development and physical safety of our children while allowing them to be socially connected and technologically adept, with that said, we do not believe it is appropriate for our children to be on any form of social media until they become high school age"
+  Option 2: 5/6 points (83.3%) [Traditional]
+    "We're committed to guarding the psychological development and physical safety of our children while allowing them to be socially connected and technologically adept, with that said, we do not believe it is appropriate for our children to be on any form of social media until they become middle school age"
+  Option 3: 4/6 points (66.7%) [Traditional]
+    "We're committed to guarding the psychological development and physical safety of our children while allowing them to be socially connected and technologically adept, with that said, we will allow closely monitored social media use from middle school age on"
+  Option 4: 1/6 points (16.7%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 59 | Section: Section IV: Your Marriage Life with Children
+Type: M | Weight: 6 | Faith Question: NO
+Text: We're committed to guarding the psychological development and physical safety of our children while allowing them to be socially connected and technologically adept, with that said, we do not believe it is appropriate for our children to have a mobile phone until they become high school age, what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%) [Traditional]
+    "We're committed to guarding the psychological development and physical safety of our children while allowing them to be socially connected and technologically adept, with that said, we do not believe it is appropriate for our children to have a mobile phone until they become high school age"
+  Option 2: 5/6 points (83.3%) [Traditional]
+    "We're committed to guarding the psychological development and physical safety of our children while allowing them to be socially connected and technologically adept, with that said, we do not believe it is appropriate for our children to have a mobile phone until they become middle school age"
+  Option 3: 4/6 points (66.7%) [Traditional]
+    "We're committed to guarding the psychological development and physical safety of our children while allowing them to be socially connected and technologically adept, with that said, we will allow closely monitored mobile phone use from as early as we feel comfortable they can properly use it without losing or damaging it."
+  Option 4: 1/6 points (16.7%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 60 | Section: Section IV: Your Marriage Life with Children
+Type: M | Weight: 6 | Faith Question: NO
+Text: We're committed to guarding the image and identity of our children and are committed to not posting any photos of them on social media indefinitely., what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%) [Traditional]
+    "We're committed to guarding the image and identity of our children and are committed to not posting any photos of them on social media indefinitely."
+  Option 2: 5/6 points (83.3%) [Traditional]
+    "We're committed to approaching the issue of social media exposure of our children's image and identity with care, still, we do not plan to create an account on their behalf or have any unique restrictions to friends/family or ourselves of sharing photos with them in them."
+  Option 3: 4/6 points (66.7%) [Traditional]
+    "We're committed to creating and managing an account on our children's behalf, with photos we will share from their birth until we believe they are of age to take over their account."
+
+================================================================================
+QUESTION 61 | Section: Section IV: Your Marriage Life with Children
+Type: M | Weight: 6 | Faith Question: YES
+Text: We believe God created man and woman, as the two genders, with a sexual ethic of marriage and relationship between a man and a woman, with that said, we also acknowledge many aspects of our human experience are often not in line with God's highest design for humanity and as a result, we want to prepare our children to not only understand God's intentions for them in terms of gender and sexual ethics, but also, we want to raise children who can also effectively engage with those different from them in this regard with grace and love, without compromising their understanding of the truth. As such, we commit to discussing this topic with our children by age [your preferred age], what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%) [Faith Bonus, Traditional]
+    "We believe God created man and woman, as the two genders, with a sexual ethic of marriage and relationship between a man and a woman, with that said, we also acknowledge many aspects of our human experience are often not in line with God's highest design for humanity and as a result, we want to prepare our children to not only understand God's intentions for them in terms of gender and sexual ethics, but also, we want to raise children who can also effectively engage with those different from them in this regard with grace and love, without compromising their understanding of the truth. As such, we commit to discussing this topic with our children by age [your preferred age]"
+  Option 2: 6/6 points (100.0%) [Faith Bonus, Traditional]
+    "While we recognize and acknowledge God's highest design for humanity around gender and sexuality, we do not feel equipped to have this conversation with our children because we need to develop and deepen our own understanding of this topic through our own study and consultation with spiritual counsel. As such, we commit to doing intentional study on our own and in the meantime, allowing our faith community and counsel to provide the primary guidance to our children."
+  Option 3: 3/6 points (50.0%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 62 | Section: Section IV: Your Marriage Life with Children
+Type: M | Weight: 6 | Faith Question: NO
+Text: We recognize the reality of race as well as its role and history still we don't believe we should have an explicit discussion about race / racial dynamics in the world and in our country with our children, what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%) [Traditional]
+    "We recognize the reality of race as well as its role and history still we don't believe we should have an explicit discussion about race / racial dynamics in the world and in our country with our children"
+  Option 2: 5/6 points (83.3%) [Traditional]
+    "We commit to discussing race with our children together at no later than 10 years old, specifically, discussing the history of race / racial dynamics, where it stems from a biblical perspective (Genesis 3), and expectations you have of them around their approach to engaging the issue in this world"
+  Option 3: 4/6 points (66.7%) [Traditional]
+    "We commit to discussing race with our children one on one (each parent has their own talk) at no later than 10 years old, specifically, discussing the history of race / racial dynamics, where it stems from a biblical perspective (Genesis 3), and expectations you have of them around their approach to engaging the issue in this world"
+  Option 4: 1/6 points (16.7%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 63 | Section: Section IV: Your Marriage Life with Children
+Type: M | Weight: 6 | Faith Question: NO
+Text: We are committed to educating our children in the public school system., what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%) [Traditional]
+    "We are committed to educating our children in the public school system."
+  Option 2: 5/6 points (83.3%) [Traditional]
+    "We are committed to educating our children in private school."
+  Option 3: 4/6 points (66.7%) [Traditional]
+    "We are committed to homeschooling our children."
+  Option 4: 1/6 points (16.7%)
+    "We are committed to a flexible learning experience where we're committed to the best local educational environment which could vary between all school types based on location, outcomes, pricing and more."
+
+================================================================================
+QUESTION 64 | Section: Section V: Your Family/Home Life
+Type: M | Weight: 4 | Faith Question: NO
+Text: We are committed to eating dinner as a family every single day, outside of unique and rare circumstances, what is your approach?
+
+OPTION SCORING:
+  Option 1: 4/4 points (100.0%) [Traditional]
+    "We are committed to eating dinner as a family every single day, outside of unique and rare circumstances"
+  Option 2: 3/4 points (75.0%) [Traditional]
+    "We are committed to eating dinner as a family at least once weekly, on"
+  Option 3: 2/4 points (50.0%) [Traditional]
+    "We are committed to eating dinner as a family at least once monthly, on the | of each month"
+  Option 4: 1/4 points (25.0%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 65 | Section: Section V: Your Family/Home Life
+Type: M | Weight: 4 | Faith Question: NO
+Text: We are committed to budgeting, planning and going on at least one family vacation per year, what is your approach?
+
+OPTION SCORING:
+  Option 1: 4/4 points (100.0%) [Traditional]
+    "We are committed to budgeting, planning and going on at least one family vacation per year"
+  Option 2: 3/4 points (75.0%) [Traditional]
+    "We are committed to budgeting, planning and going on at least two family vacations per year"
+  Option 3: 2/4 points (50.0%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 66 | Section: Section V: Your Family/Home Life
+Type: M | Weight: 4 | Faith Question: NO
+Text: We are committed to taking a full immediate family photo at least once per year, what is your approach?
+
+OPTION SCORING:
+  Option 1: 4/4 points (100.0%) [Traditional]
+    "We are committed to taking a full immediate family photo at least once per year"
+  Option 2: 3/4 points (75.0%) [Traditional]
+    "We are committed to taking a full immediate family photo at least once every two years"
+  Option 3: 2/4 points (50.0%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 67 | Section: Section V: Your Family/Home Life
+Type: D | Weight: 6 | Faith Question: NO
+Text: In view of gifting and capacity, we commit to [one designated spouse] being the primary individual in our family who manages and executes the periodic functions of our house cleaning and maintenance, which includes but is not limited to cleaning and maintenance of living space, laundry and dry cleaning.
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%) [Traditional]
+    "In view of gifting and capacity, we commit to [one designated spouse] being the primary individual in our family who manages and executes the periodic functions of our house cleaning and maintenance, which includes but is not limited to cleaning and maintenance of living space, laundry and dry cleaning. We commit to not conflating this role and responsibility with function as always being the one executing the function/responsibility day to day, meaning [one designated spouse] is primarily and ultimately responsible and accountable for seeing it get done, within the financial and capacity constraints of the family."
+  Option 2: 2/6 points (33.3%)
+    "We are not in agreement with this approach to house cleaning and maintenance responsibilities."
+  Option 3: 2/6 points (33.3%) [Traditional]
+    "We would like to agree with this approach, but need additional discussion with Godly counsel to be sure of our commitment."
+
+================================================================================
+QUESTION 68 | Section: Section V: Your Family/Home Life
+Type: M | Weight: 4 | Faith Question: NO
+Text: We commit to a model of weekly house cleaning taking place on Saturdays or Sundays which includes but is not limited to, cleaning of general living areas, kitchen, bathrooms and bedrooms and laundry (assumption of general tidiness, cleaning after self during the week)., what is your approach?
+
+OPTION SCORING:
+  Option 1: 4/4 points (100.0%)
+    "We commit to a model of weekly house cleaning taking place on Saturdays or Sundays which includes but is not limited to, cleaning of general living areas, kitchen, bathrooms and bedrooms and laundry (assumption of general tidiness, cleaning after self during the week)."
+  Option 2: 3/4 points (75.0%)
+    "We commit to a model of bi-weekly house cleaning taking place on Saturdays or Sundays which includes but is not limited to, cleaning of general living areas, kitchen, bathrooms and bedrooms and laundry (assumption of general tidiness, cleaning after self during the week)."
+  Option 3: 2/4 points (50.0%)
+    "We commit to a model of bi-weekly house cleaning by an outside cleaning vendor which includes but is not limited to, cleaning of general living areas, kitchen, bathrooms and bedrooms and laundry (assumption of general tidiness, cleaning after self during the week)."
+  Option 4: 1/4 points (25.0%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 69 | Section: Section V: Your Family/Home Life
+Type: M | Weight: 4 | Faith Question: NO
+Text: We commit to a model where the person who prepares the food is not the person who cleans up the kitchen, sink and table after the food is prepared and consumed. It is the responsibility of the noncooking spouse/children to clean., what is your approach?
+
+OPTION SCORING:
+  Option 1: 4/4 points (100.0%) [Traditional]
+    "We commit to a model where the person who prepares the food is not the person who cleans up the kitchen, sink and table after the food is prepared and consumed. It is the responsibility of the noncooking spouse/children to clean."
+  Option 2: 3/4 points (75.0%)
+    "We commit to a model where the person who prepares the food is responsible for cleaning up after the meal is done."
+  Option 3: 2/4 points (50.0%)
+    "We commit to a model where the person who prepares the food is responsible for cleaning up as they cook and after the meal is done."
+  Option 4: 1/4 points (25.0%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 70 | Section: Section V: Your Family/Home Life
+Type: M | Weight: 4 | Faith Question: NO
+Text: We commit to a model of weekly outside housework taking place on Saturdays or Sundays which includes but is not limited to, cleaning of vehicles, lawn care, cleaning of trash & recycling bins, deck, sidewalk and general gardening, what is your approach?
+
+OPTION SCORING:
+  Option 1: 4/4 points (100.0%)
+    "We commit to a model of weekly outside housework taking place on Saturdays or Sundays which includes but is not limited to, cleaning of vehicles, lawn care, cleaning of trash & recycling bins, deck, sidewalk and general gardening"
+  Option 2: 3/4 points (75.0%)
+    "We commit to a model of monthly outside housework taking place on Saturdays or Sundays which includes but is not limited to, cleaning of vehicles, lawn care, cleaning of trash & recycling bins, deck, sidewalk and general gardening"
+  Option 3: 2/4 points (50.0%)
+    "We commit to a model of outside housework by a hired outside vendor which includes but is not limited to, cleaning of vehicles, lawn care, cleaning of trash & recycling bins, deck, sidewalk and general gardening"
+  Option 4: 1/4 points (25.0%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 71 | Section: Section V: Your Family/Home Life
+Type: M | Weight: 4 | Faith Question: NO
+Text: We are committed to doing at least one outing as a family at least once weekly, what is your approach?
+
+OPTION SCORING:
+  Option 1: 4/4 points (100.0%) [Traditional]
+    "We are committed to doing at least one outing as a family at least once weekly"
+  Option 2: 3/4 points (75.0%) [Traditional]
+    "We are committed to doing at least one outing as a family at least bi-weekly"
+  Option 3: 2/4 points (50.0%) [Traditional]
+    "We are committed to doing at least one outing as a family at least monthly"
+  Option 4: 1/4 points (25.0%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 72 | Section: Section VI: Your Finances
+Type: D | Weight: 8 | Faith Question: YES
+Text: We commit to having a "One Flesh, One Financial" model where any and every amount of income generated by either spouse is considered the family's resources and is budgeted and apportioned against our prayerfully planned annual budget
+
+OPTION SCORING:
+  Option 1: 8/8 points (100.0%) [Faith Bonus, Traditional]
+    "We commit to having a "One Flesh, One Financial" model where any and every amount of income generated by either spouse is considered the family's resources and is budgeted and apportioned against our prayerfully planned annual budget"
+  Option 2: 2/8 points (25.0%)
+    "Other: Before committing to this we need further discussion in our session around how this would operate"
+
+================================================================================
+QUESTION 73 | Section: Section VI: Your Finances
+Type: M | Weight: 6 | Faith Question: NO
+Text: We commit to developing an annual budget, with monthly discussions on the of each month, around our status (actuals) against our goals, what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%)
+    "We commit to developing an annual budget, with monthly discussions on the of each month, around our status (actuals) against our goals"
+  Option 2: 4/6 points (66.7%)
+    "We commit to working with a financial advisor, who will help us develop an annual budget, with monthly discussion around our status (actuals) against our goals"
+  Option 3: 3/6 points (50.0%)
+    "We commit to developing an annual budget, with bi-monthly discussions on the of every other month, around our status (actuals) against our goals"
+  Option 4: 1/6 points (16.7%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 74 | Section: Section VI: Your Finances
+Type: D | Weight: 8 | Faith Question: NO
+Text: In view of gifting and capacity, we commit to [one designated spouse] being the primary individual in our family who manages the periodic functions of our finances, which includes but is not limited to, developing the budget, financial reconciliations, bill-payment and investment related asset management and allocation
+
+OPTION SCORING:
+  Option 1: 8/8 points (100.0%) [Traditional]
+    "In view of gifting and capacity, we commit to [one designated spouse] being the primary individual in our family who manages the periodic functions of our finances, which includes but is not limited to, developing the budget, financial reconciliations, bill-payment and investment related asset management and allocation"
+  Option 2: 2/8 points (25.0%)
+    "Other: We commit to having a licensed financial professional handle and manage all of our financial matters. We commit to at least monthly updates (indefinitely) with the professional of our choosing."
+
+================================================================================
+QUESTION 75 | Section: Section VI: Your Finances
+Type: M | Weight: 6 | Faith Question: YES
+Text: We commit to giving at least 10% of our net income to our faith community monthly, what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%) [Faith Bonus]
+    "We commit to giving at least 10% of our net income to our faith community monthly"
+  Option 2: 6/6 points (100.0%) [Faith Bonus]
+    "We commit to giving at least 2% of our net income to our faith community monthly, with the goal of increasing giving by 1% each year"
+  Option 3: 4/6 points (66.7%) [Faith Bonus]
+    "We commit to giving at least 10% of our net income to our faith community and at least 2% to causes and missions we believe in."
+  Option 4: 1/6 points (16.7%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 76 | Section: Section VI: Your Finances
+Type: M | Weight: 6 | Faith Question: NO
+Text: We commit to paying for things when we go out together in public, unless we explicitly discuss another plan in advance, what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%)
+    "We commit to paying for things when we go out together in public, unless we explicitly discuss another plan in advance"
+  Option 2: 4/6 points (66.7%)
+    "We're committed to a more flexible setup where there is no set expectation for one spouse paying (because it's ultimately coming from the same source) and we talk about it in advance each time"
+  Option 3: 3/6 points (50.0%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 77 | Section: Section VI: Your Finances
+Type: M | Weight: 6 | Faith Question: NO
+Text: We commit to giving our children a weekly allowance as an opportunity to teach financial stewardship, what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%) [Traditional]
+    "We commit to giving our children a weekly allowance as an opportunity to teach financial stewardship"
+  Option 2: 5/6 points (83.3%) [Traditional]
+    "While we believe in teaching our children proper financial stewardship, we do not believe in giving them an allowance. We will provide resources as needed and available."
+  Option 3: 4/6 points (66.7%) [Traditional]
+    "We commit to giving our children a monthly allowance as an opportunity to teach stewardship"
+  Option 4: 1/6 points (16.7%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 78 | Section: Section VI: Your Finances
+Type: M | Weight: 6 | Faith Question: NO
+Text: We commit to opening a 529 plan/account for our children after they are born and depositing a budget sensitive amount monthly, what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%) [Traditional]
+    "We commit to opening a 529 plan/account for our children after they are born and depositing a budget sensitive amount monthly"
+  Option 2: 5/6 points (83.3%) [Traditional]
+    "We commit to opening a savings account for our children after they are born and depositing a budget sensitive amount monthly"
+  Option 3: 4/6 points (66.7%) [Traditional]
+    "We commit to opening a brokerage account for our children after they are born and depositing a budget sensitive amount monthly"
+  Option 4: 2/6 points (33.3%) [Traditional]
+    "We commit to opening both a 529 plan/account and a brokerage account for our children after they are born and depositing a budget sensitive amount monthly"
+  Option 5: 1/6 points (16.7%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 79 | Section: Section VI: Your Finances
+Type: M | Weight: 6 | Faith Question: NO
+Text: We commit to having [one designated spouse] be responsible for the overall food planning and preparation for the family, with considerations made for date night, family outings and circumstances when one is unable to do. (80 / 20), what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%) [Traditional]
+    "We commit to having [one designated spouse] be responsible for the overall food planning and preparation for the family, with considerations made for date night, family outings and circumstances when one is unable to do. (80 / 20)"
+  Option 2: 5/6 points (83.3%) [Traditional]
+    "We commit to having [one designated spouse] be responsible for the overall food planning and preparation for the family, with a split of [one designated spouse] being responsible for meals during the week (M-Fri) and [one designated spouse] being responsible for meals during the weekend."
+  Option 3: 4/6 points (66.7%) [Traditional]
+    "We commit to having a chef / nanny be responsible for the overall food planning and preparation for the family."
+  Option 4: 1/6 points (16.7%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 80 | Section: Section VI: Your Finances
+Type: M | Weight: 6 | Faith Question: NO
+Text: We commit to enjoying home-cooked meals at least 4 of the 7 days per week, what is your approach?
+
+OPTION SCORING:
+  Option 1: 6/6 points (100.0%)
+    "We commit to enjoying home-cooked meals at least 4 of the 7 days per week"
+  Option 2: 4/6 points (66.7%)
+    "We commit to enjoying home-cooked meals at least 2 of the 7 days per week"
+  Option 3: 3/6 points (50.0%)
+    "We commit to enjoying healthy meals through all channels (without specific constraints beyond it being in line with financial budget)"
+  Option 4: 1/6 points (16.7%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 81 | Section: Section VII: Your Health and Wellness
+Type: M | Weight: 5 | Faith Question: NO
+Text: We commit to preparing and enjoying healthy meals as a family, as defined by completely restricting fried food, fast food, candy as well as any other non-whole, highly processed junk foods from our family's consumption at least 5 of the 7 days per week., what is your approach?
+
+OPTION SCORING:
+  Option 1: 5/5 points (100.0%) [Traditional]
+    "We commit to preparing and enjoying healthy meals as a family, as defined by completely restricting fried food, fast food, candy as well as any other non-whole, highly processed junk foods from our family's consumption at least 5 of the 7 days per week."
+  Option 2: 4/5 points (80.0%) [Traditional]
+    "We commit to preparing and enjoying healthy meals as a family, as defined by completely restricting fried food, fast food, candy as well as any other non-whole, highly processed junk foods from our family's consumption at least 4 of the 7 days per week."
+  Option 3: 2/5 points (40.0%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 82 | Section: Section VII: Your Health and Wellness
+Type: M | Weight: 5 | Faith Question: NO
+Text: We commit to a healthy balanced diet with no special restriction on any meats (seafood, chicken, beef, pork), dairy, fruits and vegetables, and whole grains or nuts, what is your approach?
+
+OPTION SCORING:
+  Option 1: 5/5 points (100.0%)
+    "We commit to a healthy balanced diet with no special restriction on any meats (seafood, chicken, beef, pork), dairy, fruits and vegetables, and whole grains or nuts"
+  Option 2: 4/5 points (80.0%)
+    "We commit to a healthy balanced diet including all meats except pork (seafood, chicken, beef), dairy, fruits and vegetables, and whole grains or nuts"
+  Option 3: 2/5 points (40.0%)
+    "We commit to a healthy balanced vegetarian diet"
+  Option 4: 1/5 points (20.0%)
+    "We commit to a healthy balanced ascertain diet"
+  Option 5: 2/5 points (40.0%) [Traditional]
+    "We commit to a healthy balanced diet which is flexible to individual needs (e.g., husband can pursue carnivore and wife can pursue vegetarian, while children can be unrestricted, for example)"
+
+================================================================================
+QUESTION 83 | Section: Section VII: Your Health and Wellness
+Type: D | Weight: 7 | Faith Question: NO
+Text: We commit to breastfeeding primarily and only using formula in rare circumstances.
+
+OPTION SCORING:
+  Option 1: 7/7 points (100.0%)
+    "We commit to breastfeeding primarily and only using formula in rare circumstances."
+  Option 2: 2/7 points (28.6%)
+    "We commit to breastfeeding whenever possible, still, we do not have any reservations about relying on high quality formula."
+
+================================================================================
+QUESTION 84 | Section: Section VII: Your Health and Wellness
+Type: M | Weight: 5 | Faith Question: NO
+Text: We're committed to breastfeeding along with introducing appropriate complementary foods for up to 2 years for our children., what is your approach?
+
+OPTION SCORING:
+  Option 1: 5/5 points (100.0%) [Traditional]
+    "We're committed to breastfeeding along with introducing appropriate complementary foods for up to 2 years for our children."
+  Option 2: 4/5 points (80.0%) [Traditional]
+    "We're committed to breastfeeding along with introducing appropriate complementary foods whenever possible still, we do not plan to do it beyond 1 year for our children."
+  Option 3: 2/5 points (40.0%)
+    "We do not have a strong perspective about breastfeeding and will take the guidance of our medical professional when the time comes."
+
+================================================================================
+QUESTION 85 | Section: Section VII: Your Health and Wellness
+Type: M | Weight: 5 | Faith Question: NO
+Text: We are committed to a more natural, homeopathic approach to the health and wellness of both us and our children, avoiding the use of OTC drugs and medicines outside of extreme and rare circumstances., what is your approach?
+
+OPTION SCORING:
+  Option 1: 5/5 points (100.0%) [Traditional]
+    "We are committed to a more natural, homeopathic approach to the health and wellness of both us and our children, avoiding the use of OTC drugs and medicines outside of extreme and rare circumstances."
+  Option 2: 4/5 points (80.0%)
+    "We are committed to our health and wellness and have no reservations with leveraging the medication and OTC drugs available to us to manage pain and illness."
+  Option 3: 2/5 points (40.0%)
+    "We are committed to our health and wellness and each approach this issue very differently, thus we are committed to a model which is flexible to each individual's preferences."
+
+================================================================================
+QUESTION 86 | Section: Section VII: Your Health and Wellness
+Type: D | Weight: 7 | Faith Question: NO
+Text: We are committed to each doing a full physical and check-up annually, including all pertinent age/risk factor appropriate tests (i.e., prostate, breast, etc.). As such, to establish this shared practice, we plan to go on or by before our wedding day.
+
+OPTION SCORING:
+  Option 1: 7/7 points (100.0%)
+    "We are committed to each doing a full physical and check-up annually, including all pertinent age/risk factor appropriate tests (i.e., prostate, breast, etc.). As such, to establish this shared practice, we plan to go on or by before our wedding day."
+  Option 2: 2/7 points (28.6%)
+    "We are committed to each doing a full physical and check-up annually, including all pertinent age/risk factor appropriate tests (i.e., prostate, breast, etc.). We already have completed our individual check-ups for the year and look forward to continuing this annual practice in marriage."
+
+================================================================================
+QUESTION 87 | Section: Section VII: Your Health and Wellness
+Type: M | Weight: 5 | Faith Question: NO
+Text: We are committed to having a natural birth., what is your approach?
+
+OPTION SCORING:
+  Option 1: 5/5 points (100.0%)
+    "We are committed to having a natural birth."
+  Option 2: 4/5 points (80.0%)
+    "We are committed to having an epidural or anything medically available to relieve labor pain."
+  Option 3: 2/5 points (40.0%)
+    "We're not well educated enough on the subject to make an informed decision on what's best so we plan to research and revisit this when the time comes."
+
+================================================================================
+QUESTION 88 | Section: Section VII: Your Health and Wellness
+Type: M | Weight: 5 | Faith Question: YES
+Text: We are each committed to seeing a (faith-aligned) therapist individually, at least 6 times per year during our marriage (as our resources allow)., what is your approach?
+
+OPTION SCORING:
+  Option 1: 5/5 points (100.0%) [Faith Bonus]
+    "We are each committed to seeing a (faith-aligned) therapist individually, at least 6 times per year during our marriage (as our resources allow)."
+  Option 2: 4/5 points (80.0%) [Faith Bonus]
+    "We are each committed to seeing a (faith-aligned) therapist individually, at least 4 times per year during our marriage (as our resources allow)."
+  Option 3: 3/5 points (60.0%) [Faith Bonus]
+    "We are each committed to seeing a (faith-aligned) therapist individually, at least 12 times per year during our marriage (as our resources allow)."
+  Option 4: 1/5 points (20.0%)
+    "While we believe in seeking counsel for our marriage, we're not ready to commit to long-term individual therapy currently."
+
+================================================================================
+QUESTION 89 | Section: Section VII: Your Health and Wellness
+Type: M | Weight: 5 | Faith Question: NO
+Text: We are each committed to a goal of sustainable health, through regular exercise, which for us is at least 3x per week individually, what is your approach?
+
+OPTION SCORING:
+  Option 1: 5/5 points (100.0%)
+    "We are each committed to a goal of sustainable health, through regular exercise, which for us is at least 3x per week individually"
+  Option 2: 4/5 points (80.0%)
+    "We are each committed to a goal of sustainable health, through regular exercise, which for us is at least 2x per week individually"
+  Option 3: 2/5 points (40.0%)
+    "We are each committed to a goal of sustainable health, through regular exercise, which for us is at least 4x per week individually"
+  Option 4: 1/5 points (20.0%)
+    "Other: please detail"
+
+================================================================================
+QUESTION 90 | Section: Section VIII: Your Marriage and Boundaries
+Type: D | Weight: 9 | Faith Question: NO
+Text: We commit to never actively keeping / maintaining any secrets from one another.
+
+OPTION SCORING:
+  Option 1: 9/9 points (100.0%)
+    "We commit to never actively keeping / maintaining any secrets from one another."
+  Option 2: 2/9 points (22.2%) [Traditional]
+    "We are not ready to make this commitment at this time and prefer to address this matter later in our relationship"
+
+================================================================================
+QUESTION 91 | Section: Section VIII: Your Marriage and Boundaries
+Type: D | Weight: 9 | Faith Question: YES
+Text: While we fully trust God and our spouse, we believe in oneness and there being no hidden spaces, thus, we believe in "transparent access" which means we each have the passcodes for all our technology (hardware) and digital media accounts.
+
+OPTION SCORING:
+  Option 1: 9/9 points (100.0%) [Faith Bonus]
+    "While we fully trust God and our spouse, we believe in oneness and there being no hidden spaces, thus, we believe in "transparent access" which means we each have the passcodes for all our technology (hardware) and digital media accounts."
+  Option 2: 2/9 points (22.2%) [Faith Bonus]
+    "While we fully trust God and our spouse, and believe in being one, we do not believe in "transparent access" and do not believe it is necessary to commit to having the passcodes for all of our technology (hardware) and digital media accounts."
+
+================================================================================
+QUESTION 92 | Section: Section VIII: Your Marriage and Boundaries
+Type: M | Weight: 7 | Faith Question: YES
+Text: We commit to splitting and rotating visiting family for major holidays between our families (e.g., Thanksgiving, Christmas, Easter) each year., what is your approach?
+
+OPTION SCORING:
+  Option 1: 7/7 points (100.0%) [Faith Bonus, Traditional]
+    "We commit to splitting and rotating visiting family for major holidays between our families (e.g., Thanksgiving, Christmas, Easter) each year."
+  Option 2: 7/7 points (100.0%) [Faith Bonus, Traditional]
+    "We commit to doing major holidays at home, with a visit at least one family for one holiday each year (rotating)."
+  Option 3: 3/7 points (42.9%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 93 | Section: Section VIII: Your Marriage and Boundaries
+Type: M | Weight: 7 | Faith Question: NO
+Text: We're committed to caring for our spouses' parents in advanced age through financial contribution., what is your approach?
+
+OPTION SCORING:
+  Option 1: 7/7 points (100.0%)
+    "We're committed to caring for our spouses' parents in advanced age through financial contribution."
+  Option 2: 5/7 points (71.4%)
+    "We're committed to caring for our spouses' parents in advanced age through welcoming them to move in with us so we can be primary caregivers."
+  Option 3: 3/7 points (42.9%)
+    "We're committed to caring for our spouses' parents in advanced age yet in the interest of our marriage and honoring their best care, we do not believe a longer-term stay is the best option for us."
+  Option 4: 1/7 points (14.3%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 94 | Section: Section VIII: Your Marriage and Boundaries
+Type: M | Weight: 7 | Faith Question: NO
+Text: We're committed to having at least one parent stay with us for a period of a month, after the birth of our first child., what is your approach?
+
+OPTION SCORING:
+  Option 1: 7/7 points (100.0%)
+    "We're committed to having at least one parent stay with us for a period of a month, after the birth of our first child."
+  Option 2: 5/7 points (71.4%)
+    "We're committed to setting frequent and intentional early interactions with our new child and our parents, for visits and help with care, still, we prefer not to have anyone stay for an extended length of time in the first month."
+  Option 3: 3/7 points (42.9%)
+    "We're committed to having at least one parent stay with us for a period of two weeks, after the birth of our first child."
+  Option 4: 1/7 points (14.3%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 95 | Section: Section VIII: Your Marriage and Boundaries
+Type: M | Weight: 7 | Faith Question: NO
+Text: We commit to maintaining healthy boundaries with the opposite sex as a married couple, however, we do not believe any unique restrictions on interactions are required for opposite sex interactions that are not present with our same-sex interactions., what is your approach?
+
+OPTION SCORING:
+  Option 1: 7/7 points (100.0%)
+    "We commit to maintaining healthy boundaries with the opposite sex as a married couple, however, we do not believe any unique restrictions on interactions are required for opposite sex interactions that are not present with our same-sex interactions."
+  Option 2: 6/7 points (85.7%) [Traditional]
+    "We commit to maintaining healthy boundaries with the opposite sex as a married couple, with that said, while we believe in shared interactions with an individual, we do not believe in nurturing/actively maintaining friendships with the opposite sex one on one (outside of work colleagues/family) as measured by: daily/multiple times per week one on one conversations/text/social media messages, one on one meetups without our spouse, and inappropriate conversation you wouldn't be comfortable with your spouse or anyone else seeing."
+
+================================================================================
+QUESTION 96 | Section: Section VIII: Your Marriage and Boundaries
+Type: M | Weight: 7 | Faith Question: NO
+Text: We're committed to putting our phones away during date nights, with only use for contact with babysitter (if applicable), caregiver or photographs between us, what is your approach?
+
+OPTION SCORING:
+  Option 1: 7/7 points (100.0%)
+    "We're committed to putting our phones away during date nights, with only use for contact with babysitter (if applicable), caregiver or photographs between us"
+  Option 2: 5/7 points (71.4%)
+    "We commit to exercising discretion, and we do not believe a firm line is necessary"
+  Option 3: 3/7 points (42.9%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 97 | Section: Section VIII: Your Marriage and Boundaries
+Type: M | Weight: 7 | Faith Question: YES
+Text: While we fully trust God and our spouse, we believe in honoring our covenant in and through all our actions, as such:, what is your approach?
+
+OPTION SCORING:
+  Option 1: 7/7 points (100.0%)
+    "We commit to ensuring there is no direct communications via message or comments with any member of the opposite sex on any platform, unless it's someone we both unequivocally know and trust"
+  Option 2: 5/7 points (71.4%)
+    "We commit to exercising discretion and discernment, and we do not believe a firm line is necessary"
+  Option 3: 3/7 points (42.9%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 98 | Section: Section VIII: Your Marriage and Boundaries
+Type: M | Weight: 7 | Faith Question: YES
+Text: While we fully trust God and our spouse, we believe in honoring our covenant in and through all our actions, as such:, what is your approach?
+
+OPTION SCORING:
+  Option 1: 7/7 points (100.0%)
+    "We commit to ensuring there is no direct connection (via follow / being followed, friendship or connection) and/or direct communications via message or comments with any past significant other(s) / past romantic interests on any platform"
+  Option 2: 5/7 points (71.4%)
+    "We commit to ensuring all past significant other(s) / past romantic interests are blocked on every platform"
+  Option 3: 3/7 points (42.9%)
+    "Not Applicable"
+  Option 4: 1/7 points (14.3%)
+    "Other: Please detail"
+
+================================================================================
+QUESTION 99 | Section: Section VIII: Your Marriage and Boundaries
+Type: M | Weight: 7 | Faith Question: YES
+Text: While we fully trust God and our spouse, we believe in honoring our covenant in and through all our actions, as such:, what is your approach?
+
+OPTION SCORING:
+  Option 1: 7/7 points (100.0%)
+    "We commit to deleting all private and public media with any past significant other(s) / past romantic interests from all private devices and public accounts (active or not) by"
+  Option 2: 5/7 points (71.4%)
+    "Not Applicable"
+  Option 3: 3/7 points (42.9%)
+    "Other: Please detail"
+
+================================================================================
+SUMMARY STATISTICS
+Total Questions: 99
+Declaration Questions: 30
+Multiple Choice Questions: 69
+Faith Questions: 31
+Total Possible Points: 660
+
+SECTION BREAKDOWN:
+  Section III: Your Marriage Life: 31 questions, 216 total weight
+  Section IV: Your Marriage Life with Children: 20 questions, 126 total weight
+  Section I: Your Foundation: 9 questions, 82 total weight
+  Section VIII: Your Marriage and Boundaries: 10 questions, 74 total weight
+  Section VI: Your Finances: 9 questions, 58 total weight
+  Section VII: Your Health and Wellness: 9 questions, 49 total weight
+  Section V: Your Family/Home Life: 8 questions, 34 total weight
+  Section II: Your Faith Life: 3 questions, 21 total weight
