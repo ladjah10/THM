@@ -137,11 +137,14 @@ export default function MarriageAssessment() {
   };
 
   // Handle selection of an answer option
-  const handleOptionSelect = async (questionId: number, option: string, value: number) => {
+  const handleOptionSelect = async (questionId: string, option: string, value: number) => {
+    // Ensure consistent question ID format (normalize to string format)
+    const normalizedQuestionId = questionId.toString();
+    
     // Update state with the new response
     const updatedResponses = {
       ...userResponses,
-      [questionId]: { option, value }
+      [normalizedQuestionId]: { option, value }
     };
     
     setUserResponses(updatedResponses);
@@ -160,11 +163,12 @@ export default function MarriageAssessment() {
       }
 
       // Check if this is question 99 (final question) and auto-complete
-      if (questionId === 99 && demographicData.email) {
+      const numericQuestionId = typeof questionId === 'string' ? parseInt(questionId.replace('Q', '')) : questionId;
+      if (numericQuestionId === 99 && demographicData.email) {
         await apiRequest('POST', '/api/assessment/complete', {
           email: demographicData.email,
           finalResponse: {
-            questionId: questionId.toString(),
+            questionId: normalizedQuestionId,
             option,
             value
           }
@@ -180,7 +184,7 @@ export default function MarriageAssessment() {
       // Silent failure for autosave to avoid disrupting user experience
     }
     
-    console.log(`Response recorded for question ${questionId}`);
+    console.log(`Response recorded for question ${normalizedQuestionId}`);
   };
 
   // Navigate to next question or section
@@ -273,9 +277,29 @@ export default function MarriageAssessment() {
         return;
       }
 
-      // Validate that assessment has responses
-      const answeredCount = Object.keys(userResponses).length;
-      if (answeredCount < totalQuestions) {
+      // Validate that assessment has responses - check for all question IDs
+      const questionIds = questions.map(q => q.id);
+      const answeredQuestionKeys = Object.keys(userResponses);
+      
+      // Check if we have responses for all questions (handle both string and numeric formats)
+      const hasAllResponses = questionIds.every(questionId => {
+        const numericId = questionId.replace('Q', '');
+        return answeredQuestionKeys.includes(questionId) || 
+               answeredQuestionKeys.includes(numericId);
+      });
+      
+      const answeredCount = answeredQuestionKeys.length;
+      
+      if (!hasAllResponses || answeredCount < totalQuestions) {
+        // Debug information for troubleshooting
+        console.log('Validation Debug:', {
+          totalQuestions,
+          answeredCount,
+          hasAllResponses,
+          questionIds: questionIds.slice(0, 5), // First 5 for debugging
+          answeredKeys: answeredQuestionKeys.slice(0, 5) // First 5 for debugging
+        });
+        
         toast({
           title: "Incomplete Assessment",
           description: `Please answer all ${totalQuestions} questions before submitting. Currently answered: ${answeredCount}`,

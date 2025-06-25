@@ -54,6 +54,7 @@ export default function QuestionnaireView({
       value = question.weight || 1;
     }
     
+    // Pass the question ID directly as it is (Q1, Q2, etc.)
     onOptionSelect(question.id, option, value);
   }, [question.id, question.type, question.weight, question.options, onOptionSelect]);
 
