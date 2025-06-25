@@ -997,11 +997,11 @@ export const questions: Question[] = [
     section: "Section VI: Your Finances",
     subsection: "Financial Generosity (in Faith)",
     type: "M",
-    text: "We commit to giving at least $10%$ of our net income to our faith community monthly, what is your approach?",
+    text: "We commit to giving at least 10% of our net income to our faith community monthly, what is your approach?",
     options: [
-      "We commit to giving at least $10%$ of our net income to our faith community monthly",
-      "We commit to giving at least $2%$ of our net income to our faith community monthly, with the goal of increasing giving by $1%$ each year",
-      "We commit to giving at least $10%$ of our net income to our faith community and at least $2%$ to causes and missions we believe in.",
+      "We commit to giving at least 10% of our net income to our faith community monthly",
+      "We commit to giving at least 2% of our net income to our faith community monthly, with the goal of increasing giving by 1% each year",
+      "We commit to giving at least 10% of our net income to our faith community and at least 2% to causes and missions we believe in.",
       "Other: Please detail"
     ],
     weight: 6
