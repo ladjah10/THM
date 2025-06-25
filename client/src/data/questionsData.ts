@@ -7,13 +7,14 @@
  */
 
 export interface Question {
-  id: number;
-  section: string;
-  subsection: string;
-  type: "M" | "D" | "I";
+  id: string;
   text: string;
+  section: string;
+  type: "M" | "D" | "I";
+  faith: boolean;
+  baseWeight: number;
+  adjustedWeight: number;
   options: string[];
-  weight: number;
 }
 
 export const sections = [

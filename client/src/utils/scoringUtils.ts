@@ -4,7 +4,7 @@ import { psychographicProfiles } from "@/data/psychographicProfiles";
 /**
  * Calculate assessment scores based on user responses
  */
-export function calculateScores(questions: Question[], responses: Record<number, UserResponse>): AssessmentScores {
+export function calculateScores(questions: Question[], responses: Record<string, UserResponse>): AssessmentScores {
   // Import section weights and percentages
   const SECTION_WEIGHTS = {
     "Section I: Your Foundation": 89,
@@ -46,7 +46,7 @@ export function calculateScores(questions: Question[], responses: Record<number,
     const response = responses[question.id];
     if (!response) return;
 
-    const weight = question.weight ?? 1;
+    const weight = question.adjustedWeight ?? 1;
     const section = question.section;
     
     let earned: number;
@@ -314,7 +314,7 @@ export function validateSectionWeights(questions: Question[]) {
   const sectionWeights: Record<string, { totalWeight: number; questionCount: number }> = {};
   
   questions.forEach(question => {
-    const weight = question.weight ?? 1;
+    const weight = question.adjustedWeight ?? 1;
     
     if (!sectionWeights[question.section]) {
       sectionWeights[question.section] = { totalWeight: 0, questionCount: 0 };
@@ -347,7 +347,7 @@ export function validateSectionWeights(questions: Question[]) {
  * Developer debug tool for comprehensive assessment analysis
  */
 export function debugAssessmentScoring(
-  responses: Record<number, UserResponse>,
+  responses: Record<string, UserResponse>,
   questions: Question[],
   gender?: string
 ) {

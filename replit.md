@@ -81,6 +81,7 @@ The application uses Replit's deployment infrastructure:
 - **Dependencies**: Automatic package installation for all environments
 
 ## Recent Changes
+- June 25, 2025: Updated question dataset format with structured JSON-exportable format including string IDs (Q1-Q99), faith flags, baseWeight/adjustedWeight separation, and proper type definitions for enhanced data management
 - June 25, 2025: Implemented final scoring algorithm patch with proper section weighting (623 total points), standardized response percentages (100%/75%/40%/15%), and weighted category contributions ensuring accurate profile correlation and compatibility scoring
 - June 25, 2025: Implemented contextual scoring system that analyzes faith and traditional content in options, applies content-aware scoring with bonus multipliers for faith questions, and properly weights traditional marriage responses regardless of option position
 - June 25, 2025: Fixed critical scoring algorithm issues - corrected multiple choice scoring from 5x inflated denominators to proper weight-based scoring, implemented graduated point distribution, and adjusted psychographic profile criteria to realistic ranges
