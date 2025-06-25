@@ -10,6 +10,7 @@ export interface Question {
   id: string;
   text: string;
   section: string;
+  subsection: string;
   type: "M" | "D" | "I";
   faith: boolean;
   baseWeight: number;
@@ -31,12 +32,21 @@ export const sections = [
 
 export const questions: Question[] = [
   {
+
     id: "Q1",
+
     text: "We each already believe in and (have) receive(d) Jesus Christ as our Lord and Savior and this reality will be the active foundation and guiding lens through which we see and operate in our marriage and family.",
+
     section: "Section I: Your Foundation",
+
+    subsection: "Marriage + Family",
+
     type: "D",
+
     faith: true,
+
     baseWeight: 10,
+
     adjustedWeight: 11,
     options: [
       "We each already believe in and (have) receive(d) Jesus Christ as our Lord and Savior and this reality will be the active foundation and guiding lens through which we see and operate in our marriage and family.",
@@ -47,6 +57,7 @@ export const questions: Question[] = [
     id: "Q2",
     text: "In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this \"life covenant\" process, unless mutually revisited and discussed at a later time.",
     section: "Section I: Your Foundation",
+    subsection: "Marriage + Family Accountability",
     type: "D",
     faith: true,
     baseWeight: 10,
@@ -54,9 +65,7 @@ export const questions: Question[] = [
     options: [
       "In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this \"life covenant\" process, unless mutually revisited and discussed at a later time.",
       "Other: Before committing to this we need further discussion with spiritual counsel around how this would operate."
-    ],
-    weight: 11,
-    isFaithQuestion: true
+    ]
   },
   {
 
@@ -65,6 +74,8 @@ export const questions: Question[] = [
     text: "We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ.",
 
     section: "Section I: Your Foundation",
+
+    subsection: "Marriage & Your Children's Faith Journey (for if/when it becomes applicable)",
 
     type: "D",
 
@@ -85,6 +96,8 @@ export const questions: Question[] = [
     text: "We're committed to the belief: While a marriage relationship can yield happiness, we believe happiness is neither a stable emotion nor a stable foundation to build a marriage upon, as such, we believe each spouse is ultimately responsible for their own happiness., what is your approach?",
 
     section: "Section I: Your Foundation",
+
+    subsection: "Marriage Mindset: Happiness",
 
     type: "M",
 
@@ -108,6 +121,8 @@ export const questions: Question[] = [
 
     section: "Section I: Your Foundation",
 
+    subsection: "Marriage Preparation: Legal (Incapacitation)",
+
     type: "D",
 
     faith: true,
@@ -128,6 +143,8 @@ export const questions: Question[] = [
 
     section: "Section I: Your Foundation",
 
+    subsection: "Marriage Preparation: Legal (Will)",
+
     type: "D",
 
     faith: true,
@@ -147,6 +164,7 @@ export const questions: Question[] = [
     text: "We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, \"Falling Out of Love\", \"Growing Apart\", \"Irreconcilable Differences\"",
 
     section: "Section I: Your Foundation",
+    subsection: "Marriage Mindset: Divorce",
 
     type: "M",
 
@@ -167,6 +185,8 @@ export const questions: Question[] = [
     text: "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), still, in view of the law and the prevalent rates of marriage dissolution, we agree to explore and structure a mutually considerate prenuptial agreement for our marriage., what is your approach?",
 
     section: "Section I: Your Foundation",
+
+    subsection: "Marriage Mindset: Conflict",
 
     type: "M",
 
@@ -189,6 +209,8 @@ export const questions: Question[] = [
 
     section: "Section I: Your Foundation",
 
+    subsection: "Marriage Preparation: Pastoral Counseling",
+
     type: "M",
 
     faith: true,
@@ -209,6 +231,8 @@ export const questions: Question[] = [
     text: "We commit to daily prayer as a couple before we go to sleep., what is your approach?",
 
     section: "Section II: Your Faith Life",
+
+    subsection: "Prayer Life (Individual)",
 
     type: "M",
 
@@ -231,6 +255,8 @@ export const questions: Question[] = [
 
     section: "Section II: Your Faith Life",
 
+    subsection: "Prayer Life (Collective)",
+
     type: "M",
 
     faith: true,
@@ -251,6 +277,8 @@ export const questions: Question[] = [
     text: "We commit to each volunteering/serving in our faith community in some capacity in every season., what is your approach?",
 
     section: "Section II: Your Faith Life",
+
+    subsection: "Spiritual Life Accountability",
 
     type: "M",
 
@@ -294,6 +322,8 @@ export const questions: Question[] = [
 
     section: "Section III: Your Marriage Life",
 
+    subsection: "Roles and Responsibilities: General",
+
     type: "M",
 
     faith: false,
@@ -315,6 +345,8 @@ export const questions: Question[] = [
     text: "We commit to a marriage model where we agree to both work full-time for as long as we both can consistently honor our commitments to God, our spouse and our children (If applicable)., what is your approach?",
 
     section: "Section III: Your Marriage Life",
+
+    subsection: "Roles and Responsibilities: Leadership",
 
     type: "M",
 
@@ -360,6 +392,8 @@ export const questions: Question[] = [
 
     section: "Section III: Your Marriage Life",
 
+    subsection: "Roles and Responsibilities: Decision Making",
+
     type: "M",
 
     faith: false,
@@ -381,6 +415,8 @@ export const questions: Question[] = [
     text: "We commit to a marriage / work model where we agree to have no more than 2 late night workdays either at the office or at home (i.e., not going to bed with your spouse), per week., what is your approach?",
 
     section: "Section III: Your Marriage Life",
+
+    subsection: "Roles and Responsibilities: Communication",
 
     type: "M",
 
@@ -404,6 +440,8 @@ export const questions: Question[] = [
 
     section: "Section III: Your Marriage Life",
 
+    subsection: "Communication: Conflict Resolution",
+
     type: "D",
 
     faith: false,
@@ -424,6 +462,8 @@ export const questions: Question[] = [
 
     section: "Section III: Your Marriage Life",
 
+    subsection: "Communication: Truth",
+
     type: "D",
 
     faith: true,
@@ -443,6 +483,8 @@ export const questions: Question[] = [
     text: "We commit to having sex at least 3 times per week, what is your approach?",
 
     section: "Section III: Your Marriage Life",
+
+    subsection: "Sex (Frequency)",
 
     type: "M",
 
@@ -465,6 +507,8 @@ export const questions: Question[] = [
 
     section: "Section III: Your Marriage Life",
 
+    subsection: "Sex (Initiation)",
+
     type: "M",
 
     faith: false,
@@ -485,6 +529,8 @@ export const questions: Question[] = [
     text: "We commit to having a conversation within the first month about what we individually enjoy in sex with our spouse and what aspect of the experience, if anything, you would each enjoy more of., what is your approach?",
 
     section: "Section III: Your Marriage Life",
+
+    subsection: "Sex (Performance Enhancement)",
 
     type: "M",
 
@@ -508,6 +554,8 @@ export const questions: Question[] = [
 
     section: "Section III: Your Marriage Life",
 
+    subsection: "Sex (Boundaries)",
+
     type: "M",
 
     faith: false,
@@ -529,6 +577,8 @@ export const questions: Question[] = [
 
     section: "Section III: Your Marriage Life",
 
+    subsection: "Sex (Other Activities)",
+
     type: "D",
 
     faith: false,
@@ -548,6 +598,8 @@ export const questions: Question[] = [
     text: "We're committed to not having any mobile electronics in our bedroom, specifically, TV's, laptops and/or phones at night's end to ensure our bedroom is a place of intimacy.",
 
     section: "Section III: Your Marriage Life",
+
+    subsection: "Sex (Intimacy Expression)",
 
     type: "D",
 
@@ -569,6 +621,8 @@ export const questions: Question[] = [
 
     section: "Section III: Your Marriage Life",
 
+    subsection: "Affection (Love Languages)",
+
     type: "D",
 
     faith: false,
@@ -588,6 +642,8 @@ export const questions: Question[] = [
     text: "We commit to having a weekly check-in on at [] (guarded time)",
 
     section: "Section III: Your Marriage Life",
+
+    subsection: "Romance",
 
     type: "D",
 
@@ -609,6 +665,8 @@ export const questions: Question[] = [
 
     section: "Section III: Your Marriage Life",
 
+    subsection: "Quality Time (Date Nights)",
+
     type: "D",
 
     faith: false,
@@ -628,6 +686,8 @@ export const questions: Question[] = [
     text: "We commit to a minimum of monthly counseling sessions for the first year of our marriage, with a minimum of bi-monthly in year 2 and a minimum of quarterly in years 3+ as check-ins (with additional sessions as needed)., what is your approach?",
 
     section: "Section III: Your Marriage Life",
+
+    subsection: "Quality Time (Planning)",
 
     type: "M",
 
@@ -650,6 +710,8 @@ export const questions: Question[] = [
 
     section: "Section III: Your Marriage Life",
 
+    subsection: "Quality Time (Alone Time)",
+
     type: "D",
 
     faith: false,
@@ -669,6 +731,8 @@ export const questions: Question[] = [
     text: "We commit to not going more than 24 hours without speaking with one another under any circumstances.",
 
     section: "Section III: Your Marriage Life",
+
+    subsection: "Quality Time (Friends/Social Life)",
 
     type: "D",
 
@@ -690,6 +754,8 @@ export const questions: Question[] = [
 
     section: "Section III: Your Marriage Life",
 
+    subsection: "Quality Time (Media Consumption/TV)",
+
     type: "D",
 
     faith: false,
@@ -709,6 +775,8 @@ export const questions: Question[] = [
     text: "We commit to not going to sleep while still angry with one another [not to be confused with resolving the issue, but committing to find common ground to discuss further, prayer and then coming together as one]",
 
     section: "Section III: Your Marriage Life",
+
+    subsection: "Quality Time (Digital Technology/Devices/Social Media)",
 
     type: "D",
 
@@ -730,6 +798,8 @@ export const questions: Question[] = [
 
     section: "Section III: Your Marriage Life",
 
+    subsection: "Lifestyle: Recreation",
+
     type: "D",
 
     faith: false,
@@ -749,6 +819,8 @@ export const questions: Question[] = [
     text: "We commit to never using sex as a weapon by withholding it due to conflict [Unless mutually acknowledged and agreed due to medical considerations, prayer and/or fasting]",
 
     section: "Section III: Your Marriage Life",
+
+    subsection: "Lifestyle: Hobbies",
 
     type: "D",
 
@@ -770,6 +842,8 @@ export const questions: Question[] = [
 
     section: "Section III: Your Marriage Life",
 
+    subsection: "Lifestyle: Social Circles",
+
     type: "D",
 
     faith: false,
@@ -789,6 +863,8 @@ export const questions: Question[] = [
     text: "We commit to never discussing conflict/issues in your marriage with anyone (especially family members) before (1) addressing the issue with your spouse and (2) mutually agreeing to seek approved counsel on the issue.",
 
     section: "Section III: Your Marriage Life",
+
+    subsection: "Lifestyle: Vacations/Travel",
 
     type: "D",
 
@@ -810,6 +886,8 @@ export const questions: Question[] = [
 
     section: "Section III: Your Marriage Life",
 
+    subsection: "Lifestyle: Entertainment",
+
     type: "M",
 
     faith: false,
@@ -830,6 +908,8 @@ export const questions: Question[] = [
     text: "We're committed to living in a city where at least one of our families resides, always., what is your approach?",
 
     section: "Section III: Your Marriage Life",
+
+    subsection: "Lifestyle: Gift-Giving",
 
     type: "M",
 
@@ -853,6 +933,8 @@ export const questions: Question[] = [
 
     section: "Section III: Your Marriage Life",
 
+    subsection: "Lifestyle: Traditions and Celebrations",
+
     type: "M",
 
     faith: false,
@@ -875,6 +957,8 @@ export const questions: Question[] = [
 
     section: "Section III: Your Marriage Life",
 
+    subsection: "Lifestyle: Personal Space",
+
     type: "M",
 
     faith: false,
@@ -895,6 +979,8 @@ export const questions: Question[] = [
     text: "We're committed to living in an apartment long-term as our primary residence., what is your approach?",
 
     section: "Section III: Your Marriage Life",
+
+    subsection: "Lifestyle: Future Dreaming and Planning",
 
     type: "M",
 
@@ -918,6 +1004,8 @@ export const questions: Question[] = [
 
     section: "Section IV: Your Marriage Life with Children",
 
+    subsection: "Children (Desire & Quantity)",
+
     type: "D",
 
     faith: false,
@@ -938,6 +1026,8 @@ export const questions: Question[] = [
 
     section: "Section IV: Your Marriage Life with Children",
 
+    subsection: "Children (Delivery Style)",
+
     type: "M",
 
     faith: false,
@@ -957,6 +1047,8 @@ export const questions: Question[] = [
     text: "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer:, what is your approach?",
 
     section: "Section IV: Your Marriage Life with Children",
+
+    subsection: "Children (Birth Location)",
 
     type: "M",
 
@@ -979,6 +1071,8 @@ export const questions: Question[] = [
 
     section: "Section IV: Your Marriage Life with Children",
 
+    subsection: "Children (Birth Preparation)",
+
     type: "M",
 
     faith: false,
@@ -1000,6 +1094,8 @@ export const questions: Question[] = [
     text: "We commit to having as many children as God will allow us to have., what is your approach?",
 
     section: "Section IV: Your Marriage Life with Children",
+
+    subsection: "Children (Newborn Care)",
 
     type: "M",
 
@@ -1024,6 +1120,8 @@ export const questions: Question[] = [
 
     section: "Section IV: Your Marriage Life with Children",
 
+    subsection: "Children (Feeding Style)",
+
     type: "M",
 
     faith: false,
@@ -1044,6 +1142,8 @@ export const questions: Question[] = [
     text: "We commit to naming our children with first names that are from the Bible., what is your approach?",
 
     section: "Section IV: Your Marriage Life with Children",
+
+    subsection: "Children (Caretaking, Childcare)",
 
     type: "M",
 
@@ -1067,6 +1167,8 @@ export const questions: Question[] = [
 
     section: "Section IV: Your Marriage Life with Children",
 
+    subsection: "Children (Homeschooling vs. Traditional School)",
+
     type: "M",
 
     faith: false,
@@ -1087,6 +1189,8 @@ export const questions: Question[] = [
     text: "We commit to keeping the news of our pregnancy private until the end of the 1st trimester., what is your approach?",
 
     section: "Section IV: Your Marriage Life with Children",
+
+    subsection: "Children (Pre-birth Discussions)",
 
     type: "M",
 
@@ -1110,6 +1214,8 @@ export const questions: Question[] = [
 
     section: "Section IV: Your Marriage Life with Children",
 
+    subsection: "Children (Discipline Style)",
+
     type: "M",
 
     faith: false,
@@ -1131,6 +1237,8 @@ export const questions: Question[] = [
 
     section: "Section IV: Your Marriage Life with Children",
 
+    subsection: "Children (Positive Reinforcement, Rewards, Consequences)",
+
     type: "D",
 
     faith: false,
@@ -1151,6 +1259,8 @@ export const questions: Question[] = [
 
     section: "Section IV: Your Marriage Life with Children",
 
+    subsection: "Children (Child Involvement in Household Management)",
+
     type: "D",
 
     faith: false,
@@ -1170,6 +1280,8 @@ export const questions: Question[] = [
     text: "We commit to discussing sex with our children together at no later than 5 years old, specifically, discussing appropriate/inappropriate touch and expectations of communication if it happens., what is your approach?",
 
     section: "Section IV: Your Marriage Life with Children",
+
+    subsection: "Children (After-School Activities)",
 
     type: "M",
 
@@ -1194,6 +1306,8 @@ export const questions: Question[] = [
 
     section: "Section IV: Your Marriage Life with Children",
 
+    subsection: "Children (Media Consumption and Technology)",
+
     type: "M",
 
     faith: false,
@@ -1215,6 +1329,8 @@ export const questions: Question[] = [
     text: "We're committed to guarding the psychological development and physical safety of our children while allowing them to be socially connected and technologically adept, with that said, we do not believe it is appropriate for our children to be on any form of social media until they become high school age, what is your approach?",
 
     section: "Section IV: Your Marriage Life with Children",
+
+    subsection: "Children (Health and Medical Care)",
 
     type: "M",
 
@@ -1238,6 +1354,8 @@ export const questions: Question[] = [
 
     section: "Section IV: Your Marriage Life with Children",
 
+    subsection: "Children (Faith and Spiritual Formation)",
+
     type: "M",
 
     faith: false,
@@ -1260,6 +1378,8 @@ export const questions: Question[] = [
 
     section: "Section IV: Your Marriage Life with Children",
 
+    subsection: "Children (Extended Family Influence and Exposure)",
+
     type: "M",
 
     faith: false,
@@ -1281,6 +1401,8 @@ export const questions: Question[] = [
 
     section: "Section IV: Your Marriage Life with Children",
 
+    subsection: "Children (Marriage Age Target)",
+
     type: "M",
 
     faith: false,
@@ -1301,6 +1423,8 @@ export const questions: Question[] = [
     text: "We recognize the reality of race as well as its role and history still we don't believe we should have an explicit discussion about race / racial dynamics in the world and in our country with our children, what is your approach?",
 
     section: "Section IV: Your Marriage Life with Children",
+
+    subsection: "Children (College Savings and Funding)",
 
     type: "M",
 
@@ -1324,6 +1448,8 @@ export const questions: Question[] = [
 
     section: "Section IV: Your Marriage Life with Children",
 
+    subsection: "Children (Future Family Planning)",
+
     type: "M",
 
     faith: false,
@@ -1345,6 +1471,8 @@ export const questions: Question[] = [
     text: "We are committed to eating dinner as a family every single day, outside of unique and rare circumstances, what is your approach?",
 
     section: "Section V: Your Family/Home Life",
+
+    subsection: "Cooking",
 
     type: "M",
 
@@ -1368,6 +1496,8 @@ export const questions: Question[] = [
 
     section: "Section V: Your Family/Home Life",
 
+    subsection: "Household Management (Cleaning)",
+
     type: "M",
 
     faith: false,
@@ -1388,6 +1518,8 @@ export const questions: Question[] = [
     text: "We are committed to taking a full immediate family photo at least once per year, what is your approach?",
 
     section: "Section V: Your Family/Home Life",
+
+    subsection: "Household Management (Maintenance)",
 
     type: "M",
 
@@ -1410,6 +1542,8 @@ export const questions: Question[] = [
 
     section: "Section V: Your Family/Home Life",
 
+    subsection: "Household Management (Decision-Making and Task Assignment)",
+
     type: "D",
 
     faith: false,
@@ -1430,6 +1564,8 @@ export const questions: Question[] = [
     text: "We commit to a model of weekly house cleaning taking place on Saturdays or Sundays which includes but is not limited to, cleaning of general living areas, kitchen, bathrooms and bedrooms and laundry (assumption of general tidiness, cleaning after self during the week)., what is your approach?",
 
     section: "Section V: Your Family/Home Life",
+
+    subsection: "Household Management (Organization)",
 
     type: "M",
 
@@ -1453,6 +1589,8 @@ export const questions: Question[] = [
 
     section: "Section V: Your Family/Home Life",
 
+    subsection: "Extended Family (In-Laws)",
+
     type: "M",
 
     faith: false,
@@ -1474,6 +1612,8 @@ export const questions: Question[] = [
     text: "We commit to a model of weekly outside housework taking place on Saturdays or Sundays which includes but is not limited to, cleaning of vehicles, lawn care, cleaning of trash & recycling bins, deck, sidewalk and general gardening, what is your approach?",
 
     section: "Section V: Your Family/Home Life",
+
+    subsection: "Extended Family (Boundaries)",
 
     type: "M",
 
@@ -1497,6 +1637,8 @@ export const questions: Question[] = [
 
     section: "Section V: Your Family/Home Life",
 
+    subsection: "Extended Family (Holidays and Celebrations)",
+
     type: "M",
 
     faith: false,
@@ -1518,6 +1660,7 @@ export const questions: Question[] = [
     text: "We commit to having a \"One Flesh, One Financial\" model where any and every amount of income generated by either spouse is considered the family's resources and is budgeted and apportioned against our prayerfully planned annual budget",
 
     section: "Section VI: Your Finances",
+    subsection: "Budget Planning",
 
     type: "D",
 
@@ -1538,6 +1681,8 @@ export const questions: Question[] = [
     text: "We commit to developing an annual budget, with monthly discussions on the of each month, around our status (actuals) against our goals, what is your approach?",
 
     section: "Section VI: Your Finances",
+
+    subsection: "Budget Oversight and Management",
 
     type: "M",
 
@@ -1561,6 +1706,8 @@ export const questions: Question[] = [
 
     section: "Section VI: Your Finances",
 
+    subsection: "Financial Management",
+
     type: "D",
 
     faith: false,
@@ -1580,6 +1727,8 @@ export const questions: Question[] = [
     text: "We commit to giving at least 10% of our net income to our faith community monthly, what is your approach?",
 
     section: "Section VI: Your Finances",
+
+    subsection: "Spending Limits/Boundaries",
 
     type: "M",
 
@@ -1603,6 +1752,8 @@ export const questions: Question[] = [
 
     section: "Section VI: Your Finances",
 
+    subsection: "Financial Decision-Making (Joint Purchases)",
+
     type: "M",
 
     faith: false,
@@ -1623,6 +1774,8 @@ export const questions: Question[] = [
     text: "We commit to giving our children a weekly allowance as an opportunity to teach financial stewardship, what is your approach?",
 
     section: "Section VI: Your Finances",
+
+    subsection: "Individual Financial Choices (Discretionary/Individual Spending)",
 
     type: "M",
 
@@ -1645,6 +1798,8 @@ export const questions: Question[] = [
     text: "We commit to opening a 529 plan/account for our children after they are born and depositing a budget sensitive amount monthly, what is your approach?",
 
     section: "Section VI: Your Finances",
+
+    subsection: "Giving and Tithing",
 
     type: "M",
 
@@ -1669,6 +1824,8 @@ export const questions: Question[] = [
 
     section: "Section VI: Your Finances",
 
+    subsection: "Household Responsibilities (Food/Meals)",
+
     type: "M",
 
     faith: false,
@@ -1690,6 +1847,8 @@ export const questions: Question[] = [
     text: "We commit to enjoying home-cooked meals at least 4 of the 7 days per week, what is your approach?",
 
     section: "Section VI: Your Finances",
+
+    subsection: "Financial Future Planning",
 
     type: "M",
 
@@ -1713,6 +1872,8 @@ export const questions: Question[] = [
 
     section: "Section VII: Your Health and Wellness",
 
+    subsection: "Health and Fitness Goals (Individual)",
+
     type: "M",
 
     faith: false,
@@ -1733,6 +1894,8 @@ export const questions: Question[] = [
     text: "We commit to a healthy balanced diet with no special restriction on any meats (seafood, chicken, beef, pork), dairy, fruits and vegetables, and whole grains or nuts, what is your approach?",
 
     section: "Section VII: Your Health and Wellness",
+
+    subsection: "Health and Fitness Goals (Collective)",
 
     type: "M",
 
@@ -1757,6 +1920,8 @@ export const questions: Question[] = [
 
     section: "Section VII: Your Health and Wellness",
 
+    subsection: "Health (Diet and Nutrition)",
+
     type: "D",
 
     faith: false,
@@ -1776,6 +1941,8 @@ export const questions: Question[] = [
     text: "We're committed to breastfeeding along with introducing appropriate complementary foods for up to 2 years for our children., what is your approach?",
 
     section: "Section VII: Your Health and Wellness",
+
+    subsection: "Health (Medical Care)",
 
     type: "M",
 
@@ -1798,6 +1965,8 @@ export const questions: Question[] = [
 
     section: "Section VII: Your Health and Wellness",
 
+    subsection: "Health (Mental Health and Counseling)",
+
     type: "M",
 
     faith: false,
@@ -1819,6 +1988,8 @@ export const questions: Question[] = [
 
     section: "Section VII: Your Health and Wellness",
 
+    subsection: "Wellness (Self-Care)",
+
     type: "D",
 
     faith: false,
@@ -1838,6 +2009,8 @@ export const questions: Question[] = [
     text: "We are committed to having a natural birth., what is your approach?",
 
     section: "Section VII: Your Health and Wellness",
+
+    subsection: "Wellness (Recreation and Leisure)",
 
     type: "M",
 
@@ -1859,6 +2032,8 @@ export const questions: Question[] = [
     text: "We are each committed to seeing a (faith-aligned) therapist individually, at least 6 times per year during our marriage (as our resources allow)., what is your approach?",
 
     section: "Section VII: Your Health and Wellness",
+
+    subsection: "Wellness (Sleep)",
 
     type: "M",
 
@@ -1882,6 +2057,8 @@ export const questions: Question[] = [
 
     section: "Section VII: Your Health and Wellness",
 
+    subsection: "Substance Use",
+
     type: "M",
 
     faith: false,
@@ -1903,6 +2080,8 @@ export const questions: Question[] = [
     text: "We commit to never actively keeping / maintaining any secrets from one another.",
 
     section: "Section VIII: Your Marriage and Boundaries",
+
+    subsection: "Personal Boundaries (Individual Independence)",
 
     type: "D",
 
@@ -1944,6 +2123,8 @@ export const questions: Question[] = [
 
     section: "Section VIII: Your Marriage and Boundaries",
 
+    subsection: "Personal Boundaries (Friendships)",
+
     type: "M",
 
     faith: false,
@@ -1964,6 +2145,8 @@ export const questions: Question[] = [
     text: "We're committed to caring for our spouses' parents in advanced age through financial contribution., what is your approach?",
 
     section: "Section VIII: Your Marriage and Boundaries",
+
+    subsection: "Personal Boundaries (Professional Life)",
 
     type: "M",
 
@@ -1987,6 +2170,8 @@ export const questions: Question[] = [
 
     section: "Section VIII: Your Marriage and Boundaries",
 
+    subsection: "Personal Boundaries (Family and In-Laws)",
+
     type: "M",
 
     faith: false,
@@ -2009,6 +2194,8 @@ export const questions: Question[] = [
 
     section: "Section VIII: Your Marriage and Boundaries",
 
+    subsection: "Personal Boundaries (Opposite Sex Interactions)",
+
     type: "M",
 
     faith: false,
@@ -2028,6 +2215,8 @@ export const questions: Question[] = [
     text: "We're committed to putting our phones away during date nights, with only use for contact with babysitter (if applicable), caregiver or photographs between us, what is your approach?",
 
     section: "Section VIII: Your Marriage and Boundaries",
+
+    subsection: "Personal Boundaries (Ex-Romantic Relationships)",
 
     type: "M",
 
@@ -2050,6 +2239,8 @@ export const questions: Question[] = [
 
     section: "Section VIII: Your Marriage and Boundaries",
 
+    subsection: "Personal Boundaries (Social Media)",
+
     type: "M",
 
     faith: false,
@@ -2070,6 +2261,8 @@ export const questions: Question[] = [
     text: "While we fully trust God and our spouse, we believe in honoring our covenant in and through all our actions, as such:, what is your approach?",
 
     section: "Section VIII: Your Marriage and Boundaries",
+
+    subsection: "Personal Boundaries (Past Relationship Boundaries)",
 
     type: "M",
 
@@ -2092,6 +2285,8 @@ export const questions: Question[] = [
     text: "While we fully trust God and our spouse, we believe in honoring our covenant in and through all our actions, as such:, what is your approach?",
 
     section: "Section VIII: Your Marriage and Boundaries",
+
+    subsection: "Personal Boundaries (Digital Media with Past Relationships)",
 
     type: "M",
 
