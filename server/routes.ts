@@ -3635,6 +3635,65 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // API endpoint for testing scoring algorithm with simulated data
+  app.get('/api/simulate', async (req: Request, res: Response) => {
+    try {
+      const { gender } = req.query;
+      
+      if (!gender || (gender !== 'male' && gender !== 'female')) {
+        return res.status(400).json({ error: 'Valid gender parameter required (male/female)' });
+      }
+
+      // Import scoring utilities
+      const { calculateScores, determineProfile } = await import('../client/src/utils/scoringUtils');
+      const { questionsData } = await import('../client/src/data/questionsData');
+
+      // Generate realistic test responses (weighted toward higher scores for testing)
+      const simulatedResponses: Record<string, { option: string; value: number }> = {};
+      
+      questionsData.forEach((question, index) => {
+        // Create weighted responses that favor higher commitment/quality responses
+        const responseIndex = Math.random() < 0.7 ? 0 : Math.random() < 0.8 ? 1 : Math.random() < 0.9 ? 2 : 3;
+        simulatedResponses[question.id] = {
+          option: `Option ${responseIndex + 1}`,
+          value: responseIndex
+        };
+      });
+
+      // Create test demographics
+      const testDemographics = {
+        gender: gender as string,
+        age: '25-34',
+        ethnicity: 'Other',
+        city: 'Test City',
+        state: 'Test State',
+        zipCode: '12345',
+        hasPurchasedBook: 'Yes'
+      };
+
+      // Calculate scores using improved algorithm
+      const scores = calculateScores(questionsData, simulatedResponses);
+      const profileResults = determineProfile(scores, gender as string);
+
+      const simulationResult = {
+        gender,
+        scores,
+        profile: profileResults.primaryProfile,
+        genderProfile: profileResults.genderProfile,
+        testInfo: {
+          totalQuestions: questionsData.length,
+          responseCount: Object.keys(simulatedResponses).length,
+          algorithmVersion: '660-point improved scoring'
+        }
+      };
+
+      res.json(simulationResult);
+    } catch (error) {
+      console.error('Simulation error:', error);
+      res.status(500).json({ error: 'Simulation failed', details: error.message });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
