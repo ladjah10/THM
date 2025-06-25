@@ -3067,9 +3067,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
             message: `Assessment results resent successfully to ${email}` 
           });
         } else if (coupleAssessment) {
-          // Generate couple assessment PDF
-          const { generateCoupleAssessmentPDF } = await import('./updated-couple-pdf');
-          const pdfBuffer = await generateCoupleAssessmentPDF(coupleAssessment);
+          // Generate couple assessment PDF with live scoring
+          let pdfBuffer: Buffer;
+          
+          try {
+            const { generatePDFWithLiveScore } = await import('./pdf/generateReport');
+            const spouseAssessment = await storage.getSpouseAssessment(assessment.coupleId, 'spouse');
+            
+            if (spouseAssessment) {
+              pdfBuffer = await generatePDFWithLiveScore(
+                assessment.id || assessment.email,
+                spouseAssessment.id || spouseAssessment.email,
+                assessment.coupleId
+              );
+            } else {
+              // Fallback to standard method
+              const { generateCoupleAssessmentPDF } = await import('./updated-couple-pdf');
+              pdfBuffer = await generateCoupleAssessmentPDF(coupleAssessment);
+            }
+          } catch (liveScoreError) {
+            console.error('Live score PDF generation failed, using fallback:', liveScoreError);
+            const { generateCoupleAssessmentPDF } = await import('./updated-couple-pdf');
+            pdfBuffer = await generateCoupleAssessmentPDF(coupleAssessment);
+          }
           
           // Create temporary file for the PDF
           const tempFilePath = path.join(os.tmpdir(), `${uuidv4()}-couple-assessment.pdf`);
@@ -3522,8 +3542,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       );
       
       if (coupleAssessment) {
-        // Generate couple PDF
-        pdfBuffer = await generator.generateCoupleReport(coupleAssessment);
+        // Try to use live scoring for couple assessment
+        try {
+          const { generatePDFWithLiveScore } = await import('./pdf/generateReport');
+          const spouseAssessment = coupleAssessment.primary?.id === id ? coupleAssessment.spouse : coupleAssessment.primary;
+          
+          if (spouseAssessment) {
+            pdfBuffer = await generatePDFWithLiveScore(
+              assessment.id || assessment.email,
+              spouseAssessment.id || spouseAssessment.email,
+              assessment.coupleId || 'unknown'
+            );
+          } else {
+            // Fallback to standard couple report
+            pdfBuffer = await generator.generateCoupleReport(coupleAssessment);
+          }
+        } catch (liveScoreError) {
+          console.error('Live score generation failed, using standard:', liveScoreError);
+          pdfBuffer = await generator.generateCoupleReport(coupleAssessment);
+        }
       } else {
         // Generate individual PDF
         pdfBuffer = await generator.generateIndividualReport(assessment);

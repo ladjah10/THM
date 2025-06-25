@@ -7,6 +7,7 @@ import path from 'path';
 import fs from 'fs';
 import { AssessmentResult, CoupleAssessmentReport } from '@shared/schema';
 import { psychographicProfiles } from '../../client/src/data/psychographicProfiles';
+import { prepareAndCompareCoupleAssessments } from '../utils/coupleAnalysisUtils';
 
 /**
  * Generate Individual Assessment PDF Report
@@ -564,4 +565,77 @@ function generateCoupleAppendixSection(doc: PDFDocument, report: CoupleAssessmen
     .text('For complete profile descriptions, please refer to your individual assessment reports.', {
       width: doc.page.width - 100
     });
+}
+
+// Prepares the report using the most updated algorithm before generating PDF
+export async function generatePDFWithLiveScore(
+  primaryId: string,
+  spouseId: string,
+  coupleId: string
+): Promise<Buffer> {
+  try {
+    const { pool } = await import('../db');
+    
+    // Fetch assessment & response data from DB
+    const [primary, spouse] = await Promise.all([
+      pool.query('SELECT * FROM assessment_results WHERE id = $1 OR email = $1', [primaryId]),
+      pool.query('SELECT * FROM assessment_results WHERE id = $1 OR email = $1', [spouseId]),
+    ]);
+
+    if (primary.rows.length === 0 || spouse.rows.length === 0) {
+      throw new Error('Assessment data not found for couple generation');
+    }
+
+    // Parse stored data properly
+    const primaryData = primary.rows[0];
+    const spouseData = spouse.rows[0];
+    
+    // Extract responses and demographics from stored JSON
+    const primaryResponses = primaryData.responses || {};
+    const spouseResponses = spouseData.responses || {};
+    const primaryDemographics = primaryData.demographics || {};
+    const spouseDemographics = spouseData.demographics || {};
+
+    // Create assessment objects
+    const formattedPrimary: AssessmentResult = {
+      id: primaryData.id,
+      email: primaryData.email,
+      name: primaryData.name,
+      scores: primaryData.scores,
+      profile: primaryData.profile,
+      genderProfile: primaryData.gender_profile,
+      responses: primaryResponses,
+      demographics: primaryDemographics,
+      timestamp: primaryData.timestamp
+    };
+
+    const formattedSpouse: AssessmentResult = {
+      id: spouseData.id,
+      email: spouseData.email,
+      name: spouseData.name,
+      scores: spouseData.scores,
+      profile: spouseData.profile,
+      genderProfile: spouseData.gender_profile,
+      responses: spouseResponses,
+      demographics: spouseDemographics,
+      timestamp: spouseData.timestamp
+    };
+
+    // Generate live report using improved algorithm
+    const liveReport = await prepareAndCompareCoupleAssessments(
+      formattedPrimary,
+      formattedSpouse,
+      formattedPrimary.email,
+      primaryDemographics,
+      primaryResponses,
+      spouseDemographics,
+      spouseResponses,
+      coupleId
+    );
+
+    return await generateCoupleReport(liveReport);
+  } catch (error) {
+    console.error('Error generating PDF with live score:', error);
+    throw error;
+  }
 }
