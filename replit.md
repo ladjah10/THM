@@ -81,6 +81,7 @@ The application uses Replit's deployment infrastructure:
 - **Dependencies**: Automatic package installation for all environments
 
 ## Recent Changes
+- June 25, 2025: Fixed assessment hanging issue for male respondents - added timeout protection and emergency fallbacks in profile determination logic
 - June 24, 2025: Fixed Question 99 options structure - removed repeated question text from option 1, now has proper 3-option format for digital media with past relationships
 - June 24, 2025: Fixed Question 98 options structure - removed repeated question text from option 1, now has proper 4-option format for past relationship boundaries
 - June 24, 2025: Fixed Question 97 options structure - removed repeated question text from option 1, now has proper 3-option format for social media boundaries

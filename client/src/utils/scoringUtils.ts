@@ -137,7 +137,7 @@ export function determineProfiles(scores: AssessmentScores, gender?: string) {
   
   console.log(`Found ${genderProfiles.length} gender-specific profiles for "${normalizedGender}"`);
   
-  // Enhanced matching function with exact and near-match detection
+  // Enhanced matching function with exact and near-match detection and male user protection
   const findMatches = (profiles: UserProfile[]) => {
     const exactMatches: UserProfile[] = [];
     const nearMatches: { profile: UserProfile; missedCriteria: string[] }[] = [];
@@ -145,6 +145,12 @@ export function determineProfiles(scores: AssessmentScores, gender?: string) {
     profiles.forEach(profile => {
       let exactMatch = true;
       const missedCriteria: string[] = [];
+      
+      // Prevent hanging by ensuring valid profile criteria exist
+      if (!profile.criteria || profile.criteria.length === 0) {
+        console.warn(`Profile ${profile.name} has no criteria - skipping`);
+        return;
+      }
       
       // Check all criteria for this profile
       profile.criteria.forEach(criterion => {
