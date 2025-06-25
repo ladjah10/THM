@@ -81,7 +81,7 @@ The application uses Replit's deployment infrastructure:
 - **Dependencies**: Automatic package installation for all environments
 
 ## Recent Changes
-- June 24, 2025: Fixed Question 45 options structure - removed repeated question text from option 1, now has proper 2-option format (water delivery vs vaginal delivery)
+- June 24, 2025: Fixed Question 45 options structure - removed repeated question text from option 1, added "(Out of Water)" clarification to vaginal delivery option
 - June 24, 2025: Fixed Question 39 options structure - integrated sub-bullets into main option and created 3-option format with antithesis and Godly counsel options
 - June 24, 2025: Fixed Question 28 options structure - integrated sub-bullet content into main option and created proper antithesis option for communication approach
 - June 24, 2025: Fixed Question 27 options structure - integrated sub-bullet content into main option and created proper antithesis option
