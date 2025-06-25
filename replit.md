@@ -81,6 +81,7 @@ The application uses Replit's deployment infrastructure:
 - **Dependencies**: Automatic package installation for all environments
 
 ## Recent Changes
+- June 24, 2025: Fixed Question 79 structure - added "[one designated spouse]" placeholder to recurring bill payment responsibility question and options 1-2
 - June 24, 2025: Verified Question 76 - no changes needed as it addresses joint payment behavior, not individual responsibility assignment
 - June 24, 2025: Fixed Question 75 formatting - removed all dollar signs from question text and options for clean percentage display
 - June 24, 2025: Fixed Question 74 structure - added "[one designated spouse]" placeholder to financial management responsibility question and first option

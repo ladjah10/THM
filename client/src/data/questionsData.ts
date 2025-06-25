@@ -1053,10 +1053,10 @@ export const questions: Question[] = [
     section: "Section VI: Your Finances",
     subsection: "Food Preparation & Planning: Overall Model: Responsibility",
     type: "M",
-    text: "We commit to having be responsible for the overall food planning and preparation for the family, with considerations made for date night, family outings and circumstances when one is unable to do. $(80 / 20)$, what is your approach?",
+    text: "We commit to having [one designated spouse] be responsible for the overall food planning and preparation for the family, with considerations made for date night, family outings and circumstances when one is unable to do. (80 / 20), what is your approach?",
     options: [
-      "We commit to having be responsible for the overall food planning and preparation for the family, with considerations made for date night, family outings and circumstances when one is unable to do. $(80 / 20)$",
-      "We commit to having be responsible for the overall food planning and preparation for the family, with a split of being responsible for meals during the week (M-Fri) and being responsible for meals during the weekend.",
+      "We commit to having [one designated spouse] be responsible for the overall food planning and preparation for the family, with considerations made for date night, family outings and circumstances when one is unable to do. (80 / 20)",
+      "We commit to having [one designated spouse] be responsible for the overall food planning and preparation for the family, with a split of [one designated spouse] being responsible for meals during the week (M-Fri) and [one designated spouse] being responsible for meals during the weekend.",
       "We commit to having a chef / nanny be responsible for the overall food planning and preparation for the family.",
       "Other: Please detail"
     ],
