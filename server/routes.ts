@@ -15,6 +15,7 @@ import path from 'path';
 import os from 'os';
 import { v4 as uuidv4 } from 'uuid';
 import session from 'express-session';
+import simulateRoute from "./routes/simulate";
 
 // Extend Express.Request with session type
 declare module 'express-session' {
