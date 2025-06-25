@@ -46,22 +46,50 @@ export function calculateScores(
       }
       possible = weight;
     } else {
-      // Multiple choice questions: distribute weight based on choice quality
+      // Multiple choice questions: context-aware scoring based on traditionalism and faith content
       const weight = question.weight ?? 1;
-      const numOptions = question.options.length;
+      const optionText = response.option.toLowerCase();
+      const questionText = question.text.toLowerCase();
       
-      // First option gets full weight, subsequent options get proportionally less
+      // Assess faith and traditional content in the option
+      const isFaithOption = assessFaithContent(optionText);
+      const isTraditionalOption = assessTraditionalContent(optionText);
+      const isFaithQuestion = assessFaithContent(questionText) || question.section.includes('Faith') || question.section.includes('Foundation');
+      
+      // Calculate earned points based on content alignment and position
       if (response.value === 0) {
-        earned = weight; // Best choice
+        // First option - typically most aligned/committed
+        earned = weight;
       } else if (response.value === 1) {
-        earned = Math.round(weight * 0.75); // Good choice
+        // Second option - assess content quality
+        if (isFaithOption || isTraditionalOption) {
+          earned = Math.round(weight * 0.85); // High score for faith/traditional content
+        } else {
+          earned = Math.round(weight * 0.70); // Standard second option
+        }
       } else if (response.value === 2) {
-        earned = Math.round(weight * 0.5); // Moderate choice
+        // Third option
+        if (isFaithOption || isTraditionalOption) {
+          earned = Math.round(weight * 0.60); // Moderate score for faith/traditional content
+        } else {
+          earned = Math.round(weight * 0.45); // Lower score for non-aligned content
+        }
       } else {
-        earned = Math.round(weight * 0.25); // Lower choice
+        // Fourth+ option
+        if (isFaithOption || isTraditionalOption) {
+          earned = Math.round(weight * 0.40); // Some credit for faith/traditional content
+        } else {
+          earned = Math.round(weight * 0.20); // Minimal score for non-aligned content
+        }
       }
       
-      possible = weight; // Fixed: possible equals weight, not 5x weight
+      // Apply faith question multiplier for questions in faith-heavy sections
+      if (isFaithQuestion && (isFaithOption || isTraditionalOption)) {
+        earned = Math.round(earned * 1.1); // 10% bonus for faith alignment in faith questions
+        earned = Math.min(earned, weight); // Cap at maximum weight
+      }
+      
+      possible = weight;
     }
     
     // Add to section scores
@@ -126,6 +154,32 @@ export function calculateScores(
     totalEarned,
     totalPossible
   };
+}
+
+/**
+ * Assess if content contains faith-based elements
+ */
+function assessFaithContent(text: string): boolean {
+  const faithKeywords = [
+    'god', 'christ', 'jesus', 'lord', 'savior', 'faith', 'prayer',
+    'scripture', 'biblical', 'christian', 'church', 'worship',
+    'spiritual', 'ministry', 'baptized', 'covenant'
+  ];
+  
+  return faithKeywords.some(keyword => text.includes(keyword));
+}
+
+/**
+ * Assess if content contains traditional marriage elements
+ */
+function assessTraditionalContent(text: string): boolean {
+  const traditionalKeywords = [
+    'husband', 'wife', 'traditional', 'lifelong', 'commitment',
+    'family', 'children', 'provider', 'homemaker', 'head', 
+    'submission', 'authority', 'roles', 'biblical'
+  ];
+  
+  return traditionalKeywords.some(keyword => text.includes(keyword));
 }
 
 /**
