@@ -688,10 +688,10 @@ export const questions: Question[] = [
     section: "Section IV: Your Marriage Life with Children",
     subsection: "Pregnancy Announcement",
     type: "M",
-    text: "We commit to keeping the news of our pregnancy private until the end of the $1^{\text {st}}$ trimester., what is your approach?",
+    text: "We commit to keeping the news of our pregnancy private until the end of the 1st trimester., what is your approach?",
     options: [
-      "We commit to keeping the news of our pregnancy private until the end of the $1^{\text {st}}$ trimester.",
-      "We commit to keeping the news of our pregnancy private until the end of the $2^{\text {st}}$ trimester.",
+      "We commit to keeping the news of our pregnancy private until the end of the 1st trimester.",
+      "We commit to keeping the news of our pregnancy private until the end of the 2nd trimester.",
       "We do not have a specific guideline around if and when we will share news of a pregnancy.",
       "Not Applicable"
     ],
