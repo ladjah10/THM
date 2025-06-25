@@ -608,7 +608,6 @@ export const questions: Question[] = [
     type: "M",
     text: "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer:, what is your approach?",
     options: [
-      "We recognize the most important outcome we desire is for a healthy delivery for both the mother and the child, with that said, to the extent we can plan, we'd prefer:",
       "A Home Birth (if medically prudent and possible)",
       "A Hospital Birth",
       "A Birth Center (if medically prudent and possible)"
