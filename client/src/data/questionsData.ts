@@ -1268,10 +1268,7 @@ export const questions: Question[] = [
     text: "We commit to maintaining healthy boundaries with the opposite sex as a married couple, however, we do not believe any unique restrictions on interactions are required for opposite sex interactions that are not present with our same-sex interactions., what is your approach?",
     options: [
       "We commit to maintaining healthy boundaries with the opposite sex as a married couple, however, we do not believe any unique restrictions on interactions are required for opposite sex interactions that are not present with our same-sex interactions.",
-      "We commit to maintaining healthy boundaries with the opposite sex as a married couple, with that said, while we believe in shared interactions with an individual, we do not believe in nurturing/ actively maintaining friendships with the opposite sex one on one (outside of work colleagues / family) as measured by:",
-      "daily / multiple times per week: one on one conversations/text/ social media messages",
-      "one on one meetups without our spouse",
-      "inappropriate conversation you wouldn't be comfortable with your spouse / or anyone else seein"
+      "We commit to maintaining healthy boundaries with the opposite sex as a married couple, with that said, while we believe in shared interactions with an individual, we do not believe in nurturing/actively maintaining friendships with the opposite sex one on one (outside of work colleagues/family) as measured by: daily/multiple times per week one on one conversations/text/social media messages, one on one meetups without our spouse, and inappropriate conversation you wouldn't be comfortable with your spouse or anyone else seeing."
     ],
     weight: 7
   },
