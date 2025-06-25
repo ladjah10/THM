@@ -3678,17 +3678,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         };
       });
 
-      // Create test demographics
-      const testDemographics = {
-        gender: gender as string,
-        age: '25-34',
-        ethnicity: 'Other',
-        city: 'Test City',
-        state: 'Test State',
-        zipCode: '12345',
-        hasPurchasedBook: 'Yes'
-      };
-
       // Calculate scores using improved algorithm
       const scores = calculateScores(simulatedQuestions, simulatedResponses);
       const profileResults = determineProfile(scores, gender as string);
@@ -3702,7 +3691,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         scores,
         profile: profileResults.primaryProfile,
         genderProfile: profileResults.genderProfile,
-        demographics: mockDemographics,
+        demographics: {
+          firstName: `Test${gender.charAt(0).toUpperCase() + gender.slice(1)}`,
+          lastName: 'User',
+          email: 'la@lawrenceadjah.com',
+          gender: gender as string,
+          ageRange: '30-39',
+          ethnicity: 'Black',
+          city: 'Dallas',
+          state: 'Texas',
+          zipCode: '12345',
+          hasPurchasedBook: 'Yes'
+        },
         completedAt: new Date().toISOString(),
         paymentStatus: 'completed',
         reportGenerated: true,
