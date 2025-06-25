@@ -645,33 +645,20 @@ export default function MarriageAssessment() {
               />
             )}
             
-            {isLastQuestion ? (
-              <QuestionnaireView 
-                question={questions[questions.length - 1]} /* Use the last question for reference */
-                onOptionSelect={handleOptionSelect}
-                onNextQuestion={handleNextQuestion}
-                onPreviousQuestion={handlePreviousQuestion}
-                onSaveProgress={handleSaveProgress}
-                onSubmitAssessment={handleSubmitAssessment}
-                selectedOption={""} /* Not applicable for final submit screen */
-                isFirstQuestion={false}
-                questionIndex={totalQuestions - 1}
-                totalQuestions={totalQuestions}
-                showSaveButton={true}
-                isLastQuestion={true}
-              />
-            ) : currentQuestion && (
+            {currentQuestion && (
               <QuestionnaireView 
                 question={currentQuestion}
                 onOptionSelect={handleOptionSelect}
                 onNextQuestion={handleNextQuestion}
                 onPreviousQuestion={handlePreviousQuestion}
                 onSaveProgress={handleSaveProgress}
+                onSubmitAssessment={handleSubmitAssessment}
                 selectedOption={userResponses[currentQuestion.id]?.option}
                 isFirstQuestion={currentQuestionIndex === 0 && sections.indexOf(currentSection) === 0}
                 questionIndex={questions.findIndex(q => q.id === currentQuestion.id)}
                 totalQuestions={totalQuestions}
                 showSaveButton={true}
+                isLastQuestion={questions.findIndex(q => q.id === currentQuestion.id) === totalQuestions - 1}
               />
             )}
           </>
