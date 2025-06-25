@@ -113,6 +113,18 @@ function calculateMatchScore(candidate: AssessmentResult): number {
   return (baseScore * scoreWeight) + (ageFactor * ageWeight * 100) + (profileFactor * profileWeight * 100);
 }
 
+// Add simulation function to test scoring algorithm
+const runSimulatedAssessment = async (gender: "male" | "female") => {
+  try {
+    const res = await fetch(`/api/simulate?gender=${gender}`);
+    const data = await res.json();
+    alert(`✅ Simulated ${gender} score: ${data.scores?.overallPercentage?.toFixed(2)}%`);
+  } catch (err) {
+    console.error("Simulation failed", err);
+    alert("❌ Simulation failed. Check console for details.");
+  }
+};
+
 // Recovery Section Component
 function RecoverySection() {
   const [recoveryData, setRecoveryData] = useState<CustomerRecoveryData[]>([]);
@@ -787,6 +799,19 @@ export default function AdminDashboard() {
               </Card>
             </div>
           )}
+
+          {/* Simulation Testing Controls */}
+          <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold mb-4">Algorithm Testing</h2>
+            <div className="my-4 space-x-2">
+              <Button variant="outline" onClick={() => runSimulatedAssessment("male")}>
+                Simulate Male Assessment
+              </Button>
+              <Button variant="outline" onClick={() => runSimulatedAssessment("female")}>
+                Simulate Female Assessment
+              </Button>
+            </div>
+          </div>
 
           <Tabs defaultValue="assessments" className="space-y-6">
             <TabsList className="grid w-full grid-cols-6">
