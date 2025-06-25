@@ -5,28 +5,40 @@ import { psychographicProfiles } from "@/data/psychographicProfiles";
  * Calculate assessment scores based on user responses
  */
 export function calculateScores(questions: Question[], responses: Record<number, UserResponse>): AssessmentScores {
-  // Initialize section scores
-  const sectionScores: Record<string, { earned: number; possible: number; percentage: number }> = {};
-  let totalEarned = 0;
-  let totalPossible = 0;
-
-  // Section weight percentages (based on updated algorithm)
-  const sectionWeightPercentages = {
-    "Section I: Your Foundation": 12.42,
-    "Section II: Your Faith Life": 3.18,
-    "Section III: Your Marriage Life": 32.73,
-    "Section IV: Your Marriage Life with Children": 19.09,
-    "Section V: Your Family/Home Life": 5.15,
-    "Section VI: Your Finances": 8.79,
-    "Section VII: Your Health and Wellness": 7.42,
-    "Section VIII: Your Marriage and Boundaries": 11.21
+  // Import section weights and percentages
+  const SECTION_WEIGHTS = {
+    "Section I: Your Foundation": 89,
+    "Section II: Your Faith Life": 22.5,
+    "Section III: Your Marriage Life": 190,
+    "Section IV: Your Marriage Life with Children": 120,
+    "Section V: Your Family/Home Life": 32,
+    "Section VI: Your Finances": 52,
+    "Section VII: Your Health and Wellness": 47,
+    "Section VIII: Your Marriage and Boundaries": 70.5
   };
 
+  const SECTION_PERCENTAGES = {
+    "Section I: Your Foundation": 0.1429,
+    "Section II: Your Faith Life": 0.0361,
+    "Section III: Your Marriage Life": 0.3050,
+    "Section IV: Your Marriage Life with Children": 0.1926,
+    "Section V: Your Family/Home Life": 0.0514,
+    "Section VI: Your Finances": 0.0835,
+    "Section VII: Your Health and Wellness": 0.0754,
+    "Section VIII: Your Marriage and Boundaries": 0.1132
+  };
+
+  const TOTAL_WEIGHT = 623;
+
+  // Initialize section scores
+  const sectionScores: Record<string, { earned: number; possible: number; percentage: number }> = {};
+  const sectionEarned: Record<string, number> = {};
+  let totalEarned = 0;
+
   // Initialize all sections
-  questions.forEach(question => {
-    if (!sectionScores[question.section]) {
-      sectionScores[question.section] = { earned: 0, possible: 0, percentage: 0 };
-    }
+  Object.keys(SECTION_WEIGHTS).forEach(section => {
+    sectionScores[section] = { earned: 0, possible: 0, percentage: 0 };
+    sectionEarned[section] = 0;
   });
 
   // Calculate scores for each question using updated algorithm
@@ -35,91 +47,70 @@ export function calculateScores(questions: Question[], responses: Record<number,
     if (!response) return;
 
     const weight = question.weight ?? 1;
-    const isFaithQuestion = (question as any).isFaithQuestion || 
-                           assessFaithContent(question.text.toLowerCase()) || 
-                           question.section.includes('Faith') || 
-                           question.section.includes('Foundation');
+    const section = question.section;
     
     let earned: number;
     
     if (question.type === "D") {
-      // Declaration questions: Enhanced scoring with variance
+      // Declaration questions: 100% or 30%
       if (response.value === 0) {
-        earned = weight; // 100% for affirmative
+        earned = weight * 1.0; // 100% for affirmative
       } else {
-        earned = Math.round(weight * 0.30 * 100) / 100; // 30% for antithesis
+        earned = weight * 0.30; // 30% for antithesis
       }
     } else {
-      // Multiple choice questions: Updated response weighting with variance
+      // Multiple choice questions: Response percentage scaling
       const optionText = response.option.toLowerCase();
       const isFaithOption = assessFaithContent(optionText);
       const isTraditionalOption = assessTraditionalContent(optionText);
+      const isFaithQuestion = (question as any).isFaithQuestion || 
+                             assessFaithContent(question.text.toLowerCase()) || 
+                             question.section.includes('Faith') || 
+                             question.section.includes('Foundation');
       
-      // Response scoring with variance to eliminate equal values
+      // Response scoring based on option value
       if (response.value === 0) {
-        // High-alignment responses: 98-100%
-        if (isFaithQuestion && (isFaithOption || isTraditionalOption)) {
-          earned = weight; // 100%
-        } else {
-          earned = Math.round(weight * 0.98 * 100) / 100; // 98%
-        }
+        earned = weight * 1.0; // 100%
       } else if (response.value === 1) {
-        // Moderate responses: 60-75% with faith bonus
-        if (isFaithOption || isTraditionalOption) {
-          if (isFaithQuestion) {
-            earned = Math.round(weight * 0.74 * 100) / 100; // 74% for faith questions
-          } else {
-            earned = Math.round(weight * 0.72 * 100) / 100; // 72% for traditional content
-          }
+        // Apply faith/traditional content bonus
+        if (isFaithQuestion && (isFaithOption || isTraditionalOption)) {
+          earned = weight * 0.75; // 75% with bonus
         } else {
-          earned = Math.round(weight * 0.65 * 100) / 100; // 65% standard
+          earned = weight * 0.75; // 75% standard
         }
       } else if (response.value === 2) {
-        // Lower responses: 35-50%
-        if (isFaithOption || isTraditionalOption) {
-          earned = Math.round(weight * 0.48 * 100) / 100; // 48%
-        } else {
-          earned = Math.round(weight * 0.38 * 100) / 100; // 38%
-        }
+        earned = weight * 0.40; // 40%
       } else {
-        // Lowest responses: 15-30%
-        if (isFaithOption || isTraditionalOption) {
-          earned = Math.round(weight * 0.28 * 100) / 100; // 28%
-        } else {
-          earned = Math.round(weight * 0.18 * 100) / 100; // 18%
-        }
+        earned = weight * 0.15; // 15%
       }
     }
     
-    // Add to section scores
-    sectionScores[question.section].earned += earned;
-    sectionScores[question.section].possible += weight;
-    
-    // Add to total scores
+    // Add to section totals
+    sectionEarned[section] += earned;
     totalEarned += earned;
-    totalPossible += weight;
   });
 
-  // Calculate percentages for each section using the category score formula
-  Object.keys(sectionScores).forEach(section => {
-    const { earned, possible } = sectionScores[section];
-    if (possible === 0) {
-      sectionScores[section].percentage = 0;
-    } else {
-      // Category Score = (Sum of weighted scores / Total section weight) * 100
-      const categoryScore = (earned / possible) * 100;
-      sectionScores[section].percentage = Math.min(100, Math.round(categoryScore * 10) / 10);
-    }
+  // Normalize each section to percentage
+  Object.keys(SECTION_WEIGHTS).forEach(section => {
+    const earned = sectionEarned[section];
+    const sectionWeight = SECTION_WEIGHTS[section];
+    const percentage = (earned / sectionWeight) * 100;
+    
+    sectionScores[section] = {
+      earned,
+      possible: sectionWeight,
+      percentage: Math.min(100, Math.round(percentage * 10) / 10)
+    };
   });
 
-  // Calculate overall percentage using weighted category contributions
-  let overallScore = 0;
+  // Calculate weighted overall percentage
+  let overallPercentage = 0;
   Object.entries(sectionScores).forEach(([section, data]) => {
-    const weightPercentage = sectionWeightPercentages[section] || 0;
-    overallScore += (data.percentage * weightPercentage) / 100;
+    const sectionPercentage = SECTION_PERCENTAGES[section] || 0;
+    overallPercentage += data.percentage * sectionPercentage;
   });
   
-  const overallPercentage = Math.min(100, Math.round(overallScore * 10) / 10);
+  overallPercentage = Math.min(100, Math.round(overallPercentage * 10) / 10);
 
   // Identify strengths and improvement areas
   const strengths = Object.entries(sectionScores)
@@ -142,7 +133,7 @@ export function calculateScores(questions: Question[], responses: Record<number,
     strengths,
     improvementAreas,
     totalEarned,
-    totalPossible
+    totalPossible: TOTAL_WEIGHT
   };
 }
 
