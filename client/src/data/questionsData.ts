@@ -704,10 +704,8 @@ export const questions: Question[] = [
     type: "M",
     text: "We commit to raising and disciplining our children with Godly wisdom and discernment, with an orientation to disciplining our children according to their age and level of understanding leveraging:, what is your approach?",
     options: [
-      "We commit to raising and disciplining our children with Godly wisdom and discernment, with an orientation to disciplining our children according to their age and level of understanding leveraging:",
-      "Gentle verbal instruction/warning, firm verbal instruction/warning and in the repeated case of disobedience, disrespect or danger, we are comfortable with physical discipline and other forms of punishments in love.",
-      "We commit to raising and disciplining our children with Godly wisdom and discernment, with an orientation to disciplining our children according to their age and level of understanding leveraging:",
-      "Gentle verbal instruction/warning, firm verbal instruction warning and in the repeated case of disobedience, disrespect or danger, we are comfortable with other forms of punishment in love, which do not include physical discipline",
+      "We commit to raising and disciplining our children with Godly wisdom and discernment, with an orientation to disciplining our children according to their age and level of understanding leveraging gentle verbal instruction/warning, firm verbal instruction/warning and in the repeated case of disobedience, disrespect or danger, we are comfortable with physical discipline and other forms of punishments in love.",
+      "We commit to raising and disciplining our children with Godly wisdom and discernment, with an orientation to disciplining our children according to their age and level of understanding leveraging gentle verbal instruction/warning, firm verbal instruction warning and in the repeated case of disobedience, disrespect or danger, we are comfortable with other forms of punishment in love, which do not include physical discipline.",
       "Not Applicable"
     ],
     weight: 6
