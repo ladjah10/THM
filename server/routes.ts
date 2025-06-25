@@ -7,6 +7,7 @@ import { sendAssessmentEmail, sendReferralEmail, sendCoupleInvitationEmails } fr
 import { sendFormInitiationNotification, sendAssessmentBackup } from "./sendgrid";
 import { generateShareImage } from "./shareImage";
 import { AssessmentResult, DemographicData, CoupleAssessmentReport } from "../shared/schema";
+import { prepareAndCompareCoupleAssessments } from "./utils/coupleAnalysisUtils";
 import { handleStripeWebhook, syncStripePayments } from "./stripe-webhooks";
 import { createSampleAssessmentData } from "./sampleData";
 import fs from 'fs';
@@ -1577,15 +1578,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Save spouse assessment
       await storage.saveAssessment(spouseAssessment);
       
-      // Generate couple report
-      const coupleReport = await storage.getCoupleAssessment(validatedData.coupleId);
+      // Get primary assessment to generate couple report
+      const primaryAssessment = await storage.getAssessmentByCoupleId(validatedData.coupleId, 'primary');
       
-      if (!coupleReport) {
+      if (!primaryAssessment) {
         return res.status(404).json({
           success: false,
           message: "Could not generate couple report. Primary assessment not found."
         });
       }
+      
+      // Generate couple report using improved comparison with new algorithm
+      const coupleReport = await prepareAndCompareCoupleAssessments(
+        primaryAssessment,
+        spouseAssessment,
+        primaryAssessment.email,
+        primaryAssessment.demographics,
+        primaryAssessment.responses,
+        spouseAssessment.demographics,
+        spouseAssessment.responses,
+        validatedData.coupleId
+      );
+      
+      // Save the generated report to database
+      await storage.saveCoupleAssessmentReport(coupleReport);
       
       return res.status(200).json({ 
         success: true,

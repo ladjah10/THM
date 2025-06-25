@@ -1,4 +1,6 @@
-import { calculateAssessmentWithResponses } from "../../attached_assets/improved_calculateAssessmentWithResponses";
+// Import the improved assessment calculation function
+// Note: This uses the enhanced scoring algorithm with 660-point system
+import { calculateFullAssessment } from "../../client/src/utils/scoringUtils";
 
 type AssessmentResult = {
   email: string;
@@ -41,13 +43,29 @@ export async function prepareAndCompareCoupleAssessments(
   responsesSpouse: any,
   coupleId: string
 ): Promise<CoupleAssessmentReport> {
-  const updatedPrimary = primary.scores?.overallPercentage
-    ? primary
-    : await calculateAssessmentWithResponses(email, demographicsPrimary, responsesPrimary);
-
-  const updatedSpouse = spouse.scores?.overallPercentage
-    ? spouse
-    : await calculateAssessmentWithResponses(spouse.email || email, demographicsSpouse, responsesSpouse);
+  // Use existing scores if available, otherwise recalculate with improved algorithm
+  let updatedPrimary = primary;
+  let updatedSpouse = spouse;
+  
+  if (!primary.scores?.overallPercentage && responsesPrimary) {
+    const recalculatedPrimary = calculateFullAssessment(responsesPrimary, demographicsPrimary);
+    updatedPrimary = {
+      ...primary,
+      scores: recalculatedPrimary.scores,
+      profile: recalculatedPrimary.profile,
+      genderProfile: recalculatedPrimary.genderProfile
+    };
+  }
+  
+  if (!spouse.scores?.overallPercentage && responsesSpouse) {
+    const recalculatedSpouse = calculateFullAssessment(responsesSpouse, demographicsSpouse);
+    updatedSpouse = {
+      ...spouse,
+      scores: recalculatedSpouse.scores,
+      profile: recalculatedSpouse.profile,
+      genderProfile: recalculatedSpouse.genderProfile
+    };
+  }
 
   return generateCoupleReport(updatedPrimary, updatedSpouse, coupleId);
 }
