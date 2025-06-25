@@ -81,6 +81,7 @@ The application uses Replit's deployment infrastructure:
 - **Dependencies**: Automatic package installation for all environments
 
 ## Recent Changes
+- June 25, 2025: Added resume functionality and improved submission validation - users can now resume partially completed assessments, and the validation system properly checks for all required question responses instead of relying on simple count matching
 - June 25, 2025: Fixed critical assessment submission issue - resolved question ID validation logic that prevented users from submitting completed assessments, ensuring proper handling of Q1-Q99 question format and response validation
 - June 25, 2025: Fully implemented simulation endpoint with PDF generation and email delivery - /api/simulate now generates complete assessment reports, sends PDFs to la@lawrenceadjah.com via SendGrid, and provides comprehensive testing of the 660-point scoring algorithm with realistic score ranges
 - June 25, 2025: Enhanced PDF generation with live scoring (generatePDFWithLiveScore) - couple PDFs now use real-time improved 660-point algorithm instead of cached scores, ensuring most accurate compatibility analysis and proper Lawrence Adjah methodology integration

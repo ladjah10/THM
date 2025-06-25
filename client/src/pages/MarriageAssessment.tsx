@@ -277,40 +277,29 @@ export default function MarriageAssessment() {
         return;
       }
 
-      // Validate that assessment has responses - check for all question IDs
+      // Enhanced validation - check for responses to all required questions
       const questionIds = questions.map(q => q.id);
-      const answeredQuestionKeys = Object.keys(userResponses);
+      const validResponses = questions.filter(q => userResponses[q.id] !== undefined);
+      const requiredCount = questions.length; // All questions are required
       
-      // Check if we have responses for all questions (handle both string and numeric formats)
-      const hasAllResponses = questionIds.every(questionId => {
-        const numericId = questionId.replace('Q', '');
-        return answeredQuestionKeys.includes(questionId) || 
-               answeredQuestionKeys.includes(numericId);
-      });
-      
-      const answeredCount = answeredQuestionKeys.length;
-      
-      if (!hasAllResponses || answeredCount < totalQuestions) {
-        // Debug information for troubleshooting
+      if (validResponses.length < requiredCount) {
+        // Find missing questions for better user feedback
+        const missingQuestions = questions.filter(q => !userResponses[q.id])
+          .map(q => q.id)
+          .slice(0, 5); // Show first 5 missing
+        
         console.log('Validation Debug:', {
           totalQuestions,
-          answeredCount,
-          hasAllResponses,
-          questionIds: questionIds.slice(0, 10), // First 10 for debugging
-          answeredKeys: answeredQuestionKeys.slice(0, 10), // First 10 for debugging
-          lastFewQuestionIds: questionIds.slice(-5), // Last 5 questions
-          lastFewAnsweredKeys: answeredQuestionKeys.slice(-5), // Last 5 answered
-          sampleMatches: questionIds.slice(0, 3).map(qId => ({
-            questionId: qId,
-            numericId: qId.replace('Q', ''),
-            hasStringMatch: answeredQuestionKeys.includes(qId),
-            hasNumericMatch: answeredQuestionKeys.includes(qId.replace('Q', ''))
-          }))
+          validResponses: validResponses.length,
+          requiredCount,
+          missingQuestions,
+          userResponseKeys: Object.keys(userResponses).slice(0, 10),
+          sampleUserResponses: Object.entries(userResponses).slice(0, 3)
         });
         
         toast({
           title: "Incomplete Assessment",
-          description: `Please answer all ${totalQuestions} questions before submitting. Currently answered: ${answeredCount}`,
+          description: `Please answer all ${requiredCount} questions before submitting. You've answered ${validResponses.length} questions.`,
           variant: "destructive"
         });
         return;
