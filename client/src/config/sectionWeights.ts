@@ -1,8 +1,6 @@
 /**
- * Section weights and percentages for the updated scoring algorithm
+ * Section weights and percentages for assessment scoring
  */
-
-export const TOTAL_WEIGHT = 623;
 
 export const SECTION_WEIGHTS = {
   "Section I: Your Foundation": 89,
@@ -25,3 +23,5 @@ export const SECTION_PERCENTAGES = {
   "Section VII: Your Health and Wellness": 0.0754,
   "Section VIII: Your Marriage and Boundaries": 0.1132
 };
+
+export const TOTAL_WEIGHT = 623;

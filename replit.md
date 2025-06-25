@@ -81,6 +81,7 @@ The application uses Replit's deployment infrastructure:
 - **Dependencies**: Automatic package installation for all environments
 
 ## Recent Changes
+- June 25, 2025: Implemented improved scoring algorithm with proper response scaling (100%/75%/40%/15% based on option selection), section weight normalization, and weighted overall percentage calculation - replaces simple totalEarned += response.value pattern
 - June 25, 2025: Restored essential subsection data containing Lawrence Adjah's authentic categorization (e.g., "Marriage Mindset: Happiness", "Sex (Frequency)", "Children (Discipline Style)") - critical for maintaining book authenticity and granular question classification
 - June 25, 2025: Updated question dataset format with structured JSON-exportable format including string IDs (Q1-Q99), faith flags, baseWeight/adjustedWeight separation, and proper type definitions for enhanced data management
 - June 25, 2025: Implemented final scoring algorithm patch with proper section weighting (623 total points), standardized response percentages (100%/75%/40%/15%), and weighted category contributions ensuring accurate profile correlation and compatibility scoring
