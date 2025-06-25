@@ -1,27 +1,29 @@
 /**
  * Section weights and percentages for assessment scoring
+ * This file defines section weights and their proportional contributions for scoring
  */
 
-export const SECTION_WEIGHTS = {
-  "Section I: Your Foundation": 89,
-  "Section II: Your Faith Life": 22.5,
-  "Section III: Your Marriage Life": 190,
-  "Section IV: Your Marriage Life with Children": 120,
-  "Section V: Your Family/Home Life": 32,
-  "Section VI: Your Finances": 52,
-  "Section VII: Your Health and Wellness": 47,
-  "Section VIII: Your Marriage and Boundaries": 70.5
+export const SECTION_WEIGHTS: Record<string, number> = {
+  "Your Foundation": 82,
+  "Your Faith Life": 21,
+  "Your Marriage Life": 216,
+  "Your Marriage Life with Children": 126,
+  "Your Family/Home Life": 34,
+  "Your Finances": 58,
+  "Your Health and Wellness": 49,
+  "Your Marriage and Boundaries": 74
 };
 
-export const SECTION_PERCENTAGES = {
-  "Section I: Your Foundation": 0.1429,
-  "Section II: Your Faith Life": 0.0361,
-  "Section III: Your Marriage Life": 0.3050,
-  "Section IV: Your Marriage Life with Children": 0.1926,
-  "Section V: Your Family/Home Life": 0.0514,
-  "Section VI: Your Finances": 0.0835,
-  "Section VII: Your Health and Wellness": 0.0754,
-  "Section VIII: Your Marriage and Boundaries": 0.1132
+// Proportional contributions to final score (based on 660 total weight)
+export const SECTION_PERCENTAGES: Record<string, number> = {
+  "Your Foundation": 82 / 660,                   // 12.42%
+  "Your Faith Life": 21 / 660,                   // 3.18%
+  "Your Marriage Life": 216 / 660,               // 32.73%
+  "Your Marriage Life with Children": 126 / 660, // 19.09%
+  "Your Family/Home Life": 34 / 660,             // 5.15%
+  "Your Finances": 58 / 660,                     // 8.79%
+  "Your Health and Wellness": 49 / 660,          // 7.42%
+  "Your Marriage and Boundaries": 74 / 660       // 11.21%
 };
 
-export const TOTAL_WEIGHT = 623;
+export const TOTAL_WEIGHT = 660;

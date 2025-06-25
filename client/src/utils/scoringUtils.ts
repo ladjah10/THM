@@ -12,6 +12,18 @@ export function calculateScores(questions: Question[], responses: Record<string,
   const sectionEarned: Record<string, number> = {};
   let totalEarned = 0;
 
+  // Map full section names to short names for weight lookup
+  const sectionNameMap: Record<string, string> = {
+    "Section I: Your Foundation": "Your Foundation",
+    "Section II: Your Faith Life": "Your Faith Life", 
+    "Section III: Your Marriage Life": "Your Marriage Life",
+    "Section IV: Your Marriage Life with Children": "Your Marriage Life with Children",
+    "Section V: Your Family/Home Life": "Your Family/Home Life",
+    "Section VI: Your Finances": "Your Finances",
+    "Section VII: Your Health and Wellness": "Your Health and Wellness",
+    "Section VIII: Your Marriage and Boundaries": "Your Marriage and Boundaries"
+  };
+
   // Initialize all sections
   Object.keys(SECTION_WEIGHTS).forEach(section => {
     sectionScores[section] = { earned: 0, possible: 0, percentage: 0 };
@@ -24,15 +36,19 @@ export function calculateScores(questions: Question[], responses: Record<string,
     if (!response) return;
 
     const weight = question.adjustedWeight ?? question.weight ?? 1;
-    const section = question.section;
+    const fullSectionName = question.section;
+    const shortSectionName = sectionNameMap[fullSectionName] || fullSectionName;
     
     let earned: number;
     
     // Improved response scoring based on option selection
     earned = getResponseScore(response.option, weight);
     
-    // Add to section totals
-    sectionEarned[section] += earned;
+    // Add to section totals using short section name
+    if (!sectionEarned[shortSectionName]) {
+      sectionEarned[shortSectionName] = 0;
+    }
+    sectionEarned[shortSectionName] += earned;
     totalEarned += earned;
   });
 

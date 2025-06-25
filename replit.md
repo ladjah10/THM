@@ -81,6 +81,7 @@ The application uses Replit's deployment infrastructure:
 - **Dependencies**: Automatic package installation for all environments
 
 ## Recent Changes
+- June 25, 2025: Updated section weights to final values (660 total) with accurate proportional contributions - Your Foundation: 82 (12.42%), Your Faith Life: 21 (3.18%), Your Marriage Life: 216 (32.73%), Your Marriage Life with Children: 126 (19.09%), Your Family/Home Life: 34 (5.15%), Your Finances: 58 (8.79%), Your Health and Wellness: 49 (7.42%), Your Marriage and Boundaries: 74 (11.21%)
 - June 25, 2025: Implemented improved scoring algorithm with proper response scaling (100%/75%/40%/15% based on option selection), section weight normalization, and weighted overall percentage calculation - replaces simple totalEarned += response.value pattern
 - June 25, 2025: Restored essential subsection data containing Lawrence Adjah's authentic categorization (e.g., "Marriage Mindset: Happiness", "Sex (Frequency)", "Children (Discipline Style)") - critical for maintaining book authenticity and granular question classification
 - June 25, 2025: Updated question dataset format with structured JSON-exportable format including string IDs (Q1-Q99), faith flags, baseWeight/adjustedWeight separation, and proper type definitions for enhanced data management
