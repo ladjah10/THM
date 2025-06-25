@@ -1,289 +1,67 @@
-/**
- * Assessment Recalculation System
- * 
- * This script recalculates all assessments in the database using the latest scoring algorithm,
- * updates records with accurate timestamps, and marks them for admin dashboard display.
- */
+import { calculateAssessmentWithResponses } from "../attached_assets/improved_calculateAssessmentWithResponses";
+import { pool } from "./db";
 
-import { storage } from './storage';
-import { generateIndividualAssessmentPDF, generateCoupleAssessmentPDF } from './pdfReportGenerator';
-import { AssessmentResult, CoupleAssessmentReport } from '../shared/schema';
-
-interface RecalculationResult {
-  email: string;
-  originalScore?: number;
-  newScore?: number;
-  scoreDifference?: number;
-  originalProfile?: string;
-  newProfile?: string;
-  profileChanged?: boolean;
-  pdfGenerated?: boolean;
-  timestamp: string;
-  status: 'success' | 'error';
-  error?: string;
-}
-
-interface RecalculationSummary {
-  recalculationDate: string;
-  totalProcessed: number;
-  successCount: number;
-  errorCount: number;
-  results: RecalculationResult[];
-}
-
-export async function recalculateAllAssessments(): Promise<RecalculationSummary> {
-  console.log('Starting recalculation of all assessments...');
-  
-  const startTime = new Date();
-  const results: RecalculationResult[] = [];
-  let successCount = 0;
-  let errorCount = 0;
-
+export const recalculateAssessmentById = async (assessmentId: string) => {
   try {
-    // Get all completed assessments from storage
-    const assessments = await storage.getAllAssessments();
-    console.log(`Found ${assessments.length} assessments to recalculate`);
+    // 1. Fetch assessment metadata
+    const assessmentRes = await pool.query("SELECT * FROM assessments WHERE id = $1", [assessmentId]);
+    const assessment = assessmentRes.rows[0];
+    if (!assessment) throw new Error("Assessment not found");
 
-    for (const assessment of assessments) {
-      if (assessment.status !== 'completed' || !assessment.responses) {
-        console.log(`Skipping incomplete assessment for ${assessment.email}`);
-        continue;
-      }
+    // 2. Fetch responses
+    const responsesRes = await pool.query(
+      "SELECT question_id, option, value FROM responses WHERE assessment_id = $1",
+      [assessmentId]
+    );
 
-      try {
-        const result: RecalculationResult = {
-          email: assessment.email,
-          originalScore: assessment.scores?.overallPercentage,
-          originalProfile: assessment.profile?.name,
-          timestamp: new Date().toISOString(),
-          status: 'success'
-        };
+    const responses: Record<string, { option: string; value: number }> = {};
+    responsesRes.rows.forEach(({ question_id, option, value }) => {
+      responses[question_id] = { option, value };
+    });
 
-        // Use a simple recalculation approach for now
-        // Calculate basic score from responses
-        let totalScore = 0;
-        let totalPossible = 0;
-        
-        Object.values(assessment.responses).forEach(response => {
-          if (typeof response.value === 'number') {
-            totalScore += response.value;
-            totalPossible += 5; // Assuming max value of 5 per question
-          }
-        });
-        
-        const recalculatedPercentage = totalPossible > 0 ? (totalScore / totalPossible) * 100 : 0;
-        
-        const recalculatedScores = {
-          overallPercentage: Math.round(recalculatedPercentage * 10) / 10,
-          profile: assessment.profile, // Keep existing profile for now
-          genderProfile: assessment.genderProfile
-        };
-        
-        result.newScore = recalculatedScores.overallPercentage;
-        result.newProfile = recalculatedScores.profile?.name;
-        result.scoreDifference = result.originalScore ? 
-          Math.abs(result.newScore - result.originalScore) : 0;
-        result.profileChanged = result.originalProfile !== result.newProfile;
+    // 3. Fetch demographics (if needed by algorithm)
+    const demoRes = await pool.query("SELECT * FROM demographics WHERE assessment_id = $1", [assessmentId]);
+    const demographics = demoRes.rows[0] || {};
 
-        // Update assessment with recalculated data
-        const updatedAssessment: AssessmentResult = {
-          ...assessment,
-          scores: {
-            ...assessment.scores,
-            overallPercentage: recalculatedScores.overallPercentage
-          },
-          profile: recalculatedScores.profile,
-          genderProfile: recalculatedScores.genderProfile,
-          recalculated: true,
-          recalculationDate: new Date().toISOString(),
-          originalScore: result.originalScore,
-          timestamp: assessment.timestamp // Keep original completion timestamp
-        };
+    // 4. Run updated calculation
+    const result = await calculateAssessmentWithResponses(
+      assessment.email,
+      demographics,
+      responses
+    );
 
-        // Generate updated PDF
-        try {
-          const pdfBuffer = await generateIndividualAssessmentPDF(updatedAssessment);
-          result.pdfGenerated = true;
-        } catch (pdfError) {
-          console.error(`PDF generation failed for ${assessment.email}:`, pdfError);
-          result.pdfGenerated = false;
-        }
+    // 5. Optional: Update DB with new score
+    // await pool.query("UPDATE assessments SET score = $1 WHERE id = $2", [result.scores.overallPercentage, assessmentId]);
 
-        // Save updated assessment using saveAssessment method
-        await storage.saveAssessment(updatedAssessment);
-        
-        results.push(result);
-        successCount++;
-        
-        console.log(`✓ Recalculated assessment for ${assessment.email} - Score: ${result.originalScore}% → ${result.newScore}%`);
-
-      } catch (error) {
-        console.error(`Error recalculating assessment for ${assessment.email}:`, error);
-        
-        results.push({
-          email: assessment.email,
-          timestamp: new Date().toISOString(),
-          status: 'error',
-          error: error instanceof Error ? error.message : 'Unknown error'
-        });
-        
-        errorCount++;
-      }
-    }
-
-    // Recalculate couple assessments
-    const coupleAssessments = await storage.getAllCoupleAssessments();
-    console.log(`Found ${coupleAssessments.length} couple assessments to recalculate`);
-
-    for (const coupleAssessment of coupleAssessments) {
-      try {
-        // Recalculate compatibility and difference analysis
-        const primaryScores = coupleAssessment.primaryAssessment.scores;
-        const spouseScores = coupleAssessment.spouseAssessment.scores;
-        
-        // Calculate updated compatibility score
-        const overallCompatibility = 100 - Math.abs(
-          primaryScores.overallPercentage - spouseScores.overallPercentage
-        );
-
-        // Recalculate difference analysis
-        const sectionDifferences: any = {};
-        const strengthAreas: string[] = [];
-        const vulnerabilityAreas: string[] = [];
-
-        Object.keys(primaryScores.sections).forEach(section => {
-          const primaryPercent = primaryScores.sections[section]?.percentage || 0;
-          const spousePercent = spouseScores.sections[section]?.percentage || 0;
-          const difference = Math.abs(primaryPercent - spousePercent);
-
-          sectionDifferences[section] = {
-            primaryPercentage: primaryPercent,
-            spousePercentage: spousePercent,
-            differencePct: difference
-          };
-
-          if (difference < 15 && primaryPercent > 60 && spousePercent > 60) {
-            strengthAreas.push(section);
-          } else if (difference > 25) {
-            vulnerabilityAreas.push(section);
-          }
-        });
-
-        const updatedCoupleAssessment: CoupleAssessmentReport = {
-          ...coupleAssessment,
-          overallCompatibility,
-          differenceAnalysis: {
-            overallDifference: Math.abs(primaryScores.overallPercentage - spouseScores.overallPercentage),
-            sectionDifferences,
-            strengthAreas,
-            vulnerabilityAreas
-          },
-          recalculated: true,
-          recalculationDate: new Date().toISOString()
-        };
-
-        // Generate updated couple PDF
-        try {
-          const pdfBuffer = await generateCoupleAssessmentPDF(updatedCoupleAssessment);
-          updatedCoupleAssessment.pdfBuffer = pdfBuffer;
-        } catch (pdfError) {
-          console.error(`Couple PDF generation failed for ${coupleAssessment.id}:`, pdfError);
-        }
-
-        // Save updated couple assessment
-        await storage.updateCoupleAssessment(coupleAssessment.id, updatedCoupleAssessment);
-        
-        console.log(`✓ Recalculated couple assessment ${coupleAssessment.id} - Compatibility: ${overallCompatibility.toFixed(1)}%`);
-        successCount++;
-
-      } catch (error) {
-        console.error(`Error recalculating couple assessment ${coupleAssessment.id}:`, error);
-        errorCount++;
-      }
-    }
-
-    const summaryReport: RecalculationSummary = {
-      recalculationDate: startTime.toISOString(),
-      totalProcessed: assessments.length + coupleAssessments.length,
-      successCount,
-      errorCount,
-      results
-    };
-
-    console.log(`Recalculation completed: ${successCount} successful, ${errorCount} errors`);
-    return summaryReport;
-
-  } catch (error) {
-    console.error('Fatal error during recalculation:', error);
-    throw error;
-  }
-}
-
-export async function recalculateSingleAssessment(assessmentId: string): Promise<RecalculationResult> {
-  console.log(`Recalculating single assessment: ${assessmentId}`);
-  
-  try {
-    const assessment = await storage.getAssessment(assessmentId);
-    if (!assessment) {
-      throw new Error('Assessment not found');
-    }
-
-    if (assessment.status !== 'completed' || !assessment.responses) {
-      throw new Error('Assessment is not completed or missing responses');
-    }
-
-    const result: RecalculationResult = {
-      email: assessment.email,
-      originalScore: assessment.scores?.overallPercentage,
-      originalProfile: assessment.profile?.name,
-      timestamp: new Date().toISOString(),
-      status: 'success'
-    };
-
-    // Recalculate scores
-    const recalculatedScores = calculateAssessmentScores(assessment.responses, assessment.demographics);
-    
-    result.newScore = recalculatedScores.overallPercentage;
-    result.newProfile = recalculatedScores.profile?.name;
-    result.scoreDifference = result.originalScore ? 
-      Math.abs(result.newScore - result.originalScore) : 0;
-    result.profileChanged = result.originalProfile !== result.newProfile;
-
-    // Update assessment
-    const updatedAssessment: AssessmentResult = {
-      ...assessment,
-      scores: recalculatedScores.scores,
-      profile: recalculatedScores.profile,
-      genderProfile: recalculatedScores.genderProfile,
-      recalculated: true,
-      recalculationDate: new Date().toISOString(),
-      originalScore: result.originalScore,
-      timestamp: assessment.timestamp
-    };
-
-    // Generate updated PDF
-    try {
-      const pdfBuffer = await generateIndividualAssessmentPDF(updatedAssessment);
-      updatedAssessment.pdfBuffer = pdfBuffer;
-      result.pdfGenerated = true;
-    } catch (pdfError) {
-      console.error(`PDF generation failed:`, pdfError);
-      result.pdfGenerated = false;
-    }
-
-    // Save updated assessment
-    await storage.updateAssessment(assessmentId, updatedAssessment);
-    
-    console.log(`✓ Recalculated assessment for ${assessment.email}`);
     return result;
-
-  } catch (error) {
-    console.error(`Error recalculating assessment ${assessmentId}:`, error);
-    return {
-      email: 'unknown',
-      timestamp: new Date().toISOString(),
-      status: 'error',
-      error: error instanceof Error ? error.message : 'Unknown error'
-    };
+  } catch (err) {
+    console.error("❌ Failed to recalculate:", err);
+    throw err;
   }
-}
+};
+
+export const recalculateAllAssessments = async () => {
+  try {
+    const assessmentsRes = await pool.query("SELECT id FROM assessments");
+    const assessmentIds = assessmentsRes.rows.map(row => row.id);
+    
+    console.log(`📊 Recalculating ${assessmentIds.length} assessments...`);
+    
+    const results = [];
+    for (const id of assessmentIds) {
+      try {
+        const result = await recalculateAssessmentById(id);
+        results.push({ id, success: true, result });
+        console.log(`✅ Recalculated assessment ${id}`);
+      } catch (err) {
+        results.push({ id, success: false, error: err.message });
+        console.log(`❌ Failed to recalculate assessment ${id}: ${err.message}`);
+      }
+    }
+    
+    return results;
+  } catch (err) {
+    console.error("❌ Failed to recalculate all assessments:", err);
+    throw err;
+  }
+};
