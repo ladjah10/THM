@@ -1319,7 +1319,6 @@ export const questions: Question[] = [
     type: "M",
     text: "While we fully trust God and our spouse, we believe in honoring our covenant in and through all our actions, as such:, what is your approach?",
     options: [
-      "While we fully trust God and our spouse, we believe in honoring our covenant in and through all our actions, as such:",
       "We commit to deleting all private and public media with any past significant other(s) / past romantic interests from all private devices and public accounts (active or not) by",
       "Not Applicable",
       "Other: Please detail"
