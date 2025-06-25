@@ -1600,7 +1600,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         validatedData.coupleId
       );
       
-      // Save the generated report to database
+      // Save the generated report to database  
       await storage.saveCoupleAssessmentReport(coupleReport);
       
       return res.status(200).json({ 
