@@ -81,6 +81,7 @@ The application uses Replit's deployment infrastructure:
 - **Dependencies**: Automatic package installation for all environments
 
 ## Recent Changes
+- June 25, 2025: Created couple analysis utilities (server/utils/coupleAnalysisUtils.ts) to ensure couple assessments use improved scoring algorithm - includes prepareAndCompareCoupleAssessments function for recalculating scores with 660-point system and comprehensive compatibility analysis
 - June 25, 2025: Enhanced assessment submission validation in handleSubmitAssessment - added comprehensive demographic validation (name, email, gender), response completeness check, and improved error handling with user-friendly toast messages to prevent submission hangs
 - June 25, 2025: Fixed parent component (MarriageAssessment.tsx) to properly pass isLastQuestion={questionIndex === totalQuestions - 1} and simplified component structure to ensure proper assessment submission flow
 - June 25, 2025: Fixed assessment submission button in QuestionnaireView.tsx - ensures onSubmitAssessment() is called on the last question instead of onNextQuestion(), with proper Submit/Next button text based on question position
