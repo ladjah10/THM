@@ -81,6 +81,7 @@ The application uses Replit's deployment infrastructure:
 - **Dependencies**: Automatic package installation for all environments
 
 ## Recent Changes
+- June 24, 2025: Fixed Question 97 options structure - removed repeated question text from option 1, now has proper 2-option format for online opposite sex boundaries
 - June 24, 2025: Fixed Question 95 options structure - integrated sub-bullets (options 3-5) into main option 2 for opposite sex interaction boundaries
 - June 24, 2025: Fixed Question 79 structure - added "[one designated spouse]" placeholder to food preparation responsibility question and options 1-2
 - June 24, 2025: Verified Question 76 - no changes needed as it addresses joint payment behavior, not individual responsibility assignment
