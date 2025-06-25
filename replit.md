@@ -81,6 +81,7 @@ The application uses Replit's deployment infrastructure:
 - **Dependencies**: Automatic package installation for all environments
 
 ## Recent Changes
+- June 24, 2025: Fixed Question 67 structure - added "[one designated spouse]" placeholder, integrated sub-bullet into main option, created 3-option format with antithesis and Godly counsel options
 - June 24, 2025: Fixed Question 61 text clarity - replaced incomplete "by age" with "by age [your preferred age]" to clarify user input requirement
 - June 24, 2025: Fixed Question 53 options structure - integrated sub-bullets into main options, now has proper 2-option format plus "Not Applicable" for child discipline approaches
 - June 24, 2025: Fixed Question 52 text formatting - replaced mathematical symbols with proper "1st trimester" and "2nd trimester" text

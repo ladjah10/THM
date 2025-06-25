@@ -890,10 +890,11 @@ export const questions: Question[] = [
     section: "Section V: Your Family/Home Life",
     subsection: "House Cleaning & Maintenance",
     type: "D",
-    text: "In view of gifting and capacity, we commit to being the primary individual in our family who manages and executes the periodic functions of our house cleaning and maintenance, which includes but is not limited to cleaning and maintenance of living space, laundry and dry cleaning.",
+    text: "In view of gifting and capacity, we commit to [one designated spouse] being the primary individual in our family who manages and executes the periodic functions of our house cleaning and maintenance, which includes but is not limited to cleaning and maintenance of living space, laundry and dry cleaning.",
     options: [
-      "In view of gifting and capacity, we commit to being the primary individual in our family who manages and executes the periodic functions of our house cleaning and maintenance, which includes but is not limited to cleaning and maintenance of living space, laundry and dry cleaning.",
-      "We commit to not conflating this role and responsibility with function as always being the one executing the function/ responsibility day to day. What this means is is primarily and ultimately responsible and accountable for seeing it get done, within the financial and capacity constraints of the family."
+      "In view of gifting and capacity, we commit to [one designated spouse] being the primary individual in our family who manages and executes the periodic functions of our house cleaning and maintenance, which includes but is not limited to cleaning and maintenance of living space, laundry and dry cleaning. We commit to not conflating this role and responsibility with function as always being the one executing the function/responsibility day to day, meaning [one designated spouse] is primarily and ultimately responsible and accountable for seeing it get done, within the financial and capacity constraints of the family.",
+      "We are not in agreement with this approach to house cleaning and maintenance responsibilities.",
+      "We would like to agree with this approach, but need additional discussion with Godly counsel to be sure of our commitment."
     ],
     weight: 6
   },
