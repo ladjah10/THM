@@ -8,7 +8,7 @@ import { Progress } from "@/components/ui/progress";
 interface QuestionnaireViewProps {
   question: Question;
   selectedOption?: string;
-  onOptionSelect: (questionId: number, option: string, value: number) => void;
+  onOptionSelect: (questionId: string, option: string, value: number) => void;
   onNextQuestion: () => void;
   onPreviousQuestion: () => void;
   onSaveProgress?: () => void; // New prop for saving progress
