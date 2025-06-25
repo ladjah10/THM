@@ -985,9 +985,9 @@ export const questions: Question[] = [
     section: "Section VI: Your Finances",
     subsection: "Financial Management Model",
     type: "D",
-    text: "In view of gifting and capacity, we commit to being the primary individual in our family who manages the periodic functions of our finances, which includes but is not limited to, developing the budget, financial reconciliations, bill-payment and investment related asset management and allocation",
+    text: "In view of gifting and capacity, we commit to [one designated spouse] being the primary individual in our family who manages the periodic functions of our finances, which includes but is not limited to, developing the budget, financial reconciliations, bill-payment and investment related asset management and allocation",
     options: [
-      "In view of gifting and capacity, we commit to being the primary individual in our family who manages the periodic functions of our finances, which includes but is not limited to, developing the budget, financial reconciliations, bill-payment and investment related asset management and allocation",
+      "In view of gifting and capacity, we commit to [one designated spouse] being the primary individual in our family who manages the periodic functions of our finances, which includes but is not limited to, developing the budget, financial reconciliations, bill-payment and investment related asset management and allocation",
       "Other: We commit to having a licensed financial professional handle and manage all of our financial matters. We commit to at least monthly updates (indefinitely) with the professional of our choosing."
     ],
     weight: 8
