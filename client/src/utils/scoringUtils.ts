@@ -4,148 +4,138 @@ import { psychographicProfiles } from "@/data/psychographicProfiles";
 /**
  * Calculate assessment scores based on user responses
  */
-export function calculateScores(
-  questions: Question[],
-  responses: Record<number, UserResponse>
-): AssessmentScores {
+export function calculateScores(questions: Question[], responses: Record<number, UserResponse>): AssessmentScores {
   // Initialize section scores
   const sectionScores: Record<string, { earned: number; possible: number; percentage: number }> = {};
-  
-  // Initialize total score
   let totalEarned = 0;
   let totalPossible = 0;
-  
-  // Process each question
+
+  // Section weight percentages (based on updated algorithm)
+  const sectionWeightPercentages = {
+    "Section I: Your Foundation": 12.42,
+    "Section II: Your Faith Life": 3.18,
+    "Section III: Your Marriage Life": 32.73,
+    "Section IV: Your Marriage Life with Children": 19.09,
+    "Section V: Your Family/Home Life": 5.15,
+    "Section VI: Your Finances": 8.79,
+    "Section VII: Your Health and Wellness": 7.42,
+    "Section VIII: Your Marriage and Boundaries": 11.21
+  };
+
+  // Initialize all sections
   questions.forEach(question => {
-    const response = responses[question.id];
-    
-    // Skip if no response or invalid response format
-    if (!response || typeof response.value !== "number") {
-      console.warn("Skipped question ID:", question.id, "- Missing or invalid response");
-      return;
-    }
-    
-    // Initialize section if not exists
     if (!sectionScores[question.section]) {
       sectionScores[question.section] = { earned: 0, possible: 0, percentage: 0 };
     }
+  });
+
+  // Calculate scores for each question using updated algorithm
+  questions.forEach(question => {
+    const response = responses[question.id];
+    if (!response) return;
+
+    const weight = question.weight ?? 1;
+    const isFaithQuestion = (question as any).isFaithQuestion || 
+                           assessFaithContent(question.text.toLowerCase()) || 
+                           question.section.includes('Faith') || 
+                           question.section.includes('Foundation');
     
-    // Calculate earned and possible values based on question type
     let earned: number;
-    let possible: number;
     
     if (question.type === "D") {
-      // Declaration questions: Affirmative choice = 100% weight, Antithesis choice = 25% weight
-      const weight = question.weight ?? 1;
+      // Declaration questions: Enhanced scoring with variance
       if (response.value === 0) {
-        // First option (affirmative declaration) = full weight
-        earned = weight;
+        earned = weight; // 100% for affirmative
       } else {
-        // Second option (antithesis/non-commitment) = 25% weight
-        earned = Math.round(weight * 0.25);
+        earned = Math.round(weight * 0.30 * 100) / 100; // 30% for antithesis
       }
-      possible = weight;
     } else {
-      // Multiple choice questions: context-aware scoring based on traditionalism and faith content
-      const weight = question.weight ?? 1;
+      // Multiple choice questions: Updated response weighting with variance
       const optionText = response.option.toLowerCase();
-      const questionText = question.text.toLowerCase();
-      
-      // Assess faith and traditional content in the option
       const isFaithOption = assessFaithContent(optionText);
       const isTraditionalOption = assessTraditionalContent(optionText);
-      const isFaithQuestion = assessFaithContent(questionText) || question.section.includes('Faith') || question.section.includes('Foundation');
       
-      // Calculate earned points based on content alignment and position
+      // Response scoring with variance to eliminate equal values
       if (response.value === 0) {
-        // First option - typically most aligned/committed
-        earned = weight;
-      } else if (response.value === 1) {
-        // Second option - assess content quality
-        if (isFaithOption || isTraditionalOption) {
-          earned = Math.round(weight * 0.85); // High score for faith/traditional content
+        // High-alignment responses: 98-100%
+        if (isFaithQuestion && (isFaithOption || isTraditionalOption)) {
+          earned = weight; // 100%
         } else {
-          earned = Math.round(weight * 0.70); // Standard second option
+          earned = Math.round(weight * 0.98 * 100) / 100; // 98%
+        }
+      } else if (response.value === 1) {
+        // Moderate responses: 60-75% with faith bonus
+        if (isFaithOption || isTraditionalOption) {
+          if (isFaithQuestion) {
+            earned = Math.round(weight * 0.74 * 100) / 100; // 74% for faith questions
+          } else {
+            earned = Math.round(weight * 0.72 * 100) / 100; // 72% for traditional content
+          }
+        } else {
+          earned = Math.round(weight * 0.65 * 100) / 100; // 65% standard
         }
       } else if (response.value === 2) {
-        // Third option
+        // Lower responses: 35-50%
         if (isFaithOption || isTraditionalOption) {
-          earned = Math.round(weight * 0.60); // Moderate score for faith/traditional content
+          earned = Math.round(weight * 0.48 * 100) / 100; // 48%
         } else {
-          earned = Math.round(weight * 0.45); // Lower score for non-aligned content
+          earned = Math.round(weight * 0.38 * 100) / 100; // 38%
         }
       } else {
-        // Fourth+ option
+        // Lowest responses: 15-30%
         if (isFaithOption || isTraditionalOption) {
-          earned = Math.round(weight * 0.40); // Some credit for faith/traditional content
+          earned = Math.round(weight * 0.28 * 100) / 100; // 28%
         } else {
-          earned = Math.round(weight * 0.20); // Minimal score for non-aligned content
+          earned = Math.round(weight * 0.18 * 100) / 100; // 18%
         }
       }
-      
-      // Apply faith question multiplier for questions in faith-heavy sections
-      if (isFaithQuestion && (isFaithOption || isTraditionalOption)) {
-        earned = Math.round(earned * 1.1); // 10% bonus for faith alignment in faith questions
-        earned = Math.min(earned, weight); // Cap at maximum weight
-      }
-      
-      possible = weight;
     }
     
     // Add to section scores
     sectionScores[question.section].earned += earned;
-    sectionScores[question.section].possible += possible;
+    sectionScores[question.section].possible += weight;
     
     // Add to total scores
     totalEarned += earned;
-    totalPossible += possible;
+    totalPossible += weight;
   });
-  
-  // Calculate percentages for each section
+
+  // Calculate percentages for each section using the category score formula
   Object.keys(sectionScores).forEach(section => {
     const { earned, possible } = sectionScores[section];
-    // Ensure we don't exceed 100%
     if (possible === 0) {
       sectionScores[section].percentage = 0;
     } else {
-      // Strictly cap at 100% maximum
-      const rawPercentage = (earned / possible) * 100;
-      // Round to 1 decimal place for more precise percentages
-      sectionScores[section].percentage = Math.min(100, Math.round(rawPercentage * 10) / 10);
+      // Category Score = (Sum of weighted scores / Total section weight) * 100
+      const categoryScore = (earned / possible) * 100;
+      sectionScores[section].percentage = Math.min(100, Math.round(categoryScore * 10) / 10);
     }
   });
+
+  // Calculate overall percentage using weighted category contributions
+  let overallScore = 0;
+  Object.entries(sectionScores).forEach(([section, data]) => {
+    const weightPercentage = sectionWeightPercentages[section] || 0;
+    overallScore += (data.percentage * weightPercentage) / 100;
+  });
   
-  // Calculate overall percentage (capped at 100%)
-  let overallPercentage = 0;
-  if (totalPossible > 0) {
-    // Strictly cap at 100% maximum
-    const rawPercentage = (totalEarned / totalPossible) * 100;
-    // Round to 1 decimal place for more precise percentages
-    overallPercentage = Math.min(100, Math.round(rawPercentage * 10) / 10);
-  }
-  
-  // Determine strengths and improvement areas
-  const sectionEntries = Object.entries(sectionScores);
-  sectionEntries.sort((a, b) => b[1].percentage - a[1].percentage);
-  
-  // Top 3 sections are strengths
-  const strengths = sectionEntries
-    .slice(0, 3)
+  const overallPercentage = Math.min(100, Math.round(overallScore * 10) / 10);
+
+  // Identify strengths and improvement areas
+  const strengths = Object.entries(sectionScores)
+    .filter(([, score]) => score.percentage >= 80)
     .map(([section, score]) => {
-      // Ensure percentage is displayed correctly with up to 1 decimal place
       const formattedPercentage = score.percentage.toFixed(1).replace('.0', '');
-      return `Strong ${section} compatibility (${formattedPercentage}%)`;
+      return `Strong ${section} alignment (${formattedPercentage}%)`;
     });
-  
-  // Bottom 2 sections are improvement areas
-  const improvementAreas = sectionEntries
-    .slice(-2)
+
+  const improvementAreas = Object.entries(sectionScores)
+    .filter(([, score]) => score.percentage < 70)
     .map(([section, score]) => {
-      // Ensure percentage is displayed correctly with up to 1 decimal place
       const formattedPercentage = score.percentage.toFixed(1).replace('.0', '');
       return `${section} alignment can be improved (${formattedPercentage}%)`;
     });
-  
+
   return {
     sections: sectionScores,
     overallPercentage,

@@ -81,6 +81,7 @@ The application uses Replit's deployment infrastructure:
 - **Dependencies**: Automatic package installation for all environments
 
 ## Recent Changes
+- June 25, 2025: Implemented comprehensive algorithm update with adjusted question weights (+1 for faith Declaration questions, +0.5 for faith Multiple Choice), response variance scoring to eliminate equal values, weighted category contributions, and compatibility scoring with faith category emphasis
 - June 25, 2025: Implemented contextual scoring system that analyzes faith and traditional content in options, applies content-aware scoring with bonus multipliers for faith questions, and properly weights traditional marriage responses regardless of option position
 - June 25, 2025: Fixed critical scoring algorithm issues - corrected multiple choice scoring from 5x inflated denominators to proper weight-based scoring, implemented graduated point distribution, and adjusted psychographic profile criteria to realistic ranges
 - June 25, 2025: Fixed assessment hanging issue for male respondents - added timeout protection and emergency fallbacks in profile determination logic

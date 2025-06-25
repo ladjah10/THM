@@ -39,7 +39,8 @@ export const questions: Question[] = [
       "We each already believe in and (have) receive(d) Jesus Christ as our Lord and Savior and this reality will be the active foundation and guiding lens through which we see and operate in our marriage and family.",
       "We are interested in living our new lives together according to the Christian faith, but we haven't each made the individual decision to receive Jesus Christ as our Lord and Savior (and be baptized) and we would like to do this in advance of our union."
     ],
-    weight: 10
+    weight: 11,
+    isFaithQuestion: true
   },
   {
     id: 2,
@@ -51,7 +52,8 @@ export const questions: Question[] = [
       "In view of the previous question, we are committed to living our lives together being accountable to God, His scripture and to the commitments we make through this \"life covenant\" process, unless mutually revisited and discussed at a later time.",
       "Other: Before committing to this we need further discussion with spiritual counsel around how this would operate."
     ],
-    weight: 10
+    weight: 11,
+    isFaithQuestion: true
   },
   {
     id: 3,
@@ -63,7 +65,8 @@ export const questions: Question[] = [
       "We believe we have a responsibility to raise our children according to the Christian faith, intentionally teaching them and raising them according to its expectations while leaving space for them to develop their own personal relationship with Jesus Christ and hopefully make a decision to give their life to Jesus Christ.",
       "We have different beliefs about this matter and need further discussion before reaching agreement"
     ],
-    weight: 10
+    weight: 11,
+    isFaithQuestion: true
   },
   {
     id: 4,
@@ -77,7 +80,8 @@ export const questions: Question[] = [
       "We're committed to the belief: \"Happy King, Happy Kingdom\" - the wife is ultimately responsible for making her husband happy and this will in turn lead to a successful marriage.",
       "We're committed to the belief: We believe in \"Happy Spouse, Happy House\" - each spouse is ultimately responsible for the other spouse's happiness and this will in turn lead to a successful marriage."
     ],
-    weight: 8
+    weight: 8.5,
+    isFaithQuestion: true
   },
   {
     id: 5,
@@ -89,7 +93,8 @@ export const questions: Question[] = [
       "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing our spouse as Power of Attorney before our marriage date on or by this date.",
       "We are not ready to make this commitment at this time and prefer to address this matter later in our relationship"
     ],
-    weight: 10
+    weight: 11,
+    isFaithQuestion: true
   },
   {
     id: 6,
@@ -101,7 +106,8 @@ export const questions: Question[] = [
       "We're committed to preparing in advance of our marriage to ensuring we are each well cared for in the undesired, unfortunate and rare case of incapacitating illness and or premature death, as such, we are each committed to establishing completing a notarized copy of our will before our marriage date on or by this date.",
       "We are not ready to make this commitment at this time and prefer to address this matter later in our relationship"
     ],
-    weight: 10
+    weight: 11,
+    isFaithQuestion: true
   },
   {
     id: 7,
@@ -113,7 +119,8 @@ export const questions: Question[] = [
       "We are committed to a lifelong marriage and do not see divorce as an exercisable option for any reasons outside of biblical (adultery & abandonment) or personal safety grounds (physical abuse and professionally evaluated and validated, psychological harm), including but not limited to: Unhappiness, \"Falling Out of Love\", \"Growing Apart\", \"Irreconcilable Differences\"",
       "We believe divorce is acceptable for various reasons including unhappiness, falling out of love, growing apart, or irreconcilable differences beyond the biblical grounds mentioned above"
     ],
-    weight: 8
+    weight: 8.5,
+    isFaithQuestion: true
   },
   {
     id: 8,
@@ -126,7 +133,8 @@ export const questions: Question[] = [
       "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), and do not believe any legal agreements beyond our mutual commitments through this life covenant process are necessary for us to explore and structure at this time.",
       "We are committed to a lifelong marriage with one another and do not see divorce as an exercisable option (outside of biblical/safety circumstances), still, we'd like to be more informed about what prenuptial agreements entail before deciding to consider or not consider it before our marriage."
     ],
-    weight: 8
+    weight: 8.5,
+    isFaithQuestion: true
   },
   {
     id: 9,
@@ -139,7 +147,8 @@ export const questions: Question[] = [
       "We commit to establishing and celebrating our holy union/ covenant through our wedding, celebrating our marriage anniversary every year and also doing/celebrating a covenant renewal ceremony every 10 years.",
       "We commit to establishing and celebrating our holy union/ covenant through our wedding, celebrating our marriage anniversary every year and also doing/celebrating a covenant renewal ceremony every 5 years."
     ],
-    weight: 8
+    weight: 8.5,
+    isFaithQuestion: true
   },
   {
     id: 10,
@@ -152,7 +161,8 @@ export const questions: Question[] = [
       "We commit to weekly prayer as a couple (during designated checkin time).",
       "Other: Please detail"
     ],
-    weight: 7
+    weight: 7.5,
+    isFaithQuestion: true
   },
   {
     id: 11,
@@ -165,7 +175,8 @@ export const questions: Question[] = [
       "We commit to family worship weekly, including familial prayer over meals, and weekly corporate worship in a local/femote faith community where we are members.",
       "Other: Please detail"
     ],
-    weight: 7
+    weight: 7.5,
+    isFaithQuestion: true
   },
   {
     id: 12,
@@ -179,7 +190,8 @@ export const questions: Question[] = [
       "We commit to each volunteering/serving flexibly inside (and outside of) our faith community based on our capacity, but at a minimum, we'll always be serving our faith community through our giving in every season.",
       "We commit to each volunteering/serving flexibly inside (and outside of) our faith community based on our capacity."
     ],
-    weight: 7
+    weight: 7.5,
+    isFaithQuestion: true
   },
   {
     id: 13,
@@ -191,7 +203,8 @@ export const questions: Question[] = [
       "We understand and accept the order of relationship priority according to God's highest design is first, our relationship with God; then, our relationship with our Spouse (see: \"forsake all others\"); then, our relationship with our children (if applicable); then everything and everyone else (including work, friends, family)",
       "We believe in a more flexible approach to relationship priorities that may vary based on circumstances and individual needs rather than following a strict hierarchical order"
     ],
-    weight: 6
+    weight: 6.5,
+    isFaithQuestion: true
   },
   {
     id: 14,
@@ -205,7 +218,8 @@ export const questions: Question[] = [
       "We commit to the wife hyphenating her last name with her husband's last name in marriage.",
       "Other: (Please detail)"
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 15,
@@ -219,7 +233,8 @@ export const questions: Question[] = [
       "We commit to a marriage model where we agree to both work full-time until we have children and then we will transition to a model where the wife stays at home for an extended period (beyond standard parental leave) until the children reach age",
       "We commit to a marriage model where we agree to both work full-time until we have children and then we will transition to a model where the wife stays at home indefinitely as full-time housewife/ homemaker."
     ],
-    weight: 6
+    weight: 6.5,
+    isFaithQuestion: true
   },
   {
     id: 16,
@@ -233,7 +248,8 @@ export const questions: Question[] = [
       "We commit to a marriage / work model where we agree to never be away from one another for more than a 3-day period, regardless of the commitment/project scope. If necessary, we will set a \"Come to me or I'll come to you\" plan in order to honor this expectation.",
       "Other: Please detail"
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 17,
@@ -247,7 +263,8 @@ export const questions: Question[] = [
       "We commit to a marriage / work model where we agree to have a guarded period of at least 1 hour daily where it's our time to connect directly (not including children), and no work is to be done. Our preliminary guarded time is (am/pm)",
       "Other: Please detail"
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 18,
@@ -261,7 +278,8 @@ export const questions: Question[] = [
       "Given the nature of our work, we do not believe this commitment would align well for us.",
       "Other: Please detail"
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 19,
@@ -273,7 +291,8 @@ export const questions: Question[] = [
       "We commit to a weekly date night on (guarded day, no children if applicable)",
       "We commit to a bi-weekly date night on (guarded day, no children if applicable)"
     ],
-    weight: 8
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 20,
@@ -285,7 +304,8 @@ export const questions: Question[] = [
       "We share the belief that sex in marriage is a duty before God and not a conditional expression of love and honor. As such, we believe we not only have the opportunity to have sex in marriage, but also, we each have the equal responsibility to have sex with each other regularly in marriage, unless only for a short pause due to a mutual commitment to prayer or fasting or for an unexpected health challenge.",
       "We have different beliefs about this matter and need further discussion before reaching agreement"
     ],
-    weight: 8
+    weight: 6.5,
+    isFaithQuestion: true
   },
   {
     id: 21,
@@ -298,7 +318,8 @@ export const questions: Question[] = [
       "We commit to having sex daily",
       "We commit to having sex at least 2 times per week"
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 22,
@@ -311,7 +332,8 @@ export const questions: Question[] = [
       "We commit to alternating who initiates sex by day/instance.",
       "We commit to \"letting it flow\" naturally without a set alternation schedule, with that said, we each willingly acknowledge it is not the responsibility of one spouse to initiate a duty before God."
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 23,
@@ -325,7 +347,8 @@ export const questions: Question[] = [
       "We commit to having a conversation within the first 6 months about what we individually enjoy in sex with our spouse and what aspect of the experience, if anything, you would each enjoy more of.",
       "Other: Before committing to this we need further discussion in our session around how this would operate."
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 24,
@@ -338,7 +361,8 @@ export const questions: Question[] = [
       "We plan to use contraception, but we do not plan to use any which require oral consumption (health concerns/considerations) or invasive surgery (vasectomy, fallopian \"tubes tied\").",
       "We plan to use all forms of contraception available to us which includes oral consumption and/or invasive surgery as an option (vasectomy, fallopian \"tubes tied\")."
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 25,
@@ -350,7 +374,8 @@ export const questions: Question[] = [
       "We commit to never discussing our sex lives with anyone (friends, colleagues, and family members) unless we mutually agree to seek outside counsel on that aspect of our relationship.",
       "We are not ready to make this commitment at this time and prefer to address this matter later in our relationship"
     ],
-    weight: 8
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 26,
@@ -362,7 +387,8 @@ export const questions: Question[] = [
       "We're committed to not having any mobile electronics in our bedroom, specifically, TV's, laptops and/or phones at night's end to ensure our bedroom is a place of intimacy.",
       "We do not believe we need unique boundaries around electronics in our bedroom."
     ],
-    weight: 8
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 27,
@@ -374,7 +400,8 @@ export const questions: Question[] = [
       "We commit to having a weekly check-in on at [] (guarded time) with a recommended agenda including: Specific Appreciation, Area to Grow/Challenge to Address, Planning, and Prayer",
       "We prefer a more flexible approach to relationship communication without committing to scheduled weekly check-ins"
     ],
-    weight: 8
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 28,
@@ -386,7 +413,8 @@ export const questions: Question[] = [
       "We commit to having a weekly check-in on at [] (guarded time) with a recommended agenda including: Specific Appreciation, Area to Grow/Challenge to Address, Planning, and Prayer",
       "We prefer handling communication and conflict resolution naturally as issues arise rather than through scheduled weekly check-ins"
     ],
-    weight: 8
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 29,
@@ -398,7 +426,8 @@ export const questions: Question[] = [
       "We commit to not fighting or having serious arguments in front of others, rather, we'd wait for time alone and away from company, either in our check-in time or immediately after to discuss things away from them.",
       "We are not ready to make this commitment at this time and prefer to address this matter later in our relationship"
     ],
-    weight: 8
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 30,
@@ -411,7 +440,8 @@ export const questions: Question[] = [
       "We commit to a min of bi-weekly counseling sessions for the first year of our marriage, with a min of monthly in year 2 and a min of quarterly in years 3+ as check-ins (with additional sessions as needed).",
       "Other: Please detail"
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 31,
@@ -423,7 +453,8 @@ export const questions: Question[] = [
       "We commit to never discussing conflict/issues in our marriage with anyone, before (1) addressing the issue with our spouse and (2) mutually agreeing to seek approved counsel on the issue.",
       "We are not ready to make this commitment at this time and prefer to address this matter later in our relationship"
     ],
-    weight: 8
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 32,
@@ -435,7 +466,8 @@ export const questions: Question[] = [
       "We commit to not going more than 24 hours without speaking with one another under any circumstances.",
       "We are not ready to make this commitment at this time and prefer to address this matter later in our relationship"
     ],
-    weight: 8
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 33,
@@ -447,7 +479,8 @@ export const questions: Question[] = [
       "We commit to not discussing serious issues/ conflicts/debates via text message. Rather, we'll always discuss them in person or in a live conversation on a phone given the importance of conveying the proper tone and honoring wise boundaries for the marriage.",
       "We are not ready to make this commitment at this time and prefer to address this matter later in our relationship"
     ],
-    weight: 8
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 34,
@@ -459,7 +492,8 @@ export const questions: Question[] = [
       "We commit to not going to sleep while still angry with one another [not to be confused with resolving the issue, but committing to find common ground to discuss further, prayer and then coming together as one]",
       "We are not ready to make this commitment at this time and prefer to address this matter later in our relationship"
     ],
-    weight: 8
+    weight: 8.5,
+    isFaithQuestion: true
   },
   {
     id: 35,
@@ -471,7 +505,8 @@ export const questions: Question[] = [
       "We commit to always sleeping together in the same bed, no matter the issue.",
       "We are not ready to make this commitment at this time and prefer to address this matter later in our relationship"
     ],
-    weight: 8
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 36,
@@ -483,7 +518,8 @@ export const questions: Question[] = [
       "We commit to never using sex as a weapon by withholding it due to conflict [Unless mutually acknowledged and agreed due to medical considerations, prayer and/or fasting]",
       "We are not ready to make this commitment at this time and prefer to address this matter later in our relationship"
     ],
-    weight: 8
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 37,
@@ -495,7 +531,8 @@ export const questions: Question[] = [
       "We commit to never using silence as a weapon by withholding presence or communication due to conflict [Unless mutually acknowledged and agreed for a set amount of time for prayer and reflection]",
       "We are not ready to make this commitment at this time and prefer to address this matter later in our relationship"
     ],
-    weight: 8
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 38,
@@ -507,7 +544,8 @@ export const questions: Question[] = [
       "We commit to never discussing conflict/issues in your marriage with anyone (especially family members) before (1) addressing the issue with your spouse and (2) mutually agreeing to seek approved counsel on the issue.",
       "We are not ready to make this commitment at this time and prefer to address this matter later in our relationship"
     ],
-    weight: 8
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 39,
@@ -520,7 +558,8 @@ export const questions: Question[] = [
       "We are not in agreement with this approach to decision-making in marriage.",
       "We would like to agree with this approach, but need additional discussion with Godly counsel to be sure of our commitment."
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 40,
@@ -534,7 +573,8 @@ export const questions: Question[] = [
       "We're committed to being flexible about our home location, open to living wherever opportunity may lead us, even if it's not in a city with existing family.",
       "We're committed to living in a city where at least one of our families resides for up to the next 5 years (with consideration for younger children + childcare, parental care + presence in older age, existing community)."
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 41,
@@ -548,7 +588,8 @@ export const questions: Question[] = [
       "We're committed to living in a remote area, whether domestically or abroad, which is not necessarily connected or proximate to a major city.",
       "We're committed to being flexible about our living area and do not have a particular preference to a city type."
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 42,
@@ -561,7 +602,8 @@ export const questions: Question[] = [
       "We're committed to living internationally long-term and plan to eventually move shortly after our marriage.",
       "We're committed to being flexible about our living location and do not have a particular preference around living domestically or internationally."
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 43,
@@ -575,7 +617,8 @@ export const questions: Question[] = [
       "We're committed to living in a standalone single-family townhouse long-term as our primary residence.",
       "We're committed to living in a multi-family house long-term."
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 44,
@@ -587,7 +630,8 @@ export const questions: Question[] = [
       "We commit to having children (according to God's will).",
       "We do not commit to having children."
     ],
-    weight: 8
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 45,
@@ -599,7 +643,8 @@ export const questions: Question[] = [
       "A Water Delivery (if medically prudent and possible)",
       "Vaginal Delivery (Out of Water) (with potential for C-Section if medically necessary)"
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 46,
@@ -612,7 +657,8 @@ export const questions: Question[] = [
       "A Hospital Birth",
       "A Birth Center (if medically prudent and possible)"
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 47,
@@ -626,7 +672,8 @@ export const questions: Question[] = [
       "We commit to attempting to have them after year two.",
       "We commit to attempting to have them after this specific milestone."
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 48,
@@ -641,7 +688,8 @@ export const questions: Question[] = [
       "We commit to having three children (according to God's will).",
       "Not Applicable"
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 49,
@@ -654,7 +702,8 @@ export const questions: Question[] = [
       "We admire and believe in adoption but do not plan to adopt during our marriage.",
       "We are committed to having children biologically (according to God's will), but would consider adoption if we discern it's not His will for us to have children biologically."
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 50,
@@ -668,7 +717,8 @@ export const questions: Question[] = [
       "We commit to naming our children with first names that are gender neutral.",
       "Other: Please detail"
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 51,
@@ -681,7 +731,8 @@ export const questions: Question[] = [
       "We agree that's not an option name one of our children after a parent.",
       "Not Applicable"
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 52,
@@ -695,7 +746,8 @@ export const questions: Question[] = [
       "We do not have a specific guideline around if and when we will share news of a pregnancy.",
       "Not Applicable"
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 53,
@@ -708,7 +760,8 @@ export const questions: Question[] = [
       "We commit to raising and disciplining our children with Godly wisdom and discernment, with an orientation to disciplining our children according to their age and level of understanding leveraging gentle verbal instruction/warning, firm verbal instruction warning and in the repeated case of disobedience, disrespect or danger, we are comfortable with other forms of punishment in love, which do not include physical discipline.",
       "Not Applicable"
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 54,
@@ -720,7 +773,8 @@ export const questions: Question[] = [
       "We commit to being a united front before our children, never keeping any secrets from the other parent and never undermining a decision or perspective given by your spouse, whether in front of the children as a couple, or separate from your spouse with the children",
       "We are not ready to make this commitment at this time and prefer to address this matter later in our relationship"
     ],
-    weight: 8
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 55,
@@ -732,7 +786,8 @@ export const questions: Question[] = [
       "We commit to not fighting or having serious arguments in front of the children, rather, we'd wait for time alone and away from the children, either in our check-in time or immediately after to discuss things away from them.",
       "We commit to fighting respectfully, even if it's a serious disagreement, in front of the children, because we believe it's healthy and constructive to model positive conflict resolution and to set realistic expectations for them in a marriage."
     ],
-    weight: 8
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 56,
@@ -747,7 +802,8 @@ export const questions: Question[] = [
       "We commit to discussing sex with our children one on one (each parent has their own talk) at no later than 5 years old; however, we'll discuss appropriate/inappropriate touch and expectations of communication if it happens, between by age 7 and we'll talk through anatomy, what sex is and its purpose, by puberty (10-13).",
       "Other: Please detail"
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 57,
@@ -761,7 +817,8 @@ export const questions: Question[] = [
       "We're committed to approaching the issue of social media exposure of our children's image and identity with discretion; however, we do not believe any specific restrictions on sharing / posting from friends and family are necessary",
       "We're committed to guarding the image and identity of our children and are committed to limiting their exposure on social media by limiting others from sharing photos of our children on social media (direct/indirectly) without our permission and posting family/individual photos we've mutually agreed to share."
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 58,
@@ -775,7 +832,8 @@ export const questions: Question[] = [
       "We're committed to guarding the psychological development and physical safety of our children while allowing them to be socially connected and technologically adept, with that said, we will allow closely monitored social media use from middle school age on",
       "Other: Please detail"
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 59,
@@ -789,7 +847,8 @@ export const questions: Question[] = [
       "We're committed to guarding the psychological development and physical safety of our children while allowing them to be socially connected and technologically adept, with that said, we will allow closely monitored mobile phone use from as early as we feel comfortable they can properly use it without losing or damaging it.",
       "Other: Please detail"
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 60,
@@ -802,7 +861,8 @@ export const questions: Question[] = [
       "We're committed to approaching the issue of social media exposure of our children's image and identity with care, still, we do not plan to create an account on their behalf or have any unique restrictions to friends/family or ourselves of sharing photos with them in them.",
       "We're committed to creating and managing an account on our children's behalf, with photos we will share from their birth until we believe they are of age to take over their account."
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 61,
@@ -815,7 +875,8 @@ export const questions: Question[] = [
       "While we recognize and acknowledge God's highest design for humanity around gender and sexuality, we do not feel equipped to have this conversation with our children because we need to develop and deepen our own understanding of this topic through our own study and consultation with spiritual counsel. As such, we commit to doing intentional study on our own and in the meantime, allowing our faith community and counsel to provide the primary guidance to our children.",
       "Other: Please detail"
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 62,
@@ -829,7 +890,8 @@ export const questions: Question[] = [
       "We commit to discussing race with our children one on one (each parent has their own talk) at no later than 10 years old, specifically, discussing the history of race / racial dynamics, where it stems from a biblical perspective (Genesis 3), and expectations you have of them around their approach to engaging the issue in this world",
       "Other: Please detail"
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 63,
@@ -843,7 +905,8 @@ export const questions: Question[] = [
       "We are committed to homeschooling our children.",
       "We are committed to a flexible learning experience where we're committed to the best local educational environment which could vary between all school types based on location, outcomes, pricing and more."
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 64,
@@ -857,7 +920,8 @@ export const questions: Question[] = [
       "We are committed to eating dinner as a family at least once monthly, on the | of each month",
       "Other: Please detail"
     ],
-    weight: 4
+    weight: 4,
+    isFaithQuestion: false
   },
   {
     id: 65,
@@ -870,7 +934,8 @@ export const questions: Question[] = [
       "We are committed to budgeting, planning and going on at least two family vacations per year",
       "Other: Please detail"
     ],
-    weight: 4
+    weight: 4,
+    isFaithQuestion: false
   },
   {
     id: 66,
@@ -883,7 +948,8 @@ export const questions: Question[] = [
       "We are committed to taking a full immediate family photo at least once every two years",
       "Other: Please detail"
     ],
-    weight: 4
+    weight: 4,
+    isFaithQuestion: false
   },
   {
     id: 67,
@@ -896,7 +962,8 @@ export const questions: Question[] = [
       "We are not in agreement with this approach to house cleaning and maintenance responsibilities.",
       "We would like to agree with this approach, but need additional discussion with Godly counsel to be sure of our commitment."
     ],
-    weight: 6
+    weight: 4,
+    isFaithQuestion: false
   },
   {
     id: 68,
@@ -910,7 +977,8 @@ export const questions: Question[] = [
       "We commit to a model of bi-weekly house cleaning by an outside cleaning vendor which includes but is not limited to, cleaning of general living areas, kitchen, bathrooms and bedrooms and laundry (assumption of general tidiness, cleaning after self during the week).",
       "Other: Please detail"
     ],
-    weight: 4
+    weight: 4,
+    isFaithQuestion: false
   },
   {
     id: 69,
@@ -924,7 +992,8 @@ export const questions: Question[] = [
       "We commit to a model where the person who prepares the food is responsible for cleaning up as they cook and after the meal is done.",
       "Other: Please detail"
     ],
-    weight: 4
+    weight: 4,
+    isFaithQuestion: false
   },
   {
     id: 70,
@@ -938,7 +1007,8 @@ export const questions: Question[] = [
       "We commit to a model of outside housework by a hired outside vendor which includes but is not limited to, cleaning of vehicles, lawn care, cleaning of trash & recycling bins, deck, sidewalk and general gardening",
       "Other: Please detail"
     ],
-    weight: 4
+    weight: 4,
+    isFaithQuestion: false
   },
   {
     id: 71,
@@ -952,7 +1022,8 @@ export const questions: Question[] = [
       "We are committed to doing at least one outing as a family at least monthly",
       "Other: Please detail"
     ],
-    weight: 4
+    weight: 4,
+    isFaithQuestion: false
   },
   {
     id: 72,
@@ -964,7 +1035,8 @@ export const questions: Question[] = [
       "We commit to having a \"One Flesh, One Financial\" model where any and every amount of income generated by either spouse is considered the family's resources and is budgeted and apportioned against our prayerfully planned annual budget",
       "Other: Before committing to this we need further discussion in our session around how this would operate"
     ],
-    weight: 8
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 73,
@@ -978,7 +1050,8 @@ export const questions: Question[] = [
       "We commit to developing an annual budget, with bi-monthly discussions on the of every other month, around our status (actuals) against our goals",
       "Other: Please detail"
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 74,
@@ -990,7 +1063,8 @@ export const questions: Question[] = [
       "In view of gifting and capacity, we commit to [one designated spouse] being the primary individual in our family who manages the periodic functions of our finances, which includes but is not limited to, developing the budget, financial reconciliations, bill-payment and investment related asset management and allocation",
       "Other: We commit to having a licensed financial professional handle and manage all of our financial matters. We commit to at least monthly updates (indefinitely) with the professional of our choosing."
     ],
-    weight: 8
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 75,
@@ -1004,7 +1078,8 @@ export const questions: Question[] = [
       "We commit to giving at least 10% of our net income to our faith community and at least 2% to causes and missions we believe in.",
       "Other: Please detail"
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 76,
@@ -1017,7 +1092,8 @@ export const questions: Question[] = [
       "We're committed to a more flexible setup where there is no set expectation for one spouse paying (because it's ultimately coming from the same source) and we talk about it in advance each time",
       "Other: Please detail"
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 77,
@@ -1031,7 +1107,8 @@ export const questions: Question[] = [
       "We commit to giving our children a monthly allowance as an opportunity to teach stewardship",
       "Other: Please detail"
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 78,
@@ -1046,7 +1123,8 @@ export const questions: Question[] = [
       "We commit to opening both a 529 plan/account and a brokerage account for our children after they are born and depositing a budget sensitive amount monthly",
       "Other: Please detail"
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 79,
@@ -1060,7 +1138,8 @@ export const questions: Question[] = [
       "We commit to having a chef / nanny be responsible for the overall food planning and preparation for the family.",
       "Other: Please detail"
     ],
-    weight: 6
+    weight: 6,
+    isFaithQuestion: false
   },
   {
     id: 80,
@@ -1074,7 +1153,8 @@ export const questions: Question[] = [
       "We commit to enjoying healthy meals through all channels (without specific constraints beyond it being in line with financial budget)",
       "Other: Please detail"
     ],
-    weight: 6
+    weight: 4,
+    isFaithQuestion: false
   },
   {
     id: 81,
@@ -1087,7 +1167,8 @@ export const questions: Question[] = [
       "We commit to preparing and enjoying healthy meals as a family, as defined by completely restricting fried food, fast food, candy as well as any other non-whole, highly processed junk foods from our family's consumption at least 4 of the 7 days per week.",
       "Other: Please detail"
     ],
-    weight: 5
+    weight: 5,
+    isFaithQuestion: false
   },
   {
     id: 82,
@@ -1102,7 +1183,8 @@ export const questions: Question[] = [
       "We commit to a healthy balanced ascertain diet",
       "We commit to a healthy balanced diet which is flexible to individual needs (e.g., husband can pursue carnivore and wife can pursue vegetarian, while children can be unrestricted, for example)"
     ],
-    weight: 5
+    weight: 5,
+    isFaithQuestion: false
   },
   {
     id: 83,
@@ -1114,7 +1196,8 @@ export const questions: Question[] = [
       "We commit to breastfeeding primarily and only using formula in rare circumstances.",
       "We commit to breastfeeding whenever possible, still, we do not have any reservations about relying on high quality formula."
     ],
-    weight: 7
+    weight: 5,
+    isFaithQuestion: false
   },
   {
     id: 84,
@@ -1127,7 +1210,8 @@ export const questions: Question[] = [
       "We're committed to breastfeeding along with introducing appropriate complementary foods whenever possible still, we do not plan to do it beyond 1 year for our children.",
       "We do not have a strong perspective about breastfeeding and will take the guidance of our medical professional when the time comes."
     ],
-    weight: 5
+    weight: 5,
+    isFaithQuestion: false
   },
   {
     id: 85,
@@ -1140,7 +1224,8 @@ export const questions: Question[] = [
       "We are committed to our health and wellness and have no reservations with leveraging the medication and OTC drugs available to us to manage pain and illness.",
       "We are committed to our health and wellness and each approach this issue very differently, thus we are committed to a model which is flexible to each individual's preferences."
     ],
-    weight: 5
+    weight: 5,
+    isFaithQuestion: false
   },
   {
     id: 86,
@@ -1152,7 +1237,8 @@ export const questions: Question[] = [
       "We are committed to each doing a full physical and check-up annually, including all pertinent age/risk factor appropriate tests (i.e., prostate, breast, etc.). As such, to establish this shared practice, we plan to go on or by before our wedding day.",
       "We are committed to each doing a full physical and check-up annually, including all pertinent age/risk factor appropriate tests (i.e., prostate, breast, etc.). We already have completed our individual check-ups for the year and look forward to continuing this annual practice in marriage."
     ],
-    weight: 7
+    weight: 5,
+    isFaithQuestion: false
   },
   {
     id: 87,
@@ -1165,7 +1251,8 @@ export const questions: Question[] = [
       "We are committed to having an epidural or anything medically available to relieve labor pain.",
       "We're not well educated enough on the subject to make an informed decision on what's best so we plan to research and revisit this when the time comes."
     ],
-    weight: 5
+    weight: 5,
+    isFaithQuestion: false
   },
   {
     id: 88,
@@ -1179,7 +1266,8 @@ export const questions: Question[] = [
       "We are each committed to seeing a (faith-aligned) therapist individually, at least 12 times per year during our marriage (as our resources allow).",
       "While we believe in seeking counsel for our marriage, we're not ready to commit to long-term individual therapy currently."
     ],
-    weight: 5
+    weight: 5,
+    isFaithQuestion: false
   },
   {
     id: 89,
@@ -1193,7 +1281,8 @@ export const questions: Question[] = [
       "We are each committed to a goal of sustainable health, through regular exercise, which for us is at least 4x per week individually",
       "Other: please detail"
     ],
-    weight: 5
+    weight: 7,
+    isFaithQuestion: false
   },
   {
     id: 90,
@@ -1205,7 +1294,8 @@ export const questions: Question[] = [
       "We commit to never actively keeping / maintaining any secrets from one another.",
       "We are not ready to make this commitment at this time and prefer to address this matter later in our relationship"
     ],
-    weight: 9
+    weight: 7,
+    isFaithQuestion: false
   },
   {
     id: 91,
@@ -1217,7 +1307,8 @@ export const questions: Question[] = [
       "While we fully trust God and our spouse, we believe in oneness and there being no hidden spaces, thus, we believe in \"transparent access\" which means we each have the passcodes for all our technology (hardware) and digital media accounts.",
       "While we fully trust God and our spouse, and believe in being one, we do not believe in \"transparent access\" and do not believe it is necessary to commit to having the passcodes for all of our technology (hardware) and digital media accounts."
     ],
-    weight: 9
+    weight: 7,
+    isFaithQuestion: false
   },
   {
     id: 92,
@@ -1230,7 +1321,8 @@ export const questions: Question[] = [
       "We commit to doing major holidays at home, with a visit at least one family for one holiday each year (rotating).",
       "Other: Please detail"
     ],
-    weight: 7
+    weight: 7,
+    isFaithQuestion: false
   },
   {
     id: 93,
@@ -1244,7 +1336,8 @@ export const questions: Question[] = [
       "We're committed to caring for our spouses' parents in advanced age yet in the interest of our marriage and honoring their best care, we do not believe a longer-term stay is the best option for us.",
       "Other: Please detail"
     ],
-    weight: 7
+    weight: 7,
+    isFaithQuestion: false
   },
   {
     id: 94,
@@ -1258,7 +1351,8 @@ export const questions: Question[] = [
       "We're committed to having at least one parent stay with us for a period of two weeks, after the birth of our first child.",
       "Other: Please detail"
     ],
-    weight: 7
+    weight: 7,
+    isFaithQuestion: false
   },
   {
     id: 95,
@@ -1270,7 +1364,8 @@ export const questions: Question[] = [
       "We commit to maintaining healthy boundaries with the opposite sex as a married couple, however, we do not believe any unique restrictions on interactions are required for opposite sex interactions that are not present with our same-sex interactions.",
       "We commit to maintaining healthy boundaries with the opposite sex as a married couple, with that said, while we believe in shared interactions with an individual, we do not believe in nurturing/actively maintaining friendships with the opposite sex one on one (outside of work colleagues/family) as measured by: daily/multiple times per week one on one conversations/text/social media messages, one on one meetups without our spouse, and inappropriate conversation you wouldn't be comfortable with your spouse or anyone else seeing."
     ],
-    weight: 7
+    weight: 7,
+    isFaithQuestion: false
   },
   {
     id: 96,
@@ -1283,7 +1378,8 @@ export const questions: Question[] = [
       "We commit to exercising discretion, and we do not believe a firm line is necessary",
       "Other: Please detail"
     ],
-    weight: 7
+    weight: 7,
+    isFaithQuestion: false
   },
   {
     id: 97,
@@ -1296,7 +1392,8 @@ export const questions: Question[] = [
       "We commit to exercising discretion and discernment, and we do not believe a firm line is necessary",
       "Other: Please detail"
     ],
-    weight: 7
+    weight: 7,
+    isFaithQuestion: false
   },
   {
     id: 98,
@@ -1310,7 +1407,8 @@ export const questions: Question[] = [
       "Not Applicable",
       "Other: Please detail"
     ],
-    weight: 7
+    weight: 7,
+    isFaithQuestion: false
   },
   {
     id: 99,
@@ -1323,7 +1421,8 @@ export const questions: Question[] = [
       "Not Applicable",
       "Other: Please detail"
     ],
-    weight: 7
+    weight: 7.5,
+    isFaithQuestion: true
   }
 ];
 
