@@ -3644,9 +3644,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: 'Valid gender parameter required (male/female)' });
       }
 
-      // Import scoring utilities
-      const { calculateScores, determineProfile } = await import('../client/src/utils/scoringUtils');
-      const { questionsData } = await import('../client/src/data/questionsData');
+      // Import scoring utilities and questions data
+      const scoringModule = await import('../client/src/utils/scoringUtils');
+      const questionsModule = await import('../client/src/data/questionsData');
+      
+      const { calculateScores, determineProfile } = scoringModule;
+      const questionsData = questionsModule.default;
+
+      if (!questionsData || !Array.isArray(questionsData)) {
+        throw new Error('Questions data not available');
+      }
 
       // Generate realistic test responses (weighted toward higher scores for testing)
       const simulatedResponses: Record<string, { option: string; value: number }> = {};
