@@ -209,16 +209,20 @@ export default function QuestionnaireView({
         
         <Button
           onClick={() => {
-            // Guard clause: prevent onNextQuestion on last question
-            if (questionIndex === totalQuestions - 1) {
-              return;
+            if (isLastQuestion) {
+              if (typeof onSubmitAssessment === "function") {
+                onSubmitAssessment();
+              } else {
+                console.warn("onSubmitAssessment not defined");
+              }
+            } else {
+              onNextQuestion();
             }
-            onNextQuestion();
           }}
           disabled={!selectedOption}
           className="px-5 py-2 text-sm font-medium bg-blue-600 hover:bg-blue-500 text-white"
         >
-          Next →
+          {isLastQuestion ? "Submit" : "Next →"}
         </Button>
       </div>
       

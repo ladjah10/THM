@@ -81,6 +81,7 @@ The application uses Replit's deployment infrastructure:
 - **Dependencies**: Automatic package installation for all environments
 
 ## Recent Changes
+- June 25, 2025: Fixed assessment submission button in QuestionnaireView.tsx - ensures onSubmitAssessment() is called on the last question instead of onNextQuestion(), with proper Submit/Next button text based on question position
 - June 25, 2025: Created comprehensive recalculation system (server/recalculateAssessments.ts) with improved scoring algorithm integration - supports individual assessment recalculation and batch processing of all assessments with proper error handling and database integration
 - June 25, 2025: Updated section weights to final values (660 total) with accurate proportional contributions - Your Foundation: 82 (12.42%), Your Faith Life: 21 (3.18%), Your Marriage Life: 216 (32.73%), Your Marriage Life with Children: 126 (19.09%), Your Family/Home Life: 34 (5.15%), Your Finances: 58 (8.79%), Your Health and Wellness: 49 (7.42%), Your Marriage and Boundaries: 74 (11.21%)
 - June 25, 2025: Implemented improved scoring algorithm with proper response scaling (100%/75%/40%/15% based on option selection), section weight normalization, and weighted overall percentage calculation - replaces simple totalEarned += response.value pattern
