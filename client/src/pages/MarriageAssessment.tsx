@@ -262,16 +262,28 @@ export default function MarriageAssessment() {
   
   // Handle final submission of the assessment
   const handleSubmitAssessment = async () => {
-    if (!demographicData.email) {
-      toast({
-        title: "Email Required",
-        description: "Please complete the demographic information with your email before submitting.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
     try {
+      // Enhanced demographic validation
+      if (!demographicData.email || !demographicData.gender || !demographicData.firstName || !demographicData.lastName) {
+        toast({
+          title: "Required Fields Missing",
+          description: "Please complete all required demographic fields (name, email, gender) before submitting.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Validate that assessment has responses
+      const answeredCount = Object.keys(userResponses).length;
+      if (answeredCount < totalQuestions) {
+        toast({
+          title: "Incomplete Assessment",
+          description: `Please answer all ${totalQuestions} questions before submitting. Currently answered: ${answeredCount}`,
+          variant: "destructive"
+        });
+        return;
+      }
+      
       toast({
         title: "Submitting Assessment",
         description: "Please wait while we finalize your assessment...",
