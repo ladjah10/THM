@@ -301,6 +301,7 @@ export const questions: Question[] = [
     text: "We understand and accept the order of relationship priority according to God's highest design is first, our relationship with God; then, our relationship with our Spouse (see: \"forsake all others\"); then, our relationship with our children (if applicable); then everything and everyone else (including work, friends, family)",
 
     section: "Section III: Your Marriage Life",
+    subsection: "Church Life",
 
     type: "M",
 
@@ -369,6 +370,7 @@ export const questions: Question[] = [
     text: "We commit to a marriage / work model where we agree to never be away from one another for more than a 7-day period, regardless of the commitment/project scope. If necessary, we will set a \"Come to me or I'll come to you\" plan in order to honor this expectation., what is your approach?",
 
     section: "Section III: Your Marriage Life",
+    subsection: "Roles and Responsibilities: Headship/Submission",
 
     type: "M",
 
@@ -2102,6 +2104,7 @@ export const questions: Question[] = [
     text: "While we fully trust God and our spouse, we believe in oneness and there being no hidden spaces, thus, we believe in \"transparent access\" which means we each have the passcodes for all our technology (hardware) and digital media accounts.",
 
     section: "Section VIII: Your Marriage and Boundaries",
+    subsection: "Personal Boundaries (Lifestyle Choices)",
 
     type: "D",
 
