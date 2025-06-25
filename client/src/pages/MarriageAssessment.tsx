@@ -296,8 +296,16 @@ export default function MarriageAssessment() {
           totalQuestions,
           answeredCount,
           hasAllResponses,
-          questionIds: questionIds.slice(0, 5), // First 5 for debugging
-          answeredKeys: answeredQuestionKeys.slice(0, 5) // First 5 for debugging
+          questionIds: questionIds.slice(0, 10), // First 10 for debugging
+          answeredKeys: answeredQuestionKeys.slice(0, 10), // First 10 for debugging
+          lastFewQuestionIds: questionIds.slice(-5), // Last 5 questions
+          lastFewAnsweredKeys: answeredQuestionKeys.slice(-5), // Last 5 answered
+          sampleMatches: questionIds.slice(0, 3).map(qId => ({
+            questionId: qId,
+            numericId: qId.replace('Q', ''),
+            hasStringMatch: answeredQuestionKeys.includes(qId),
+            hasNumericMatch: answeredQuestionKeys.includes(qId.replace('Q', ''))
+          }))
         });
         
         toast({
