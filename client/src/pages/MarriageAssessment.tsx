@@ -75,6 +75,38 @@ export default function MarriageAssessment() {
       setAssessmentType(state.assessmentType);
     }
   }, []);
+
+  // Resume logic - Load saved progress when email is available
+  useEffect(() => {
+    const fetchSavedProgress = async () => {
+      if (!demographicData.email) return;
+      
+      try {
+        const saved = await apiRequest('POST', '/api/assessment/load-progress', {
+          email: demographicData.email,
+          assessmentType
+        });
+
+        if (saved?.responses && Object.keys(saved.responses).length > 0) {
+          setUserResponses(saved.responses);
+          if (saved.demographicData) {
+            setDemographicData(saved.demographicData);
+          }
+          console.log("✅ Loaded saved progress with", Object.keys(saved.responses).length, "responses");
+          
+          toast({
+            title: "Progress Restored",
+            description: `Found ${Object.keys(saved.responses).length} previously answered questions.`,
+          });
+        }
+      } catch (error) {
+        console.warn("No saved progress found:", error);
+        // Silent failure - this is expected for new assessments
+      }
+    };
+
+    fetchSavedProgress();
+  }, [demographicData.email, assessmentType]);
   
   // AUTOSAVE DISABLED: Previously caused problems overwriting unique user responses with default data
   // For reference, the autosave code has been commented out but preserved

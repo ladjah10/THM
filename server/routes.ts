@@ -121,6 +121,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ error: 'Failed to load assessment questions' });
     }
   });
+
+  // Load saved assessment progress
+  app.post('/api/assessment/load-progress', async (req, res) => {
+    const { email, assessmentType } = req.body;
+
+    if (!email || !assessmentType) {
+      return res.status(400).json({ error: 'Missing email or assessmentType' });
+    }
+
+    try {
+      const saved = await storage.getAssessmentProgress(email);
+      if (!saved) {
+        return res.status(404).json({ message: 'No progress found' });
+      }
+      return res.status(200).json(saved);
+    } catch (err) {
+      console.error('Load progress error:', err);
+      return res.status(500).json({ error: 'Server error while loading progress' });
+    }
+  });
+
   // Auto-save assessment responses endpoint
   app.post('/api/assessment/save-progress', async (req, res) => {
     try {
