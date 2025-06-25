@@ -113,15 +113,23 @@ function calculateMatchScore(candidate: AssessmentResult): number {
   return (baseScore * scoreWeight) + (ageFactor * ageWeight * 100) + (profileFactor * profileWeight * 100);
 }
 
-// Add simulation function to test scoring algorithm
+// Add simulation function to test scoring algorithm with PDF generation
 const runSimulatedAssessment = async (gender: "male" | "female") => {
   try {
+    setLoading(true);
     const res = await fetch(`/api/simulate?gender=${gender}`);
     const data = await res.json();
-    alert(`✅ Simulated ${gender} score: ${data.scores?.overallPercentage?.toFixed(2)}%`);
+    
+    if (data.testInfo?.emailSent) {
+      alert(`✅ ${data.message}\nScore: ${data.scores?.overallPercentage?.toFixed(2)}%\nProfile: ${data.profile?.name || 'Not determined'}\nPDF sent to: ${data.testInfo.recipient}`);
+    } else {
+      alert(`⚠️ ${data.message}\nScore: ${data.scores?.overallPercentage?.toFixed(2)}%\nProfile: ${data.profile?.name || 'Not determined'}`);
+    }
   } catch (err) {
     console.error("Simulation failed", err);
     alert("❌ Simulation failed. Check console for details.");
+  } finally {
+    setLoading(false);
   }
 };
 

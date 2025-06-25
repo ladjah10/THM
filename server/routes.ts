@@ -3693,20 +3693,85 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const scores = calculateScores(simulatedQuestions, simulatedResponses);
       const profileResults = determineProfile(scores, gender as string);
 
-      const simulationResult = {
-        gender,
+      // Create complete assessment result for PDF generation
+      const assessmentResult: AssessmentResult = {
+        id: `sim-${Date.now()}`,
+        userId: 'simulation-user',
+        email: 'la@lawrenceadjah.com',
+        responses: simulatedResponses,
         scores,
         profile: profileResults.primaryProfile,
         genderProfile: profileResults.genderProfile,
-        testInfo: {
-          totalQuestions: simulatedQuestions.length,
-          responseCount: Object.keys(simulatedResponses).length,
-          algorithmVersion: '660-point improved scoring',
-          note: 'Using simulated question data for testing'
-        }
+        demographics: mockDemographics,
+        completedAt: new Date().toISOString(),
+        paymentStatus: 'completed',
+        reportGenerated: true,
+        emailSent: false,
+        recalculated: false
       };
 
-      res.json(simulationResult);
+      // Generate PDF and send email
+      try {
+        const pdfBuffer = await generateIndividualPDF(assessmentResult);
+        
+        // Send email with PDF attachment
+        await sendEmail(process.env.SENDGRID_API_KEY!, {
+          to: 'la@lawrenceadjah.com',
+          from: process.env.EMAIL_SENDER!,
+          subject: `Simulated ${gender} Assessment - The 100 Marriage Assessment`,
+          html: `
+            <h2>Simulated Assessment Results</h2>
+            <p><strong>Gender:</strong> ${gender}</p>
+            <p><strong>Overall Score:</strong> ${scores.overallPercentage.toFixed(1)}%</p>
+            <p><strong>Primary Profile:</strong> ${profileResults.primaryProfile?.name || 'Not determined'}</p>
+            <p><strong>Test Info:</strong> ${simulatedQuestions.length} questions, ${Object.keys(simulatedResponses).length} responses</p>
+            <p>Please find the complete assessment report attached.</p>
+          `,
+          attachments: [{
+            content: pdfBuffer.toString('base64'),
+            filename: `simulated-${gender}-assessment-${Date.now()}.pdf`,
+            type: 'application/pdf',
+            disposition: 'attachment'
+          }]
+        });
+
+        const simulationResult = {
+          message: 'Simulation complete and email sent to la@lawrenceadjah.com',
+          gender,
+          scores,
+          profile: profileResults.primaryProfile,
+          genderProfile: profileResults.genderProfile,
+          testInfo: {
+            totalQuestions: simulatedQuestions.length,
+            responseCount: Object.keys(simulatedResponses).length,
+            algorithmVersion: '660-point improved scoring',
+            emailSent: true,
+            recipient: 'la@lawrenceadjah.com'
+          }
+        };
+
+        res.json(simulationResult);
+      } catch (emailError) {
+        console.error('Email sending failed:', emailError);
+        
+        // Still return simulation results even if email fails
+        const simulationResult = {
+          message: 'Simulation complete but email failed',
+          gender,
+          scores,
+          profile: profileResults.primaryProfile,
+          genderProfile: profileResults.genderProfile,
+          testInfo: {
+            totalQuestions: simulatedQuestions.length,
+            responseCount: Object.keys(simulatedResponses).length,
+            algorithmVersion: '660-point improved scoring',
+            emailSent: false,
+            emailError: emailError.message
+          }
+        };
+
+        res.json(simulationResult);
+      }
     } catch (error) {
       console.error('Simulation error:', error);
       res.status(500).json({ error: 'Simulation failed', details: error.message });
