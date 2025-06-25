@@ -81,6 +81,7 @@ The application uses Replit's deployment infrastructure:
 - **Dependencies**: Automatic package installation for all environments
 
 ## Recent Changes
+- June 25, 2025: Fixed critical scoring algorithm issues - corrected multiple choice scoring from 5x inflated denominators to proper weight-based scoring, implemented graduated point distribution, and adjusted psychographic profile criteria to realistic ranges
 - June 25, 2025: Fixed assessment hanging issue for male respondents - added timeout protection and emergency fallbacks in profile determination logic
 - June 24, 2025: Fixed Question 99 options structure - removed repeated question text from option 1, now has proper 3-option format for digital media with past relationships
 - June 24, 2025: Fixed Question 98 options structure - removed repeated question text from option 1, now has proper 4-option format for past relationship boundaries

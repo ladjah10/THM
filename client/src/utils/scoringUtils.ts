@@ -46,10 +46,22 @@ export function calculateScores(
       }
       possible = weight;
     } else {
-      // Multiple choice and other questions
+      // Multiple choice questions: distribute weight based on choice quality
       const weight = question.weight ?? 1;
-      earned = response.value * weight;
-      possible = 5 * weight; // Max value is 5
+      const numOptions = question.options.length;
+      
+      // First option gets full weight, subsequent options get proportionally less
+      if (response.value === 0) {
+        earned = weight; // Best choice
+      } else if (response.value === 1) {
+        earned = Math.round(weight * 0.75); // Good choice
+      } else if (response.value === 2) {
+        earned = Math.round(weight * 0.5); // Moderate choice
+      } else {
+        earned = Math.round(weight * 0.25); // Lower choice
+      }
+      
+      possible = weight; // Fixed: possible equals weight, not 5x weight
     }
     
     // Add to section scores

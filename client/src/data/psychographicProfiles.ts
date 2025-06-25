@@ -8,8 +8,8 @@ export const psychographicProfiles: UserProfile[] = [
     description: "You have a strong commitment to faith as the foundation of your relationship. You value traditional marriage roles and have clear expectations for family life. Your decisions are firmly guided by your interpretation of scripture, and you're unwavering in your convictions.",
     genderSpecific: null,
     criteria: [
-      { section: "Section I: Your Foundation", min: 90 },
-      { section: "Section II: Your Faith Life", min: 85 }
+      { section: "Section I: Your Foundation", min: 85 },
+      { section: "Section II: Your Faith Life", min: 80 }
     ],
     iconPath: "/icons/profiles/SB 1.png"
   },
@@ -19,9 +19,9 @@ export const psychographicProfiles: UserProfile[] = [
     description: "You value structure and careful planning in your relationship while maintaining strong faith values. You're committed to establishing clear expectations and boundaries in your marriage while prioritizing your spiritual foundation.",
     genderSpecific: null,
     criteria: [
-      { section: "Section I: Your Foundation", min: 80 },
-      { section: "Section III: Your Marriage Life", min: 75 },
-      { section: "Section VI: Your Finances", min: 70 }
+      { section: "Section I: Your Foundation", min: 75 },
+      { section: "Section III: Your Marriage Life", min: 70 },
+      { section: "Section VI: Your Finances", min: 65 }
     ],
     iconPath: "/icons/profiles/HP.png"
   },
