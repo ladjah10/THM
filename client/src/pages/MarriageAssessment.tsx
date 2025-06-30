@@ -9,6 +9,7 @@ import ResultsView from "@/components/assessment/ResultsView";
 import EmailSentConfirmation from "@/components/assessment/EmailSentConfirmation";
 import { CoupleInviteForm } from "@/components/couple/CoupleInviteForm";
 import { apiRequest } from "@/lib/queryClient";
+import { useAuth } from "@/hooks/useAuth";
 import { questions, sections } from "@/data/questionsData";
 import { calculateScores, determineProfile, determineProfiles } from "@/utils/scoringUtils";
 import { sendEmailReport } from "@/utils/emailUtils";
@@ -80,9 +81,11 @@ export default function MarriageAssessment() {
   useEffect(() => {
     const fetchSavedProgress = async () => {
       try {
-        const saved = await apiRequest('POST', '/api/assessment/load-progress', {
+        const response = await apiRequest('POST', '/api/assessment/load-progress', {
           assessmentType
         });
+        
+        const saved = await response.json();
 
         if (saved?.responses && Object.keys(saved.responses).length > 0) {
           setUserResponses(saved.responses);

@@ -4,6 +4,11 @@ import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 
 export default function Home() {
+  const { user } = useAuth();
+
+  const handleLogout = () => {
+    window.location.href = "/api/logout";
+  };
   const [_, navigate] = useLocation();
   const [showBaucomCitations, setShowBaucomCitations] = useState(false);
   const [showFinkelCitations, setShowFinkelCitations] = useState(false);

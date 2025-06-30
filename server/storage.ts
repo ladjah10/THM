@@ -64,7 +64,7 @@ class MemStorage {
   private assessmentLogs: { id: string, assessmentId?: string, coupleAssessmentId?: string, action: string, userEmail?: string, scoreSummary?: string, timestamp: string, metadata?: string }[] = [];
 
   // User management methods
-  async getUser(id: number): Promise<User | undefined> {
+  async getUser(id: string): Promise<User | undefined> {
     return this.users.find(user => user.id === id);
   }
 
