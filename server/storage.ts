@@ -936,6 +936,25 @@ export class DatabaseStorage implements IStorage {
       return await this.memStorage.createUser(insertUser);
     }
   }
+
+  async upsertUser(userData: any): Promise<User> {
+    try {
+      // For now, use memory storage as fallback
+      // In a real implementation, this would use PostgreSQL UPSERT
+      const existingUser = await this.memStorage.getUserByUsername(userData.email || userData.id);
+      if (existingUser) {
+        // Update existing user
+        const updatedUser = { ...existingUser, ...userData };
+        return updatedUser;
+      } else {
+        // Create new user
+        return await this.memStorage.createUser(userData);
+      }
+    } catch (error) {
+      console.error('Error upserting user:', error);
+      return await this.memStorage.createUser(userData);
+    }
+  }
   
   // Check for assessments marked as completed and transfer them to results
   async transferCompletedAssessments(): Promise<void> {

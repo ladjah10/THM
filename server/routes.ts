@@ -16,6 +16,7 @@ import os from 'os';
 import { v4 as uuidv4 } from 'uuid';
 import session from 'express-session';
 import simulateRoute from "./routes/simulate";
+import { setupAuth, isAuthenticated } from "./replitAuth";
 
 // Extend Express.Request with session type
 declare module 'express-session' {
@@ -43,8 +44,8 @@ if (!process.env.STRIPE_SECRET_KEY) {
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // TODO: Setup Replit authentication
-  // await setupAuth(app);
+  // Setup Replit authentication
+  await setupAuth(app);
   // Add input validation middleware for better data integrity
   app.use(express.json({ limit: '10mb' })); // Increase payload limit
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
@@ -125,16 +126,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get authenticated user info
-  app.get('/api/auth/user', async (req: any, res) => {
-    // TODO: Add authentication middleware
+  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
-      // For now, return mock user data - will be replaced with real auth
-      res.json({ 
-        id: 'demo-user',
-        email: 'demo@example.com',
-        firstName: 'Demo',
-        lastName: 'User'
-      });
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      res.json(user);
     } catch (error) {
       console.error("Error fetching user:", error);
       res.status(500).json({ message: "Failed to fetch user" });
@@ -142,12 +138,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Load saved assessment progress (protected route)
-  app.post('/api/assessment/load-progress', async (req: any, res) => {
+  app.post('/api/assessment/load-progress', isAuthenticated, async (req: any, res) => {
     try {
-      // TODO: Get user from auth
-      const email = 'demo@example.com'; // Temporary fallback
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
       
-      const saved = await storage.getAssessmentProgress(email);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      const saved = await storage.getAssessmentProgress(user.email || userId);
       if (!saved) {
         return res.status(404).json({ message: 'No progress found' });
       }
