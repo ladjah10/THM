@@ -43,6 +43,8 @@ if (!process.env.STRIPE_SECRET_KEY) {
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Setup Replit authentication
+  await setupAuth(app);
   // Add input validation middleware for better data integrity
   app.use(express.json({ limit: '10mb' })); // Increase payload limit
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
@@ -122,16 +124,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Load saved assessment progress
-  app.post('/api/assessment/load-progress', async (req, res) => {
-    const { email, assessmentType } = req.body;
-
-    if (!email || !assessmentType) {
-      return res.status(400).json({ error: 'Missing email or assessmentType' });
-    }
-
+  // Get authenticated user info
+  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
-      const saved = await storage.getAssessmentProgress(email);
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      res.json(user);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      res.status(500).json({ message: "Failed to fetch user" });
+    }
+  });
+
+  // Load saved assessment progress (protected route)
+  app.post('/api/assessment/load-progress', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      const saved = await storage.getAssessmentProgress(user.email || userId);
       if (!saved) {
         return res.status(404).json({ message: 'No progress found' });
       }
@@ -142,8 +157,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Auto-save assessment responses endpoint
-  app.post('/api/assessment/save-progress', async (req, res) => {
+  // Auto-save assessment responses endpoint (protected route)
+  app.post('/api/assessment/save-progress', isAuthenticated, async (req: any, res) => {
     try {
       // Validate the request body
       const progressSchema = z.object({

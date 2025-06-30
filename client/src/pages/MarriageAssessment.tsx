@@ -76,14 +76,11 @@ export default function MarriageAssessment() {
     }
   }, []);
 
-  // Resume logic - Load saved progress when email is available
+  // Resume logic - Load saved progress for authenticated users
   useEffect(() => {
     const fetchSavedProgress = async () => {
-      if (!demographicData.email) return;
-      
       try {
         const saved = await apiRequest('POST', '/api/assessment/load-progress', {
-          email: demographicData.email,
           assessmentType
         });
 
@@ -106,7 +103,7 @@ export default function MarriageAssessment() {
     };
 
     fetchSavedProgress();
-  }, [demographicData.email, assessmentType]);
+  }, [assessmentType]);
   
   // AUTOSAVE DISABLED: Previously caused problems overwriting unique user responses with default data
   // For reference, the autosave code has been commented out but preserved

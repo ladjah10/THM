@@ -16,9 +16,10 @@ import {
 // Storage interface definition
 export interface IStorage {
   // User management
-  getUser(id: number): Promise<User | undefined>;
+  getUser(id: string): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(insertUser: InsertUser): Promise<User>;
+  upsertUser(user: any): Promise<User>;
   
   // Assessment management
   saveAssessment(assessment: AssessmentResult): Promise<void>;
