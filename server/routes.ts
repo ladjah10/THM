@@ -1784,6 +1784,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin API to fetch all partial assessments (in-progress)
+  app.get('/api/admin/partial-assessments', async (req: Request, res: Response) => {
+    try {
+      const partialAssessments = await storage.getAllPartialAssessments();
+      
+      return res.status(200).json({
+        success: true,
+        data: partialAssessments
+      });
+    } catch (error) {
+      console.error("Error fetching partial assessments:", error);
+      return res.status(500).json({ 
+        success: false,
+        message: "Failed to fetch partial assessments"
+      });
+    }
+  });
+
   // Admin API to download assessment summary data as CSV
   app.get('/api/admin/download-assessment-data', async (req: Request, res: Response) => {
     try {

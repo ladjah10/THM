@@ -113,25 +113,7 @@ function calculateMatchScore(candidate: AssessmentResult): number {
   return (baseScore * scoreWeight) + (ageFactor * ageWeight * 100) + (profileFactor * profileWeight * 100);
 }
 
-// Add simulation function to test scoring algorithm with PDF generation
-const runSimulatedAssessment = async (gender: "male" | "female") => {
-  try {
-    setLoading(true);
-    const res = await fetch(`/api/simulate?gender=${gender}`);
-    const data = await res.json();
-    
-    if (data.testInfo?.emailSent) {
-      alert(`✅ ${data.message}\nScore: ${data.scores?.overallPercentage?.toFixed(2)}%\nProfile: ${data.profile?.name || 'Not determined'}\nPDF sent to: ${data.testInfo.recipient}`);
-    } else {
-      alert(`⚠️ ${data.message}\nScore: ${data.scores?.overallPercentage?.toFixed(2)}%\nProfile: ${data.profile?.name || 'Not determined'}`);
-    }
-  } catch (err) {
-    console.error("Simulation failed", err);
-    alert("❌ Simulation failed. Check console for details.");
-  } finally {
-    setLoading(false);
-  }
-};
+
 
 // Recovery Section Component
 function RecoverySection() {
@@ -252,7 +234,39 @@ export default function AdminDashboard() {
   const [filterMarriageStatus, setFilterMarriageStatus] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const [simulationLoading, setSimulationLoading] = useState(false);
   const { toast } = useToast();
+
+  // Add simulation function to test scoring algorithm with PDF generation
+  const runSimulatedAssessment = async (gender: "male" | "female") => {
+    try {
+      setSimulationLoading(true);
+      const res = await fetch(`/api/simulate?gender=${gender}`);
+      const data = await res.json();
+      
+      if (data.testInfo?.emailSent) {
+        toast({
+          title: "Simulation Complete",
+          description: `✅ ${data.message}\nScore: ${data.scores?.overallPercentage?.toFixed(2)}%\nProfile: ${data.profile?.name || 'Not determined'}\nPDF sent to: ${data.testInfo.recipient}`,
+        });
+      } else {
+        toast({
+          title: "Simulation Complete",
+          description: `⚠️ ${data.message}\nScore: ${data.scores?.overallPercentage?.toFixed(2)}%\nProfile: ${data.profile?.name || 'Not determined'}`,
+          variant: "destructive",
+        });
+      }
+    } catch (err) {
+      console.error("Simulation failed", err);
+      toast({
+        title: "Simulation Failed",
+        description: "❌ Simulation failed. Check console for details.",
+        variant: "destructive",
+      });
+    } finally {
+      setSimulationLoading(false);
+    }
+  };
 
   // Fetch assessments data
   const { 
@@ -313,6 +327,16 @@ export default function AdminDashboard() {
     refetch: refetchReferrals 
   } = useQuery({
     queryKey: ["/api/admin/referrals"],
+    enabled: isAuthenticated,
+  });
+
+  // Fetch partial assessments (in-progress)
+  const { 
+    data: partialAssessmentsData, 
+    isLoading: partialAssessmentsLoading,
+    refetch: refetchPartialAssessments 
+  } = useQuery({
+    queryKey: ["/api/admin/partial-assessments"],
     enabled: isAuthenticated,
   });
 
@@ -673,7 +697,8 @@ export default function AdminDashboard() {
                         refetchTransactions(),
                         refetchReferrals(),
                         refetchSectionAverages(),
-                        refetchPoolCandidates()
+                        refetchPoolCandidates(),
+                        refetchPartialAssessments()
                       ]);
 
                       console.log('All data refreshed successfully');
@@ -751,6 +776,49 @@ export default function AdminDashboard() {
             </CardContent>
           </Card>
 
+          {/* Testing Section */}
+          <Card className="mb-8 border-blue-200 bg-blue-50">
+            <CardHeader>
+              <CardTitle className="text-blue-800">Testing & Simulation</CardTitle>
+              <CardDescription className="text-blue-700">
+                Test the assessment system with simulated data and PDF generation
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex gap-4">
+                <Button
+                  variant="outline"
+                  onClick={() => runSimulatedAssessment("male")}
+                  disabled={simulationLoading}
+                  className="border-blue-300 text-blue-700 hover:bg-blue-100"
+                >
+                  {simulationLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  ) : (
+                    <User className="h-4 w-4 mr-2" />
+                  )}
+                  Test Male Assessment
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => runSimulatedAssessment("female")}
+                  disabled={simulationLoading}
+                  className="border-pink-300 text-pink-700 hover:bg-pink-100"
+                >
+                  {simulationLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  ) : (
+                    <User className="h-4 w-4 mr-2" />
+                  )}
+                  Test Female Assessment
+                </Button>
+              </div>
+              <div className="text-sm text-blue-600 mt-2">
+                Generates full assessment with PDF report and sends to la@lawrenceadjah.com
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Summary Cards */}
           {analyticsSummary && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -822,8 +890,9 @@ export default function AdminDashboard() {
           </div>
 
           <Tabs defaultValue="assessments" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-6">
+            <TabsList className="grid w-full grid-cols-7">
               <TabsTrigger value="assessments">Assessments</TabsTrigger>
+              <TabsTrigger value="in-progress">In-Progress</TabsTrigger>
               <TabsTrigger value="analytics">Analytics</TabsTrigger>
               <TabsTrigger value="payments">Payments</TabsTrigger>
               <TabsTrigger value="pool">Marriage Pool</TabsTrigger>
@@ -1123,6 +1192,80 @@ export default function AdminDashboard() {
                         </div>
                       )}
                     </>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* In-Progress Tab */}
+            <TabsContent value="in-progress" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <CardTitle>In-Progress Assessments</CardTitle>
+                      <CardDescription>
+                        Users who started but haven't completed their assessments
+                      </CardDescription>
+                    </div>
+                    <Badge variant="outline">
+                      {partialAssessmentsData?.data?.length || 0} in progress
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {partialAssessmentsLoading ? (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="h-8 w-8 animate-spin" />
+                    </div>
+                  ) : partialAssessmentsData?.data?.length > 0 ? (
+                    <div className="space-y-4">
+                      {partialAssessmentsData.data.map((partial: any, index: number) => (
+                        <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                          <div className="flex-1">
+                            <div className="font-medium">
+                              {partial.demographics?.firstName} {partial.demographics?.lastName}
+                            </div>
+                            <div className="text-sm text-muted-foreground">
+                              {partial.email}
+                            </div>
+                            <div className="text-xs text-muted-foreground mt-1">
+                              Started: {new Date(partial.timestamp).toLocaleDateString()}
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-4">
+                            <div className="text-center">
+                              <div className="text-sm font-medium">
+                                {Object.keys(partial.responses || {}).length} / 99
+                              </div>
+                              <div className="text-xs text-muted-foreground">
+                                Questions
+                              </div>
+                            </div>
+                            <div className="w-20">
+                              <div className="text-xs text-muted-foreground mb-1">
+                                {Math.round((Object.keys(partial.responses || {}).length / 99) * 100)}%
+                              </div>
+                              <div className="w-full bg-gray-200 rounded-full h-2">
+                                <div 
+                                  className="bg-blue-500 h-2 rounded-full" 
+                                  style={{ 
+                                    width: `${Math.round((Object.keys(partial.responses || {}).length / 99) * 100)}%` 
+                                  }}
+                                />
+                              </div>
+                            </div>
+                            <Badge variant={partial.assessmentType === 'couple' ? 'secondary' : 'default'}>
+                              {partial.assessmentType || 'individual'}
+                            </Badge>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center text-muted-foreground py-8">
+                      No assessments in progress
+                    </div>
                   )}
                 </CardContent>
               </Card>
