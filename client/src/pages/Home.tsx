@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function Home() {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
 
   const handleLogout = () => {
     window.location.href = "/api/logout";
@@ -17,10 +17,18 @@ export default function Home() {
   const [showDetailedResearch, setShowDetailedResearch] = useState(false);
   
   const handleStartIndividualAssessment = () => {
+    if (!user) {
+      window.location.href = '/api/login';
+      return;
+    }
     navigate('/assessment', { replace: true, state: { assessmentType: 'individual' } });
   };
   
   const handleStartCoupleAssessment = () => {
+    if (!user) {
+      window.location.href = '/api/login';
+      return;
+    }
     navigate('/assessment', { replace: true, state: { assessmentType: 'couple' } });
   };
   
@@ -63,6 +71,32 @@ export default function Home() {
             <Link href="/invite">
               <span className="text-amber-600 hover:text-amber-500 font-medium cursor-pointer">Invite Friends</span>
             </Link>
+            
+            {/* Authentication Section */}
+            {isLoading ? (
+              <div className="text-sm text-gray-500">Loading...</div>
+            ) : user ? (
+              <div className="flex items-center space-x-4">
+                <span className="text-sm text-gray-600">
+                  Welcome, {(user as any).firstName || (user as any).email || 'User'}
+                </span>
+                <Button 
+                  onClick={handleLogout}
+                  variant="outline" 
+                  size="sm"
+                  className="text-red-600 border-red-600 hover:bg-red-50"
+                >
+                  Logout
+                </Button>
+              </div>
+            ) : (
+              <Button 
+                onClick={() => window.location.href = '/api/login'}
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                Sign In with Replit
+              </Button>
+            )}
           </div>
           <div className="md:hidden">
             <button className="text-gray-700 hover:text-blue-700">
