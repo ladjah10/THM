@@ -27,9 +27,22 @@ export interface IStorage {
   getAllAssessments(): Promise<AssessmentResult[]>;
   getAssessmentById(id: string): Promise<AssessmentResult | null>;
   getAssessment(id: string): Promise<AssessmentResult | null>;
+  getAssessmentByEmail(email: string): Promise<AssessmentResult | null>;
   updateAssessment(id: string, assessment: AssessmentResult): Promise<void>;
   getRecalculatedAssessments(): Promise<AssessmentResult[]>;
   getCompletedAssessment(emailOrId: string): Promise<AssessmentResult | null>;
+  
+  // Progress management
+  saveAssessmentProgress(data: {
+    email: string;
+    demographicData: any;
+    responses?: Record<string, { option: string; value: number }>;
+    assessmentType: string;
+    timestamp: string;
+    completed: boolean;
+  }): Promise<void>;
+  getAssessmentProgress(email: string): Promise<any | null>;
+  getAllPartialAssessments(): Promise<any[]>;
   
   // Couple assessment management
   saveCoupleAssessment(primaryAssessment: AssessmentResult, spouseEmail: string): Promise<string>;
@@ -263,6 +276,20 @@ class MemStorage {
       this.assessments.set(updatedAssessment.email, updatedAssessment);
       console.log(`Assessment updated in memory for ${updatedAssessment.email}`);
     }
+  }
+
+  async getAssessmentByEmail(email: string): Promise<AssessmentResult | null> {
+    const assessment = this.assessments.get(email);
+    return assessment || null;
+  }
+
+  async getAssessmentProgress(email: string): Promise<any | null> {
+    const progress = this.partialAssessments.get(email);
+    return progress || null;
+  }
+
+  async getAllPartialAssessments(): Promise<any[]> {
+    return Array.from(this.partialAssessments.values());
   }
 
   async updateCoupleAssessment(id: string, report: CoupleAssessmentReport): Promise<void> {
@@ -912,6 +939,59 @@ export class DatabaseStorage implements IStorage {
     } catch (error) {
       console.error('Error getting user:', error);
       return undefined;
+    }
+  }
+
+  async getAssessmentByEmail(email: string): Promise<AssessmentResult | null> {
+    try {
+      const { pool } = await import('./db');
+      const result = await pool.query('SELECT * FROM assessments WHERE email = $1', [email]);
+      return result.rows[0] || null;
+    } catch (error) {
+      console.error('Error getting assessment by email:', error);
+      // Fallback to memory storage
+      return this.memStorage.getAssessmentByEmail(email);
+    }
+  }
+
+  async getAssessmentProgress(email: string): Promise<any | null> {
+    try {
+      const { pool } = await import('./db');
+      const result = await pool.query('SELECT * FROM assessment_progress WHERE email = $1', [email]);
+      if (result.rows[0]) {
+        return {
+          email: result.rows[0].email,
+          demographics: result.rows[0].demographic_data,
+          responses: result.rows[0].responses,
+          assessmentType: result.rows[0].assessment_type,
+          timestamp: result.rows[0].timestamp,
+          completed: result.rows[0].completed
+        };
+      }
+      return null;
+    } catch (error) {
+      console.error('Error getting assessment progress:', error);
+      // Fallback to memory storage
+      return this.memStorage.getAssessmentProgress(email);
+    }
+  }
+
+  async getAllPartialAssessments(): Promise<any[]> {
+    try {
+      const { pool } = await import('./db');
+      const result = await pool.query('SELECT * FROM assessment_progress WHERE completed = FALSE');
+      return result.rows.map(row => ({
+        email: row.email,
+        demographics: row.demographic_data,
+        responses: row.responses,
+        assessmentType: row.assessment_type,
+        timestamp: row.timestamp,
+        completed: row.completed
+      }));
+    } catch (error) {
+      console.error('Error getting all partial assessments:', error);
+      // Fallback to memory storage
+      return this.memStorage.getAllPartialAssessments();
     }
   }
 

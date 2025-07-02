@@ -158,25 +158,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Check for existing assessments (protected route)
-  app.get('/api/assessment/check-existing', isAuthenticated, async (req: any, res) => {
+  // Debug endpoint to check stored assessments (temporary)
+  app.get('/api/debug/assessments', async (req: Request, res: Response) => {
     try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
+      const allAssessments = await storage.getAllAssessments();
+      const partialAssessments = await storage.getAllPartialAssessments();
       
-      if (!user) {
-        return res.status(404).json({ message: 'User not found' });
-      }
+      res.json({
+        totalComplete: allAssessments.length,
+        totalPartial: partialAssessments.length,
+        complete: allAssessments.map(a => ({
+          email: a.email,
+          name: a.name,
+          timestamp: a.timestamp
+        })),
+        partial: partialAssessments.map(p => ({
+          email: p.email,
+          responses: Object.keys(p.responses || {}).length,
+          timestamp: p.timestamp
+        }))
+      });
+    } catch (error) {
+      console.error('Debug error:', error);
+      res.status(500).json({ error: 'Debug failed' });
+    }
+  });
 
-      const email = user.email;
+  // Check for existing assessments (temporarily non-protected for debugging)
+  app.get('/api/assessment/check-existing', async (req: any, res) => {
+    try {
+      const email = req.query.email as string;
       const assessmentType = req.query.type as string || 'individual';
+      
+      console.log(`Checking existing assessment for email: ${email}`);
+      
+      if (!email) {
+        return res.status(400).json({ message: 'Email parameter required' });
+      }
       
       // Check if user has any existing assessments
       const existingAssessment = await storage.getAssessmentByEmail(email);
+      const partialProgress = await storage.getAssessmentProgress(email);
+      
+      console.log(`Found existing assessment: ${!!existingAssessment}, partial: ${!!partialProgress}`);
       
       res.json({
-        hasExisting: !!existingAssessment,
-        assessmentType: assessmentType
+        hasExisting: !!(existingAssessment || partialProgress),
+        hasComplete: !!existingAssessment,
+        hasPartial: !!partialProgress,
+        assessmentType: assessmentType,
+        debug: {
+          email,
+          existingAssessment: !!existingAssessment,
+          partialProgress: !!partialProgress
+        }
       });
     } catch (error) {
       console.error('Error checking existing assessment:', error);

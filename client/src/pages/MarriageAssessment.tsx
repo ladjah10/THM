@@ -92,18 +92,22 @@ export default function MarriageAssessment() {
     }
   }, [isAuthenticated, user]);
 
-  // Check for existing assessments for authenticated users
+  // Check for existing assessments (temporarily working without auth for debugging)
   useEffect(() => {
     const checkExistingAssessment = async () => {
-      if (!isAuthenticated || !user?.email) return;
+      // For debugging, check for "LA Average" user specifically
+      const testEmail = "laaverage@test.com"; // Test email for LA Average user
       
       try {
-        const response = await apiRequest('GET', `/api/assessment/check-existing?email=${encodeURIComponent(user.email)}&type=${assessmentType}`);
+        const response = await apiRequest('GET', `/api/assessment/check-existing?email=${encodeURIComponent(testEmail)}&type=${assessmentType}`);
         const result = await response.json();
+        
+        console.log('Check existing result:', result);
         
         if (result.hasExisting) {
           setHasExistingAssessment(true);
           setShowResumeOption(true);
+          console.log('Should show resume dialog now');
         }
       } catch (error) {
         console.warn("Could not check for existing assessment:", error);
@@ -111,7 +115,7 @@ export default function MarriageAssessment() {
     };
 
     checkExistingAssessment();
-  }, [isAuthenticated, user, assessmentType]);
+  }, [assessmentType]);
 
   // Resume logic - Load saved progress for authenticated users
   useEffect(() => {
