@@ -81,6 +81,10 @@ The application uses Replit's deployment infrastructure:
 - **Dependencies**: Automatic package installation for all environments
 
 ## Recent Changes
+- July 2, 2025: Added resume functionality UI with modal dialog allowing users to resume partially completed assessments or start fresh, integrated with Replit authentication for seamless progress tracking
+- July 2, 2025: Added login/logout controls during demographic portion of assessment with user status display and sign in/out buttons for authenticated users 
+- July 2, 2025: Implemented auto-population of first name, last name, and email from Replit social login data in demographic form with proper fallback handling
+- July 2, 2025: Added API endpoints for checking existing assessments (/api/assessment/check-existing) and enhanced load progress functionality with authentication integration
 - June 25, 2025: Integrated Replit Auth for seamless user authentication and automatic progress tracking - users sign in once and can resume assessments from any device, with demographic data auto-populated from Replit profile
 - June 25, 2025: Added resume functionality and improved submission validation - users can now resume partially completed assessments, and the validation system properly checks for all required question responses instead of relying on simple count matching
 - June 25, 2025: Fixed critical assessment submission issue - resolved question ID validation logic that prevented users from submitting completed assessments, ensuring proper handling of Q1-Q99 question format and response validation

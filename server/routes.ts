@@ -158,6 +158,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Check for existing assessments (protected route)
+  app.get('/api/assessment/check-existing', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      const email = user.email;
+      const assessmentType = req.query.type as string || 'individual';
+      
+      // Check if user has any existing assessments
+      const existingAssessment = await storage.getAssessmentByEmail(email);
+      
+      res.json({
+        hasExisting: !!existingAssessment,
+        assessmentType: assessmentType
+      });
+    } catch (error) {
+      console.error('Error checking existing assessment:', error);
+      res.status(500).json({ message: 'Failed to check existing assessment' });
+    }
+  });
+
   // Auto-save assessment responses endpoint (protected route)
   app.post('/api/assessment/save-progress', async (req: any, res) => {
     try {
