@@ -81,6 +81,7 @@ The application uses Replit's deployment infrastructure:
 - **Dependencies**: Automatic package installation for all environments
 
 ## Recent Changes
+- July 2, 2025: Fixed critical admin dashboard routing issue - admin page was returning 404 due to authentication-based route restrictions, now properly accessible at /admin route with fixed imports and component structure
 - July 2, 2025: Successfully completed resume functionality implementation with full storage integration - users can now resume partially completed assessments seamlessly, with progress properly saved and retrieved from both memory and database storage
 - July 2, 2025: Fixed critical storage method gaps by implementing getAssessmentByEmail, getAssessmentProgress, and getAllPartialAssessments in both MemStorage and DatabaseStorage classes with proper fallback handling
 - July 2, 2025: Verified resume functionality with test user "LA Average" - created partial assessment with 5 responses, confirmed data persistence and retrieval, resume dialog displays correctly on frontend

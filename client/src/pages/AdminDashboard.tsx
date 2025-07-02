@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { RefreshCw, FileDown, Search, Loader2, Mail, Info, Download, AlertCircle, Users, DollarSign, Activity, TrendingUp, FileText } from "lucide-react";
+import { RefreshCw, FileDown, Search, Loader2, Mail, Info, Download, AlertCircle, Users, DollarSign, Activity, TrendingUp, FileText, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from "recharts";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";

@@ -27,32 +27,25 @@ function Router() {
 
   return (
     <Switch>
-      {/* Show landing page for unauthenticated users or while loading */}
-      {isLoading || !isAuthenticated ? (
-        <Route path="/" component={Home} />
-      ) : (
-        <>
-          {/* Protected routes for authenticated users */}
-          <Route path="/" component={Home} />
-          <Route path="/assessment" component={MarriageAssessment} />
-          <Route path="/admin" component={AdminDashboard} />
-          <Route path="/samples" component={SamplesPage} />
-          <Route path="/couple-assessment/invite/:coupleId" component={CoupleAssessmentInvite} />
-          <Route path="/couple-assessment/report/:coupleId" component={CoupleAssessmentReport} />
-          <Route path="/test" component={AssessmentTest} />
-          <Route path="/sample-pdf" component={ViewSamplePDF} />
-          <Route path="/sample-couple-assessment" component={SampleCoupleAssessment} />
-          <Route path="/individual-assessment" component={IndividualAssessmentOnScreen} />
-          <Route path="/real-pdf" component={() => {
-            window.location.href = "/realistic-couple-assessment.html";
-            return null;
-          }} />
-          <Route path="/view-reports" component={ViewAssessmentReports} />
-          <Route path="/invite" component={InviteFriends} />
-          <Route path="/admin/payments" component={AdminPaymentsSimple} />
-          <Route path="/admin/assessments" component={SimpleAssessmentResults} />
-        </>
-      )}
+      {/* Always available routes */}
+      <Route path="/" component={Home} />
+      <Route path="/assessment" component={MarriageAssessment} />
+      <Route path="/admin" component={AdminDashboard} />
+      <Route path="/samples" component={SamplesPage} />
+      <Route path="/couple-assessment/invite/:coupleId" component={CoupleAssessmentInvite} />
+      <Route path="/couple-assessment/report/:coupleId" component={CoupleAssessmentReport} />
+      <Route path="/test" component={AssessmentTest} />
+      <Route path="/sample-pdf" component={ViewSamplePDF} />
+      <Route path="/sample-couple-assessment" component={SampleCoupleAssessment} />
+      <Route path="/individual-assessment" component={IndividualAssessmentOnScreen} />
+      <Route path="/real-pdf" component={() => {
+        window.location.href = "/realistic-couple-assessment.html";
+        return null;
+      }} />
+      <Route path="/view-reports" component={ViewAssessmentReports} />
+      <Route path="/invite" component={InviteFriends} />
+      <Route path="/admin/payments" component={AdminPaymentsSimple} />
+      <Route path="/admin/assessments" component={SimpleAssessmentResults} />
       <Route component={NotFound} />
     </Switch>
   );
