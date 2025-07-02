@@ -94,7 +94,7 @@ export default function Home() {
                 onClick={() => window.location.href = '/api/login'}
                 className="bg-blue-600 hover:bg-blue-700 text-white"
               >
-                Sign In with Replit
+                Sign In
               </Button>
             )}
           </div>

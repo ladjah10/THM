@@ -904,55 +904,66 @@ export class DatabaseStorage implements IStorage {
     }
   }
   
-  async getUser(id: number): Promise<User | undefined> {
+  async getUser(id: string): Promise<any | undefined> {
     try {
-      // Implementation would use database access
-      // Use shared memory storage as fallback
-      return await this.memStorage.getUser(id);
+      const { pool } = await import('./db');
+      const result = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+      return result.rows[0] || undefined;
     } catch (error) {
       console.error('Error getting user:', error);
-      return await this.memStorage.getUser(id);
+      return undefined;
     }
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
+  async getUserByUsername(username: string): Promise<any | undefined> {
     try {
-      // Implementation would use database access
-      // Use shared memory storage as fallback
-      return await this.memStorage.getUserByUsername(username);
+      const { pool } = await import('./db');
+      const result = await pool.query('SELECT * FROM users WHERE email = $1', [username]);
+      return result.rows[0] || undefined;
     } catch (error) {
       console.error('Error getting user by username:', error);
-      return await this.memStorage.getUserByUsername(username);
+      return undefined;
     }
   }
 
-  async createUser(insertUser: InsertUser): Promise<User> {
+  async createUser(insertUser: any): Promise<any> {
     try {
-      // Implementation would use database access
-      // Use shared memory storage as fallback
-      return await this.memStorage.createUser(insertUser);
+      const { pool } = await import('./db');
+      const result = await pool.query(
+        'INSERT INTO users (id, email, first_name, last_name) VALUES ($1, $2, $3, $4) RETURNING *',
+        [insertUser.id, insertUser.email, insertUser.firstName, insertUser.lastName]
+      );
+      return result.rows[0];
     } catch (error) {
       console.error('Error creating user:', error);
-      return await this.memStorage.createUser(insertUser);
+      throw error;
     }
   }
 
-  async upsertUser(userData: any): Promise<User> {
+  async upsertUser(userData: any): Promise<any> {
     try {
-      // For now, use memory storage as fallback
-      // In a real implementation, this would use PostgreSQL UPSERT
-      const existingUser = await this.memStorage.getUserByUsername(userData.email || userData.id);
-      if (existingUser) {
-        // Update existing user
-        const updatedUser = { ...existingUser, ...userData };
-        return updatedUser;
-      } else {
-        // Create new user
-        return await this.memStorage.createUser(userData);
-      }
+      const { pool } = await import('./db');
+      const result = await pool.query(`
+        INSERT INTO users (id, email, first_name, last_name, profile_image_url, updated_at)
+        VALUES ($1, $2, $3, $4, $5, NOW())
+        ON CONFLICT (id) DO UPDATE SET
+          email = EXCLUDED.email,
+          first_name = EXCLUDED.first_name,
+          last_name = EXCLUDED.last_name,
+          profile_image_url = EXCLUDED.profile_image_url,
+          updated_at = NOW()
+        RETURNING *
+      `, [
+        userData.id,
+        userData.email,
+        userData.firstName,
+        userData.lastName,
+        userData.profileImageUrl
+      ]);
+      return result.rows[0];
     } catch (error) {
       console.error('Error upserting user:', error);
-      return await this.memStorage.createUser(userData);
+      throw error;
     }
   }
   
