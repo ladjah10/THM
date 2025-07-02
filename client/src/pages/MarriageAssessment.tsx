@@ -27,6 +27,7 @@ type View = "paywall" | "demographics" | "questionnaire" | "results" | "emailSen
 
 export default function MarriageAssessment() {
   const [_, params] = useLocation();
+  const { user, isAuthenticated } = useAuth();
   
   // Get assessment type from location state or default to individual
   const [assessmentType, setAssessmentType] = useState<'individual' | 'couple'>('individual');
@@ -37,6 +38,8 @@ export default function MarriageAssessment() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [isLastQuestion, setIsLastQuestion] = useState(false);
   const [userResponses, setUserResponses] = useState<Record<number, UserResponse>>({});
+  const [hasExistingAssessment, setHasExistingAssessment] = useState(false);
+  const [showResumeOption, setShowResumeOption] = useState(false);
   const [demographicData, setDemographicData] = useState<DemographicData>({
     firstName: "",
     lastName: "",
@@ -77,11 +80,47 @@ export default function MarriageAssessment() {
     }
   }, []);
 
+  // Auto-populate user data from Replit authentication
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      setDemographicData(prev => ({
+        ...prev,
+        firstName: user.firstName || prev.firstName,
+        lastName: user.lastName || prev.lastName,
+        email: user.email || prev.email,
+      }));
+    }
+  }, [isAuthenticated, user]);
+
+  // Check for existing assessments for authenticated users
+  useEffect(() => {
+    const checkExistingAssessment = async () => {
+      if (!isAuthenticated || !user?.email) return;
+      
+      try {
+        const response = await apiRequest('GET', `/api/assessment/check-existing?email=${encodeURIComponent(user.email)}&type=${assessmentType}`);
+        const result = await response.json();
+        
+        if (result.hasExisting) {
+          setHasExistingAssessment(true);
+          setShowResumeOption(true);
+        }
+      } catch (error) {
+        console.warn("Could not check for existing assessment:", error);
+      }
+    };
+
+    checkExistingAssessment();
+  }, [isAuthenticated, user, assessmentType]);
+
   // Resume logic - Load saved progress for authenticated users
   useEffect(() => {
     const fetchSavedProgress = async () => {
+      if (!isAuthenticated || !user?.email) return;
+      
       try {
         const response = await apiRequest('POST', '/api/assessment/load-progress', {
+          email: user.email,
           assessmentType
         });
         
@@ -90,7 +129,14 @@ export default function MarriageAssessment() {
         if (saved?.responses && Object.keys(saved.responses).length > 0) {
           setUserResponses(saved.responses);
           if (saved.demographicData) {
-            setDemographicData(saved.demographicData);
+            setDemographicData(prev => ({
+              ...prev,
+              ...saved.demographicData,
+              // Keep auto-populated data if saved data is empty
+              firstName: saved.demographicData.firstName || prev.firstName,
+              lastName: saved.demographicData.lastName || prev.lastName,
+              email: saved.demographicData.email || prev.email,
+            }));
           }
           console.log("✅ Loaded saved progress with", Object.keys(saved.responses).length, "responses");
           
@@ -106,7 +152,7 @@ export default function MarriageAssessment() {
     };
 
     fetchSavedProgress();
-  }, [assessmentType]);
+  }, [isAuthenticated, user, assessmentType]);
   
   // AUTOSAVE DISABLED: Previously caused problems overwriting unique user responses with default data
   // For reference, the autosave code has been commented out but preserved
@@ -657,6 +703,76 @@ export default function MarriageAssessment() {
     }
   };
 
+  const handleResumeAssessment = async () => {
+    if (!isAuthenticated || !user?.email) return;
+    
+    try {
+      const response = await apiRequest('POST', '/api/assessment/load-progress', {
+        email: user.email,
+        assessmentType
+      });
+      
+      const saved = await response.json();
+      
+      if (saved?.responses && Object.keys(saved.responses).length > 0) {
+        setUserResponses(saved.responses);
+        if (saved.demographicData) {
+          setDemographicData(prev => ({
+            ...prev,
+            ...saved.demographicData,
+            firstName: saved.demographicData.firstName || prev.firstName,
+            lastName: saved.demographicData.lastName || prev.lastName,
+            email: saved.demographicData.email || prev.email,
+          }));
+        }
+        
+        // Navigate to appropriate view based on progress
+        if (Object.keys(saved.responses).length >= 99) {
+          setCurrentView("results");
+        } else if (saved.demographicData?.email) {
+          setCurrentView("questionnaire");
+        } else {
+          setCurrentView("demographics");
+        }
+        
+        setShowResumeOption(false);
+        toast({
+          title: "Assessment Resumed",
+          description: `Continuing from where you left off with ${Object.keys(saved.responses).length} completed questions.`,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to resume assessment:", error);
+      toast({
+        title: "Resume Failed",
+        description: "Could not load your previous progress. Starting fresh.",
+        variant: "destructive"
+      });
+      setShowResumeOption(false);
+    }
+  };
+
+  const handleStartFresh = () => {
+    setUserResponses({});
+    setDemographicData(prev => ({
+      firstName: user?.firstName || "",
+      lastName: user?.lastName || "",
+      email: user?.email || "",
+      lifeStage: "",
+      birthday: "",
+      phone: "",
+      gender: "",
+      marriageStatus: "",
+      desireChildren: "",
+      ethnicity: "",
+      city: "",
+      state: "",
+      zipCode: ""
+    }));
+    setShowResumeOption(false);
+    setCurrentView("demographics");
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 font-sans antialiased text-gray-800">
       {/* Header */}
@@ -670,6 +786,32 @@ export default function MarriageAssessment() {
           </div>
         </div>
       </header>
+
+      {/* Resume Assessment Dialog */}
+      {showResumeOption && isAuthenticated && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 className="text-lg font-semibold mb-4">Resume Assessment?</h3>
+            <p className="text-gray-600 mb-6">
+              We found a previous assessment in progress. Would you like to continue where you left off or start fresh?
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={handleResumeAssessment}
+                className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Resume Progress
+              </button>
+              <button
+                onClick={handleStartFresh}
+                className="flex-1 bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors"
+              >
+                Start Fresh
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Main Content Area */}
       <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -685,12 +827,38 @@ export default function MarriageAssessment() {
         
         {/* Demographics comes after payment */}
         {currentView === "demographics" && (
-          <DemographicView 
-            demographicData={demographicData}
-            onChange={handleDemographicChange}
-            onSubmit={handleDemographicSubmit}
-            onBack={() => setCurrentView("questionnaire")}
-          />
+          <div>
+            {/* Login/Logout Controls */}
+            <div className="mb-6 flex justify-end">
+              {isAuthenticated ? (
+                <div className="flex items-center gap-4">
+                  <span className="text-sm text-gray-600">
+                    Signed in as {user?.firstName || user?.email}
+                  </span>
+                  <a
+                    href="/api/logout"
+                    className="text-sm text-blue-600 hover:text-blue-800 underline"
+                  >
+                    Sign Out
+                  </a>
+                </div>
+              ) : (
+                <a
+                  href="/api/login"
+                  className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Sign In
+                </a>
+              )}
+            </div>
+            
+            <DemographicView 
+              demographicData={demographicData}
+              onChange={handleDemographicChange}
+              onSubmit={handleDemographicSubmit}
+              onBack={() => setCurrentView("questionnaire")}
+            />
+          </div>
         )}
 
         {/* Questionnaire view */}
