@@ -3783,15 +3783,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
         options: ['Option 1', 'Option 2', 'Option 3', 'Option 4']
       }));
 
-      // Generate realistic test responses (weighted toward higher scores for testing)
+      // Generate realistic test responses using actual scoring methodology
       const simulatedResponses: Record<string, { option: string; value: number }> = {};
       
       simulatedQuestions.forEach((question, index) => {
         // Create weighted responses that favor higher commitment/quality responses
         const responseIndex = Math.random() < 0.7 ? 0 : Math.random() < 0.8 ? 1 : Math.random() < 0.9 ? 2 : 3;
+        
+        // Calculate proper response value based on question type and weight
+        let responseValue: number;
+        
+        if (question.type === 'D') {
+          // Declaration questions: full weight for agreement (option 0), 25% for disagreement
+          responseValue = responseIndex === 0 ? question.weight : Math.round(question.weight * 0.25);
+        } else {
+          // Multiple choice questions: use graduated scoring (100%, 75%, 40%, 15%)
+          const scorePercentages = [1.0, 0.75, 0.40, 0.15];
+          responseValue = Math.round(question.weight * scorePercentages[responseIndex]);
+        }
+        
         simulatedResponses[question.id] = {
           option: `Option ${responseIndex + 1}`,
-          value: responseIndex
+          value: responseValue
         };
       });
 
